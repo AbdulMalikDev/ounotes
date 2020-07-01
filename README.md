@@ -6,6 +6,8 @@
 An Application for Osmania University students to access educational material at one place built with the famous **Stacked Architecture** in Flutter.
 
 
+
+
 ## Download App
 <a href="https://play.google.com/store/apps/details?id=com.notes.ounotes"><img src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" width="200"></img></a>
 
@@ -23,6 +25,8 @@ An Application for Osmania University students to access educational material at
 
  :boom: Now any user can upload documents ! :boom:
 * Please read the guidelines and contribution guide for beginners.
+
+To learn more about Stacked Architecture in Flutter [check out this Youtube Playlist.](https://www.youtube.com/playlist?list=PLdTodMosi-BwM4XkagNwe4KADOMWQS5X-)
 
      
 ## Contributing
