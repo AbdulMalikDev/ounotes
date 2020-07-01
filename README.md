@@ -24,6 +24,12 @@ An Application for Osmania University students to access educational material at
  :boom: Now any user can upload documents ! :boom:
 * Please read the guidelines and contribution guide for beginners.
 
+     
+## Contributing
+
+If you wish to contribute a change to any of the existing feature or add new in this repo,
+please review our [contribution guide](https://github.com/AbdulMalikDev/OU-Notes-Stacked-Architecture/blob/master/CONTRIBUTING.md),
+and send a [pull request](https://github.com/AbdulMalikDev/OU-Notes-Stacked-Architecture/pulls). I welcome and encourage all pull requests. It usually will take me within 24-48 hours to respond to any issue or request.
 
 
 ## Dependencies
@@ -213,17 +219,8 @@ Notes Search Result             |  Question Paper Search Result     |Syllabus Se
 ```
 
 </details>
-     
-## Contributing
-
-If you wish to contribute a change to any of the existing feature or add new in this repo,
-please review our [contribution guide](https://github.com/AbdulMalikDev/OU-Notes-Stacked-Architecture/blob/master/CONTRIBUTING.md),
-and send a [pull request](https://github.com/AbdulMalikDev/OU-Notes-Stacked-Architecture/pulls). I welcome and encourage all pull requests. It usually will take me within 24-48 hours to respond to any issue or request.
 
 ## Created & Maintained By
 
 [Abdul Malik](https://github.com/AbdulMalikDev) And [Syed Wajid](https://github.com/syedwajid01)
 
-> If you found this project helpful or you learned something from the source code and want to thank me, consider buying me a cup of :coffee:
->
-> * [PayPal](https://paypal.me/shubhamsinghchahar/)
