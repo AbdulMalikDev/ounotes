@@ -1,7 +1,11 @@
 import 'package:FSOUNotes/AppTheme/AppStateNotifier.dart';
 import 'package:FSOUNotes/AppTheme/AppTheme.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stacked/stacked.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
+
 
 import './app/locator.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +14,11 @@ import 'package:stacked_services/stacked_services.dart';
 import 'app/router.gr.dart';
 
 void main() async {
+  await DotEnv().load('.env');
   WidgetsFlutterBinding.ensureInitialized();
+  OneSignal.shared.init(DotEnv().env['INIT']);
+  OneSignal.shared
+      .setInFocusDisplayType(OSNotificationDisplayType.notification);
   setupLocator();
   Logger.level = Level.verbose;
   SharedPreferences prefs = await SharedPreferences.getInstance();

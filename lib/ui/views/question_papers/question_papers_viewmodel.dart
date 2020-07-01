@@ -1,4 +1,5 @@
 import 'package:FSOUNotes/app/locator.dart';
+import 'package:FSOUNotes/app/logger.dart';
 import 'package:FSOUNotes/app/router.gr.dart';
 import 'package:FSOUNotes/enums/constants.dart';
 import 'package:FSOUNotes/enums/enums.dart';
@@ -8,10 +9,12 @@ import 'package:FSOUNotes/models/question_paper.dart';
 import 'package:FSOUNotes/services/funtional_services/cloud_storage_service.dart';
 import 'package:FSOUNotes/services/funtional_services/firestore_service.dart';
 import 'package:FSOUNotes/services/state_services/download_service.dart';
+import 'package:logger/logger.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 class QuestionPapersViewModel extends BaseViewModel {
+  Logger log = getLogger("QuestionPapersViewModel");
   FirestoreService _firestoreService = locator<FirestoreService>();
   List<QuestionPaper> _questionPapers = [];
   CloudStorageService _cloudStorageService = locator<CloudStorageService>();
@@ -71,8 +74,11 @@ class QuestionPapersViewModel extends BaseViewModel {
       }
     });
     for (int i = 0; i < downloadedQp.length; i++) {
+      // log.e(downloadedQp[i].filename);
+      // log.e(title);
       if (downloadedQp[i].year == year &&
-          downloadedQp[i].subjectName == subname) {
+          downloadedQp[i].subjectName == subname
+          && downloadedQp[i].filename == title) {
         filePath = downloadedQp[i].path;
         notifyListeners();
         return true;

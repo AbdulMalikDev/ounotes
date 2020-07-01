@@ -25,6 +25,7 @@ dependencies:
     sdk: flutter
   shared_preferences: ^0.5.7+3
   google_sign_in: ^4.5.1
+  flutter_dotenv: ^2.1.0
   fluttertoast: ^4.0.1
   flutter_mailer: ^0.5.1
   open_appstore: ^1.0.2
@@ -64,6 +65,7 @@ dependencies:
   flutter_auth_buttons: ^0.6.0
   auto_route: ^0.5.0
   modal_progress_hud: ^0.1.3
+  onesignal_flutter: ^2.5.0
 
   get_it:
   injectable:
@@ -104,6 +106,7 @@ flutter:
    - assets/images/6.png
    - assets/images/7.png
    - assets/images/github-logo.png
+   - .env
 
   fonts:
     - family: OpenSans
