@@ -96,7 +96,7 @@ Notes Search Result             |  Question Paper Search Result     |Syllabus Se
 
 
 ## Getting started 
-* Project setup instructions are given at [Wiki](https://github.com/TheAlphamerc/flutter_twitter_clone/wiki/Gettings-Started) section.
+* Project setup instructions coming soon.
 
 ## Directory Structure
 <details>
