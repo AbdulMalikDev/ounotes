@@ -12,9 +12,9 @@ class UploadLogView extends StatelessWidget {
       builder: (context, model, child) => Scaffold(
         body: Container(
           //color: Colors.yellow,
-          height: MediaQuery.of(context).size.height * 0.85,
+          height: MediaQuery.of(context).size.height * 0.75,
           // alignment: Alignment.center,
-          child: Center(
+          child: SingleChildScrollView(
             child: Column(
               //mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -27,10 +27,12 @@ class UploadLogView extends StatelessWidget {
                       )
                     : ListView.builder(
                         shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
                         itemCount: model.logs.length,
                         itemBuilder: (ctx, index) {
                           UploadLog logItem = model.logs[index];
                           return Container(
+                            //height: 300,
                             margin: EdgeInsets.symmetric(
                                 horizontal: 20, vertical: 20),
                             child: Card(
@@ -38,13 +40,22 @@ class UploadLogView extends StatelessWidget {
                               child: ListTile(
                                 contentPadding: EdgeInsets.all(15),
                                 title: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.start,
                                   children: <Widget>[
-                                    Text("File Name : "+ logItem.fileName),
+                                    Text("File Name : " + logItem.fileName),
+                                    Text(""),
                                     Text("FileType : " + logItem.type),
-                                    Text("Subject Name :" + logItem.subjectName),
-                                    Text("Email of Uploader : " + logItem.email),
-                                    Text("UploadedAt : " + logItem.date.toString()),
+                                    Text(""),
+                                    Text("Subject Name :" +
+                                        logItem.subjectName),
+                                    Text(""),
+                                    Text("Email of Uploader : " +
+                                        logItem.email),
+                                    Text(""),
+                                    Text("UploadedAt : " +
+                                        logItem.date.toString()),
+                                    Text(""),
                                     Text("Size : " + logItem.size ?? "0"),
                                   ],
                                 ),
@@ -55,7 +66,10 @@ class UploadLogView extends StatelessWidget {
                             ),
                           );
                         },
-                      )
+                      ),
+                SizedBox(
+                  height: 170,
+                ),
               ],
             ),
           ),
