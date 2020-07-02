@@ -6,7 +6,6 @@ class DrawerHeaderView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    
     return Container(
       height: App(context).appScreenHeightWithOutSafeArea(0.3),
       child: DrawerHeader(
@@ -27,21 +26,33 @@ class DrawerHeaderView extends StatelessWidget {
             Container(
               alignment: Alignment.centerLeft,
               //color: Colors.yellow,
-              child: Text(
-                'OU Notes',
-                textAlign: TextAlign.left,
-                style: Theme.of(context)
-                    .textTheme
-                    .headline6
-                    .copyWith(fontSize: 25),
+              child: Row(
+                children: <Widget>[
+                  // Container(
+                  //   height: 30,
+                  //   width: 40,
+                  //   child: Image(
+                  //     image: AssetImage('assets/images/OU_Logo.jpg'),
+                  //   ),
+                  // ),
+                  SizedBox(width: 10,),
+                  Text(
+                    'OU Notes',
+                    textAlign: TextAlign.left,
+                    style: Theme.of(context)
+                        .textTheme
+                        .headline6
+                        .copyWith(fontSize: 25),
+                  ),
+                ],
               ),
             ),
             //SizedBox(height: screenHeightWithoutSafeArea * 0.0125),
             Container(
               //color: Colors.yellow,
               //  alignment: Alignment.centerRight,
-              height:App(context).appScreenHeightWithOutSafeArea(0.2),
-              width:App(context).appScreenWidthWithOutSafeArea(0.3),
+              height: App(context).appScreenHeightWithOutSafeArea(0.2),
+              width: App(context).appScreenWidthWithOutSafeArea(0.3),
               //padding: EdgeInsets.only(left: 20),
               child: ClipRect(
                 child: Align(

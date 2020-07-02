@@ -8,7 +8,6 @@
 .buildlog/
 .history
 .svn/
-.env*
 
 # IntelliJ related
 *.iml
@@ -31,9 +30,6 @@
 .pub-cache/
 .pub/
 /build/
-/.vscode/
-/android/app/google-services.json
-/lib/enums/confidential.dart
 
 # Web related
 lib/generated_plugin_registrant.dart
