@@ -4,6 +4,7 @@ import 'package:FSOUNotes/ui/views/FilterDocuments/FD_subjectdisplay/fd_subjectv
 import 'package:FSOUNotes/ui/views/Profile/profile_view.dart';
 import 'package:FSOUNotes/ui/views/about_us/privacy_policy/privacy_policyview.dart';
 import 'package:FSOUNotes/ui/views/about_us/privacy_policy/terms_and_conditionview.dart';
+import 'package:FSOUNotes/ui/views/admin/admin_view.dart';
 import 'package:FSOUNotes/ui/views/all_documents/all_documents_view.dart';
 import 'package:FSOUNotes/ui/views/all_documents/upload/upload_selection/upload_selection_view.dart';
 import 'package:FSOUNotes/ui/views/all_documents/upload/upload_view.dart';
@@ -41,4 +42,5 @@ class $Router {
   FDDocumentView fdDocumentView;
   PrivacyPolicyView privacyPolicyView;
   TermsAndConditionView termsAndConditionView;
+  AdminView adminViewRoute;
 }

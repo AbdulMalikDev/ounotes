@@ -2,6 +2,7 @@ import 'package:FSOUNotes/AppTheme/AppStateNotifier.dart';
 import 'package:FSOUNotes/app/locator.dart';
 import 'package:FSOUNotes/app/router.gr.dart';
 import 'package:FSOUNotes/enums/enums.dart';
+import 'package:FSOUNotes/services/funtional_services/authentication_service.dart';
 import 'package:FSOUNotes/services/funtional_services/email_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -11,6 +12,10 @@ import 'package:stacked_services/stacked_services.dart';
 class DrawerViewModel extends BaseViewModel {
   NavigationService _navigationService = locator<NavigationService>();
   AppStateNotifier _appStateNotifier = locator<AppStateNotifier>();
+  AuthenticationService _authenticationService =
+      locator<AuthenticationService>();
+
+   bool get isAdmin => _authenticationService.user.isAdmin;
 
   dispatchEmail() async {
     await EmailService.emailFunc(
@@ -56,4 +61,9 @@ class DrawerViewModel extends BaseViewModel {
         arguments: FDInputViewArguments(path: path));
   }
 
+
+  navigateToAdminUploadScreen(Document path) {
+     _navigationService.navigateTo(Routes.adminViewRoute,
+        arguments: FDInputViewArguments(path: path));
+  }
 }

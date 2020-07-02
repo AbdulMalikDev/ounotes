@@ -4,6 +4,7 @@ class Report {
   final String type;
   final String title;
   final String email;
+  int reports;
 
   Report(this.id, this.subjectName, this.type, this.title , this.email);
 
@@ -13,7 +14,8 @@ class Report {
     subjectName     = data['subjectName'],
     type            = data['type'],
     title           = data['title'],
-    email           = data['email'];
+    email           = data['email'],
+    reports         = data["reports"] ?? 0;
 
 
   Map<String,dynamic> toJson() {
@@ -23,6 +25,7 @@ class Report {
       "type"        : type,
       "title"       : title,
       "email"       : email,
+      "reports"     : reports,
     };
   }
 

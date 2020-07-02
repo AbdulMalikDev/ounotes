@@ -85,6 +85,12 @@ class DrawerView extends StatelessWidget {
                               subtitle1,
                               model.navigateToUserUploadScreen,
                               Document.Drawer),
+                          if(model.isAdmin)NavItem(
+                              Icons.equalizer,
+                              "Admin Panel",
+                              subtitle1,
+                              model.navigateToAdminUploadScreen,
+                              Document.Drawer),
                           ListTile(
                             leading: SizedBox(
                               height: 30,

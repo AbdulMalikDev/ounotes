@@ -27,6 +27,7 @@ import 'package:FSOUNotes/ui/views/FilterDocuments/FD_subjectdisplay/fd_subjectv
 import 'package:FSOUNotes/ui/views/FilterDocuments/FD_DocumentDisplay/fd_documentview.dart';
 import 'package:FSOUNotes/ui/views/about_us/privacy_policy/privacy_policyview.dart';
 import 'package:FSOUNotes/ui/views/about_us/privacy_policy/terms_and_conditionview.dart';
+import 'package:FSOUNotes/ui/views/admin/admin_view.dart';
 
 abstract class Routes {
   static const splashViewRoute = '/';
@@ -48,6 +49,7 @@ abstract class Routes {
   static const fdDocumentView = '/fd-document-view';
   static const privacyPolicyView = '/privacy-policy-view';
   static const termsAndConditionView = '/terms-and-condition-view';
+  static const adminViewRoute = '/admin-view-route';
   static const all = {
     splashViewRoute,
     introViewRoute,
@@ -68,6 +70,7 @@ abstract class Routes {
     fdDocumentView,
     privacyPolicyView,
     termsAndConditionView,
+    adminViewRoute,
   };
 }
 
@@ -282,6 +285,11 @@ class Router extends RouterBase {
             TermsAndConditionViewArguments();
         return MaterialPageRoute<dynamic>(
           builder: (context) => TermsAndConditionView(key: typedArgs.key),
+          settings: settings,
+        );
+      case Routes.adminViewRoute:
+        return MaterialPageRoute<dynamic>(
+          builder: (context) => AdminView(),
           settings: settings,
         );
       default:

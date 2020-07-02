@@ -102,3 +102,13 @@ class Constants {
     }
   }
 }
+
+
+//DO NOT DELETE THIS
+// @override
+//   Widget build(BuildContext context) {
+//     return ViewModelBuilder<ReportViewModel>.reactive(
+//       builder: (context, model, child) => Scaffold(),
+//       viewModelBuilder:() => ReportViewModel(),
+//     );
+//   }
