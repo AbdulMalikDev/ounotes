@@ -454,6 +454,6 @@ class FirestoreService {
    }
 
   deleteUploadLog(UploadLog report)async {
-    _reportCollectionReference.document(report.id).delete();
+    await _uploadLogCollectionReference.document(report.id).delete();
   }
 }
