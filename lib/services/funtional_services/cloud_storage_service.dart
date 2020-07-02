@@ -59,6 +59,7 @@ class CloudStorageService {
       //final filename = fileUrl.substring(url.lastIndexOf("/") + 1);
       var request = await HttpClient().getUrl(Uri.parse(fileUrl));
       var response = await request.close();
+      log.w("downloading");
       var bytes = await consolidateHttpClientResponseBytes(
         response,
         // onBytesReceived: (bytesReceived, expectedContentLength) {
@@ -67,16 +68,10 @@ class CloudStorageService {
         //         (bytesReceived / expectedContentLength * 100)
         //             .toStringAsFixed(0) +
         //         "%");
-        //     _dialogService.showDialog(
-        //       title: '$note.title\n',
-        //       description: "Downloading...  " +
-        //           (bytesReceived / expectedContentLength * 100)
-        //               .toStringAsFixed(0) +
-        //           "%",
-        //     );
         //   }
         // },
       );
+
       String dir = (await getApplicationDocumentsDirectory()).path;
       String id = newCuid();
       if (note.id == null || note.id.length == 0) {

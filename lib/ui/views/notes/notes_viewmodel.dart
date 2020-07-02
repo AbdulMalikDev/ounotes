@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:FSOUNotes/app/locator.dart';
 import 'package:FSOUNotes/app/logger.dart';
 import 'package:FSOUNotes/app/router.gr.dart';
@@ -74,41 +73,41 @@ class NotesViewModel extends BaseViewModel {
     return downloadsbysub;
   }
 
-  showDialogOfProgress(BuildContext context) {
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-            title: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                Text(
-                  "Note",
-                  style: Theme.of(context)
-                      .textTheme
-                      .headline6
-                      .copyWith(fontSize: 18),
-                ),
-              ],
-            ),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                Text(
-                  "File is downloading",
-                  style: Theme.of(context)
-                      .textTheme
-                      .subtitle1
-                      .copyWith(fontSize: 18),
-                ),
-              ],
-            ),
-          );
-        });
-  }
+  // showDialogOfProgress(BuildContext context) {
+  //   showDialog(
+  //       context: context,
+  //       builder: (BuildContext context) {
+  //         return AlertDialog(
+  //           shape:
+  //               RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+  //           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+  //           title: Row(
+  //             mainAxisSize: MainAxisSize.min,
+  //             children: <Widget>[
+  //               Text(
+  //                 "Note",
+  //                 style: Theme.of(context)
+  //                     .textTheme
+  //                     .headline6
+  //                     .copyWith(fontSize: 18),
+  //               ),
+  //             ],
+  //           ),
+  //           content: Column(
+  //             mainAxisSize: MainAxisSize.min,
+  //             children: <Widget>[
+  //               Text(
+  //                 "File is downloading",
+  //                 style: Theme.of(context)
+  //                     .textTheme
+  //                     .subtitle1
+  //                     .copyWith(fontSize: 18),
+  //               ),
+  //             ],
+  //           ),
+  //         );
+  //       });
+  // }
 
   getListOfVoteBySub(String subname) {
     List<Vote> votesbySub = [];

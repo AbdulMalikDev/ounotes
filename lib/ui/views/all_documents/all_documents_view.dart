@@ -22,7 +22,7 @@ class _AllDocumentsViewState extends State<AllDocumentsView>
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
     return ViewModelBuilder<AllDocumentsViewModel>.reactive(
-        onModelReady: (model)async{model.subjectName = widget.subjectName;await model.handleStartup();},
+        onModelReady: (model)async{model.subjectName = widget.subjectName;await model.handleStartup(context);},
         builder: (context, model, child) => DefaultTabController(
               length: 4,
               child: Scaffold(
