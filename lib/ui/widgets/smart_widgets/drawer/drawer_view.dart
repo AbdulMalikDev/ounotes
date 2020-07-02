@@ -101,7 +101,7 @@ class DrawerView extends StatelessWidget {
                               style: subtitle1,
                             ),
                             onTap: () async {
-                              const url = 'https://github.com/';
+                              const url = 'https://github.com/AbdulMalikDev/ounotes';
                               if (await canLaunch(url)) {
                                 await launch(url);
                               } else {
