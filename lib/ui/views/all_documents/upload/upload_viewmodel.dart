@@ -8,7 +8,6 @@ import 'package:FSOUNotes/models/document.dart';
 import 'package:FSOUNotes/models/link.dart';
 import 'package:FSOUNotes/models/notes.dart';
 import 'package:FSOUNotes/models/question_paper.dart';
-import 'package:FSOUNotes/models/subject.dart';
 import 'package:FSOUNotes/models/syllabus.dart';
 import 'package:FSOUNotes/services/funtional_services/cloud_storage_service.dart';
 import 'package:FSOUNotes/services/funtional_services/firestore_service.dart';
@@ -141,6 +140,7 @@ class UploadViewModel extends BaseViewModel {
     //* their value may be different while uploading , so i have used switch case to
     //* handle all 4 situations
     setBusy(true);
+
     String type;
     log.e("year $_year");
     AbstractDocument doc;
@@ -196,6 +196,7 @@ class UploadViewModel extends BaseViewModel {
     }
     if (doc.path != Document.Links) {
       var result = await _cloudStorageService.uploadFile(note: doc, type: type);
+      log.w(result);
       if (result == "BLOCKED") {
         await _dialogService.showDialog(
             title: "BLOCKED",
@@ -288,7 +289,12 @@ class UploadViewModel extends BaseViewModel {
         setBusy(false);
         return;
       } else if (result == "File is null") {
+        setBusy(false);
         return;
+      } else if (result == 'error') {
+        setBusy(false);
+        Fluttertoast.showToast(
+            msg: "An error occurred...please try again later");
       } else if (result == "upload successful") {
         setBusy(false);
         Fluttertoast.showToast(

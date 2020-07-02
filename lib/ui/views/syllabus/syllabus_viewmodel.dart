@@ -104,7 +104,7 @@ class SyllabusViewModel extends BaseViewModel {
         );
         setLoading(false);
         _navigationService.navigateTo(Routes.pdfScreenRoute,
-            arguments: PDFScreenArguments(pathPDF: PDFpath, title: doc.title));
+            arguments: PDFScreenArguments(pathPDF: PDFpath, title: "Document"));
       }
     // });
   }

@@ -71,14 +71,34 @@ class _UploadViewState extends State<UploadView> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: <Widget>[
                                 CircularProgressIndicator(
-                                  strokeWidth: 7,
+                                  strokeWidth: 5,
                                   valueColor:
                                       AlwaysStoppedAnimation(Colors.white),
                                 ),
                                 SizedBox(
-                                  height: 10,
+                                  height: 20,
                                 ),
-                                Text("Please wait...")
+                                Column(
+                                  children: <Widget>[
+                                    Text(
+                                      "Please wait...",
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 20,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 20,
+                                    ),
+                                    Text(
+                                      "Large files may take some time...",
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 17,
+                                      ),
+                                    )
+                                  ],
+                                )
                               ],
                             ))
                           : Form(
