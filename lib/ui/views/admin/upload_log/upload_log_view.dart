@@ -20,9 +20,9 @@ class _UploadLogViewState extends State<UploadLogView>
       builder: (context, model, child) => Scaffold(
         body: Container(
           //color: Colors.yellow,
-          height: MediaQuery.of(context).size.height * 0.8,
+          height: MediaQuery.of(context).size.height * 0.75,
           // alignment: Alignment.center,
-          child: Center(
+          child: SingleChildScrollView(
             child: Column(
               //mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -35,10 +35,12 @@ class _UploadLogViewState extends State<UploadLogView>
                       )
                     : ListView.builder(
                         shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
                         itemCount: model.logs.length,
                         itemBuilder: (ctx, index) {
                           UploadLog logItem = model.logs[index];
                           return Container(
+                            //height: 300,
                             margin: EdgeInsets.symmetric(
                                 horizontal: 20, vertical: 10),
                             child: Card(
@@ -47,7 +49,8 @@ class _UploadLogViewState extends State<UploadLogView>
                               child: ListTile(
                                 contentPadding: EdgeInsets.all(15),
                                 title: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.start,
                                   children: <Widget>[
                                     Text(
                                       "File Name : " + logItem.fileName,
@@ -88,7 +91,10 @@ class _UploadLogViewState extends State<UploadLogView>
                             ),
                           );
                         },
-                      )
+                      ),
+                SizedBox(
+                  height: 170,
+                ),
               ],
             ),
           ),

@@ -22,9 +22,10 @@ class _ReportViewState extends State<ReportView>
           //color: Colors.yellow,
           height: MediaQuery.of(context).size.height * 0.85,
           // alignment: Alignment.center,
-          child: Center(
+          child: SingleChildScrollView(
             child: Column(
               //mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 model.isBusy
@@ -35,13 +36,14 @@ class _ReportViewState extends State<ReportView>
                       )
                     : ListView.builder(
                         shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
                         itemCount: model.reports.length,
                         itemBuilder: (ctx, index) {
                           Report report = model.reports[index];
                           print(model.data);
                           return Container(
                             margin: EdgeInsets.symmetric(
-                                horizontal: 20, vertical: 20),
+                                horizontal: 20, vertical: 10),
                             child: Card(
                               color: Theme.of(context).colorScheme.background,
                               elevation: 10,
