@@ -1,4 +1,4 @@
-## <img src="https://github.com/AbdulMalikDev/OU-Notes-Stacked-Architecture/blob/master/assets/images/Applogo.jpg?raw=true" width="48">OU Notes [Osmania University (O.U)] [![GitHub stars](https://img.shields.io/github/stars/Thealphamerc/flutter_twitter_clone?style=social)](https://github.com/login?return_to=%2FTheAlphamerc%flutter_twitter_clone) ![GitHub forks](https://img.shields.io/github/forks/TheAlphamerc/flutter_twitter_clone?style=social) 
+## <img src="https://github.com/AbdulMalikDev/OU-Notes-Stacked-Architecture/blob/master/assets/images/Applogo.jpg?raw=true" width="48">OU Notes [Osmania University (O.U)] [![GitHub stars](https://img.shields.io/github/stars/AbdulMalikDev/ounotes?style=social)](https://github.com/login?return_to=%2FTheAlphamerc%flutter_twitter_clone) ![GitHub forks](https://img.shields.io/github/forks/AbdulMalikDev/ounotes?style=social) 
 ![Dart CI](https://github.com/TheAlphamerc/flutter_twitter_clone/workflows/Dart%20CI/badge.svg) ![GitHub pull requests](https://img.shields.io/github/issues-pr/TheAlphamerc/flutter_twitter_clone) ![GitHub closed pull requests](https://img.shields.io/github/issues-pr-closed/Thealphamerc/flutter_twitter_clone) ![GitHub last commit](https://img.shields.io/github/last-commit/Thealphamerc/flutter_twitter_clone)  ![GitHub issues](https://img.shields.io/github/issues-raw/Thealphamerc/flutter_twitter_clone) [![Open Source Love](https://badges.frapsoft.com/os/v2/open-source.svg?v=103)](https://github.com/Thealphamerc/flutter_twitter_clone) 
 
 
@@ -90,7 +90,7 @@ Notes Search Result             |  Question Paper Search Result     |Syllabus Se
 
 
 ## Getting started 
-* Project setup instructions are given at [Wiki](https://github.com/TheAlphamerc/flutter_twitter_clone/wiki/Gettings-Started) section.
+* Project setup instructions coming soon.
 
 ## Directory Structure
 <details>
@@ -223,7 +223,3 @@ and send a [pull request](https://github.com/AbdulMalikDev/OU-Notes-Stacked-Arch
 ## Created & Maintained By
 
 [Abdul Malik](https://github.com/AbdulMalikDev) And [Syed Wajid](https://github.com/syedwajid01)
-
-> If you found this project helpful or you learned something from the source code and want to thank me, consider buying me a cup of :coffee:
->
-> * [PayPal](https://paypal.me/shubhamsinghchahar/)
