@@ -144,21 +144,22 @@ class DownloadedQuestionPaperView extends StatelessWidget {
 }
 
 void showSnackBar(
-  BuildContext context,
-  String item,
-) {
-  Scaffold.of(context).showSnackBar(
-    SnackBar(
-      content: Wrap(
-        direction: Axis.vertical,
-        children: <Widget>[
-          Text("Removed $item",style: Theme.of(context).textTheme.bodyText1.copyWith(fontSize: 15),),
-          SizedBox(
-            width: 40,
+    BuildContext context,
+    String item,
+  ) {
+    Scaffold.of(context).showSnackBar(
+      SnackBar(
+        content: Container(
+          constraints: BoxConstraints(maxWidth: 300),
+          child: Text(
+            "REMOVED $item",
+            style: Theme.of(context)
+                .textTheme
+                .subtitle1
+                .copyWith(fontSize: 15, color: Colors.black),
           ),
-        ],
+        ),
+        duration: Duration(seconds: 1),
       ),
-      duration: Duration(seconds: 1),
-    ),
-  );
-}
+    );
+  }

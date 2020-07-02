@@ -146,24 +146,22 @@ class DownloadedSyllabusView extends StatelessWidget {
 }
 
 void showSnackBar(
-  BuildContext context,
-  String item,
-) {
-  Scaffold.of(context).showSnackBar(
-    SnackBar(
-      content: Wrap(
-        direction: Axis.vertical,
-        children: <Widget>[
-          Text(
-            "Removed  $item",
-            style: Theme.of(context).textTheme.subtitle1.copyWith(fontSize: 15),
+    BuildContext context,
+    String item,
+  ) {
+    Scaffold.of(context).showSnackBar(
+      SnackBar(
+        content: Container(
+          constraints: BoxConstraints(maxWidth: 300),
+          child: Text(
+            "REMOVED $item",
+            style: Theme.of(context)
+                .textTheme
+                .subtitle1
+                .copyWith(fontSize: 15, color: Colors.black),
           ),
-          SizedBox(
-            width: 40,
-          ),
-        ],
+        ),
+        duration: Duration(seconds: 1),
       ),
-      duration: Duration(seconds: 1),
-    ),
-  );
-}
+    );
+  }

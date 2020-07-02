@@ -54,7 +54,9 @@ class QuestionPapersViewModel extends BaseViewModel {
     setBusy(false);
   }
 
-  getListOfQpInDownloads(String subName,) {
+  getListOfQpInDownloads(
+    String subName,
+  ) {
     List<Download> downloadsbysub = [];
     downloadedQp.forEach((download) {
       if (download.subjectName == subName) {
@@ -65,7 +67,8 @@ class QuestionPapersViewModel extends BaseViewModel {
   }
 
   String filePath;
-  Future<bool> checkQPInDownloads(String year, String subname,String title) async {
+  Future<bool> checkQPInDownloads(
+      String year, String subname, String title) async {
     await _downloadService.fetchAndSetDownloads();
     List<Download> allDownloads = _downloadService.downloadlist;
     allDownloads.forEach((download) {
@@ -77,8 +80,8 @@ class QuestionPapersViewModel extends BaseViewModel {
       // log.e(downloadedQp[i].filename);
       // log.e(title);
       if (downloadedQp[i].year == year &&
-          downloadedQp[i].subjectName == subname
-          && downloadedQp[i].filename == title) {
+          downloadedQp[i].subjectName == subname &&
+          downloadedQp[i].filename == title) {
         filePath = downloadedQp[i].path;
         notifyListeners();
         return true;
@@ -93,7 +96,7 @@ class QuestionPapersViewModel extends BaseViewModel {
     String subName,
     String type,
   }) async {
-    checkQPInDownloads(note.year, subName , note.title).then((value) async {
+    checkQPInDownloads(note.year, subName, note.title).then((value) async {
       if (value) {
         _navigationService.navigateTo(
           Routes.pdfScreenRoute,
@@ -101,6 +104,7 @@ class QuestionPapersViewModel extends BaseViewModel {
         );
       } else {
         setLoading(true);
+
         String PDFpath = await _cloudStorageService.downloadFile(
           notesName: notesName,
           subName: subName,
