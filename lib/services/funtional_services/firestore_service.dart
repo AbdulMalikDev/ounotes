@@ -278,6 +278,8 @@ class FirestoreService {
                           if (doc.id.length > 5) {
                             await ref.document(doc.id).delete();
                             await _uploadLogCollectionReference.document(doc.id).delete();
+                            DocumentSnapshot docSnap = await _reportCollectionReference.document(doc.id).get();
+                            if(docSnap.exists){docSnap.reference.delete();}
 
                           }
                         } else {
