@@ -146,6 +146,7 @@ class CloudStorageService {
       StorageUploadTask uploadTask = _storageReference
           .child("pdfs/${note.subjectName}/$type/$fileName")
           .putFile(document);
+     
       // _storageReference.
       log.i("url : pdfs/${note.subjectName}/$type/$fileName");
       StorageTaskSnapshot storageSnap = await uploadTask.onComplete;
@@ -168,7 +169,7 @@ class CloudStorageService {
       if (e is PlatformException) error = e.message;
       error = e.toString();
       log.e(error);
-      return error;
+      return "error";
     }
   }
 

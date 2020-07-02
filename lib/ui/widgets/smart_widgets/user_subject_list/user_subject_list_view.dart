@@ -51,8 +51,11 @@ class UserSubjectListView extends StatelessWidget {
                         onDismissed: (direction) {
                           model.removeSubject(subject);
                           // // Then show a snackbar.
-                          //TODO Snackbar implement
-                          // showSnackBar(context, item, usersub, sub, index);
+
+                          showSnackBar(
+                            context,
+                            subject.name,
+                          );
                         },
                         background: Container(
                           //margin: EdgeInsets.symmetric(horizontal:10),
@@ -107,15 +110,6 @@ class UserSubjectListView extends StatelessWidget {
                               ),
                             ),
                             onTap: () {
-                              //TODO on tap logic to navigate to all documents screen
-                              // Navigator.of(context).push(
-                              //   MaterialPageRoute(
-                              //     builder: (context) => AllDocumentScreen(
-                              //       subname: widget.userSub[index].name,
-                              //       route: 'usersub',
-                              //     ),
-                              //   ),
-                              // );
                               model.onTap(subject.name);
                             },
                           ),
@@ -126,6 +120,27 @@ class UserSubjectListView extends StatelessWidget {
             );
           }),
       viewModelBuilder: () => UserSubjectListViewModel(),
+    );
+  }
+
+  void showSnackBar(
+    BuildContext context,
+    String item,
+  ) {
+    Scaffold.of(context).showSnackBar(
+      SnackBar(
+        content: Container(
+          constraints: BoxConstraints(maxWidth: 300),
+          child: Text(
+            "REMOVED $item",
+            style: Theme.of(context)
+                .textTheme
+                .subtitle1
+                .copyWith(fontSize: 15, color: Colors.black),
+          ),
+        ),
+        duration: Duration(seconds: 1),
+      ),
     );
   }
 }

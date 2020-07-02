@@ -139,6 +139,57 @@ class NotesViewModel extends BaseViewModel {
     return false;
   }
 
+  downloadFile({
+    String notesName,
+    String subName,
+    String type,
+    AbstractDocument note,
+  }) async {
+    log.i("notesName : $notesName");
+    log.i("Subject Name : $subName");
+    log.i("Type : $type");
+    try {
+      String fileUrl =
+          "https://storage.googleapis.com/ou-notes.appspot.com/pdfs/$subName/$type/$notesName";
+      log.i(Uri.parse(fileUrl));
+      //final filename = fileUrl.substring(url.lastIndexOf("/") + 1);
+      var request = await HttpClient().getUrl(Uri.parse(fileUrl));
+      var response = await request.close();
+      log.w("downloading");
+      var bytes = await consolidateHttpClientResponseBytes(
+        response,
+        onBytesReceived: (bytesReceived, expectedContentLength) {
+          if (expectedContentLength != null) {
+            // log.w("downloading" +
+            //     (bytesReceived / expectedContentLength * 100)
+            //         .toStringAsFixed(0) +
+            //     "%");
+            _progress = (bytesReceived / expectedContentLength * 100);
+            notifyListeners();
+          }
+        },
+      );
+
+      String dir = (await getApplicationDocumentsDirectory()).path;
+      String id = newCuid();
+      if (note.id == null || note.id.length == 0) {
+        note.setId = id;
+      }
+      note.setIsDownloaded = true;
+      File file = new File('$dir/$id');
+      await file.writeAsBytes(bytes);
+      log.i("file path: ${file.path}");
+      return file.path;
+    } catch (e) {
+      log.e("While retreiving Notes from Firebase STORAGE , Error occurred");
+      String error;
+      if (e is PlatformException) error = e.message;
+      error = e.toString();
+      log.e(error);
+      return error;
+    }
+  }
+
   void onTap({
     Note note,
     String notesName,
@@ -151,7 +202,8 @@ class NotesViewModel extends BaseViewModel {
             arguments: PDFScreenArguments(pathPDF: filePath, title: notesName));
       } else {
         setLoading(true);
-        String PDFpath = await _cloudStorageService.downloadFile(
+       
+        String PDFpath = await downloadFile(
           notesName: notesName,
           subName: subName,
           type: type,

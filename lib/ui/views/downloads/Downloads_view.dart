@@ -101,7 +101,7 @@ Widget noDownloadsOverlay(BuildContext context) {
   return Center(
     child: Text(
       "Your downloads will appear here",
-      style: Theme.of(context).textTheme.bodyText1.copyWith(fontSize: 16),
+      style: Theme.of(context).textTheme.headline5.copyWith(fontSize: 16),
     ),
   );
 }
