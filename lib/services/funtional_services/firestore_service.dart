@@ -170,7 +170,7 @@ class FirestoreService {
 
   loadReportsFromFirebase() async {
     try {
-      QuerySnapshot snapshot = await _reportCollectionReference.getDocuments();
+      QuerySnapshot snapshot = await _reportCollectionReference.orderBy("date",descending: true).getDocuments();
       List<Report> reports =
           snapshot.documents.map((doc) => Report.fromData(doc.data)).toList();
       return reports;
@@ -183,7 +183,7 @@ class FirestoreService {
   loadUploadLogFromFirebase() async {
     try {
       QuerySnapshot snapshot =
-          await _uploadLogCollectionReference.getDocuments();
+          await _uploadLogCollectionReference.orderBy("uploadedAt",descending: true).getDocuments();
       List<UploadLog> uploadLogs = snapshot.documents
           .map((doc) => UploadLog.fromData(doc.data))
           .toList();
@@ -255,6 +255,7 @@ class FirestoreService {
         "title": doc.title,
         "type": doc.type,
         "reports": FieldValue.increment(1),
+        "date" : DateTime.now(), 
       });
       DocumentSnapshot docSnap =
           await _reportCollectionReference.document(doc.id).get();
