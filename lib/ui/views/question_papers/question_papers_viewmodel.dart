@@ -9,6 +9,7 @@ import 'package:FSOUNotes/models/question_paper.dart';
 import 'package:FSOUNotes/services/funtional_services/cloud_storage_service.dart';
 import 'package:FSOUNotes/services/funtional_services/firestore_service.dart';
 import 'package:FSOUNotes/services/state_services/download_service.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:logger/logger.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
@@ -111,6 +112,13 @@ class QuestionPapersViewModel extends BaseViewModel {
           type: type,
           note: note,
         );
+          if (PDFpath == 'error') {
+          await Fluttertoast.showToast(
+              msg:
+                  'An error has occurred while downloading document...Please Verify your internet connection.');
+          setLoading(false);
+          return;
+        }
         _downloadService.addDownload(
           id: note.id,
           year: note.year,

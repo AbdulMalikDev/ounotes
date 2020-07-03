@@ -3,11 +3,19 @@ import 'package:FSOUNotes/ui/views/admin/upload_log/upload_log_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
-class UploadLogView extends StatelessWidget {
+class UploadLogView extends StatefulWidget {
   const UploadLogView({Key key}) : super(key: key);
 
   @override
+  _UploadLogViewState createState() => _UploadLogViewState();
+}
+
+class _UploadLogViewState extends State<UploadLogView>
+    with AutomaticKeepAliveClientMixin {
+  @override
   Widget build(BuildContext context) {
+    super.build(context);
+    var theme = Theme.of(context);
     return ViewModelBuilder<UploadLogViewModel>.reactive(
       builder: (context, model, child) => Scaffold(
         body: Container(
@@ -34,8 +42,9 @@ class UploadLogView extends StatelessWidget {
                           return Container(
                             //height: 300,
                             margin: EdgeInsets.symmetric(
-                                horizontal: 20, vertical: 20),
+                                horizontal: 20, vertical: 10),
                             child: Card(
+                              color: Theme.of(context).colorScheme.background,
                               elevation: 10,
                               child: ListTile(
                                 contentPadding: EdgeInsets.all(15),
@@ -43,20 +52,36 @@ class UploadLogView extends StatelessWidget {
                                   crossAxisAlignment:
                                       CrossAxisAlignment.start,
                                   children: <Widget>[
-                                    Text("File Name : " + logItem.fileName),
-                                    Text(""),
-                                    Text("FileType : " + logItem.type),
-                                    Text(""),
-                                    Text("Subject Name :" +
-                                        logItem.subjectName),
-                                    Text(""),
-                                    Text("Email of Uploader : " +
-                                        logItem.email),
-                                    Text(""),
-                                    Text("UploadedAt : " +
-                                        logItem.date.toString()),
-                                    Text(""),
-                                    Text("Size : " + logItem.size ?? "0"),
+                                    Text(
+                                      "File Name : " + logItem.fileName,
+                                      style: theme.textTheme.subtitle1
+                                          .copyWith(fontSize: 18),
+                                    ),
+                                    Text(
+                                      "FileType : " + logItem.type,
+                                      style: theme.textTheme.subtitle1
+                                          .copyWith(fontSize: 18),
+                                    ),
+                                    Text(
+                                      "Subject Name :" + logItem.subjectName,
+                                      style: theme.textTheme.subtitle1
+                                          .copyWith(fontSize: 18),
+                                    ),
+                                    Text(
+                                      "Email of Uploader : " + logItem.email,
+                                      style: theme.textTheme.subtitle1
+                                          .copyWith(fontSize: 18),
+                                    ),
+                                    Text(
+                                      "UploadedAt : " + logItem.date.toString(),
+                                      style: theme.textTheme.subtitle1
+                                          .copyWith(fontSize: 18),
+                                    ),
+                                    Text(
+                                      "Size : " + logItem.size ?? "0",
+                                      style: theme.textTheme.subtitle1
+                                          .copyWith(fontSize: 18),
+                                    ),
                                   ],
                                 ),
                                 onTap: () async {
@@ -78,4 +103,7 @@ class UploadLogView extends StatelessWidget {
       viewModelBuilder: () => UploadLogViewModel(),
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }

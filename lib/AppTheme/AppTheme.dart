@@ -34,6 +34,7 @@ class AppTheme {
         background: Colors.grey.shade300,
         //used for text in notes
         onSurface: Colors.grey[700],
+        onBackground: Colors.grey[600],
         ),
     textTheme: ThemeData.light().textTheme.copyWith(
           headline5: TextStyle(
@@ -80,6 +81,7 @@ class AppTheme {
       secondary: Color(0xfff29a94),
       background: Colors.grey[800],
       onSurface: Colors.white60,
+      onBackground: Colors.grey,
     ),
     cardTheme: CardTheme(
       shadowColor: Colors.white38,
@@ -87,6 +89,7 @@ class AppTheme {
     ),
     iconTheme: IconThemeData(
       color: Colors.white,
+
     ),
     accentIconTheme: IconThemeData(color: Colors.grey[850]),
     textTheme: ThemeData.light().textTheme.copyWith(

@@ -24,25 +24,29 @@ class SubjectsService with ChangeNotifier {
         branch: ["s"], id: 12, name: "ljsdlf", semester: [1, 2])
   ];
 
-  ValueNotifier<List<Subject>> _userSubjects = new ValueNotifier(new List<Subject>());
+  ValueNotifier<List<Subject>> _userSubjects =
+      new ValueNotifier(new List<Subject>());
 
   ValueNotifier<List<Subject>> get userSubjects => _userSubjects;
 
-  ValueNotifier<List<Subject>> _allSubjects = new ValueNotifier(new List<Subject>());
+  ValueNotifier<List<Subject>> _allSubjects =
+      new ValueNotifier(new List<Subject>());
 
   ValueNotifier<List<Subject>> get allSubjects => _allSubjects;
 
   addUserSubject(Subject subject) async {
-    if(_userSubjects.value.firstWhere((element) => element.name.toLowerCase() == subject.name.toLowerCase(),orElse: ()=>null)!=null)
-    {
-
+    if (_userSubjects.value.firstWhere(
+            (element) =>
+                element.name.toLowerCase() == subject.name.toLowerCase(),
+            orElse: () => null) !=
+        null) {
       return "Repeated";
     }
     List<Subject> subs = _userSubjects.value;
     subs.add(subject);
     _userSubjects.value = subs;
     List<Subject> subsr = _allSubjects.value;
-    subsr.removeWhere((sub)=>sub==subject);
+    subsr.removeWhere((sub) => sub == subject);
     _allSubjects.value = subsr;
     _userSubjects.notifyListeners();
     _allSubjects.notifyListeners();
@@ -58,6 +62,23 @@ class SubjectsService with ChangeNotifier {
     _allSubjects.value = subsr;
     _userSubjects.notifyListeners();
     _allSubjects.notifyListeners();
+    await _saveStateToLocal();
+  }
+
+  removeUserSubjectAtIntex(int index) async {
+    List<Subject> subs = _userSubjects.value;
+    final Subject subject = subs.removeAt(index);
+    _userSubjects.value = subs;
+    _userSubjects.notifyListeners();
+    await _saveStateToLocal();
+    return subject;
+  }
+
+  insertUserSubject(int index, Subject subject) async {
+    List<Subject> subs = _userSubjects.value;
+    subs.insert(index, subject);
+    _userSubjects.value = subs;
+    _userSubjects.notifyListeners();
     await _saveStateToLocal();
   }
 
