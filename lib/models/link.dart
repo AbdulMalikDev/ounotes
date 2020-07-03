@@ -1,3 +1,4 @@
+import 'package:FSOUNotes/enums/constants.dart';
 import 'package:FSOUNotes/enums/enums.dart';
 import 'package:FSOUNotes/models/document.dart';
 import 'package:cuid/cuid.dart';
@@ -26,6 +27,7 @@ class Link extends AbstractDocument{
     subjectName  = data['subjectName'];
     path         = Document.Links;
     id           = data["id"] ?? getNewId();
+    type         = Constants.links;
   }
 
   getNewId(){

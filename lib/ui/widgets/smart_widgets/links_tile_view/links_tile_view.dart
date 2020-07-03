@@ -63,12 +63,7 @@ class LinksTileView extends StatelessWidget {
                     PopupMenuButton(
                       onSelected: (Menu selectedValue) {
                         if (selectedValue == Menu.Report) {
-                          model.reportNote(
-                            id: link.id,
-                            subjectName: link.subjectName,
-                            title: link.title,
-                            type: Constants.links,
-                          );
+                          model.reportNote(doc:link);
                         }
                       },
                       icon: Icon(Icons.more_vert),

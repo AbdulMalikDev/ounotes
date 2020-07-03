@@ -127,12 +127,8 @@ class QuestionPaperTileView extends StatelessWidget {
                                         PopupMenuButton(
                                           onSelected: (Menu selectedValue) {
                                             if (selectedValue == Menu.Report) {
-                                              model.reportNote(
-                                                id: note.id,
-                                                subjectName: note.subjectName,
-                                                title: note.title,
-                                                type: Constants.questionPapers,
-                                              );
+                                              model.reportNote(doc: note);
+                                          
                                             }
                                           },
                                           icon: Icon(Icons.more_vert),

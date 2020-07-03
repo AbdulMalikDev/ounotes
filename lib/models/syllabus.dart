@@ -52,7 +52,7 @@ class Syllabus extends AbstractDocument{
     title        = data["title"] ?? (data["semester"]??"") + (data["branch"]??"");
     subjectName  = data['subjectName'];
     url          = data['url'];
-    id           = data['id'].toString() ?? "";
+    id           = data['id'] ?? "";
     isDownloaded = data['isDownloaded'] ?? false;
     path         = Document.Syllabus;
     semester     = data["semester"];
@@ -84,6 +84,8 @@ class Syllabus extends AbstractDocument{
       "year"        : year,
     };
   }
+
+  
 
   set setId(String id){this.id = id;}
   set setIsDownloaded(bool id){this.isDownloaded = id;}

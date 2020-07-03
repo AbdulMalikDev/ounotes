@@ -15,8 +15,6 @@ class UploadLogViewModel extends FutureViewModel{
 
   fetchUploadLogs() async {
     _logs = await _firestoreService.loadUploadLogFromFirebase();
-    print("~~~~~~~~~~~~~~~~~~~~~~~~");
-    print(_logs);
   }
 
   @override

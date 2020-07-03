@@ -15,8 +15,6 @@ class ReportViewModel extends FutureViewModel {
 
   fetchReports() async {
     _reports = await _firestoreService.loadReportsFromFirebase();
-    print("~~~~~~~~~~~~~~~~~~~~~~~~");
-    print(_reports);
   }
 
   @override
