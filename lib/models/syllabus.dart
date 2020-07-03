@@ -13,7 +13,6 @@ class Syllabus extends AbstractDocument{
 
   //For Syllabus , the title is the year + branch
   String title;
-
   String subjectName;
   String size;
   String url;
@@ -21,7 +20,6 @@ class Syllabus extends AbstractDocument{
   bool isDownloaded = false;
   Document note;
   Document path;
-
   String semester;
   String branch;
   String year;
@@ -58,8 +56,7 @@ class Syllabus extends AbstractDocument{
     semester     = data["semester"];
     branch       = data["branch"];
     type         = Constants.syllabus;
-    year         = data["year"] ?? "";
-
+    year         = !(data["year"] is String)?data['year'].toString():data['year']?? "";
     } catch (e) {
       log.e("While DESERIALIZING syllabus model from Firebase , Error occurred");
       String error;

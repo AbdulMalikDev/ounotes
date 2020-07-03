@@ -21,7 +21,7 @@ class SyllabusTileView extends StatelessWidget {
     final primary = Theme.of(context).colorScheme.onPrimary;
     final String title = syllabus.subjectName;
     final String semester = syllabus.semester;
-    final String branch = syllabus.branch.toUpperCase();
+    final String branch = syllabus.branch.toUpperCase()??'';
     return ViewModelBuilder<SyllabusTileViewModel>.reactive(
         onModelReady: (model) =>
             model.checkIfSyllabusIsDownloaded(downloadedsyllabus, syllabus),
