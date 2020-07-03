@@ -88,7 +88,7 @@ class UserSubjectListView extends StatelessWidget {
                         ),
                         child: Container(
                           margin: EdgeInsets.only(
-                            left: 10,
+                            left: 0,
                             top: 10,
                           ),
                           //color: Colors.yellow,
@@ -100,17 +100,44 @@ class UserSubjectListView extends StatelessWidget {
                               child: Text(subject.name,
                                   overflow: TextOverflow.clip,
                                   style: theme.textTheme.subtitle1
-                                      .copyWith(fontSize: 18)),
+                                      .copyWith(fontSize: 17)),
                             ),
-                            leading: CircleAvatar(
-                              backgroundColor: Theme.of(context).primaryColor,
-                              child: Text(
-                                subject.name.substring(0, 1).toUpperCase(),
-                                style: theme.appBarTheme.textTheme.headline6
-                                    .copyWith(
-                                        fontSize: 17,
-                                        fontWeight: FontWeight.normal),
-                              ),
+                            leading: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: <Widget>[
+                                Container(
+                                  width: 8,
+                                  padding: EdgeInsets.all(0),
+                                  margin: EdgeInsets.all(0),
+                                  child: Icon(
+                                    Icons.more_vert,
+                                    color: theme.colorScheme.onBackground,
+                                  ),
+                                ),
+                                Container(
+                                  padding: EdgeInsets.all(0),
+                                  margin: EdgeInsets.all(0),
+                                  child: Icon(
+                                    Icons.more_vert,
+                                    color:theme.colorScheme.onBackground,
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                CircleAvatar(
+                                  backgroundColor:
+                                      Theme.of(context).primaryColor,
+                                  child: Text(
+                                    subject.name.substring(0, 1).toUpperCase(),
+                                    style: theme.appBarTheme.textTheme.headline6
+                                        .copyWith(
+                                            fontSize: 17,
+                                            fontWeight: FontWeight.normal),
+                                  ),
+                                ),
+                              ],
                             ),
                             onTap: () {
                               model.onTap(subject.name);
