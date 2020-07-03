@@ -244,6 +244,7 @@ class FirestoreService {
                     reportNote({Report report , AbstractDocument doc}) async {
                       try {
                         Map<String , dynamic> data = report.toJson();
+                        
                         data.addAll({
                           "id" : doc.id,
                           "title" : doc.title,

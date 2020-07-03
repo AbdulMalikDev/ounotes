@@ -42,7 +42,7 @@ class ReportsService{
 
       _isReportExist(Report report)
       {
-        var isExist = _reports.firstWhere((element) => element.title == report.title , orElse: () => null);
+        var isExist = _reports.firstWhere((element) => element.title == report.title && element.type == report.type && element.subjectName==element.subjectName  , orElse: () => null);
         return isExist != null;
       }
 }

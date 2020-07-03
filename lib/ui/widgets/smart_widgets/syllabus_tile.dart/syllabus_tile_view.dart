@@ -112,11 +112,7 @@ class SyllabusTileView extends StatelessWidget {
                                     PopupMenuButton(
                                       onSelected: (Menu selectedValue) {
                                         if (selectedValue == Menu.Report) {
-                                          model.reportNote(
-                                            id: syllabus.id,
-                                            subjectName: syllabus.subjectName,
-                                            title: syllabus.title,
-                                            type: Constants.syllabus,
+                                          model.reportNote(doc: syllabus
                                           );
                                         }
                                       },
