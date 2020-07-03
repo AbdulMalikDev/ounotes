@@ -50,7 +50,7 @@ class Syllabus extends AbstractDocument{
     title        = data["title"] ?? (data["semester"]??"") + (data["branch"]??"");
     subjectName  = data['subjectName'];
     url          = data['url'];
-    id           = data['id'] ?? "";
+    id           = !(data['id'] is String)?data['id'].toString():data['id']?? "";
     isDownloaded = data['isDownloaded'] ?? false;
     path         = Document.Syllabus;
     semester     = data["semester"];
