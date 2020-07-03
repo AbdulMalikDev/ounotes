@@ -3,20 +3,17 @@ import 'package:FSOUNotes/app/locator.dart';
 import 'package:FSOUNotes/app/logger.dart';
 import 'package:FSOUNotes/app/router.gr.dart';
 import 'package:FSOUNotes/enums/constants.dart';
-import 'package:FSOUNotes/enums/enums.dart';
 import 'package:FSOUNotes/models/document.dart';
 import 'package:FSOUNotes/models/download.dart';
 import 'package:FSOUNotes/models/notes.dart';
 import 'package:FSOUNotes/models/vote.dart';
-import 'package:FSOUNotes/services/funtional_services/cloud_storage_service.dart';
 import 'package:FSOUNotes/services/funtional_services/firestore_service.dart';
 import 'package:FSOUNotes/services/state_services/download_service.dart';
 import 'package:FSOUNotes/services/state_services/vote_service.dart';
 import 'package:cuid/cuid.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:logger/logger.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:stacked/stacked.dart';
@@ -28,12 +25,10 @@ class NotesViewModel extends BaseViewModel {
   String table = 'uservoted_subjects';
   List<Vote> userVotedNotesList = [];
   List<Download> downloadedNotes = [];
-  List<Note> _notes = [];
-  CloudStorageService _cloudStorageService = locator<CloudStorageService>();
+  var _notes;
   NavigationService _navigationService = locator<NavigationService>();
   DownloadService _downloadService = locator<DownloadService>();
   VoteServie _voteServie = locator<VoteServie>();
-  DialogService _dialogService = locator<DialogService>();
   double _progress = 0;
   double get progress => _progress;
   String _notetitle = '';
@@ -54,6 +49,11 @@ class NotesViewModel extends BaseViewModel {
   Future fetchNotesAndVotes(String subjectName) async {
     setBusy(true);
     _notes = await _firestoreService.loadNotesFromFirebase(subjectName);
+    if (_notes == 'error') {
+      await Fluttertoast.showToast(
+          msg: "Please verify your internet connection");
+      return;
+    }
     await _voteServie.fetchAndSetVotes();
     await _downloadService.fetchAndSetDownloads();
     userVotedNotesList = _voteServie.userVotesList;
@@ -72,42 +72,6 @@ class NotesViewModel extends BaseViewModel {
     });
     return downloadsbysub;
   }
-
-  // showDialogOfProgress(BuildContext context) {
-  //   showDialog(
-  //       context: context,
-  //       builder: (BuildContext context) {
-  //         return AlertDialog(
-  //           shape:
-  //               RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-  //           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-  //           title: Row(
-  //             mainAxisSize: MainAxisSize.min,
-  //             children: <Widget>[
-  //               Text(
-  //                 "Note",
-  //                 style: Theme.of(context)
-  //                     .textTheme
-  //                     .headline6
-  //                     .copyWith(fontSize: 18),
-  //               ),
-  //             ],
-  //           ),
-  //           content: Column(
-  //             mainAxisSize: MainAxisSize.min,
-  //             children: <Widget>[
-  //               Text(
-  //                 "File is downloading",
-  //                 style: Theme.of(context)
-  //                     .textTheme
-  //                     .subtitle1
-  //                     .copyWith(fontSize: 18),
-  //               ),
-  //             ],
-  //           ),
-  //         );
-  //       });
-  // }
 
   getListOfVoteBySub(String subname) {
     List<Vote> votesbySub = [];
@@ -186,7 +150,7 @@ class NotesViewModel extends BaseViewModel {
       if (e is PlatformException) error = e.message;
       error = e.toString();
       log.e(error);
-      return error;
+      return "error";
     }
   }
 
@@ -201,14 +165,22 @@ class NotesViewModel extends BaseViewModel {
         _navigationService.navigateTo(Routes.pdfScreenRoute,
             arguments: PDFScreenArguments(pathPDF: filePath, title: notesName));
       } else {
+        _progress = 0;
+        notifyListeners();
         setLoading(true);
-       
         String PDFpath = await downloadFile(
           notesName: notesName,
           subName: subName,
           type: type,
           note: note,
         );
+        if (PDFpath == 'error') {
+          await Fluttertoast.showToast(
+              msg:
+                  'An error has occurred while downloading document...Please Verify your internet connection.');
+          setLoading(false);
+          return;
+        }
         _firestoreService.incrementView(note);
         _downloadService.addDownload(
           path: PDFpath,

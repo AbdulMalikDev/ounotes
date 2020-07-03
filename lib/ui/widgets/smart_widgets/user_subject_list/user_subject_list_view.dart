@@ -20,13 +20,17 @@ class UserSubjectListView extends StatelessWidget {
               margin: EdgeInsets.only(bottom: 20),
               height: App(context).appScreenHeightWithOutSafeArea(0.84),
               width: App(context).appScreenWidthWithOutSafeArea(1),
-              child: ListView.builder(
-                  scrollDirection: Axis.vertical,
-                  shrinkWrap: true,
-                  itemCount: userSubjects.length,
-                  itemBuilder: (context, index) {
+              child: ReorderableListView(
+                scrollDirection: Axis.vertical,
+                onReorder: (int oldIndex, int newIndex) {
+                  model.updateMyItems(oldIndex, newIndex);
+                },
+                children: List.generate(
+                  userSubjects.length,
+                  (index) {
                     Subject subject = userSubjects[index];
                     return Container(
+                      key: ValueKey('value$index'),
                       height: App(context).appScreenHeightWithOutSafeArea(0.13),
                       margin: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
                       alignment: Alignment.bottomCenter,
@@ -50,7 +54,6 @@ class UserSubjectListView extends StatelessWidget {
                         key: UniqueKey(),
                         onDismissed: (direction) {
                           model.removeSubject(subject);
-                          // // Then show a snackbar.
 
                           showSnackBar(
                             context,
@@ -116,7 +119,9 @@ class UserSubjectListView extends StatelessWidget {
                         ),
                       ),
                     );
-                  }),
+                  },
+                ),
+              ),
             );
           }),
       viewModelBuilder: () => UserSubjectListViewModel(),

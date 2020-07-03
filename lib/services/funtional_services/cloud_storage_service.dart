@@ -88,7 +88,7 @@ class CloudStorageService {
       if (e is PlatformException) error = e.message;
       error = e.toString();
       log.e(error);
-      return error;
+      return "error";
     }
   }
 
