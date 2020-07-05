@@ -31,6 +31,7 @@
 .pub/
 /build/
 
+
 # Web related
 lib/generated_plugin_registrant.dart
 
@@ -42,3 +43,9 @@ app.*.map.json
 
 # Exceptions to above rules.
 !/packages/flutter_tools/test/data/dart_dependencies_test/**/.packages
+
+
+.env
+/android/app/google-services.json
+/lib/enums/confidential.dart
+contibuting.txt
