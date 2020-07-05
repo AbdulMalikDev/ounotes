@@ -44,7 +44,6 @@ class DownloadService {
   Future<List<Download>> fetchAndSetDownloads() async {
     DBService _dbservie = locator<DBService>();
     final dataList = await _dbservie.getData(table);
-    print(dataList);
     _downloads = dataList
         .map((item) => Download(
               id: item['id'],

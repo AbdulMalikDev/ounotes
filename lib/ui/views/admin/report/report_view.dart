@@ -40,7 +40,6 @@ class _ReportViewState extends State<ReportView>
                         itemCount: model.reports.length,
                         itemBuilder: (ctx, index) {
                           Report report = model.reports[index];
-                          print(model.data);
                           return Container(
                             margin: EdgeInsets.symmetric(
                                 horizontal: 20, vertical: 10),

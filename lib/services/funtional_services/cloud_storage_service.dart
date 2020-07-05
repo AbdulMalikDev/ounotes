@@ -97,7 +97,6 @@ class CloudStorageService {
       // final dir = await _localPath;
       final file = File('$path');
       file.deleteSync(recursive: true);
-      print('file deleted');
     } catch (e) {
       // If encountering an error, return
       return 'Error!';
@@ -124,7 +123,6 @@ class CloudStorageService {
       File document = await _filePickerService.selectFile();
       String mimeStr = lookupMimeType(document.path);
       var fileType = mimeStr.split('/').last;
-      print('file type $fileType');
       if (fileType != 'pdf') {
         return 'file is not pdf';
       }
@@ -175,7 +173,6 @@ class CloudStorageService {
 
   static Future<String> get _localPath async {
     final directory = await getApplicationDocumentsDirectory();
-    print(directory.path);
     return directory.path;
   }
 

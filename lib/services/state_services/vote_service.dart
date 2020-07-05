@@ -28,7 +28,6 @@ class VoteServie {
   Future<void> fetchAndSetVotes() async {
     DBService _dbservie = locator<DBService>();
     final dataList = await _dbservie.getData(table);
-    print(dataList);
     userVotedNotes = dataList
         .map(
           (item) => Vote(
@@ -39,8 +38,6 @@ class VoteServie {
           ),
         )
         .toList();
-    print('votess......');
-    print(userVotedNotes);
   }
 
   updateVotes(

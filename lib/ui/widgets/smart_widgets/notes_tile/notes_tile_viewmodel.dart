@@ -85,7 +85,6 @@ class NotesTileViewModel extends BaseViewModel {
         }
       }
     }
-    print(_vote);
     notifyListeners();
   }
 

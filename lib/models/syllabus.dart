@@ -50,13 +50,14 @@ class Syllabus extends AbstractDocument{
     title        = data["title"] ?? (data["semester"]??"") + (data["branch"]??"");
     subjectName  = data['subjectName'];
     url          = data['url'];
-    id           = !(data['id'] is String)?data['id'].toString():data['id']?? "";
+    id           = data['id'].toString() ?? "";
     isDownloaded = data['isDownloaded'] ?? false;
     path         = Document.Syllabus;
     semester     = data["semester"];
     branch       = data["branch"];
     type         = Constants.syllabus;
-    year         = !(data["year"] is String)?data['year'].toString():data['year']?? "";
+    year         = data["year"] ?? "";
+
     } catch (e) {
       log.e("While DESERIALIZING syllabus model from Firebase , Error occurred");
       String error;

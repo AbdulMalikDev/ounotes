@@ -40,7 +40,6 @@ class SuggestionListView extends StatelessWidget {
             ),
           ),
           onTap: () async {
-            print(suggestion);
             onSelected(suggestion);
           },
         );

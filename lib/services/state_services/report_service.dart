@@ -32,9 +32,6 @@ class ReportsService{
         }else{
 
         _reports.add(report);
-        print(_reports!=null);
-        print(_reports.contains(report));
-        print(reports);
         await prefs.storeReport(_reports);
         return true;
         }

@@ -27,8 +27,6 @@ class SharedPreferencesService{
   {
     SharedPreferences prefs = await store();
     log.i("User saved locally");
-    print(user.semester);
-    print(json.encode(user.toJson()));
     prefs.setString("current_user",json.encode(user.toJson()));
   }
 
@@ -40,9 +38,7 @@ class SharedPreferencesService{
     else{
     log.i("User retreived from storage");
     var user = User.fromData(json.decode(prefs.getString("current_user")));
-    print(user==null);
     if(user==null){return false;}
-    print(user.semester!=null&&user.branch!=null);
     if(user.semester!=null&&user.branch!=null){_authenticationService.setUser = user;}
     else{return false;}
     

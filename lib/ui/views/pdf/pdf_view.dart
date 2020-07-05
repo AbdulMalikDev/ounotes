@@ -8,7 +8,6 @@ class PDFScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(pathPDF);
     //* The app bar is a bit annoying when in landscape
     bool isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
     return PDFViewerScaffold(

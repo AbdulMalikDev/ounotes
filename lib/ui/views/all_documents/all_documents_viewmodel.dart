@@ -1,6 +1,7 @@
 import 'package:FSOUNotes/app/locator.dart';
 import 'package:FSOUNotes/app/router.gr.dart';
 import 'package:FSOUNotes/services/funtional_services/sharedpref_service.dart';
+import 'package:FSOUNotes/utils/permission_handler.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
@@ -11,6 +12,7 @@ class AllDocumentsViewModel extends BaseViewModel {
   SharedPreferencesService _sharedPreferencesService =
       locator<SharedPreferencesService>();
   DialogService _dialogService = locator<DialogService>();
+  PermissionHandler _permissionHandler = locator<PermissionHandler>();
 
   String _subjectName;
 
@@ -24,10 +26,10 @@ class AllDocumentsViewModel extends BaseViewModel {
   }
 
   handleStartup(BuildContext context) async {
+    await _permissionHandler.askPermission();
    bool shouldShow = await _sharedPreferencesService.shouldIShowIntroDialog();
-   print(shouldShow);
    if (shouldShow) {
-      showDialog(
+      await showDialog(
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
