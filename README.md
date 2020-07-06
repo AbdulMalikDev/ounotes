@@ -59,23 +59,23 @@ and send a [pull request](https://github.com/AbdulMalikDev/OU-Notes-Stacked-Arch
 
 ## Screenshots
 
-![](https://github.com/AbdulMalikDev/OU-Notes-Stacked-Architecture/blob/master/screenshots/7.jpeg?raw=true)  |  ![](https://github.com/AbdulMalikDev/OU-Notes-Stacked-Architecture/blob/master/screenshots/3.jpeg?raw=true)|![](https://github.com/AbdulMalikDev/OU-Notes-Stacked-Architecture/blob/master/screenshots/8.jpeg?raw=true)|  ![](https://github.com/AbdulMalikDev/OU-Notes-Stacked-Architecture/blob/master/screenshots/4.jpeg?raw=true)
+![](/screenshots/7.jpeg?raw=true)    ![](/screenshots/3.jpeg?raw=true)![](/screenshots/8.jpeg?raw=true)  ![](/screenshots/4.jpeg?raw=true)
 
   
-![](https://github.com/AbdulMalikDev/OU-Notes-Stacked-Architecture/blob/master/screenshots/2.jpeg?raw=true)  |  ![](https://github.com/AbdulMalikDev/OU-Notes-Stacked-Architecture/blob/master/screenshots/6.jpeg?raw=true)|![](https://github.com/AbdulMalikDev/OU-Notes-Stacked-Architecture/blob/master/screenshots/9.jpeg?raw=true)|  ![](https://github.com/AbdulMalikDev/OU-Notes-Stacked-Architecture/blob/master/screenshots/21.jpeg?raw=true)
+![](/screenshots/2.jpeg?raw=true)    ![](/screenshots/6.jpeg?raw=true)![](/screenshots/9.jpeg?raw=true)  ![](/screenshots/21.jpeg?raw=true)
 
 
-![](https://github.com/AbdulMalikDev/OU-Notes-Stacked-Architecture/blob/master/screenshots/24.jpeg?raw=true)  |  ![](https://github.com/AbdulMalikDev/OU-Notes-Stacked-Architecture/blob/master/screenshots/23.jpeg?raw=true)|![](https://github.com/AbdulMalikDev/OU-Notes-Stacked-Architecture/blob/master/screenshots/22.jpeg?raw=true)|  ![](https://github.com/AbdulMalikDev/OU-Notes-Stacked-Architecture/blob/master/screenshots/25.jpeg?raw=true)
-
-    
-![](https://github.com/AbdulMalikDev/OU-Notes-Stacked-Architecture/blob/master/screenshots/28.jpeg?raw=true)  |  ![](https://github.com/AbdulMalikDev/OU-Notes-Stacked-Architecture/blob/master/screenshots/27.jpeg?raw=true)|![](https://github.com/AbdulMalikDev/OU-Notes-Stacked-Architecture/blob/master/screenshots/26.jpeg?raw=true)|  ![](https://github.com/AbdulMalikDev/OU-Notes-Stacked-Architecture/blob/master/screenshots/32.jpeg?raw=true)      
-![](https://github.com/AbdulMalikDev/OU-Notes-Stacked-Architecture/blob/master/screenshots/31.jpeg?raw=true)  |  ![](https://github.com/AbdulMalikDev/OU-Notes-Stacked-Architecture/blob/master/screenshots/30.jpeg?raw=true)|![](https://github.com/AbdulMalikDev/OU-Notes-Stacked-Architecture/blob/master/screenshots/29.jpeg?raw=true)|  ![](https://github.com/AbdulMalikDev/OU-Notes-Stacked-Architecture/blob/master/screenshots/20.jpeg?raw=true)
+![](/screenshots/24.jpeg?raw=true)    ![](/screenshots/23.jpeg?raw=true)![](/screenshots/22.jpeg?raw=true)  ![](/screenshots/25.jpeg?raw=true)
 
     
-![](https://github.com/AbdulMalikDev/OU-Notes-Stacked-Architecture/blob/master/screenshots/17.jpeg?raw=true)  |  ![](https://github.com/AbdulMalikDev/OU-Notes-Stacked-Architecture/blob/master/screenshots/14.jpeg?raw=true)|![](https://github.com/AbdulMalikDev/OU-Notes-Stacked-Architecture/blob/master/screenshots/12.jpeg?raw=true)|  ![](https://github.com/AbdulMalikDev/OU-Notes-Stacked-Architecture/blob/master/screenshots/1.jpeg?raw=true)
+![](/screenshots/28.jpeg?raw=true)    ![](/screenshots/27.jpeg?raw=true)![](/screenshots/26.jpeg?raw=true)  ![](/screenshots/32.jpeg?raw=true)      
+![](/screenshots/31.jpeg?raw=true)    ![](/screenshots/30.jpeg?raw=true)![](/screenshots/29.jpeg?raw=true)  ![](/screenshots/20.jpeg?raw=true)
+
+    
+![](/screenshots/17.jpeg?raw=true)    ![](/screenshots/14.jpeg?raw=true)![](/screenshots/12.jpeg?raw=true)  ![](/screenshots/1.jpeg?raw=true)
 
    
-![](https://github.com/AbdulMalikDev/OU-Notes-Stacked-Architecture/blob/master/screenshots/36.jpeg?raw=true)  |  ![](https://github.com/AbdulMalikDev/OU-Notes-Stacked-Architecture/blob/master/screenshots/35.jpeg?raw=true)|![](https://github.com/AbdulMalikDev/OU-Notes-Stacked-Architecture/blob/master/screenshots/34.jpeg?raw=true)|  ![](https://github.com/AbdulMalikDev/OU-Notes-Stacked-Architecture/blob/master/screenshots/33.jpeg?raw=true)
+![](/screenshots/36.jpeg?raw=true)    ![](/screenshots/35.jpeg?raw=true)![](/screenshots/34.jpeg?raw=true)  ![](/screenshots/33.jpeg?raw=true)
 
 
 
