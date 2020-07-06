@@ -1,4 +1,4 @@
-## <img src="https://github.com/AbdulMalikDev/OU-Notes-Stacked-Architecture/blob/master/assets/images/Applogo.jpg?raw=true" width="48">OU Notes [Osmania University (O.U)] [![GitHub stars](https://img.shields.io/github/stars/AbdulMalikDev/ounotes?style=social)](https://github.com/login?return_to=%2FTheAlphamerc%flutter_twitter_clone) ![GitHub forks](https://img.shields.io/github/forks/AbdulMalikDev/ounotes?style=social) 
+## <img src="https://github.com/AbdulMalikDev/OU-Notes-Stacked-Architecture/blob/master/assets/images/Applogo.jpg?raw=true" width="48">OU Notes [Osmania University (O.U)] [![GitHub stars](https://img.shields.io/github/stars/AbdulMalikDev/ounotes?style=social)](https://github.com/login?return_to=%2FTheAlphamerc%flutter_twitter_clone) ![GitHub forks](https://img.shields.io/github/forks/AbdulMalikDev/ounotes?style=social)    
 ![Dart CI](https://github.com/TheAlphamerc/flutter_twitter_clone/workflows/Dart%20CI/badge.svg) ![GitHub pull requests](https://img.shields.io/github/issues-pr/AbdulMalikDev/ounotes) ![GitHub closed pull requests](https://img.shields.io/github/issues-pr-closed/AbdulMalikDev/ounotes) ![GitHub last commit](https://img.shields.io/github/last-commit/AbdulMalikDev/ounotes)  ![GitHub issues](https://img.shields.io/github/issues-raw/AbdulMalikDev/ounotes) [![Open Source Love](https://badges.frapsoft.com/os/v2/open-source.svg?v=103)](https://github.com/Thealphamerc/flutter_twitter_clone) 
 
 
@@ -35,7 +35,7 @@ An Application for Osmania University students to access educational material at
 * [stacked](https://pub.dev/packages/stacked)
 * [share](https://pub.dev/packages/share)
 * [stacked_services](https://pub.dev/packages/stacked_services)
-* [url_launcher](https://pub.dev/packages/url_launcher)
+* [url_launcher](https://pub.dev/packages/url_launcher)                                                                             
 * [google_fonts](https://pub.dev/packages/google_fonts)
 * [file_picker](https://pub.dev/packages/file_picker)
 * [firebase_auth](https://pub.dev/packages/firebase_auth)
@@ -50,12 +50,16 @@ An Application for Osmania University students to access educational material at
 ## Contributing
 
 If you wish to contribute a change to any of the existing feature or add new in this repo,
-please review our [contribution guide](https://github.com/AbdulMalikDev/OU-Notes-Stacked-Architecture/blob/master/CONTRIBUTING.md),
-and send a [pull request](https://github.com/AbdulMalikDev/OU-Notes-Stacked-Architecture/pulls). I welcome and encourage all pull requests. It usually will take me within 24-48 hours to respond to any issue or request.
+please review our [contribution guide](https://github.com/AbdulMalikDev/ounotes/blob/master/CONTRIBUTING.md),
+and send a [pull request](https://github.com/AbdulMalikDev/ounotes/pulls). I welcome and encourage all pull requests. It usually will take me within 24-48 hours to respond to any issue or request.
 
 ## Created & Maintained By
 
 [Abdul Malik](https://github.com/AbdulMalikDev) And [Syed Wajid](https://github.com/syedwajid01)
+
+## Follow us on Instagram
+
+<a href="https://www.google.com"><img src="/screenshots/ss.png" width="48"><a/>
 
 ## Screenshots
 
