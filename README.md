@@ -59,62 +59,25 @@ and send a [pull request](https://github.com/AbdulMalikDev/OU-Notes-Stacked-Arch
 
 ## Screenshots
 
-<div style="text-align: center">
-	<table>
-		<tr>
-<!-- 			<td style="text-align: center"><img src="/screenshots/7.png?raw=true" width="200"/></td>
-			<td style="text-align: center"><img src="/screenshots/3.png?raw=true" width="210"/></td> -->
-		</tr>
-		<tr>
-			<td style="text-align: center"><img src="/screenshots/8.png?raw=true" width="200"/></td>
-<!-- 			<td style="text-align: center"><img src="/screenshots/4.png?raw=true" width="210"/></td> -->
-		</tr>
-		<tr>
-			<td style="text-align: center"><img src="/screenshots/2.png?raw=true" width="210"/></td>
-<!-- 			<td style="text-align: center"><img src="/screenshots/6.png?raw=true" width="210"/></td> -->
-		</tr>
-		<tr>
-			<td style="text-align: center"><img src="/screenshots/24.png?raw=true" width="210"/></td>
-<!-- 			<td style="text-align: center"><img src="/screenshots/23.png?raw=true" width="210"/></td> -->
-		</tr>
-  <tr>
-			<td style="text-align: center"><img src="/screenshots/22.png?raw=true" width="210"/></td>
-<!-- 			<td style="text-align: center"><img src="/screenshots/25.png?raw=true" width="210"/></td> -->
-		</tr>
-  <tr>
-			<td style="text-align: center"><img src="/screenshots/28.png?raw=true" width="210"/></td>
-<!-- 			<td style="text-align: center"><img src="/screenshots/27.png?raw=true" width="210"/></td> -->
-		</tr>
-  <tr>
-			<td style="text-align: center"><img src="/screenshots/26.png?raw=true" width="210"/></td>
-<!-- 			<td style="text-align: center"><img src="/screenshots/32.png?raw=true" width="210"/></td> -->
-		</tr>
-  <tr>
-			<td style="text-align: center"><img src="/screenshots/31.png?raw=true" width="210"/></td>
-<!-- 			<td style="text-align: center"><img src="/screenshots/30.png?raw=true" width="210"/></td> -->
-		</tr>
-  <tr>
-			<td style="text-align: center"><img src="/screenshots/29.png?raw=true" width="210"/></td>
-<!-- 			<td style="text-align: center"><img src="/screenshots/20.png?raw=true" width="210"/></td> -->
-		</tr>
-  <tr>
-			<td style="text-align: center"><img src="/screenshots/17.png?raw=true" width="210"/></td>
-<!-- 			<td style="text-align: center"><img src="/screenshots/14.png?raw=true" width="210"/></td> -->
-		</tr>
-  <tr>
-			<td style="text-align: center"><img src="/screenshots/12.png?raw=true" width="210"/></td>
-<!-- 			<td style="text-align: center"><img src="/screenshots/1.png?raw=true" width="210"/></td> -->
-		</tr>
-   <tr>
-			<td style="text-align: center"><img src="/screenshots/36.png?raw=true" width="210"/></td>
-<!-- 			<td style="text-align: center"><img src="/screenshots/35.png?raw=true" width="210"/></td> -->
-		</tr>
-   <tr>
-			<td style="text-align: center"><img src="/screenshots/34.png?raw=true" width="210"/></td>
-<!-- 			<td style="text-align: center"><img src="/screenshots/33.png?raw=true" width="210"/></td> -->
-		</tr>
-	</table>
-</div>
+![](https://github.com/AbdulMalikDev/OU-Notes-Stacked-Architecture/blob/master/screenshots/7.jpeg?raw=true)  |  ![](https://github.com/AbdulMalikDev/OU-Notes-Stacked-Architecture/blob/master/screenshots/3.jpeg?raw=true)|![](https://github.com/AbdulMalikDev/OU-Notes-Stacked-Architecture/blob/master/screenshots/8.jpeg?raw=true)|  ![](https://github.com/AbdulMalikDev/OU-Notes-Stacked-Architecture/blob/master/screenshots/4.jpeg?raw=true)
+
+  
+![](https://github.com/AbdulMalikDev/OU-Notes-Stacked-Architecture/blob/master/screenshots/2.jpeg?raw=true)  |  ![](https://github.com/AbdulMalikDev/OU-Notes-Stacked-Architecture/blob/master/screenshots/6.jpeg?raw=true)|![](https://github.com/AbdulMalikDev/OU-Notes-Stacked-Architecture/blob/master/screenshots/9.jpeg?raw=true)|  ![](https://github.com/AbdulMalikDev/OU-Notes-Stacked-Architecture/blob/master/screenshots/21.jpeg?raw=true)
+
+
+![](https://github.com/AbdulMalikDev/OU-Notes-Stacked-Architecture/blob/master/screenshots/24.jpeg?raw=true)  |  ![](https://github.com/AbdulMalikDev/OU-Notes-Stacked-Architecture/blob/master/screenshots/23.jpeg?raw=true)|![](https://github.com/AbdulMalikDev/OU-Notes-Stacked-Architecture/blob/master/screenshots/22.jpeg?raw=true)|  ![](https://github.com/AbdulMalikDev/OU-Notes-Stacked-Architecture/blob/master/screenshots/25.jpeg?raw=true)
+
+    
+![](https://github.com/AbdulMalikDev/OU-Notes-Stacked-Architecture/blob/master/screenshots/28.jpeg?raw=true)  |  ![](https://github.com/AbdulMalikDev/OU-Notes-Stacked-Architecture/blob/master/screenshots/27.jpeg?raw=true)|![](https://github.com/AbdulMalikDev/OU-Notes-Stacked-Architecture/blob/master/screenshots/26.jpeg?raw=true)|  ![](https://github.com/AbdulMalikDev/OU-Notes-Stacked-Architecture/blob/master/screenshots/32.jpeg?raw=true)      
+![](https://github.com/AbdulMalikDev/OU-Notes-Stacked-Architecture/blob/master/screenshots/31.jpeg?raw=true)  |  ![](https://github.com/AbdulMalikDev/OU-Notes-Stacked-Architecture/blob/master/screenshots/30.jpeg?raw=true)|![](https://github.com/AbdulMalikDev/OU-Notes-Stacked-Architecture/blob/master/screenshots/29.jpeg?raw=true)|  ![](https://github.com/AbdulMalikDev/OU-Notes-Stacked-Architecture/blob/master/screenshots/20.jpeg?raw=true)
+
+    
+![](https://github.com/AbdulMalikDev/OU-Notes-Stacked-Architecture/blob/master/screenshots/17.jpeg?raw=true)  |  ![](https://github.com/AbdulMalikDev/OU-Notes-Stacked-Architecture/blob/master/screenshots/14.jpeg?raw=true)|![](https://github.com/AbdulMalikDev/OU-Notes-Stacked-Architecture/blob/master/screenshots/12.jpeg?raw=true)|  ![](https://github.com/AbdulMalikDev/OU-Notes-Stacked-Architecture/blob/master/screenshots/1.jpeg?raw=true)
+
+   
+![](https://github.com/AbdulMalikDev/OU-Notes-Stacked-Architecture/blob/master/screenshots/36.jpeg?raw=true)  |  ![](https://github.com/AbdulMalikDev/OU-Notes-Stacked-Architecture/blob/master/screenshots/35.jpeg?raw=true)|![](https://github.com/AbdulMalikDev/OU-Notes-Stacked-Architecture/blob/master/screenshots/34.jpeg?raw=true)|  ![](https://github.com/AbdulMalikDev/OU-Notes-Stacked-Architecture/blob/master/screenshots/33.jpeg?raw=true)
+
+
 
 ## Getting started 
 * Project setup instructions coming soon.
