@@ -60,62 +60,42 @@ and send a [pull request](https://github.com/AbdulMalikDev/OU-Notes-Stacked-Arch
 
 ## Screenshots
 
-<div style="text-align: center">
-	<table>
-		<tr>
-			<td style="text-align: center"><img src="https://github.com/AbdulMalikDev/OU-Notes-Stacked-Architecture/blob/master/screenshots/7.png?raw=true" width="600"/></td>
-			<td style="text-align: center"><img src="https://github.com/AbdulMalikDev/OU-Notes-Stacked-Architecture/blob/master/screenshots/3.png?raw=true" width="610"/></td>
-		</tr>
-		<tr>
-			<td style="text-align: center"><img src="https://github.com/AbdulMalikDev/OU-Notes-Stacked-Architecture/blob/master/screenshots/8.png?raw=true" width="600"/></td>
-			<td style="text-align: center"><img src="https://github.com/AbdulMalikDev/OU-Notes-Stacked-Architecture/blob/master/screenshots/4.png?raw=true" width="610"/></td>
-		</tr>
-		<tr>
-			<td style="text-align: center"><img src="https://github.com/AbdulMalikDev/OU-Notes-Stacked-Architecture/blob/master/screenshots/2.png?raw=true" width="610"/></td>
-			<td style="text-align: center"><img src="https://github.com/AbdulMalikDev/OU-Notes-Stacked-Architecture/blob/master/screenshots/6.png?raw=true" width="610"/></td>
-		</tr>
-		<tr>
-			<td style="text-align: center"><img src="https://github.com/AbdulMalikDev/OU-Notes-Stacked-Architecture/blob/master/screenshots/24.png?raw=true" width="610"/></td>
-			<td style="text-align: center"><img src="https://github.com/AbdulMalikDev/OU-Notes-Stacked-Architecture/blob/master/screenshots/23.png?raw=true" width="610"/></td>
-		</tr>
-  <tr>
-			<td style="text-align: center"><img src="https://github.com/AbdulMalikDev/OU-Notes-Stacked-Architecture/blob/master/screenshots/22.png?raw=true" width="610"/></td>
-			<td style="text-align: center"><img src="https://github.com/AbdulMalikDev/OU-Notes-Stacked-Architecture/blob/master/screenshots/25.png?raw=true" width="610"/></td>
-		</tr>
-  <tr>
-			<td style="text-align: center"><img src="https://github.com/AbdulMalikDev/OU-Notes-Stacked-Architecture/blob/master/screenshots/28.png?raw=true" width="610"/></td>
-			<td style="text-align: center"><img src="https://github.com/AbdulMalikDev/OU-Notes-Stacked-Architecture/blob/master/screenshots/27.png?raw=true" width="610"/></td>
-		</tr>
-  <tr>
-			<td style="text-align: center"><img src="https://github.com/AbdulMalikDev/OU-Notes-Stacked-Architecture/blob/master/screenshots/26.png?raw=true" width="610"/></td>
-			<td style="text-align: center"><img src="https://github.com/AbdulMalikDev/OU-Notes-Stacked-Architecture/blob/master/screenshots/32.png?raw=true" width="610"/></td>
-		</tr>
-  <tr>
-			<td style="text-align: center"><img src="https://github.com/AbdulMalikDev/OU-Notes-Stacked-Architecture/blob/master/screenshots/31.png?raw=true" width="610"/></td>
-			<td style="text-align: center"><img src="https://github.com/AbdulMalikDev/OU-Notes-Stacked-Architecture/blob/master/screenshots/30.png?raw=true" width="610"/></td>
-		</tr>
-  <tr>
-			<td style="text-align: center"><img src="https://github.com/AbdulMalikDev/OU-Notes-Stacked-Architecture/blob/master/screenshots/29.png?raw=true" width="610"/></td>
-			<td style="text-align: center"><img src="https://github.com/AbdulMalikDev/OU-Notes-Stacked-Architecture/blob/master/screenshots/20.png?raw=true" width="610"/></td>
-		</tr>
-  <tr>
-			<td style="text-align: center"><img src="https://github.com/AbdulMalikDev/OU-Notes-Stacked-Architecture/blob/master/screenshots/17.png?raw=true" width="610"/></td>
-			<td style="text-align: center"><img src="https://github.com/AbdulMalikDev/OU-Notes-Stacked-Architecture/blob/master/screenshots/14.png?raw=true" width="610"/></td>
-		</tr>
-  <tr>
-			<td style="text-align: center"><img src="https://github.com/AbdulMalikDev/OU-Notes-Stacked-Architecture/blob/master/screenshots/12.png?raw=true" width="610"/></td>
-			<td style="text-align: center"><img src="https://github.com/AbdulMalikDev/OU-Notes-Stacked-Architecture/blob/master/screenshots/1.png?raw=true" width="610"/></td>
-		</tr>
-   <tr>
-			<td style="text-align: center"><img src="https://github.com/AbdulMalikDev/OU-Notes-Stacked-Architecture/blob/master/screenshots/36.png?raw=true" width="610"/></td>
-			<td style="text-align: center"><img src="https://github.com/AbdulMalikDev/OU-Notes-Stacked-Architecture/blob/master/screenshots/35.png?raw=true" width="610"/></td>
-		</tr>
-   <tr>
-			<td style="text-align: center"><img src="https://github.com/AbdulMalikDev/OU-Notes-Stacked-Architecture/blob/master/screenshots/34.png?raw=true" width="610"/></td>
-			<td style="text-align: center"><img src="https://github.com/AbdulMalikDev/OU-Notes-Stacked-Architecture/blob/master/screenshots/33.png?raw=true" width="610"/></td>
-		</tr>
-	</table>
-</div>
+Intro Screen             |  Home Screen     |Home Screen - Dark Mode             |  Subjects Dialog           
+:-------------------------:|:-------------------------:|:-------------------------:|:-------------------------:
+![](https://github.com/AbdulMalikDev/ounotes/blob/master/screenshots/7.png?raw=true)  |  ![](https://github.com/AbdulMalikDev/ounotes/blob/master/screenshots/3.png?raw=true)|![](https://github.com/AbdulMalikDev/ounotes/blob/master/screenshots/8.png?raw=true)|  ![](https://github.com/AbdulMalikDev/ounotes/blob/master/screenshots/4.png?raw=true)
+
+
+Drawer             |  About us Screen     |Profile Screen             |  Upload Link(resources) Screen
+:-------------------------:|:-------------------------:|:-------------------------:|:-------------------------:       
+![](https://github.com/AbdulMalikDev/ounotes/blob/master/screenshots/2.png?raw=true)  |  ![](https://github.com/AbdulMalikDev/ounotes/blob/master/screenshots/6.png?raw=true)|![](https://github.com/AbdulMalikDev/ounotes/blob/master/screenshots/9.png?raw=true)|  ![](https://github.com/AbdulMalikDev/ounotes/blob/master/screenshots/21.png?raw=true)
+
+
+Upload Notes Screen             |  Upload Question Papers Screen     |Upload Syllabus Screen             |  Upload Choose Screen
+:-------------------------:|:-------------------------:|:-------------------------:|:-------------------------:       
+![](https://github.com/AbdulMalikDev/ounotes/blob/master/screenshots/24.png?raw=true)  |  ![](https://github.com/AbdulMalikDev/ounotes/blob/master/screenshots/23.png?raw=true)|![](https://github.com/AbdulMalikDev/ounotes/blob/master/screenshots/22.png?raw=true)|  ![](https://github.com/AbdulMalikDev/ounotes/blob/master/screenshots/25.png?raw=true)
+
+
+
+Downloaded Notes Screen             |  Downloaded Question Papers Screen     |Downloaded Syllabus Screen             |  Notes Screen
+:-------------------------:|:-------------------------:|:-------------------------:|:-------------------------:       
+![](https://github.com/AbdulMalikDev/ounotes/blob/master/screenshots/28.png?raw=true)  |  ![](https://github.com/AbdulMalikDev/ounotes/blob/master/screenshots/27.png?raw=true)|![](https://github.com/AbdulMalikDev/ounotes/blob/master/screenshots/26.png?raw=true)|  ![](https://github.com/AbdulMalikDev/ounotes/blob/master/screenshots/32.png?raw=true)
+
+Question Papers Screen             |  Syllabus Screen     |Links/Resources Screen             |  All Notes Search Screen
+:-------------------------:|:-------------------------:|:-------------------------:|:-------------------------:       
+![](https://github.com/AbdulMalikDev/ounotes/blob/master/screenshots/31.png?raw=true)  |  ![](https://github.com/AbdulMalikDev/ounotes/blob/master/screenshots/30.png?raw=true)|![](https://github.com/AbdulMalikDev/ounotes/blob/master/screenshots/29.png?raw=true)|  ![](https://github.com/AbdulMalikDev/ounotes/blob/master/screenshots/20.png?raw=true)
+
+
+
+All Question Papers Search Screen             |  All Syllabus Search Screen     |All Resources/Links Search Screen             | Search All Subjects Screen
+:-------------------------:|:-------------------------:|:-------------------------:|:-------------------------:       
+![](https://github.com/AbdulMalikDev/ounotes/blob/master/screenshots/17.png?raw=true)  |  ![](https://github.com/AbdulMalikDev/ounotes/blob/master/screenshots/14.png?raw=true)|![](https://github.com/AbdulMalikDev/ounotes/blob/master/screenshots/12.png?raw=true)|  ![](https://github.com/AbdulMalikDev/ounotes/blob/master/screenshots/1.png?raw=true)
+
+
+
+Notes Search Result             |  Question Paper Search Result     |Syllabus Search Result             |  Resources/Links Search Resultn
+:-------------------------:|:-------------------------:|:-------------------------:|:-------------------------:       
+![](https://github.com/AbdulMalikDev/ounotes/blob/master/screenshots/36.png?raw=true)  |  ![](https://github.com/AbdulMalikDev/ounotes/blob/master/screenshots/35.png?raw=true)|![](https://github.com/AbdulMalikDev/ounotes/blob/master/screenshots/34.png?raw=true)|  ![](https://github.com/AbdulMalikDev/ounotes/blob/master/screenshots/33.png?raw=true)
+
 
 
 ## Getting started 
