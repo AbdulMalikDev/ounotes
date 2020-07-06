@@ -63,8 +63,8 @@ and send a [pull request](https://github.com/AbdulMalikDev/OU-Notes-Stacked-Arch
 <div style="text-align: center">
 	<table>
 		<tr>
-			<td style="text-align: center"><img src="https://github.com/AbdulMalikDev/ounotes/blob/master/screenshots/7.png?raw=true" width="600"/></td>
-			<td style="text-align: center"><img src="https://github.com/AbdulMalikDev/ounotes/blob/master/screenshots/3.png?raw=true" width="610"/></td>
+			<td style="text-align: center"><img src="https://github.com/AbdulMalikDev/ounotes/blob/master/screenshots/7.png?raw=true" width="300" style="vertical-align:middle;horizontal-align:middle;"/></td>
+			<td style="text-align: center"><img src="https://github.com/AbdulMalikDev/ounotes/blob/master/screenshots/3.png?raw=true" width="310"/></td>
 		</tr>
 		<tr>
 			<td style="text-align: center"><img src="https://github.com/AbdulMalikDev/ounotes/blob/master/screenshots/8.png?raw=true" width="600"/></td>
