@@ -3,7 +3,7 @@
 
 
 **For the Students , By the Students.** <br/>
-An Application for Osmania University students to access educational material at one place built with the famous **Stacked Architecture** in Flutter.
+An Application for Osmania University students to access educational material at one place built with the famous **Stacked Architecture** in **Flutter**.
 
 
 ## Download App
