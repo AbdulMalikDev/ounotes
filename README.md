@@ -59,23 +59,34 @@ and send a [pull request](https://github.com/AbdulMalikDev/OU-Notes-Stacked-Arch
 
 ## Screenshots
 
-![](/screenshots/7.png?raw=true)    ![](/screenshots/3.png?raw=true)![](/screenshots/8.png?raw=true)  ![](/screenshots/4.png?raw=true)
-
-  
-![](/screenshots/2.png?raw=true)    ![](/screenshots/6.png?raw=true)![](/screenshots/9.png?raw=true)  ![](/screenshots/21.png?raw=true)
-
-
-![](/screenshots/24.png?raw=true)    ![](/screenshots/23.png?raw=true)![](/screenshots/22.png?raw=true)  ![](/screenshots/25.png?raw=true)
-
-    
-![](/screenshots/28.png?raw=true)    ![](/screenshots/27.png?raw=true)![](/screenshots/26.png?raw=true)  ![](/screenshots/32.png?raw=true)      
-![](/screenshots/31.png?raw=true)    ![](/screenshots/30.png?raw=true)![](/screenshots/29.png?raw=true)  ![](/screenshots/20.png?raw=true)
-
-    
-![](/screenshots/17.png?raw=true)    ![](/screenshots/14.png?raw=true)![](/screenshots/12.png?raw=true)  ![](/screenshots/1.png?raw=true)
-
-   
-![](/screenshots/36.png?raw=true)    ![](/screenshots/35.png?raw=true)![](/screenshots/34.png?raw=true)  ![](/screenshots/33.png?raw=true)
+![](/screenshots/7.png?raw=true)    
+![](/screenshots/3.png?raw=true)
+![](/screenshots/8.png?raw=true)  
+![](/screenshots/4.png?raw=true)
+![](/screenshots/2.png?raw=true)   
+![](/screenshots/6.png?raw=true)
+![](/screenshots/9.png?raw=true)  
+![](/screenshots/21.png?raw=true)
+![](/screenshots/24.png?raw=true)    
+![](/screenshots/23.png?raw=true)
+![](/screenshots/22.png?raw=true)  
+![](/screenshots/25.png?raw=true)
+![](/screenshots/28.png?raw=true)    
+![](/screenshots/27.png?raw=true)
+![](/screenshots/26.png?raw=true)  
+![](/screenshots/32.png?raw=true)      
+![](/screenshots/31.png?raw=true)    
+![](/screenshots/30.png?raw=true)
+![](/screenshots/29.png?raw=true)  
+![](/screenshots/20.png?raw=true)
+![](/screenshots/17.png?raw=true)    
+![](/screenshots/14.png?raw=true)
+![](/screenshots/12.png?raw=true)  
+![](/screenshots/1.png?raw=true)
+![](/screenshots/36.png?raw=true)    
+![](/screenshots/35.png?raw=true)
+![](/screenshots/34.png?raw=true)  
+![](/screenshots/33.png?raw=true)
 
 
 
