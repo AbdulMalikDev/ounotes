@@ -59,7 +59,7 @@ and send a [pull request](https://github.com/AbdulMalikDev/ounotes/pulls). I wel
 
 ## Follow us on Instagram
 
-<a href="https://www.google.com"><img src="/screenshots/ss.png" width="48"><a/>
+<a href="https://instagram.com/ounotesapp?igshid=1ozkrvsqd0sgz"><img src="/screenshots/ss.png" width="48"><a/>
 
 ## Screenshots
 
