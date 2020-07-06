@@ -57,66 +57,64 @@ and send a [pull request](https://github.com/AbdulMalikDev/OU-Notes-Stacked-Arch
 
 [Abdul Malik](https://github.com/AbdulMalikDev) And [Syed Wajid](https://github.com/syedwajid01)
 
-
 ## Screenshots
 
 <div style="text-align: center">
 	<table>
 		<tr>
-			<td style="text-align: center"><img src="https://github.com/AbdulMalikDev/ounotes/blob/master/screenshots/7.png?raw=true" width="200"/></td>
-			<td style="text-align: center"><img src="https://github.com/AbdulMalikDev/ounotes/blob/master/screenshots/3.png?raw=true" width="210"/></td>
+			<td style="text-align: center"><img src="/screenshots/7.png?raw=true" width="200"/></td>
+			<td style="text-align: center"><img src="/screenshots/3.png?raw=true" width="210"/></td>
 		</tr>
 		<tr>
-			<td style="text-align: center"><img src="https://github.com/AbdulMalikDev/ounotes/blob/master/screenshots/8.png?raw=true" width="200"/></td>
-			<td style="text-align: center"><img src="https://github.com/AbdulMalikDev/ounotes/blob/master/screenshots/4.png?raw=true" width="210"/></td>
+			<td style="text-align: center"><img src="/screenshots/8.png?raw=true" width="200"/></td>
+			<td style="text-align: center"><img src="/screenshots/4.png?raw=true" width="210"/></td>
 		</tr>
 		<tr>
-			<td style="text-align: center"><img src="https://github.com/AbdulMalikDev/ounotes/blob/master/screenshots/2.png?raw=true" width="210"/></td>
-			<td style="text-align: center"><img src="https://github.com/AbdulMalikDev/ounotes/blob/master/screenshots/6.png?raw=true" width="210"/></td>
+			<td style="text-align: center"><img src="/screenshots/2.png?raw=true" width="210"/></td>
+			<td style="text-align: center"><img src="/screenshots/6.png?raw=true" width="210"/></td>
 		</tr>
 		<tr>
-			<td style="text-align: center"><img src="https://github.com/AbdulMalikDev/ounotes/blob/master/screenshots/24.png?raw=true" width="210"/></td>
-			<td style="text-align: center"><img src="https://github.com/AbdulMalikDev/ounotes/blob/master/screenshots/23.png?raw=true" width="210"/></td>
+			<td style="text-align: center"><img src="/screenshots/24.png?raw=true" width="210"/></td>
+			<td style="text-align: center"><img src="/screenshots/23.png?raw=true" width="210"/></td>
 		</tr>
   <tr>
-			<td style="text-align: center"><img src="https://github.com/AbdulMalikDev/ounotes/blob/master/screenshots/22.png?raw=true" width="210"/></td>
-			<td style="text-align: center"><img src="https://github.com/AbdulMalikDev/ounotes/blob/master/screenshots/25.png?raw=true" width="210"/></td>
+			<td style="text-align: center"><img src="/screenshots/22.png?raw=true" width="210"/></td>
+			<td style="text-align: center"><img src="/screenshots/25.png?raw=true" width="210"/></td>
 		</tr>
   <tr>
-			<td style="text-align: center"><img src="https://github.com/AbdulMalikDev/ounotes/blob/master/screenshots/28.png?raw=true" width="210"/></td>
-			<td style="text-align: center"><img src="https://github.com/AbdulMalikDev/ounotes/blob/master/screenshots/27.png?raw=true" width="210"/></td>
+			<td style="text-align: center"><img src="/screenshots/28.png?raw=true" width="210"/></td>
+			<td style="text-align: center"><img src="/screenshots/27.png?raw=true" width="210"/></td>
 		</tr>
   <tr>
-			<td style="text-align: center"><img src="https://github.com/AbdulMalikDev/ounotes/blob/master/screenshots/26.png?raw=true" width="210"/></td>
-			<td style="text-align: center"><img src="https://github.com/AbdulMalikDev/ounotes/blob/master/screenshots/32.png?raw=true" width="210"/></td>
+			<td style="text-align: center"><img src="/screenshots/26.png?raw=true" width="210"/></td>
+			<td style="text-align: center"><img src="/screenshots/32.png?raw=true" width="210"/></td>
 		</tr>
   <tr>
-			<td style="text-align: center"><img src="https://github.com/AbdulMalikDev/ounotes/blob/master/screenshots/31.png?raw=true" width="210"/></td>
-			<td style="text-align: center"><img src="https://github.com/AbdulMalikDev/ounotes/blob/master/screenshots/30.png?raw=true" width="210"/></td>
+			<td style="text-align: center"><img src="/screenshots/31.png?raw=true" width="210"/></td>
+			<td style="text-align: center"><img src="/screenshots/30.png?raw=true" width="210"/></td>
 		</tr>
   <tr>
-			<td style="text-align: center"><img src="https://github.com/AbdulMalikDev/ounotes/blob/master/screenshots/29.png?raw=true" width="210"/></td>
-			<td style="text-align: center"><img src="https://github.com/AbdulMalikDev/ounotes/blob/master/screenshots/20.png?raw=true" width="210"/></td>
+			<td style="text-align: center"><img src="/screenshots/29.png?raw=true" width="210"/></td>
+			<td style="text-align: center"><img src="/screenshots/20.png?raw=true" width="210"/></td>
 		</tr>
   <tr>
-			<td style="text-align: center"><img src="https://github.com/AbdulMalikDev/ounotes/blob/master/screenshots/17.png?raw=true" width="210"/></td>
-			<td style="text-align: center"><img src="https://github.com/AbdulMalikDev/ounotes/blob/master/screenshots/14.png?raw=true" width="210"/></td>
+			<td style="text-align: center"><img src="/screenshots/17.png?raw=true" width="210"/></td>
+			<td style="text-align: center"><img src="/screenshots/14.png?raw=true" width="210"/></td>
 		</tr>
   <tr>
-			<td style="text-align: center"><img src="https://github.com/AbdulMalikDev/ounotes/blob/master/screenshots/12.png?raw=true" width="210"/></td>
-			<td style="text-align: center"><img src="https://github.com/AbdulMalikDev/ounotes/blob/master/screenshots/1.png?raw=true" width="210"/></td>
+			<td style="text-align: center"><img src="/screenshots/12.png?raw=true" width="210"/></td>
+			<td style="text-align: center"><img src="/screenshots/1.png?raw=true" width="210"/></td>
 		</tr>
    <tr>
-			<td style="text-align: center"><img src="https://github.com/AbdulMalikDev/ounotes/blob/master/screenshots/36.png?raw=true" width="210"/></td>
-			<td style="text-align: center"><img src="https://github.com/AbdulMalikDev/ounotes/blob/master/screenshots/35.png?raw=true" width="210"/></td>
+			<td style="text-align: center"><img src="/screenshots/36.png?raw=true" width="210"/></td>
+			<td style="text-align: center"><img src="/screenshots/35.png?raw=true" width="210"/></td>
 		</tr>
    <tr>
-			<td style="text-align: center"><img src="https://github.com/AbdulMalikDev/ounotes/blob/master/screenshots/34.png?raw=true" width="210"/></td>
-			<td style="text-align: center"><img src="https://github.com/AbdulMalikDev/ounotes/blob/master/screenshots/33.png?raw=true" width="210"/></td>
+			<td style="text-align: center"><img src="/screenshots/34.png?raw=true" width="210"/></td>
+			<td style="text-align: center"><img src="/screenshots/33.png?raw=true" width="210"/></td>
 		</tr>
 	</table>
 </div>
-
 
 ## Getting started 
 * Project setup instructions coming soon.
