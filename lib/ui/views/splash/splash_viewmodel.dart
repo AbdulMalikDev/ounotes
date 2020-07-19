@@ -23,9 +23,9 @@ class SplashViewModel extends FutureViewModel{
     if(hasLoggedInUser)
     {
     await _subjectsService.loadSubjects();
-      _navigationService.navigateTo(Routes.homeViewRoute);
+      _navigationService.replaceWith(Routes.homeViewRoute);
     }else{
-      _navigationService.navigateTo(Routes.introViewRoute);
+      _navigationService.replaceWith(Routes.introViewRoute);
 
     }
 

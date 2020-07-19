@@ -1,9 +1,9 @@
-## <img src="https://github.com/AbdulMalikDev/OU-Notes-Stacked-Architecture/blob/master/assets/images/Applogo.jpg?raw=true" width="48">OU Notes [Osmania University (O.U)] [![GitHub stars](https://img.shields.io/github/stars/AbdulMalikDev/ounotes?style=social)](https://github.com/login?return_to=%2FTheAlphamerc%flutter_twitter_clone) ![GitHub forks](https://img.shields.io/github/forks/AbdulMalikDev/ounotes?style=social) 
+## <img src="https://github.com/AbdulMalikDev/ounotes/blob/master/assets/images/Applogo.jpg?raw=true" width="48">OU Notes [Osmania University (O.U)] [![GitHub stars](https://img.shields.io/github/stars/AbdulMalikDev/ounotes?style=social)](https://github.com/login?return_to=%2FTheAlphamerc%flutter_twitter_clone) ![GitHub forks](https://img.shields.io/github/forks/AbdulMalikDev/ounotes?style=social)    
 ![Dart CI](https://github.com/TheAlphamerc/flutter_twitter_clone/workflows/Dart%20CI/badge.svg) ![GitHub pull requests](https://img.shields.io/github/issues-pr/AbdulMalikDev/ounotes) ![GitHub closed pull requests](https://img.shields.io/github/issues-pr-closed/AbdulMalikDev/ounotes) ![GitHub last commit](https://img.shields.io/github/last-commit/AbdulMalikDev/ounotes)  ![GitHub issues](https://img.shields.io/github/issues-raw/AbdulMalikDev/ounotes) [![Open Source Love](https://badges.frapsoft.com/os/v2/open-source.svg?v=103)](https://github.com/Thealphamerc/flutter_twitter_clone) 
 
 
 **For the Students , By the Students.** <br/>
-An Application for Osmania University students to access educational material at one place built with the famous **Stacked Architecture** in Flutter.
+An Application for Osmania University students to access educational material at one place built with the famous **Stacked Architecture** in **Flutter**.
 
 
 ## Download App
@@ -35,7 +35,7 @@ An Application for Osmania University students to access educational material at
 * [stacked](https://pub.dev/packages/stacked)
 * [share](https://pub.dev/packages/share)
 * [stacked_services](https://pub.dev/packages/stacked_services)
-* [url_launcher](https://pub.dev/packages/url_launcher)
+* [url_launcher](https://pub.dev/packages/url_launcher)                                                                             
 * [google_fonts](https://pub.dev/packages/google_fonts)
 * [file_picker](https://pub.dev/packages/file_picker)
 * [firebase_auth](https://pub.dev/packages/firebase_auth)
@@ -47,44 +47,50 @@ An Application for Osmania University students to access educational material at
      
 </details>
 
+## Contributing
+
+If you wish to contribute a change to any of the existing feature or add new in this repo,
+please review our [contribution guide](https://github.com/AbdulMalikDev/ounotes/blob/master/CONTRIBUTING.md),
+and send a [pull request](https://github.com/AbdulMalikDev/ounotes/pulls). I welcome and encourage all pull requests. It usually will take me within 24-48 hours to respond to any issue or request.
+
+## Created & Maintained By
+
+[Abdul Malik](https://github.com/AbdulMalikDev) And [Syed Wajid](https://github.com/syedwajid01)
+
+## Follow us on Instagram
+
+<a href="https://instagram.com/ounotesapp?igshid=1ozkrvsqd0sgz"><img src="/screenshots/ss.png" width="48"><a/>
+
 ## Screenshots
 
-Intro Screen             |  Home Screen     |Home Screen - Dark Mode             |  Subjects Dialog           
-:-------------------------:|:-------------------------:|:-------------------------:|:-------------------------:
-![](https://github.com/AbdulMalikDev/OU-Notes-Stacked-Architecture/blob/master/screenshots/7.jpeg?raw=true)  |  ![](https://github.com/AbdulMalikDev/OU-Notes-Stacked-Architecture/blob/master/screenshots/3.jpeg?raw=true)|![](https://github.com/AbdulMalikDev/OU-Notes-Stacked-Architecture/blob/master/screenshots/8.jpeg?raw=true)|  ![](https://github.com/AbdulMalikDev/OU-Notes-Stacked-Architecture/blob/master/screenshots/4.jpeg?raw=true)
-
-
-Drawer             |  About us Screen     |Profile Screen             |  Upload Link(resources) Screen
-:-------------------------:|:-------------------------:|:-------------------------:|:-------------------------:       
-![](https://github.com/AbdulMalikDev/OU-Notes-Stacked-Architecture/blob/master/screenshots/2.jpeg?raw=true)  |  ![](https://github.com/AbdulMalikDev/OU-Notes-Stacked-Architecture/blob/master/screenshots/6.jpeg?raw=true)|![](https://github.com/AbdulMalikDev/OU-Notes-Stacked-Architecture/blob/master/screenshots/9.jpeg?raw=true)|  ![](https://github.com/AbdulMalikDev/OU-Notes-Stacked-Architecture/blob/master/screenshots/21.jpeg?raw=true)
-
-
-Upload Notes Screen             |  Upload Question Papers Screen     |Upload Syllabus Screen             |  Upload Choose Screen
-:-------------------------:|:-------------------------:|:-------------------------:|:-------------------------:       
-![](https://github.com/AbdulMalikDev/OU-Notes-Stacked-Architecture/blob/master/screenshots/24.jpeg?raw=true)  |  ![](https://github.com/AbdulMalikDev/OU-Notes-Stacked-Architecture/blob/master/screenshots/23.jpeg?raw=true)|![](https://github.com/AbdulMalikDev/OU-Notes-Stacked-Architecture/blob/master/screenshots/22.jpeg?raw=true)|  ![](https://github.com/AbdulMalikDev/OU-Notes-Stacked-Architecture/blob/master/screenshots/25.jpeg?raw=true)
-
-
-
-Downloaded Notes Screen             |  Downloaded Question Papers Screen     |Downloaded Syllabus Screen             |  Notes Screen
-:-------------------------:|:-------------------------:|:-------------------------:|:-------------------------:       
-![](https://github.com/AbdulMalikDev/OU-Notes-Stacked-Architecture/blob/master/screenshots/28.jpeg?raw=true)  |  ![](https://github.com/AbdulMalikDev/OU-Notes-Stacked-Architecture/blob/master/screenshots/27.jpeg?raw=true)|![](https://github.com/AbdulMalikDev/OU-Notes-Stacked-Architecture/blob/master/screenshots/26.jpeg?raw=true)|  ![](https://github.com/AbdulMalikDev/OU-Notes-Stacked-Architecture/blob/master/screenshots/32.jpeg?raw=true)
-
-Question Papers Screen             |  Syllabus Screen     |Links/Resources Screen             |  All Notes Search Screen
-:-------------------------:|:-------------------------:|:-------------------------:|:-------------------------:       
-![](https://github.com/AbdulMalikDev/OU-Notes-Stacked-Architecture/blob/master/screenshots/31.jpeg?raw=true)  |  ![](https://github.com/AbdulMalikDev/OU-Notes-Stacked-Architecture/blob/master/screenshots/30.jpeg?raw=true)|![](https://github.com/AbdulMalikDev/OU-Notes-Stacked-Architecture/blob/master/screenshots/29.jpeg?raw=true)|  ![](https://github.com/AbdulMalikDev/OU-Notes-Stacked-Architecture/blob/master/screenshots/20.jpeg?raw=true)
-
-
-
-All Question Papers Search Screen             |  All Syllabus Search Screen     |All Resources/Links Search Screen             | Search All Subjects Screen
-:-------------------------:|:-------------------------:|:-------------------------:|:-------------------------:       
-![](https://github.com/AbdulMalikDev/OU-Notes-Stacked-Architecture/blob/master/screenshots/17.jpeg?raw=true)  |  ![](https://github.com/AbdulMalikDev/OU-Notes-Stacked-Architecture/blob/master/screenshots/14.jpeg?raw=true)|![](https://github.com/AbdulMalikDev/OU-Notes-Stacked-Architecture/blob/master/screenshots/12.jpeg?raw=true)|  ![](https://github.com/AbdulMalikDev/OU-Notes-Stacked-Architecture/blob/master/screenshots/1.jpeg?raw=true)
-
-
-
-Notes Search Result             |  Question Paper Search Result     |Syllabus Search Result             |  Resources/Links Search Resultn
-:-------------------------:|:-------------------------:|:-------------------------:|:-------------------------:       
-![](https://github.com/AbdulMalikDev/OU-Notes-Stacked-Architecture/blob/master/screenshots/36.jpeg?raw=true)  |  ![](https://github.com/AbdulMalikDev/OU-Notes-Stacked-Architecture/blob/master/screenshots/35.jpeg?raw=true)|![](https://github.com/AbdulMalikDev/OU-Notes-Stacked-Architecture/blob/master/screenshots/34.jpeg?raw=true)|  ![](https://github.com/AbdulMalikDev/OU-Notes-Stacked-Architecture/blob/master/screenshots/33.jpeg?raw=true)
-
+![screenshot](/screenshots/7.png)    
+![screenshot](/screenshots/3.png)
+![screenshot](/screenshots/8.png)  
+![screenshot](/screenshots/4.png)
+![screenshot](/screenshots/2.png)   
+![screenshot](/screenshots/6.png)
+![screenshot](/screenshots/9.png)  
+![screenshot](/screenshots/21.png)
+![screenshot](/screenshots/24.png)    
+![screenshot](/screenshots/23.png)
+![screenshot](/screenshots/22.png)  
+![screenshot](/screenshots/25.png)
+![screenshot](/screenshots/28.png)    
+![screenshot](/screenshots/27.png)
+![screenshot](/screenshots/26.png)  
+![screenshot](/screenshots/32.png)      
+![screenshot](/screenshots/31.png)    
+![screenshot](/screenshots/30.png)
+![screenshot](/screenshots/29.png)  
+![screenshot](/screenshots/20.png)
+![screenshot](/screenshots/17.png)    
+![screenshot](/screenshots/14.png)
+![screenshot](/screenshots/12.png)  
+![screenshot](/screenshots/1.png)
+![screenshot](/screenshots/36.png)    
+![screenshot](/screenshots/35.png)
+![screenshot](/screenshots/34.png)  
+![screenshot](/screenshots/33.png)
 
 
 
@@ -214,12 +220,3 @@ Notes Search Result             |  Question Paper Search Result     |Syllabus Se
 
 </details>
      
-## Contributing
-
-If you wish to contribute a change to any of the existing feature or add new in this repo,
-please review our [contribution guide](https://github.com/AbdulMalikDev/OU-Notes-Stacked-Architecture/blob/master/CONTRIBUTING.md),
-and send a [pull request](https://github.com/AbdulMalikDev/OU-Notes-Stacked-Architecture/pulls). I welcome and encourage all pull requests. It usually will take me within 24-48 hours to respond to any issue or request.
-
-## Created & Maintained By
-
-[Abdul Malik](https://github.com/AbdulMalikDev) And [Syed Wajid](https://github.com/syedwajid01)
