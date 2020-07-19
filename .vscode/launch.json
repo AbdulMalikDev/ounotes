@@ -5,9 +5,15 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Flutter",
+            "name": "Dev",
             "request": "launch",
-            "type": "dart"
+            "type": "dart",
+        },
+        {
+            "name": "Run all Tests",
+            "request": "launch",
+            "type": "dart",
+            "program": "./test/"
         }
     ]
 }
