@@ -26,6 +26,8 @@ class SubjectsService with ChangeNotifier {
 
   ValueNotifier<List<Subject>> _userSubjects =
       new ValueNotifier(new List<Subject>());
+  
+  void setUserSubjects(users){ _userSubjects = users; }
 
   ValueNotifier<List<Subject>> get userSubjects => _userSubjects;
 
@@ -33,6 +35,7 @@ class SubjectsService with ChangeNotifier {
       new ValueNotifier(new List<Subject>());
 
   ValueNotifier<List<Subject>> get allSubjects => _allSubjects;
+
 
   addUserSubject(Subject subject) async {
     if (_userSubjects.value.firstWhere(

@@ -20,6 +20,7 @@ class HomeViewModel extends BaseViewModel {
 
   showIntroDialog() async {
     if (_subjectsService.userSubjects.value.length == 0) {
+      //If delay not added, error of build not completed may occur
       await Future.delayed(Duration(seconds: 1));
       await _dialogService.showDialog(
         title: "Welcome to OU Notes App",
