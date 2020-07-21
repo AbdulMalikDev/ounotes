@@ -27,6 +27,7 @@ class IntroViewModel extends BaseViewModel {
   String get sem => _selectedSemester;
   String get br => _selectedBranch;
   String get clg => _selectedCollege;
+
   List<DropdownMenuItem<String>> get dropdownofsem =>
       _dropDownMenuItemsofsemester;
   List<DropdownMenuItem<String>> get dropdownofbr => _dropDownMenuItemsofBranch;
@@ -80,13 +81,13 @@ class IntroViewModel extends BaseViewModel {
     if (dialogResult.confirmed) {
       setBusy(true);
       await _authenticationService.handleSignIn(
-        college: _selectedCollege,
-        branch: _selectedBranch,
-        semeseter: _selectedSemester,
+        college: _selectedCollege??"",
+        branch: _selectedBranch??"",
+        semeseter: _selectedSemester??"",
       );
       notifyListeners();
       setBusy(false);
-      _navigationService.navigateTo(Routes.splashViewRoute);
+      _navigationService.replaceWith(Routes.splashViewRoute);
     }
   }
 }

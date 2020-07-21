@@ -19,7 +19,7 @@ void main() {
       verify(sharedPref.isUserLoggedIn());
     });
 
-     test('When called and User is logged in, should call replaceWith Routes.homeViewRoute', () async {
+     test('When called and User is logged in, should call replace route with Routes.homeViewRoute', () async {
        var navigationService = getAndRegisterNavigationServiceMock();
        var sharedPref = getAndRegisterSharedPreferencesServiceMock(isUserLoggedIn: true);
        var model = SplashViewModel();
@@ -27,7 +27,7 @@ void main() {
        verify(navigationService.replaceWith(Routes.homeViewRoute));
      });
 
-     test('When called and User is not logged in, should call replaceWith Routes.introViewRoute [login page]', () async {
+     test('When called and User is not logged in, should call replace route with Routes.introViewRoute [login page]', () async {
        var navigationService = getAndRegisterNavigationServiceMock();
        var sharedPref = getAndRegisterSharedPreferencesServiceMock(isUserLoggedIn: false);
        var model = SplashViewModel();
