@@ -29,6 +29,7 @@ class UploadViewModel extends BaseViewModel {
   SubjectsService _subjectsService = locator<SubjectsService>();
 
   List<DropdownMenuItem<String>> _dropDownMenuItemsofsemester;
+  
   List<DropdownMenuItem<String>> _dropDownMenuItemsofBranch;
   List<DropdownMenuItem<String>> _dropDownMenuItemForTypeYear;
   bool _ischecked = false;

@@ -85,11 +85,11 @@ class HomeView extends StatelessWidget {
             child: FloatingActionButton(
               onPressed: () {
                 Fluttertoast.showToast(msg: 'Add Subjects');
-                showDialog(
+                showModalBottomSheet(
                     context: context,
-                    builder: (BuildContext context) {
-                      return SubjectsDialogView();
-                    });
+                    isScrollControlled: true,
+                    backgroundColor: Colors.transparent,
+                    builder: (BuildContext context) => SubjectsDialogView());
               },
               child: const Icon(Icons.add),
               backgroundColor: Theme.of(context).accentColor,
