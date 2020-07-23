@@ -113,7 +113,7 @@ flutter:
    - assets/images/7.png
    - assets/images/github-logo.png
    - assets/images/OU_Logo.jpg
-   - config/
+   - config/app_config.json
 
   fonts:
     - family: OpenSans
