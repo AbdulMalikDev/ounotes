@@ -20,7 +20,7 @@ jobs:
         encodedString: ${{ secrets.APP_CONFIG }}
     - name: Inject env variables
       run: |
-        mkdir -p ${{ github.workspace }}/config
+        mkdir ${{ github.workspace }}/config
         mv ${{ steps.write_file.outputs.filePath }} ${{ github.workspace }}/config/
     - name: Fetch all history for all tags and branches
       run: |
