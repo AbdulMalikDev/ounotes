@@ -13,8 +13,8 @@ class DrawerHeaderView extends StatelessWidget {
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: [
+              Colors.teal.shade300,
               Colors.teal.shade400,
-              Colors.teal.shade200,
             ],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,

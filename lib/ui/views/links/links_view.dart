@@ -55,7 +55,7 @@ class _LinksViewState extends State<LinksView>
                               ? Center(
                                   child: CircularProgressIndicator(),
                                 )
-                              :  model.linksList.length == 0
+                              : model.linksList.length == 0
                                   ? Center(
                                       child: Column(
                                         mainAxisAlignment:
@@ -63,13 +63,19 @@ class _LinksViewState extends State<LinksView>
                                         crossAxisAlignment:
                                             CrossAxisAlignment.center,
                                         children: <Widget>[
+                                          Container(
+                                            height: 200,
+                                            width: 200,
+                                            child: Image.asset(
+                                                'assets/images/study3.jpg'),
+                                          ),
                                           Text(
                                             "Resources/Links are empty!",
                                             style: Theme.of(context)
                                                 .textTheme
                                                 .headline6
                                                 .copyWith(
-                                                      color: Theme.of(context)
+                                                    color: Theme.of(context)
                                                         .colorScheme
                                                         .onSurface,
                                                     fontWeight:
@@ -93,18 +99,18 @@ class _LinksViewState extends State<LinksView>
                                         ],
                                       ),
                                     )
-                                  :ListView.builder(
-                                  itemCount: model.linksList.length,
-                                  itemBuilder:
-                                      (BuildContext context, int index) {
-                                    Link link = model.linksList[index];
-                                    return InkWell(
-                                        child: LinksTileView(
-                                          link: link,
-                                          index: index,
-                                        ),
-                                        onTap: () {});
-                                  }),
+                                  : ListView.builder(
+                                      itemCount: model.linksList.length,
+                                      itemBuilder:
+                                          (BuildContext context, int index) {
+                                        Link link = model.linksList[index];
+                                        return InkWell(
+                                            child: LinksTileView(
+                                              link: link,
+                                              index: index,
+                                            ),
+                                            onTap: () {});
+                                      }),
                         )
                       ],
                     ),

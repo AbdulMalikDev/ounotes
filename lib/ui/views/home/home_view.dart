@@ -18,7 +18,7 @@ class HomeView extends StatelessWidget {
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
     return ViewModelBuilder<HomeViewModel>.reactive(
-      onModelReady: (model) => model.showIntroDialog(),
+      onModelReady: (model) => model.showIntroDialog(context),
       builder: (context, model, child) => WillPopScope(
         onWillPop: () => showDialog<bool>(
           context: context,
@@ -70,13 +70,9 @@ class HomeView extends StatelessWidget {
           body: ValueListenableBuilder(
               valueListenable: model.userSubjects,
               builder: (context, userSubjects, child) {
-                return Column(
-                  children: [
-                    model.userSubjects.value.length == 0
-                        ? NoSubjectsOverlay()
-                        : UserSubjectListView(),
-                  ],
-                );
+                return model.userSubjects.value.length == 0
+                    ? NoSubjectsOverlay()
+                    : UserSubjectListView();
               }),
 
           //drawer: GetDrawer(),

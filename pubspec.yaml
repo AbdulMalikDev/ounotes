@@ -41,6 +41,8 @@ dependencies:
   flutter_typeahead: ^1.8.1
   mime: ^0.9.6+3
   awesome_dialog: ^1.1.3
+  lottie: ^0.4.1
+  direct_select_flutter: ^1.0.6
 
 
 
@@ -113,6 +115,13 @@ flutter:
    - assets/images/7.png
    - assets/images/github-logo.png
    - assets/images/OU_Logo.jpg
+   - assets/lottie/book.json
+   - assets/lottie/learn.json
+   - assets/lottie/student.json
+   - assets/lottie/upload.json
+   - assets/images/study1.jpg
+   - assets/images/study2.jpg
+   - assets/images/study3.jpg
 
   fonts:
     - family: OpenSans

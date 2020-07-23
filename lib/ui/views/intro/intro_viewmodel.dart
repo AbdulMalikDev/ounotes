@@ -3,13 +3,10 @@ import 'package:FSOUNotes/app/logger.dart';
 import 'package:FSOUNotes/app/router.gr.dart';
 import 'package:FSOUNotes/models/course_info.dart';
 import 'package:FSOUNotes/services/funtional_services/authentication_service.dart';
-import 'package:FSOUNotes/ui/shared/ui_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
-import 'package:stacked_services/stacked_services.dart';
-import 'package:FSOUNotes/models/course_info.dart';
 
 class IntroViewModel extends BaseViewModel {
   Logger log = getLogger("IntroViewModel");
@@ -44,6 +41,25 @@ class IntroViewModel extends BaseViewModel {
     _selectedSemester = _dropDownMenuItemsofsemester[0].value;
     _selectedBranch = _dropDownMenuItemsofBranch[0].value;
     _selectedCollege = _dropDownMenuItemsofCollege[0].value;
+  }
+
+  AnimationController _animationController;
+  Animation _sizeAnimation;
+  Animation get sizeanimation => _sizeAnimation;
+  bool reverse = false;
+
+  animate(thisob) {
+    _animationController =
+        AnimationController(vsync: thisob, duration: Duration(seconds: 1))
+          ..addStatusListener((status) {
+            if (status == AnimationStatus.completed) {
+              _animationController.repeat(reverse: !reverse);
+              reverse = !reverse;
+            }
+          });
+    _sizeAnimation =
+        Tween<double>(begin: 50.0, end: 100.0).animate(_animationController);
+    _animationController.forward();
   }
 
   List<DropdownMenuItem<String>> buildAndGetDropDownMenuItems(List items) {
@@ -81,9 +97,9 @@ class IntroViewModel extends BaseViewModel {
     if (dialogResult.confirmed) {
       setBusy(true);
       await _authenticationService.handleSignIn(
-        college: _selectedCollege??"",
-        branch: _selectedBranch??"",
-        semeseter: _selectedSemester??"",
+        college: _selectedCollege ?? "",
+        branch: _selectedBranch ?? "",
+        semeseter: _selectedSemester ?? "",
       );
       notifyListeners();
       setBusy(false);
