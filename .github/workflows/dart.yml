@@ -23,6 +23,10 @@ jobs:
       uses: gittools/actions/gitversion/execute@v0.9.3
     - name: Create version.txt with nuGetVersion
       run: echo ${{ steps.gitversion.outputs.nuGetVersion  }} > version.txt
+    - name: Inject env variables
+      run: |
+        mkdir -p ${{  github.workspace }}/config
+        echo ${{ secrets.GH_TOKEN }} | base64 --decode > ${{ github.workspace }}/config/app_config.json 
     - name: Upload version.txt
       uses: actions/upload-artifact@v2
       with:
