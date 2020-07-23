@@ -8,8 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
-import 'package:stacked_services/stacked_services.dart';
-import 'package:FSOUNotes/models/course_info.dart';
 
 class IntroViewModel extends BaseViewModel {
   Logger log = getLogger("IntroViewModel");

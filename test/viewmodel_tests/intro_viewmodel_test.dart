@@ -1,3 +1,4 @@
+import 'package:FSOUNotes/app/config_reader.dart';
 import 'package:FSOUNotes/app/router.gr.dart';
 import 'package:FSOUNotes/ui/views/intro/intro_viewmodel.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -14,7 +15,7 @@ void main() {
     
    group('Handle Sign in -', () {
     test('When called, should attempt to sign in the user', () async  {
-
+        await ConfigReader.initialize();
         var authService = getAndRegisterAuthenticationServiceMock();
         var dialogService = getAndRegisterDialogServiceMock(isUserConfirmedDialog: true);
         var navService = getAndRegisterNavigationServiceMock();
@@ -28,7 +29,7 @@ void main() {
     });
 
     test('When called and user sign in process completed, should call replace route with Routes.spashViewRoute', () async {
-
+        await ConfigReader.initialize();
         var dialogService = getAndRegisterDialogServiceMock(isUserConfirmedDialog: true);
         var navService = getAndRegisterNavigationServiceMock();
         var model = IntroViewModel();
