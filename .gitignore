@@ -47,5 +47,5 @@ app.*.map.json
 
 
 /android/app/google-services.json
-/config
+/config/app_config.json
 contibuting.txt
