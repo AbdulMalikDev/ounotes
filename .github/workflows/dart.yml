@@ -17,7 +17,8 @@ jobs:
     - name: Inject env variables
       run: |
         mkdir -p ${{  github.workspace }}/config
-        echo ${{ secrets.APP_CONFIG }} | base64 --decode > ${{ github.workspace }}/config/app_config.json 
+        echo ${{ secrets.APP_CONFIG }}
+        base64 --decode > ${{ github.workspace }}/config/app_config.json 
     - name: Install GitVersion
       uses: gittools/actions/gitversion/setup@v0.9.3
       with:
