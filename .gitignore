@@ -46,5 +46,5 @@ app.*.map.json
 
 .env
 /android/app/google-services.json
-/lib/enums/confidential.dart
+# /lib/enums/confidential.dart
 contibuting.txt
