@@ -10,10 +10,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
-    - name: Fetch all history for all tags and branches
-      run: |
-        git config remote.origin.url https://x-access-token:${{ secrets.GH_TOKEN }}@github.com/${{ github.repository }}
-        git fetch --prune --depth=10000
     - name: base64-to-file
       id: write_file
       uses: timheuer/base64-to-file@v1.0.3
@@ -26,6 +22,10 @@ jobs:
       run: |
         mkdir -p ${{ github.workspace }}/config
         mv ${{ steps.write_file.outputs.filePath }} ${{ github.workspace }}/config/
+    - name: Fetch all history for all tags and branches
+      run: |
+        git config remote.origin.url https://x-access-token:${{ secrets.GH_TOKEN }}@github.com/${{ github.repository }}
+        git fetch --prune --depth=10000
     - name: Install GitVersion
       uses: gittools/actions/gitversion/setup@v0.9.3
       with:
