@@ -25,7 +25,7 @@ jobs:
     - name: Inject env variables
       run: |
         mkdir -p ${{ github.workspace }}/config
-        echo > ${{ github.workspace }}/config/${{ steps.write_file.outputs.filePath }} 
+        mv ${{ steps.write_file.outputs.filePath }} ${{ github.workspace }}/config/
     - name: Install GitVersion
       uses: gittools/actions/gitversion/setup@v0.9.3
       with:
