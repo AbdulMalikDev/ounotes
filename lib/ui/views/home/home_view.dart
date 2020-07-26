@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:FSOUNotes/enums/enums.dart';
 import 'package:FSOUNotes/ui/views/home/home_viewmodel.dart';
 import 'package:FSOUNotes/ui/views/search/search_view.dart';

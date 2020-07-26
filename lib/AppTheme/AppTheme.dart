@@ -4,11 +4,11 @@ class AppTheme {
   AppTheme._();
 
   static final ThemeData lightTheme = ThemeData(
-    canvasColor: Colors.grey.shade300,
+    canvasColor: Colors.white,
     primaryColor: Colors.teal,
     accentColor: Colors.amber,
     brightness: Brightness.light,
-    scaffoldBackgroundColor: Colors.grey.shade300,
+    scaffoldBackgroundColor: Colors.white,
     appBarTheme: AppBarTheme(
       color: Colors.teal,
       iconTheme: IconThemeData(
@@ -31,7 +31,7 @@ class AppTheme {
         onPrimary: Color(0xff696b9e),
         secondary: Color(0xfff29a94),
         primaryVariant: Colors.black54,
-        background: Colors.grey.shade300,
+        background: Colors.white,
         //used for text in notes
         onSurface: Colors.grey[700],
         onBackground: Colors.grey[600],

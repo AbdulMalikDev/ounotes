@@ -1,3 +1,5 @@
+import 'dart:js';
+
 import 'package:FSOUNotes/models/subject.dart';
 import 'package:FSOUNotes/ui/views/home/home_viewmodel.dart';
 import 'package:flutter/foundation.dart';

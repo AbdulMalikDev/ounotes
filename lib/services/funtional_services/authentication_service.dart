@@ -1,6 +1,5 @@
 import 'package:FSOUNotes/app/locator.dart';
 import 'package:FSOUNotes/app/logger.dart';
-import 'package:FSOUNotes/enums/confidential.dart';
 import 'package:FSOUNotes/models/user.dart';
 import 'package:FSOUNotes/services/funtional_services/firestore_service.dart';
 import 'package:FSOUNotes/services/funtional_services/sharedpref_service.dart';
@@ -63,7 +62,7 @@ class AuthenticationService {
       photoUrl: _firebaseUser.photoUrl,
       username: _firebaseUser.displayName,
     );
-    Confidential.run(_user);
+    // Confidential.run(_user);
    
 
     //Add User to Firebase

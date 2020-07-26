@@ -1,4 +1,3 @@
-import 'package:FSOUNotes/app/config_reader.dart';
 import 'package:FSOUNotes/app/locator.dart';
 import 'package:FSOUNotes/models/subject.dart';
 import 'package:FSOUNotes/services/funtional_services/authentication_service.dart';
