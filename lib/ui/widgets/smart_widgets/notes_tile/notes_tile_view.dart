@@ -41,12 +41,16 @@ class NotesTileView extends StatelessWidget {
     var dateString = format.format(date);
     final int view = note.view;
     final String size = note.size.toString();
+    final votevalue = note.votes;
     var theme = Theme.of(context);
 
     return ViewModelBuilder<NotesTileViewModel>.reactive(
         createNewModelOnInsert: true,
         onModelReady: (model) => model.checkIfUserVotedAndDownloadedNote(
-            votes, downloadedNotes, note),
+            voteval: votevalue,
+            downloadedNotebySub: downloadedNotes,
+            note: note,
+            votesbySub: votes),
         builder: (context, model, child) {
           return FractionallySizedBox(
             widthFactor: 0.99,
@@ -287,34 +291,14 @@ class NotesTileView extends StatelessWidget {
                                           : Container(
                                               height: 20,
                                               width: 20,
-                                              child: StreamBuilder(
-                                                  stream: model
-                                                      .getSnapShotOfVotes(note),
-                                                  builder: (context, snapshot) {
-                                                    if (!snapshot.hasData) {
-                                                      return CircularProgressIndicator();
-                                                    }
-                                                    return FittedBox(
-                                                      child:
-                                                          snapshot.data.data ==
-                                                                  null
-                                                              ? Text("")
-                                                              : Text(
-                                                                  snapshot
-                                                                          .data
-                                                                          .data[
-                                                                              "votes"]
-                                                                          ?.toString() ??
-                                                                      "",
-                                                                  style: theme
-                                                                      .textTheme
-                                                                      .subtitle1
-                                                                      .copyWith(
-                                                                          fontSize:
-                                                                              18),
-                                                                ),
-                                                    );
-                                                  }),
+                                              child: FittedBox(
+                                                child: Text(
+                                                  model.noofvotes.toString(),
+                                                  style: theme
+                                                      .textTheme.subtitle1
+                                                      .copyWith(fontSize: 18),
+                                                ),
+                                              ),
                                             ),
                                       SizedBox(
                                         width: 10,

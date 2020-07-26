@@ -1,11 +1,8 @@
 import 'dart:io';
 
 import 'package:FSOUNotes/AppTheme/AppStateNotifier.dart';
-import 'package:FSOUNotes/models/course_info.dart';
 import 'package:FSOUNotes/ui/shared/app_config.dart';
-import 'package:FSOUNotes/ui/shared/ui_helper.dart';
 import 'package:FSOUNotes/ui/views/Intro/intro_viewmodel.dart';
-import 'package:FSOUNotes/ui/widgets/dumb_widgets/expantion_list.dart';
 import 'package:FSOUNotes/ui/widgets/dumb_widgets/progress.dart';
 import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
 import 'package:flutter/material.dart';

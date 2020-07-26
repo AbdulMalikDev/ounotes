@@ -22,6 +22,5 @@ void main() {
        verify(navService.navigateTo(Routes.uploadSelectionViewRoute,arguments:isA<UploadSelectionViewArguments>(),id: null));
      });
     });
-
  });
 }

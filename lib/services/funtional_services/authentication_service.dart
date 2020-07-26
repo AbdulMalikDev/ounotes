@@ -12,9 +12,14 @@ import 'package:logger/logger.dart';
 
 @lazySingleton
 class AuthenticationService {
+  //Class Logger
   Logger log = getLogger("AuthenticationService");
+
   FirestoreService _firestoreService = locator<FirestoreService>();
+
   final CollectionReference _usersCollectionReference = Firestore.instance.collection("users");
+
+  //Sign in related variables
   final GoogleSignIn googleSignIn = GoogleSignIn();
   final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
   GoogleSignInAccount _googleUser;

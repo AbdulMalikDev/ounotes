@@ -27,7 +27,6 @@ class HomeViewModel extends BaseViewModel {
         description:
             "Please use \"+\" button to add subjects and swipe left or right to delete them",
         buttonTitle: 'Ok'
-        
       );
     }
   }

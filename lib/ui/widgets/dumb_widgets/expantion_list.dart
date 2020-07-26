@@ -6,6 +6,7 @@ class ExpansionList extends StatefulWidget {
   final String title;
   final Function(String) onItemSelected;
   final bool smallVersion;
+  
   ExpansionList({
     Key key,
     this.items,

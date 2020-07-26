@@ -34,6 +34,8 @@ class NotesTileViewModel extends BaseViewModel {
   bool get hasalreadyvoted => _hasalreadyvoted;
   String _vote = Constants.none;
   String get vote => _vote;
+  int _noofvotes = 0;
+  int get noofvotes => _noofvotes;
 
   bool _isnotedownloaded = false;
   bool get isnotedownloaded => _isnotedownloaded;
@@ -44,8 +46,10 @@ class NotesTileViewModel extends BaseViewModel {
       _vote = Constants.none;
       if (votedon == Constants.upvote) {
         _firestoreService.decrementVotes(note, 1);
+        decrementvotes(1);
       } else {
         _firestoreService.incrementVotes(note, 1);
+        incrementvotes(1);
       }
       _voteServie.removeVote(note.title);
     } else {
@@ -57,10 +61,12 @@ class NotesTileViewModel extends BaseViewModel {
         if (_vote == Constants.none) wasvotenone = true;
         _vote = Constants.upvote;
         //if vote was none then incementvote by once
-        if (wasvotenone)
+        if (wasvotenone) {
           _firestoreService.incrementVotes(note, 1);
-        else {
+          incrementvotes(1);
+        } else {
           _firestoreService.incrementVotes(note, 2);
+          incrementvotes(2);
         }
         //if user has not already voted then add to db
         if (!hasalreadyvoted) {
@@ -73,10 +79,12 @@ class NotesTileViewModel extends BaseViewModel {
       } else {
         if (_vote == Constants.none) wasvotenone = true;
         _vote = Constants.downvote;
-        if (wasvotenone)
+        if (wasvotenone) {
           _firestoreService.decrementVotes(note, 1);
-        else {
+          decrementvotes(1);
+        } else {
           _firestoreService.decrementVotes(note, 2);
+          decrementvotes(2);
         }
         if (!hasalreadyvoted) {
           addtoVotes(hasupvotes: false, hasdownvotes: true, note: note);
@@ -85,6 +93,16 @@ class NotesTileViewModel extends BaseViewModel {
         }
       }
     }
+    notifyListeners();
+  }
+
+  incrementvotes(int val) {
+    _noofvotes += val;
+    notifyListeners();
+  }
+
+  decrementvotes(int val) {
+    _noofvotes -= val;
     notifyListeners();
   }
 
@@ -119,8 +137,12 @@ class NotesTileViewModel extends BaseViewModel {
   // }
 
   checkIfUserVotedAndDownloadedNote(
-      List<Vote> votesbySub, List<Download> downloadedNotebySub, Note note) {
+      {int voteval,
+      List<Vote> votesbySub,
+      List<Download> downloadedNotebySub,
+      Note note}) {
     setBusy(true);
+    _noofvotes = voteval;
     for (int j = 0; j < downloadedNotebySub.length; j++) {
       if (downloadedNotebySub[j].filename == note.title) {
         _isnotedownloaded = true;
@@ -144,7 +166,11 @@ class NotesTileViewModel extends BaseViewModel {
   bool get isAdmin => _authenticationService.user.isAdmin;
 
   void reportNote(
-      {String id, String subjectName, String type, String title , AbstractDocument doc}) async {
+      {String id,
+      String subjectName,
+      String type,
+      String title,
+      AbstractDocument doc}) async {
     Report report =
         Report(id, subjectName, type, title, _authenticationService.user.email);
     var dialogResult = await _dialogService.showConfirmationDialog(
@@ -160,7 +186,7 @@ class NotesTileViewModel extends BaseViewModel {
       _dialogService.showDialog(
           title: "Thank you for reporting", description: result);
     } else {
-      await _firestoreService.reportNote(report: report , doc:doc);
+      await _firestoreService.reportNote(report: report, doc: doc);
       Fluttertoast.showToast(
           msg: "Your report has been recorded. The admins will look into this.",
           toastLength: Toast.LENGTH_SHORT,

@@ -44,6 +44,8 @@ void $initGetIt(GetIt g, {String environment}) {
   g.registerLazySingleton<ReportsService>(() => ReportsService());
   g.registerLazySingleton<SharedPreferencesService>(
       () => SharedPreferencesService());
+  g.registerLazySingleton<SnackbarService>(
+      () => thirdPartyServicesModule.snackbarService);
   g.registerLazySingleton<SubjectsService>(() => SubjectsService());
   g.registerLazySingleton<SyllabusService>(() => SyllabusService());
   g.registerLazySingleton<VoteServie>(() => VoteServie());
@@ -54,4 +56,6 @@ class _$ThirdPartyServicesModule extends ThirdPartyServicesModule {
   DialogService get dialogService => DialogService();
   @override
   NavigationService get navigationService => NavigationService();
+  @override
+  SnackbarService get snackbarService => SnackbarService();
 }
