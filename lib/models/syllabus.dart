@@ -1,6 +1,6 @@
 
 import 'package:FSOUNotes/app/logger.dart';
-import 'package:FSOUNotes/enums/constants.dart';
+import 'package:FSOUNotes/misc/constants.dart';
 import 'package:FSOUNotes/enums/enums.dart';
 import 'package:FSOUNotes/models/document.dart';
 import 'package:flutter/foundation.dart';

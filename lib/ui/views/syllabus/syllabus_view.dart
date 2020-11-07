@@ -1,4 +1,4 @@
-import 'package:FSOUNotes/enums/constants.dart';
+import 'package:FSOUNotes/misc/constants.dart';
 import 'package:FSOUNotes/models/syllabus.dart';
 import 'package:FSOUNotes/ui/views/syllabus/syllabus_viewmodel.dart';
 import 'package:FSOUNotes/ui/widgets/dumb_widgets/progress.dart';

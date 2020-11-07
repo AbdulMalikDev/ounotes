@@ -1,7 +1,7 @@
 import 'package:FSOUNotes/app/locator.dart';
 import 'package:FSOUNotes/app/logger.dart';
 import 'package:FSOUNotes/app/router.gr.dart';
-import 'package:FSOUNotes/enums/constants.dart';
+import 'package:FSOUNotes/misc/constants.dart';
 import 'package:FSOUNotes/enums/enums.dart';
 import 'package:FSOUNotes/models/course_info.dart';
 import 'package:FSOUNotes/models/document.dart';
@@ -29,6 +29,7 @@ class UploadViewModel extends BaseViewModel {
   SubjectsService _subjectsService = locator<SubjectsService>();
 
   List<DropdownMenuItem<String>> _dropDownMenuItemsofsemester;
+  
   List<DropdownMenuItem<String>> _dropDownMenuItemsofBranch;
   List<DropdownMenuItem<String>> _dropDownMenuItemForTypeYear;
   bool _ischecked = false;

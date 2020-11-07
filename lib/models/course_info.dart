@@ -307,9 +307,3 @@ class CourseInfo {
   ];
 }
 
-// @override
-//   Widget build(BuildContext context) {
-//     return ViewModelBuilder<SearchViewModel>.reactive(
-//         builder: (context, model, child) => Scaffold(),
-//         viewModelBuilder:() => SearchViewModel());
-//   }

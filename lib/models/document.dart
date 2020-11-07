@@ -14,6 +14,7 @@ abstract class AbstractDocument {
   set setDate(DateTime setDate) {}
   set setSize(String size);
   set setUrl(String url) ;
+ 
 
   set setId(String id) {
     this.id = id;

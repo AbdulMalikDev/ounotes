@@ -4,6 +4,7 @@ import 'package:FSOUNotes/ui/views/downloads/Syllabus/Downloadedsyllabus_view.da
 import 'package:FSOUNotes/ui/views/downloads/notes/Downloadednotes_view.dart';
 import 'package:FSOUNotes/ui/widgets/dumb_widgets/progress.dart';
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:stacked/stacked.dart';
 
 class DownLoadView extends StatefulWidget {
@@ -98,10 +99,20 @@ class _DownLoadViewState extends State<DownLoadView>
 }
 
 Widget noDownloadsOverlay(BuildContext context) {
-  return Center(
-    child: Text(
-      "Your downloads will appear here",
-      style: Theme.of(context).textTheme.headline5.copyWith(fontSize: 16),
-    ),
+  return Stack(
+    children: <Widget>[
+      Align(
+          alignment: Alignment.center,
+          child: Lottie.asset('assets/lottie/learn.json')),
+      Positioned(
+        top: 340,
+        left: 60,
+        right: 50,
+        child: Text(
+          "Your downloads will appear here",
+          style: Theme.of(context).textTheme.subtitle1.copyWith(fontSize: 17),
+        ),
+      ),
+    ],
   );
 }

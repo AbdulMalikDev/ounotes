@@ -1,5 +1,5 @@
 import 'package:FSOUNotes/app/locator.dart';
-import 'package:FSOUNotes/enums/constants.dart';
+import 'package:FSOUNotes/misc/constants.dart';
 import 'package:FSOUNotes/models/subject.dart';
 import 'package:FSOUNotes/services/state_services/subjects_service.dart';
 import 'package:stacked/stacked.dart';

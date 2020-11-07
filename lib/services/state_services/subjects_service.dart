@@ -26,8 +26,10 @@ class SubjectsService with ChangeNotifier {
 
   ValueNotifier<List<Subject>> _userSubjects =
       new ValueNotifier(new List<Subject>());
-  
-  void setUserSubjects(users){ _userSubjects = users; }
+
+  void setUserSubjects(users) {
+    _userSubjects = users;
+  }
 
   ValueNotifier<List<Subject>> get userSubjects => _userSubjects;
 
@@ -35,7 +37,6 @@ class SubjectsService with ChangeNotifier {
       new ValueNotifier(new List<Subject>());
 
   ValueNotifier<List<Subject>> get allSubjects => _allSubjects;
-
 
   addUserSubject(Subject subject) async {
     if (_userSubjects.value.firstWhere(
@@ -109,6 +110,15 @@ class SubjectsService with ChangeNotifier {
         subjectObjects = allsubs
             .map((jsonSubject) => Subject.fromData(jsonSubject))
             .toList();
+        for (int i = 0; i < subjectObjects.length; i++) {
+          for (int j = 0; j < subjectObjects.length; j++) {
+            if (i != j &&
+                subjectObjects[i].name == subjectObjects[j].name &&
+                !subjectObjects[j].userSubject) {
+              subjectObjects.remove(subjectObjects[j]);
+            }
+          }
+        }
         _allSubjects.value = subjectObjects;
       } else {
         //Get from Firebase
@@ -130,7 +140,6 @@ class SubjectsService with ChangeNotifier {
     }
 
     subjectObjects = [];
-    var subjects;
     //For User subjects
     if (prefs.containsKey("user_subjects")) {
       log.i("user subjects found in local storage");

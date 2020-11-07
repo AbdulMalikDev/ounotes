@@ -1,4 +1,4 @@
-import 'package:FSOUNotes/enums/constants.dart';
+import 'package:FSOUNotes/misc/constants.dart';
 import 'package:FSOUNotes/models/question_paper.dart';
 import 'package:FSOUNotes/ui/views/question_papers/question_papers_viewmodel.dart';
 import 'package:FSOUNotes/ui/widgets/dumb_widgets/progress.dart';

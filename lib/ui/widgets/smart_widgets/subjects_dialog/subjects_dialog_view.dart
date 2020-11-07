@@ -1,152 +1,208 @@
-import 'package:FSOUNotes/enums/enums.dart';
 import 'package:FSOUNotes/models/subject.dart';
 import 'package:FSOUNotes/ui/shared/app_config.dart';
-import 'package:FSOUNotes/ui/views/search/search_view.dart';
 import 'package:FSOUNotes/ui/widgets/smart_widgets/subjects_dialog/subjects_dialog_viewmodel.dart';
+import 'package:dynamic_text_highlighting/dynamic_text_highlighting.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
-class SubjectsDialogView extends StatelessWidget {
+class SubjectsDialogView extends StatefulWidget {
   const SubjectsDialogView({Key key}) : super(key: key);
 
   @override
+  _SubjectsDialogViewState createState() => _SubjectsDialogViewState();
+}
+
+class _SubjectsDialogViewState extends State<SubjectsDialogView> {
+  TextEditingController _textEditingController = TextEditingController();
+  String searchKeyWord = "";
+  @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<SubjectsDialogViewModel>.reactive(
-        builder: (context, model, child) => Dialog(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20)),
-              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-              child: SingleChildScrollView(
-                child: Container(
-                  //color: Colors.yellow,
-                  height: App(context).appScreenHeightWithOutSafeArea(0.78),
-                  width: MediaQuery.of(context).size.width,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        Row(
-                          children: <Widget>[
-                            SizedBox(
-                              width: 20,
+        builder: (context, model, child) => Container(
+              height: MediaQuery.of(context).size.height * 0.8,
+              color: Colors.transparent,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(30.0),
+                    topRight: Radius.circular(30.0),
+                  ),
+                ),
+                width: MediaQuery.of(context).size.width,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      Row(
+                        children: <Widget>[
+                          SizedBox(
+                            width: 20,
+                          ),
+                          Text(
+                            "Add Subjects",
+                            style: Theme.of(context)
+                                .textTheme
+                                .headline6
+                                .copyWith(
+                                    fontSize: 20, fontWeight: FontWeight.w600),
+                          ),
+                          Spacer(),
+                          IconButton(
+                            icon: Icon(
+                              Icons.close,
+                              color: Theme.of(context).iconTheme.color,
                             ),
-                            Text(
-                              "Add Subjects",
-                              style: Theme.of(context)
-                                  .appBarTheme
-                                  .textTheme
-                                  .subtitle1
-                                  .copyWith(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w500),
-                            ),
-                            SizedBox(
-                              width: 80,
-                            ),
-                            IconButton(
+                            onPressed: () async {
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                        ],
+                      ),
+                      const Divider(
+                        color: Colors.grey,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(left: 16, right: 16, top: 10),
+                        child: SizedBox(
+                          height: 0.07 * MediaQuery.of(context).size.height,
+                          child: TextField(
+                            controller: _textEditingController,
+                            decoration: InputDecoration(
+                              fillColor:
+                                  Theme.of(context).colorScheme.background,
+                              filled: true,
+                              hintText: "Search Subject",
+                              hintStyle: TextStyle(fontFamily: "Montserrat"),
+                              contentPadding: EdgeInsets.symmetric(
+                                  vertical: 2, horizontal: 20),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(05),
+                                borderSide: BorderSide(
+                                  color: Colors.transparent,
+                                ),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: BorderSide(
+                                  color: Colors.transparent,
+                                ),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: BorderSide(
+                                  color: Colors.transparent,
+                                ),
+                              ),
                               icon: Icon(
                                 Icons.search,
                                 color: Theme.of(context).iconTheme.color,
                               ),
-                              onPressed: () async {
-                                await showSearch(
-                                    context: context,
-                                    delegate: SearchView(path: Path.Dialog));
-                                Navigator.of(context).pop();
-                              },
                             ),
-                          ],
+                            style: TextStyle(
+                                fontFamily: "Montserrat",
+                                fontSize: 17,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.black),
+                            onChanged: (value) {
+                              setState(() {
+                                searchKeyWord = value.toLowerCase();
+                              });
+                            },
+                          ),
                         ),
-                        const Divider(
-                          color: Colors.grey,
-                        ),
-                        const SizedBox(width: 30),
-                        Container(
-                          height:
-                              App(context).appScreenHeightWithOutSafeArea(0.58),
-                          child: ValueListenableBuilder(
-                              valueListenable: model.allSubjects,
-                              builder: (context, allSubjects, child) {
-                                List<Subject> allSubjectsAltered =
-                                    model.alter(allSubjects);
-                                return ListView.builder(
-                                  itemCount: allSubjectsAltered.length,
-                                  itemBuilder: (context, index) {
-                                    Subject subject = allSubjectsAltered[index];
-                                    return GestureDetector(
-                                      onTap: () {
-                                        model.onSubjectSelected(subject);
-                                      },
-                                      child: Container(
-                                        height: App(context)
-                                            .appScreenHeightWithOutSafeArea(
-                                                0.086),
-                                        width: App(context)
-                                                .appScreenWidthWithOutSafeArea(
-                                                    1) -
-                                            40,
-                                        //padding:EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                                        //margin:EdgeInsets.symmetric(horizontal: 10, vertical: 11),
-                                        alignment: Alignment.center,
+                      ),
+                      Container(
+                        height:
+                            App(context).appScreenHeightWithOutSafeArea(0.55),
+                        child: ValueListenableBuilder(
+                            valueListenable: model.allSubjects,
+                            builder: (context, allSubjects, child) {
+                              List<Subject> allSubjectsAltered =
+                                  model.alter(allSubjects);
 
-                                        child: ListTile(
-                                          leading: IconButton(
-                                            icon: Icon(
-                                              Icons.add_circle,
-                                              color: subject.userSubject
-                                                  ? Colors.green
-                                                  : Theme.of(context)
-                                                      .colorScheme
-                                                      .primary,
-                                              size: 30,
-                                            ),
-                                            onPressed: () {
-                                              model.onSubjectSelected(subject);
-                                            },
+                              return ListView.builder(
+                                physics: BouncingScrollPhysics(),
+                                itemCount: allSubjectsAltered.length,
+                                itemBuilder: (context, index) {
+                                  Subject subject = allSubjectsAltered[index];
+
+                                  if (!(searchKeyWord.trim() == "" ||
+                                      subject.name
+                                          .toLowerCase()
+                                          .startsWith(searchKeyWord)))
+                                    return Container();
+                                  return GestureDetector(
+                                    onTap: () {
+                                      model.onSubjectSelected(subject);
+                                    },
+                                    child: Container(
+                                      height: App(context)
+                                          .appScreenHeightWithOutSafeArea(
+                                              0.086),
+                                      width: App(context)
+                                              .appScreenWidthWithOutSafeArea(
+                                                  1) -
+                                          40,
+                                      //padding:EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                                      //margin:EdgeInsets.symmetric(horizontal: 10, vertical: 11),
+                                      alignment: Alignment.center,
+                                      child: ListTile(
+                                        leading: IconButton(
+                                          icon: Icon(
+                                            Icons.add_circle,
+                                            color: subject.userSubject
+                                                ? Colors.green
+                                                : Theme.of(context)
+                                                    .colorScheme
+                                                    .primary,
+                                            size: 30,
                                           ),
-                                          title: Text(
-                                            subject.name,
+                                          onPressed: () {
+                                            model.onSubjectSelected(subject);
+                                          },
+                                        ),
+                                        title: RichText(
+                                          text: TextSpan(
+                                            text: subject.name.substring(
+                                                0, searchKeyWord.length),
                                             style: Theme.of(context)
                                                 .textTheme
                                                 .headline6
                                                 .copyWith(
-                                                    fontSize: 16,
-                                                    fontWeight:
-                                                        FontWeight.w500),
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 17,
+                                                ),
+                                            children: <TextSpan>[
+                                              TextSpan(
+                                                text: subject.name.substring(
+                                                    searchKeyWord.length),
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .headline6
+                                                    .copyWith(
+                                                        fontSize: 16,
+                                                        fontWeight:
+                                                            FontWeight.w500),
+                                              ),
+                                            ],
                                           ),
                                         ),
                                       ),
-                                    );
-                                  },
-                                );
-                              }),
-                        ),
-                        SizedBox(
-                          height: App(context)
-                              .appScreenHeightWithOutSafeArea(0.001),
-                        ),
-                        Container(
-                          alignment: Alignment.bottomRight,
-                          height:
-                              App(context).appScreenHeightWithOutSafeArea(0.07),
-                          child: FlatButton(
-                            child: Text(
-                              "Done",
-                              style: TextStyle(
-                                  color: Theme.of(context).primaryColor,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 18),
-                            ),
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
+                                    ),
+                                  );
+                                },
+                              );
+                            }),
+                      ),
+                      SizedBox(
+                        height:
+                            App(context).appScreenHeightWithOutSafeArea(0.001),
+                      ),
+                    ],
                   ),
                 ),
               ),

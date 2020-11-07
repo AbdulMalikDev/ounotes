@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:FSOUNotes/app/logger.dart';
-import 'package:FSOUNotes/enums/constants.dart';
+import 'package:FSOUNotes/misc/constants.dart';
 import 'package:FSOUNotes/models/download.dart';
 import 'package:FSOUNotes/models/syllabus.dart';
 import 'package:FSOUNotes/services/state_services/download_service.dart';

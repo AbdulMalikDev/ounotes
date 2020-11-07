@@ -1,4 +1,4 @@
-import 'package:FSOUNotes/enums/constants.dart';
+import 'package:FSOUNotes/misc/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 

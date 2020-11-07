@@ -1,4 +1,4 @@
-import 'package:FSOUNotes/enums/constants.dart';
+import 'package:FSOUNotes/misc/constants.dart';
 import 'package:FSOUNotes/enums/enums.dart';
 import 'package:FSOUNotes/models/question_paper.dart';
 import 'package:FSOUNotes/ui/views/links/links_view.dart';

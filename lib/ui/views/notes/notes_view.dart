@@ -1,4 +1,4 @@
-import 'package:FSOUNotes/enums/constants.dart';
+import 'package:FSOUNotes/misc/constants.dart';
 import 'package:FSOUNotes/models/notes.dart';
 import 'package:FSOUNotes/models/vote.dart';
 import 'package:FSOUNotes/ui/widgets/dumb_widgets/progress.dart';
@@ -79,107 +79,106 @@ class _NotesViewState extends State<NotesView>
                 ),
               ),
               child: SingleChildScrollView(
-                child: Container(
-                  height: widget.path != null
-                      ? MediaQuery.of(context).size.height * 0.86
-                      : MediaQuery.of(context).size.height * 0.78,
-                  width: MediaQuery.of(context).size.width,
-                  child: Column(
-                    children: <Widget>[
-                      // model.isloading
-                      //     ? linearProgress()
-                      //     : SizedBox(height: 0, width: 0),
-                      Stack(
-                        children: <Widget>[
-                          Container(
-                            padding: EdgeInsets.only(top: 10),
-                            height: widget.path != null
-                                ? model.isloading
-                                    ? MediaQuery.of(context).size.height *
-                                        0.84 //chota
-                                    : MediaQuery.of(context).size.height *
-                                        0.86 //bada
-                                : model.isloading
-                                    ? MediaQuery.of(context).size.height *
-                                        0.68 //chota
-                                    : MediaQuery.of(context).size.height *
-                                        0.73, //bada
-                            width: double.infinity,
-                            child: model.isBusy
-                                ? Center(
-                                    child: CircularProgressIndicator(),
-                                  )
-                                : model.notes.length == 0
-                                    ? Center(
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          children: <Widget>[
-                                            Text(
-                                              "Notes are empty!",
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .headline6
-                                                  .copyWith(
-                                                      color: Theme.of(context)
-                                                          .colorScheme
-                                                          .onSurface,
-                                                      fontWeight:
-                                                          FontWeight.w300),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Stack(
+                      children: <Widget>[
+                        Container(
+                          height: widget.path != null
+                              ? model.isloading
+                                  ? MediaQuery.of(context).size.height *
+                                      0.84 //chota
+                                  : MediaQuery.of(context).size.height *
+                                      0.86 //bada
+                              : model.isloading
+                                  ? MediaQuery.of(context).size.height *
+                                      0.68 //chota
+                                  : MediaQuery.of(context).size.height *
+                                      0.73, //bada
+                          width: double.infinity,
+                          child: model.isBusy
+                              ? Center(
+                                  child: CircularProgressIndicator(),
+                                )
+                              : model.notes.length == 0
+                                  ? Center(
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: <Widget>[
+                                          Image.asset(
+                                            'assets/images/study1.jpg',
+                                            alignment: Alignment.center,
+                                            width: 300,
+                                            height: 300,
+                                          ),
+                                          Text(
+                                            "Notes are empty!",
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .headline6
+                                                .copyWith(
+                                                    color: Theme.of(context)
+                                                        .colorScheme
+                                                        .onSurface,
+                                                    fontWeight:
+                                                        FontWeight.w300),
+                                          ),
+                                          SizedBox(
+                                            height: 15,
+                                          ),
+                                          Text(
+                                            "why don't you upload some?",
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .headline6
+                                                .copyWith(
+                                                    color: Theme.of(context)
+                                                        .colorScheme
+                                                        .onSurface,
+                                                    fontWeight:
+                                                        FontWeight.w300),
+                                          ),
+                                        ],
+                                      ),
+                                    )
+                                  : ListView.builder(
+                                      itemCount: model.notes.length,
+                                      itemBuilder:
+                                          (BuildContext context, int index) {
+                                        Note note = model.notes[index];
+                                        return InkWell(
+                                            child: NotesTileView(
+                                              ctx: context,
+                                              note: note,
+                                              index: index,
+                                              votes: model.getListOfVoteBySub(
+                                                  widget.subjectName),
+                                              downloadedNotes: model
+                                                  .getListOfNotesInDownloads(
+                                                      widget.subjectName),
+                                              //votes: v.getListOfVoteBySub(
+                                              //  notes[index].subjectName),
                                             ),
-                                            SizedBox(
-                                              height: 15,
-                                            ),
-                                            Text(
-                                              "why don't you upload some?",
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .headline6
-                                                  .copyWith(
-                                                      color: Theme.of(context)
-                                                          .colorScheme
-                                                          .onSurface,
-                                                      fontWeight:
-                                                          FontWeight.w300),
-                                            ),
-                                          ],
-                                        ),
-                                      )
-                                    : ListView.builder(
-                                        itemCount: model.notes.length,
-                                        itemBuilder:
-                                            (BuildContext context, int index) {
-                                          Note note = model.notes[index];
-                                          return InkWell(
-                                              child: NotesTileView(
-                                                ctx: context,
+                                            onTap: () {
+                                              model.onTap(
+                                                notesName: note.title,
+                                                subName: note.subjectName,
                                                 note: note,
-                                                index: index,
-                                                votes: model.getListOfVoteBySub(
-                                                    widget.subjectName),
-                                                downloadedNotes: model
-                                                    .getListOfNotesInDownloads(
-                                                        widget.subjectName),
-                                                //votes: v.getListOfVoteBySub(
-                                                //  notes[index].subjectName),
-                                              ),
-                                              onTap: () {
-                                                model.onTap(
-                                                  notesName: note.title,
-                                                  subName: note.subjectName,
-                                                  note: note,
-                                                  //! This is used so that spelling is not messed up while uploading
-                                                  type: Constants.notes,
-                                                );
-                                              });
-                                        }),
-                          )
-                        ],
-                      ),
-                    ],
-                  ),
+                                                //! This is used so that spelling is not messed up while uploading
+                                                type: Constants.notes,
+                                              );
+                                            });
+                                      }),
+                        )
+                      ],
+                    ),
+                  ],
                 ),
               ),
             ),

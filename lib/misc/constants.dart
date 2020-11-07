@@ -1,6 +1,34 @@
 import 'package:FSOUNotes/enums/enums.dart';
 import 'package:flutter/material.dart';
 
+const Color primary = Color(0xff5177d6);
+const Color secondary = Color(0xffFFB800);
+const Color ternary = Color(0xffFF8282);
+const Color count_red = Color(0xffFF5F5F);
+const Color difficulty_hard = Color(0xffFF6D6D);
+const Color difficulty_medium = Color(0xffFFD600);
+const Color difficulty_easy = Color(0xff6CCFA8);
+
+//Default Text Styles
+//styles used for drawer
+const TextStyle listTitleDefaultTextStyle = TextStyle(
+    color: Colors.white,
+    fontSize: 20.0,
+    fontWeight: FontWeight.w600,
+    letterSpacing: -0.03,
+    fontFamily: 'Montserrat');
+
+
+
+//styles used for screens
+const TextStyle defaultTextStyle = TextStyle(
+  color: Colors.black,
+  fontSize: 15,
+  fontWeight: FontWeight.normal,
+  letterSpacing: -0.03,
+  fontFamily: 'Montserrat',
+);
+
 class Constants {
   //These are cloud storage constants so as to not mess up the URL while Uploading
   static String notes = "Notes";
@@ -21,17 +49,20 @@ class Constants {
     fontFamily: 'OpenSans',
   );
 
-  static BoxDecoration kBoxDecorationStyle = BoxDecoration(
-    color: Color(0xFF6CA8F1),
-    borderRadius: BorderRadius.circular(10.0),
-    boxShadow: [
-      BoxShadow(
-        color: Colors.black12,
-        blurRadius: 6.0,
-        offset: Offset(0, 2),
-      ),
-    ],
-  );
+ static BoxDecoration kBoxDecorationStyle = BoxDecoration(
+  color: Colors.white,
+  borderRadius: BorderRadius.circular(10),
+  border: Border.all(width: 0.3, color: Colors.black26),
+  boxShadow: [
+    BoxShadow(
+      offset: Offset(0, 0),
+      color: Colors.black,
+      spreadRadius: -10,
+      blurRadius: 14,
+    )
+  ],
+);
+
 
   //* making fields null so that null checks can be performed
   //* and displayed accordingly in views
@@ -69,7 +100,7 @@ class Constants {
     "TextFieldHeading3": "URL",
     "TextFieldHeadingLabel3": "...",
   };
-  
+
   static Map<int, String> semlist = {
     1: "Semester 1",
     2: "Semester 2",
@@ -102,7 +133,6 @@ class Constants {
     }
   }
 }
-
 
 //DO NOT DELETE THIS
 // @override

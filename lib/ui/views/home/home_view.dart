@@ -1,5 +1,5 @@
-import 'dart:io';
 import 'package:FSOUNotes/enums/enums.dart';
+import 'package:FSOUNotes/misc/helper.dart';
 import 'package:FSOUNotes/ui/views/home/home_viewmodel.dart';
 import 'package:FSOUNotes/ui/views/search/search_view.dart';
 import 'package:FSOUNotes/ui/widgets/dumb_widgets/no_subjects_overlay.dart';
@@ -17,28 +17,9 @@ class HomeView extends StatelessWidget {
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
     return ViewModelBuilder<HomeViewModel>.reactive(
-      onModelReady: (model) => model.showIntroDialog(),
+      onModelReady: (model) => model.showIntroDialog(context),
       builder: (context, model, child) => WillPopScope(
-        onWillPop: () => showDialog<bool>(
-          context: context,
-          builder: (c) => AlertDialog(
-            backgroundColor: theme.scaffoldBackgroundColor,
-            content: Text('Are you sure you want to quit OU Notes',
-                style: theme.textTheme.subtitle1.copyWith(fontSize: 17)),
-            actions: [
-              FlatButton(
-                child: Text('No',
-                    style: theme.textTheme.subtitle1.copyWith(fontSize: 17)),
-                onPressed: () => Navigator.pop(c, false),
-              ),
-              FlatButton(
-                child: Text('Yes',
-                    style: theme.textTheme.subtitle1.copyWith(fontSize: 17)),
-                onPressed: () => exit(0),
-              ),
-            ],
-          ),
-        ),
+        onWillPop: () => Helper.showWillPopDialog(context: context),
         child: Scaffold(
           drawer: DrawerView(),
           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -65,30 +46,24 @@ class HomeView extends StatelessWidget {
               ),
             ],
           ),
-
           body: ValueListenableBuilder(
-              valueListenable: model.userSubjects,
-              builder: (context, userSubjects, child) {
-                return Column(
-                  children: [
-                    model.userSubjects.value.length == 0
-                        ? NoSubjectsOverlay()
-                        : UserSubjectListView(),
-                  ],
-                );
-              }),
-
-          //drawer: GetDrawer(),
+            valueListenable: model.userSubjects,
+            builder: (context, userSubjects, child) {
+              return model.userSubjects.value.length == 0
+                  ? NoSubjectsOverlay()
+                  : UserSubjectListView();
+            },
+          ),
           floatingActionButton: Padding(
             padding: const EdgeInsets.only(bottom: 20.0),
             child: FloatingActionButton(
               onPressed: () {
                 Fluttertoast.showToast(msg: 'Add Subjects');
-                showDialog(
+                showModalBottomSheet(
                     context: context,
-                    builder: (BuildContext context) {
-                      return SubjectsDialogView();
-                    });
+                    isScrollControlled: true,
+                    backgroundColor: Colors.transparent,
+                    builder: (BuildContext context) => SubjectsDialogView());
               },
               child: const Icon(Icons.add),
               backgroundColor: Theme.of(context).accentColor,

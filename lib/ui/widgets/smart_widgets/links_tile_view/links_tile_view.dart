@@ -1,5 +1,5 @@
 import 'package:FSOUNotes/AppTheme/AppStateNotifier.dart';
-import 'package:FSOUNotes/enums/constants.dart';
+import 'package:FSOUNotes/misc/constants.dart';
 import 'package:FSOUNotes/enums/enums.dart';
 import 'package:FSOUNotes/models/link.dart';
 import 'package:expansion_tile_card/expansion_tile_card.dart';
@@ -27,9 +27,11 @@ class LinksTileView extends StatelessWidget {
               padding:
                   const EdgeInsets.symmetric(horizontal: 12.0, vertical: 5),
               child: ExpansionTileCard(
+                elevation: 5,
+                contentPadding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 5),
                 baseColor: AppStateNotifier.isDarkModeOn
                     ? Theme.of(context).colorScheme.background
-                    : Colors.white54,
+                    : Colors.grey[100],
                 expandedColor: AppStateNotifier.isDarkModeOn
                     ? Theme.of(context).colorScheme.background
                     : Colors.white,
@@ -47,7 +49,6 @@ class LinksTileView extends StatelessWidget {
                   // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     Container(
-                      
                       child: Text(
                         title,
                         overflow: TextOverflow.clip,
@@ -63,7 +64,7 @@ class LinksTileView extends StatelessWidget {
                     PopupMenuButton(
                       onSelected: (Menu selectedValue) {
                         if (selectedValue == Menu.Report) {
-                          model.reportNote(doc:link);
+                          model.reportNote(doc: link);
                         }
                       },
                       icon: Icon(Icons.more_vert),

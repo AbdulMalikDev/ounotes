@@ -1,299 +1,144 @@
-import 'dart:io';
-
-import 'package:FSOUNotes/AppTheme/AppStateNotifier.dart';
+import 'package:FSOUNotes/misc/helper.dart';
 import 'package:FSOUNotes/ui/shared/app_config.dart';
 import 'package:FSOUNotes/ui/views/Intro/intro_viewmodel.dart';
 import 'package:FSOUNotes/ui/widgets/dumb_widgets/progress.dart';
+import 'package:FSOUNotes/ui/widgets/dumb_widgets/selection_card.dart';
 import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:stacked/stacked.dart';
 
 class IntroView extends StatefulWidget {
   const IntroView({Key key}) : super(key: key);
-
   @override
   _IntroViewState createState() => _IntroViewState();
 }
 
 class _IntroViewState extends State<IntroView> {
+  final Shader linearGradient = LinearGradient(
+    colors: <Color>[Colors.teal[700], Colors.teal[400]],
+  ).createShader(Rect.fromLTWH(0.0, 0.0, 200.0, 70.0));
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
-    var titletheme = theme.textTheme.headline6
-        .copyWith(fontSize: 20, fontWeight: FontWeight.w400);
-    var dropdowntitletheme = theme.textTheme.headline6
-        .copyWith(fontSize: 18, fontWeight: FontWeight.w400);
     return ViewModelBuilder<IntroViewModel>.reactive(
-      onModelReady: (model) => model.initialise(),
+      onModelReady: (model) {
+        model.initialise();
+      },
       builder: (context, model, child) {
         return ModalProgressHUD(
           inAsyncCall: model.isBusy ? true : false,
           opacity: 0.5,
           progressIndicator: circularProgress(),
           child: WillPopScope(
-            onWillPop: () => showDialog<bool>(
+            onWillPop: () => Helper.showWillPopDialog(
               context: context,
-              builder: (c) => AlertDialog(
-                backgroundColor: theme.scaffoldBackgroundColor,
-                title: Row(
-                  children: <Widget>[
-                    Icon(Icons.warning),
-                    Text(
-                      'Warning',
-                      style: theme.textTheme.headline6,
-                    ),
-                  ],
-                ),
-                content: Text(
-                  'Do you really want to exit',
-                  style: theme.textTheme.headline6.copyWith(fontSize: 18),
-                ),
-                actions: [
-                  FlatButton(
-                    child: Text(
-                      'No',
-                      style: Theme.of(context)
-                          .textTheme
-                          .subtitle1
-                          .copyWith(fontSize: 17),
-                    ),
-                    onPressed: () => Navigator.pop(c, false),
-                  ),
-                  FlatButton(
-                    child: Text(
-                      'Yes',
-                      style: Theme.of(context)
-                          .textTheme
-                          .subtitle1
-                          .copyWith(fontSize: 17),
-                    ),
-                    onPressed: () => exit(0),
-                  ),
-                ],
-              ),
             ),
             child: Scaffold(
-              backgroundColor: theme.scaffoldBackgroundColor,
-              appBar: AppBar(
-                automaticallyImplyLeading: false,
-                title: Text("Welcome",
-                    style: theme.appBarTheme.textTheme.headline6),
-              ),
-              body: Container(
-                //  height: MediaQuery.of(context).size.height,
-                child: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Container(
-                        height:
-                            App(context).appScreenHeightWithOutSafeArea(0.16),
-                        width: App(context).appScreenWidthWithOutSafeArea(0.4),
-                        child: Image.asset("assets/images/apnaicon.png"),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Text('OU Notes', style: titletheme),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      Center(
-                        child: Container(
-                          height:
-                              App(context).appScreenHeightWithOutSafeArea(0.13),
-                          width:
-                              App(context).appScreenHeightWithOutSafeArea(1) -
-                                  40,
-                          padding:
-                              EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-                          margin:
-                              EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(16),
-                            color: theme.colorScheme.background,
-                            boxShadow: AppStateNotifier.isDarkModeOn
-                                ? []
-                                : [
-                                    BoxShadow(
-                                        offset: Offset(10, 10),
-                                        color: theme.cardTheme.shadowColor,
-                                        blurRadius: 25),
-                                    BoxShadow(
-                                        offset: Offset(-10, -10),
-                                        color: theme.cardTheme.color,
-                                        blurRadius: 25)
-                                  ],
-                          ),
-                          child: Column(
-                            children: <Widget>[
-                              Text(
-                                "Select Semester",
-                                style: dropdowntitletheme,
-                              ),
-                              SizedBox(
-                                height: 3,
-                              ),
-                              Expanded(
-                                child: Container(
-                                  height: App(context)
-                                      .appScreenHeightWithOutSafeArea(0.075),
-                                  child: DropdownButton(
-                                    dropdownColor:
-                                        theme.scaffoldBackgroundColor,
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .subtitle1
-                                        .copyWith(fontSize: 17),
-                                    value: model.sem,
-                                    items: model.dropdownofsem,
-                                    onChanged:
-                                        model.changedDropDownItemOfSemester,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
+              body: Stack(
+                children: [
+                  Positioned(
+                    top: -30,
+                    left: 0,
+                    child: Container(
+                      height: 120,
+                      width: 120,
+                      padding: EdgeInsets.zero,
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: AssetImage("assets/images/login_top.png"),
                         ),
                       ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Container(
-                        height:
-                            App(context).appScreenHeightWithOutSafeArea(0.13),
-                        width:
-                            App(context).appScreenWidthWithOutSafeArea(1) - 40,
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-                        margin:
-                            EdgeInsets.symmetric(horizontal: 20, vertical: 0),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(16),
-                          color: theme.colorScheme.background,
-                          boxShadow: AppStateNotifier.isDarkModeOn
-                              ? []
-                              : [
-                                  BoxShadow(
-                                      offset: Offset(10, 10),
-                                      color: theme.cardTheme.shadowColor,
-                                      blurRadius: 25),
-                                  BoxShadow(
-                                      offset: Offset(-10, -10),
-                                      color: theme.cardTheme.color,
-                                      blurRadius: 25)
-                                ],
-                        ),
-                        child: Column(
-                          children: <Widget>[
-                            Text(
-                              "Select Branch",
-                              style: dropdowntitletheme,
-                            ),
-                            SizedBox(
-                              height: 3,
-                            ),
-                            Flexible(
-                              child: Container(
-                                height: App(context)
-                                    .appScreenHeightWithOutSafeArea(0.075),
-                                child: DropdownButton(
-                                  dropdownColor: theme.scaffoldBackgroundColor,
-                                  focusColor: Colors.transparent,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .subtitle1
-                                      .copyWith(fontSize: 17),
-                                  value: model.br,
-                                  items: model.dropdownofbr,
-                                  onChanged: model.changedDropDownItemOfBranch,
-                                ),
-                              ),
-                            ),
-                          ],
+                    ),
+                  ),
+                  Positioned(
+                    bottom: -40,
+                    right: 0,
+                    child: Container(
+                      height: 200,
+                      width: 200,
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: AssetImage("assets/images/login_bottom.png"),
                         ),
                       ),
-                      SizedBox(
-                        height: 10,
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.topCenter,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 50,
+                        horizontal: 20,
                       ),
-                      Container(
-                        height:
-                            App(context).appScreenHeightWithOutSafeArea(0.15),
-                        width:
-                            App(context).appScreenWidthWithOutSafeArea(1) - 40,
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-                        margin:
-                            EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(16),
-                          color: theme.colorScheme.background,
-                          boxShadow: AppStateNotifier.isDarkModeOn
-                              ? []
-                              : [
-                                  BoxShadow(
-                                      offset: Offset(10, 10),
-                                      color: theme.cardTheme.shadowColor,
-                                      blurRadius: 25),
-                                  BoxShadow(
-                                      offset: Offset(-10, -10),
-                                      color: theme.cardTheme.color,
-                                      blurRadius: 25)
-                                ],
-                        ),
-                        child: Column(
-                          children: <Widget>[
-                            Text(
-                              "Select College",
-                              style: dropdowntitletheme,
-                            ),
-                            SizedBox(
-                              height: 6,
-                            ),
-                            Expanded(
-                              child: DropdownButton(
-                                dropdownColor: theme.scaffoldBackgroundColor,
-                                focusColor: Colors.transparent,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .subtitle1
-                                    .copyWith(fontSize: 17),
-                                isExpanded: true,
-                                value: model.clg,
-                                items: model.dropdownofclg,
-                                onChanged: model.changedDropDownItemOfCollege,
-                              ),
-                            ),
-                          ],
+                      child: Text(
+                        "Welcome To OUNotes",
+                        style: theme.textTheme.headline6.copyWith(
+                          fontSize: 25,
+                        //  color: theme.primaryColor,
+                          foreground: Paint()..shader = linearGradient,
                         ),
                       ),
-                      SizedBox(
-                        height: 10,
+                    ),
+                  ),
+                  Positioned(
+                    top: 50,
+                    left: App(context).appWidth(0.2),
+                    right: App(context).appWidth(0.2),
+                    child: Container(
+                      height: App(context).appHeight(0.3),
+                      width: App(context).appWidth(0.2),
+                      child: Lottie.asset(
+                        'assets/lottie/intro_book.json',
+                        fit: BoxFit.fill,
                       ),
-                      Flexible(
-                        child: Container(
+                    ),
+                  ),
+                  Positioned(
+                    top: App(context).appHeight(0.32),
+                    left: 30,
+                    right: 30,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        SelectionCard(
+                          value: model.sem,
+                          onChange: model.changedDropDownItemOfSemester,
+                          items: model.dropdownofsem,
+                          title: "Select Semester",
+                        ),
+                        SelectionCard(
+                          value: model.br,
+                          onChange: model.changedDropDownItemOfBranch,
+                          items: model.dropdownofbr,
+                          title: "Select Branch",
+                        ),
+                        SelectionCard(
+                          value: model.clg,
+                          onChange: model.changedDropDownItemOfCollege,
+                          items: model.dropdownofclg,
+                          title: "Select College",
+                          isExpanded: true,
+                        ),
+                        Container(
+                          margin: const EdgeInsets.all(10),
                           height:
                               App(context).appScreenHeightWithOutSafeArea(0.08),
-                          //width: screenWidthWithoutSafeArea - ,
                           child: GoogleSignInButton(
                               borderRadius: 10,
                               onPressed: () {
                                 model.handleSignUp();
                               }),
                         ),
-                      ),
-                      SizedBox(
-                        height: 12,
-                      ),
-                    ],
+                        SizedBox(
+                          height: 20,
+                        ),
+                      ],
+                    ),
                   ),
-                ),
+                ],
               ),
             ),
           ),

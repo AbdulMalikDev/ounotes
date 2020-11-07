@@ -1,6 +1,5 @@
 import 'package:FSOUNotes/models/subject.dart';
 import 'package:FSOUNotes/ui/views/all_documents/all_documents_view.dart';
-import 'package:FSOUNotes/ui/views/home/home_view.dart';
 import 'package:FSOUNotes/ui/views/search/search_viewmodel.dart';
 import 'package:FSOUNotes/ui/views/search/suggestion_list/suggestion_list_view.dart';
 import 'package:flutter/material.dart';
@@ -62,24 +61,24 @@ class SearchView extends SearchDelegate<Subject> {
 
   @override
   Widget buildSuggestions(BuildContext context) {
-   return ViewModelBuilder<SearchViewModel>.reactive(
-     onModelReady: (model) => model.handleStartUpLogic(),
-        builder: (context, model, child) => ValueListenableBuilder(
+    return ViewModelBuilder<SearchViewModel>.reactive(
+      onModelReady: (model) => model.handleStartUpLogic(),
+      builder: (context, model, child) => ValueListenableBuilder(
           valueListenable: model.allSubjects,
-          builder: (context, allSubjects , child) {
+          builder: (context, allSubjects, child) {
             return SuggestionListView(
-      query: this.query,
-      suggestions: model.getSuggestions(this.query),
-      path: path,
-      onSelected: (String suggestion) {
-            this.query = suggestion;
-            path == Path.Dialog
-            ? model.onSelected(suggestion:suggestion)
-            : showResults(context);
-      },
+              query: this.query,
+              suggestions: model.getSuggestions(this.query),
+              path: path,
+              onSelected: (String suggestion) {
+                this.query = suggestion;
+                path == Path.Dialog
+                    ? model.onSelected(suggestion: suggestion)
+                    : showResults(context);
+              },
+            );
+          }),
+      viewModelBuilder: () => SearchViewModel(),
     );
-          }
-        ),
-        viewModelBuilder: () => SearchViewModel());
   }
 }

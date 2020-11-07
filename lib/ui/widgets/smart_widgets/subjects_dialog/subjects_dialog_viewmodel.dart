@@ -58,7 +58,6 @@ DialogService _dialogService = locator<DialogService>();
     }
     notifyListeners();
     return allSubjects;
-
   }
 
 

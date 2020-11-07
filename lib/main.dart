@@ -2,12 +2,11 @@ import 'package:FSOUNotes/AppTheme/AppStateNotifier.dart';
 import 'package:FSOUNotes/AppTheme/AppTheme.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stacked/stacked.dart';
-
 import './app/locator.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:stacked_services/stacked_services.dart';
-import 'app/router.gr.dart';
+import 'app/router.gr.dart' as router;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -20,7 +19,6 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<AppStateNotifier>.reactive(
@@ -31,7 +29,7 @@ class MyApp extends StatelessWidget {
         darkTheme: AppTheme.darkTheme,
         themeMode:
             AppStateNotifier.isDarkModeOn ? ThemeMode.dark : ThemeMode.light,
-        onGenerateRoute: Router().onGenerateRoute,
+        onGenerateRoute: router.Router().onGenerateRoute,
         navigatorKey: locator<NavigationService>().navigatorKey,
       ),
       viewModelBuilder: () => locator<AppStateNotifier>(),

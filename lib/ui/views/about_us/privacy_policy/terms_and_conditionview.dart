@@ -1,4 +1,3 @@
-import 'package:FSOUNotes/ui/shared/app_config.dart';
 import 'package:flutter/material.dart';
 
 class TermsAndConditionView extends StatelessWidget {

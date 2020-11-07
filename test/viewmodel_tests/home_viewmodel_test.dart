@@ -21,7 +21,7 @@ void main() {
       var dialogService = getAndRegisterDialogServiceMock(isUserConfirmedDialog: true);
       var model = HomeViewModel();
       when(model.userSubjects).thenReturn(new ValueNotifier(new List<Subject>()));
-      await model.showIntroDialog();
+      await model.showIntroDialog(null);
       verify(dialogService.showDialog(title: TestData.welcomeDialogTitle,description: TestData.welcomeDialogDescription));
     });
    });

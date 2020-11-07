@@ -1,6 +1,6 @@
 import 'package:FSOUNotes/app/locator.dart';
 import 'package:FSOUNotes/app/router.gr.dart';
-import 'package:FSOUNotes/enums/constants.dart';
+import 'package:FSOUNotes/misc/constants.dart';
 import 'package:FSOUNotes/models/download.dart';
 import 'package:FSOUNotes/services/state_services/download_service.dart';
 import 'package:stacked/stacked.dart';

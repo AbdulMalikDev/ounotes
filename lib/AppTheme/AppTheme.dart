@@ -4,22 +4,23 @@ class AppTheme {
   AppTheme._();
 
   static final ThemeData lightTheme = ThemeData(
-    canvasColor: Colors.white,
-    primaryColor: Colors.teal,
-    accentColor: Colors.amber,
+    primaryColor: Color(0xff2A9D8F),
+    accentColor: Color(0xffFFB800),
     brightness: Brightness.light,
+    canvasColor: Colors.white,
     scaffoldBackgroundColor: Colors.white,
     appBarTheme: AppBarTheme(
-      color: Colors.teal,
+      color: Color(0xff2A9D8F),
       iconTheme: IconThemeData(
         color: Colors.black54,
       ),
       textTheme: ThemeData.light().textTheme.copyWith(
             headline6: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.w400,
-              color: Colors.white,
-            ),
+                fontSize: 20,
+                fontWeight: FontWeight.w500,
+                color: Colors.white,
+                letterSpacing: -0.03,
+                fontFamily: 'Montserrat'),
           ),
     ),
     cardTheme: CardTheme(
@@ -27,29 +28,49 @@ class AppTheme {
       color: Colors.white.withOpacity(0.85),
     ),
     colorScheme: ColorScheme.light(
-        primary: Colors.black54,
-        onPrimary: Color(0xff696b9e),
-        secondary: Color(0xfff29a94),
-        primaryVariant: Colors.black54,
-        background: Colors.white,
-        //used for text in notes
-        onSurface: Colors.grey[700],
-        onBackground: Colors.grey[600],
-        ),
+      primary: Colors.black54,
+      onPrimary: Color(0xff696b9e),
+      secondary: Color(0xfff29a94),
+      primaryVariant: Colors.black54,
+      background: Color(0xffeeeeee),
+      //used for text in notes
+      onSurface: Colors.grey[700],
+      onBackground: Colors.grey[600],
+    ),
     textTheme: ThemeData.light().textTheme.copyWith(
-          headline5: TextStyle(
-              fontWeight: FontWeight.w400, fontSize: 18, color: Colors.black),
-          headline4: TextStyle(
-              fontFamily: 'OpenSans',
-              fontWeight: FontWeight.w600,
-              fontSize: 15,
-              color: Colors.white),
-          bodyText1: TextStyle(color: Colors.white),
-          button: TextStyle(color: Colors.black),
           headline6: TextStyle(
-              color: Colors.black, fontSize: 20, fontWeight: FontWeight.w400),
-          subtitle1: TextStyle(color: Colors.black, fontSize: 20),
+            color: Colors.black,
+            fontSize: 20,
+            fontWeight: FontWeight.w600,
+            letterSpacing: -0.03,
+            fontFamily: 'Montserrat',
+          ),
+          headline5: TextStyle(
+            color: Colors.black,
+            fontSize: 18,
+            fontWeight: FontWeight.w400,
+            letterSpacing: -0.03,
+            fontFamily: 'Montserrat',
+          ),
+          headline4: TextStyle(
+            fontFamily: 'Montserrat',
+            fontWeight: FontWeight.w400,
+            fontSize: 15,
+            color: Colors.black,
+          ),
+          button: TextStyle(
+            color: Color(0xff2A9D8F),
+            fontFamily: 'Montserrat',
+            fontWeight: FontWeight.w400,
+            fontSize: 15,
+          ),
+          subtitle1: TextStyle(
+            color: Colors.black,
+            fontFamily: 'Montserrat',
+            fontSize: 15,
+          ),
           subtitle2: TextStyle(color: Colors.black, fontSize: 20),
+          bodyText1: TextStyle(color: Colors.white),
           bodyText2: TextStyle(color: Colors.black),
         ),
   );
@@ -89,7 +110,6 @@ class AppTheme {
     ),
     iconTheme: IconThemeData(
       color: Colors.white,
-
     ),
     accentIconTheme: IconThemeData(color: Colors.grey[850]),
     textTheme: ThemeData.light().textTheme.copyWith(
