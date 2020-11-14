@@ -22,6 +22,7 @@ class _WebViewWidgetState extends State<WebViewWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(title: Text("Notes"),),
         body: WebView(
       initialUrl: widget.url,
       javascriptMode: JavascriptMode.unrestricted,
