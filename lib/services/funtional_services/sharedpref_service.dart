@@ -28,6 +28,9 @@ class SharedPreferencesService{
     SharedPreferences prefs = await store();
     log.i("User saved locally");
     prefs.setString("current_user",json.encode(user.toJson()));
+    log.e(user.googleSignInAuthHeaders);
+    prefs.setString("google_auth_header",json.encode(user.googleSignInAuthHeaders));
+    log.e(json.decode(prefs.getString("google_auth_header")));
   }
 
   Future<bool> isUserLoggedIn() async

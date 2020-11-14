@@ -5,11 +5,10 @@ import 'package:stacked/stacked.dart';
 
 
 class SplashView extends StatelessWidget {
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
+    print("d");
     return ViewModelBuilder<SplashViewModel>.reactive(
       viewModelBuilder: () => SplashViewModel(),
       // onModelReady: (model) => model.handleStartUpLogic(),

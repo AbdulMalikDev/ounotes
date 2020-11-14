@@ -9,6 +9,7 @@ import 'package:FSOUNotes/models/vote.dart';
 import 'package:FSOUNotes/services/funtional_services/authentication_service.dart';
 import 'package:FSOUNotes/services/funtional_services/cloud_storage_service.dart';
 import 'package:FSOUNotes/services/funtional_services/firestore_service.dart';
+import 'package:FSOUNotes/services/funtional_services/google_drive_service.dart';
 import 'package:FSOUNotes/services/funtional_services/sharedpref_service.dart';
 import 'package:FSOUNotes/services/state_services/report_service.dart';
 import 'package:FSOUNotes/services/state_services/vote_service.dart';
@@ -28,6 +29,7 @@ class NotesTileViewModel extends BaseViewModel {
   ReportsService _reportsService = locator<ReportsService>();
   DialogService _dialogService = locator<DialogService>();
   CloudStorageService _cloudStorageService = locator<CloudStorageService>();
+  GoogleDriveService _googleDriveService = locator<GoogleDriveService>();
 
   VoteServie _voteServie = locator<VoteServie>();
   bool _hasalreadyvoted = false;
@@ -198,4 +200,32 @@ class NotesTileViewModel extends BaseViewModel {
         textColor: Colors.white,
         fontSize: 16.0);
   }
+
+  deleteFromGdrive(Note note) async {
+    var result = await _dialogService.showConfirmationDialog(
+        title: "Are you sure?",
+        description: "You sure you want to delete this?",
+        cancelTitle: "NO",
+        confirmationTitle: "YES");
+    if (!result.confirmed) {
+      setBusy(false);
+      return;
+    }
+    setBusy(true);
+    var response = await _googleDriveService.deleteFile(note:note);
+    setBusy(false);
+    if (response is String) {
+      _dialogService.showDialog(title: "Error", description: response);
+    }
+    Fluttertoast.showToast(
+        msg: "Delete hogaya , khush? baigan...",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0);
+  }
+
+  
 }

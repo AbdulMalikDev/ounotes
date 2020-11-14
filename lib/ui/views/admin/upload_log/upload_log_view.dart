@@ -49,8 +49,7 @@ class _UploadLogViewState extends State<UploadLogView>
                               child: ListTile(
                                 contentPadding: EdgeInsets.all(15),
                                 title: Column(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: <Widget>[
                                     Text(
                                       "File Name : " + logItem.fileName,
@@ -81,6 +80,44 @@ class _UploadLogViewState extends State<UploadLogView>
                                       "Size : " + logItem.size ?? "0",
                                       style: theme.textTheme.subtitle1
                                           .copyWith(fontSize: 18),
+                                    ),
+                                    SizedBox(height: 20,),
+                                    Row(
+                                      children: [
+                                        Expanded(
+                                            child: Padding(
+                                              padding: const EdgeInsets.all(8.0),
+                                              child: RaisedButton(
+                                              color: Colors.teal,
+                                          child: Text("View",style: TextStyle(color: Colors.white),),
+                                          onPressed: () {
+                                            model.viewDocument(logItem);
+                                          },
+                                        ),
+                                            )),
+                                        Expanded(
+                                            child: Padding(
+                                              padding: const EdgeInsets.all(8.0),
+                                              child: RaisedButton(
+                                              color: Colors.blue[700],
+                                          child: Text("Upload",style: TextStyle(color: Colors.white),),
+                                          onPressed: () {
+                                            model.uploadDocument(logItem);
+                                          },
+                                        ),
+                                            )),
+                                        Expanded(
+                                            child: Padding(
+                                              padding: const EdgeInsets.all(8.0),
+                                              child: RaisedButton(
+                                              color: Colors.red,
+                                          child: Text("DELETE",style: TextStyle(color: Colors.white),),
+                                          onPressed: () {
+                                            model.deleteDocument(logItem);
+                                          },
+                                        ),
+                                            )),
+                                      ],
                                     ),
                                   ],
                                 ),

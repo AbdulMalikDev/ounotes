@@ -1,4 +1,9 @@
+
 import 'package:FSOUNotes/app/logger.dart';
+import 'package:FSOUNotes/models/link.dart';
+import 'package:FSOUNotes/models/notes.dart';
+import 'package:FSOUNotes/models/question_paper.dart';
+import 'package:FSOUNotes/models/syllabus.dart';
 import 'package:flutter/services.dart';
 import 'package:logger/logger.dart';
 
@@ -24,15 +29,15 @@ class UploadLog {
   UploadLog.fromData(Map<String, dynamic> data) {
     try {
       fileName = data["fileName"] ?? "";
-      subjectName = data['subjectName'];
+      subjectName = data['subjectName'].toString();
       id = data['id'].toString() ?? "";
-      type = data["type"];
+      type = data["type"].toString();
       date = _parseUploadDate(data["uploadedAt"]);
-      email = data["email"];
-      size = data["size"] ?? "0";
+      email = data["email"].toString();
+      size = data["size"].toString() ?? "0";
+
     } catch (e) {
-      log.e(
-          "While DESERIALIZING uploadLog model from Firebase , Error occurred");
+      log.e("While DESERIALIZING uploadLog model from Firebase , Error occurred");
       String error;
       if (e is PlatformException) error = e.message;
       error = e.toString();

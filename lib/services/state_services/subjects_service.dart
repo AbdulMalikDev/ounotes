@@ -155,4 +155,8 @@ class SubjectsService with ChangeNotifier {
         _allSubjects.value.map((sub) => sub.toJson()).toList();
     prefs.setString("all_subjects", json.encode(allSubjects));
   }
+
+  Subject getSubjectByName(String subjectName) {
+    return _allSubjects.value.firstWhere((subject) => subject.name == subjectName,orElse: null);
+  }
 }

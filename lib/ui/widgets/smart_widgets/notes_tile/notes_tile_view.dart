@@ -336,7 +336,7 @@ class NotesTileView extends StatelessWidget {
                                       style: TextStyle(color: Colors.white)),
                                   color: Colors.red,
                                   onPressed: () async {
-                                    await model.delete(note);
+                                    await model.deleteFromGdrive(note);
                                   },
                                 ),
                               )
