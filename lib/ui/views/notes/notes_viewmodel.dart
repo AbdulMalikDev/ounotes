@@ -143,7 +143,7 @@ class NotesViewModel extends BaseViewModel {
       File file = new File('$dir/$id');
       await file.writeAsBytes(bytes);
       log.i("file path: ${file.path}");
-      return file.path;
+      return file;
     } catch (e) {
       log.e("While retreiving Notes from Firebase STORAGE , Error occurred");
       String error;
@@ -168,12 +168,14 @@ class NotesViewModel extends BaseViewModel {
         _progress = 0;
         notifyListeners();
         setLoading(true);
-        String PDFpath = await downloadFile(
+        File file = await downloadFile(
           notesName: notesName,
           subName: subName,
           type: type,
           note: note,
         );
+        String PDFpath = file.path;
+        log.e(file.path);
         if (PDFpath == 'error') {
           await Fluttertoast.showToast(
               msg:
@@ -195,6 +197,10 @@ class NotesViewModel extends BaseViewModel {
             arguments: PDFScreenArguments(pathPDF: PDFpath, title: notesName));
       }
     });
+  }
+
+  void navigateToWebView(Note note) {
+    _navigationService.navigateTo(Routes.webViewWidgetRoute,arguments: WebViewWidgetArguments(url: note.GDriveLink));
   }
 
   // @override

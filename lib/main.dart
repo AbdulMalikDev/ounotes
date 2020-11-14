@@ -8,7 +8,7 @@ import './app/locator.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:stacked_services/stacked_services.dart';
-import 'app/router.gr.dart';
+import 'app/router.gr.dart' as router;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -32,7 +32,7 @@ class MyApp extends StatelessWidget {
         darkTheme: AppTheme.darkTheme,
         themeMode:
             AppStateNotifier.isDarkModeOn ? ThemeMode.dark : ThemeMode.light,
-        onGenerateRoute: Router().onGenerateRoute,
+        onGenerateRoute: router.Router().onGenerateRoute,
         navigatorKey: locator<NavigationService>().navigatorKey,
       ),
       viewModelBuilder: () => locator<AppStateNotifier>(),

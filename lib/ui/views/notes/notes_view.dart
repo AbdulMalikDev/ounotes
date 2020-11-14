@@ -166,13 +166,15 @@ class _NotesViewState extends State<NotesView>
                                                 //  notes[index].subjectName),
                                               ),
                                               onTap: () {
-                                                model.onTap(
-                                                  notesName: note.title,
-                                                  subName: note.subjectName,
-                                                  note: note,
-                                                  //! This is used so that spelling is not messed up while uploading
-                                                  type: Constants.notes,
-                                                );
+                                                // TODO GDRIVE LINK
+                                                // model.onTap(
+                                                //   notesName: note.title,
+                                                //   subName: note.subjectName,
+                                                //   note: note,
+                                                //   //! This is used so that spelling is not messed up while uploading
+                                                //   type: Constants.notes,
+                                                // );
+                                                model.navigateToWebView(note);
                                               });
                                         }),
                           )

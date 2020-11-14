@@ -145,6 +145,7 @@ class UploadViewModel extends BaseViewModel {
     log.e("year $_year");
     AbstractDocument doc;
     switch (path) {
+
       case Document.Notes:
         type = Constants.notes;
         doc = Note(
@@ -157,6 +158,7 @@ class UploadViewModel extends BaseViewModel {
           type: type,
         );
         break;
+
       case Document.QuestionPapers:
         type = Constants.questionPapers;
         doc = QuestionPaper(
@@ -168,6 +170,7 @@ class UploadViewModel extends BaseViewModel {
           type: type,
         );
         break;
+
       case Document.Syllabus:
         type = Constants.syllabus;
         doc = Syllabus(
@@ -180,7 +183,9 @@ class UploadViewModel extends BaseViewModel {
           year: _year.toString(),
         );
         break;
+
       case Document.Links:
+        log.e("Uploading Link");
         type = Constants.links;
         doc = Link(
           subjectName: subjectName,
@@ -190,6 +195,7 @@ class UploadViewModel extends BaseViewModel {
           path: Document.Links,
         );
         break;
+
       case Document.None:
       case Document.Drawer:
         break;
@@ -205,6 +211,7 @@ class UploadViewModel extends BaseViewModel {
         setBusy(false);
         return;
       } else if (result == "File size more than 35mb") {
+        log.e("File size more than 35mb");
         showDialog(
             context: context,
             builder: (BuildContext context) {
@@ -289,25 +296,20 @@ class UploadViewModel extends BaseViewModel {
         setBusy(false);
         return;
       } else if (result == "File is null") {
+        log.e("File is null");
         setBusy(false);
         return;
       } else if (result == 'error') {
+        log.e("error");
         setBusy(false);
         Fluttertoast.showToast(
             msg: "An error occurred...please try again later");
       } else if (result == "upload successful") {
+        log.e("upload successful");
         setBusy(false);
-        Fluttertoast.showToast(
-            msg: "Document Uploaded ! Thank you !",
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.CENTER,
-            timeInSecForIosWeb: 1,
-            backgroundColor: Colors.greenAccent,
-            textColor: Colors.black,
-            fontSize: 16.0);
-        _navigationService
-            .popUntil((route) => route.settings.name == Routes.homeViewRoute);
+        _uploadSuccessful();
       } else if (result == 'file is not pdf') {
+        log.e("file is not pdf");
         showDialog(
             context: context,
             builder: (BuildContext context) {
@@ -390,11 +392,14 @@ class UploadViewModel extends BaseViewModel {
                   ]);
             });
         setBusy(false);
-      } else {
-        await _firestoreService.saveLink(doc);
-      }
-      setBusy(false);
+      } 
+
+    }else{
+      log.e("Link being saved in Firebase");
+      await _firestoreService.saveLink(doc);
+      _uploadSuccessful();
     }
+    setBusy(false);
   }
 
   launchURL(String url) async {
@@ -403,5 +408,18 @@ class UploadViewModel extends BaseViewModel {
     } else {
       throw 'Could not launch $url';
     }
+  }
+
+  _uploadSuccessful(){
+    Fluttertoast.showToast(
+            msg: "Document Uploaded ! Thank you !",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.CENTER,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.greenAccent,
+            textColor: Colors.black,
+            fontSize: 16.0);
+        _navigationService
+            .popUntil((route) => route.settings.name == Routes.homeViewRoute);
   }
 }

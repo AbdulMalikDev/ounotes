@@ -17,6 +17,7 @@ import 'package:FSOUNotes/ui/views/pdf/pdf_view.dart';
 import 'package:FSOUNotes/ui/views/question_papers/question_papers_view.dart';
 import 'package:FSOUNotes/ui/views/splash/spash_view.dart';
 import 'package:FSOUNotes/ui/views/syllabus/syllabus_view.dart';
+import 'package:FSOUNotes/ui/views/web_view/web_view.dart';
 import 'package:auto_route/auto_route_annotations.dart';
 import 'package:FSOUNotes/ui/views/about_us/about_us_view.dart';
 
@@ -43,4 +44,5 @@ class $Router {
   PrivacyPolicyView privacyPolicyView;
   TermsAndConditionView termsAndConditionView;
   AdminView adminViewRoute;
+  WebViewWidget webViewWidgetRoute;
 }
