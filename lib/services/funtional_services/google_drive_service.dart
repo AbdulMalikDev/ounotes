@@ -61,18 +61,20 @@ class GoogleDriveService {
   }) async {
     log.i("Uploading File from Firebase Storage to Google Drive");
     try {
+      log.e("Should this be added to GDrive : $addToGdrive");
       if (addToGdrive){
 
       // initialize http client and GDrive API
-      SharedPreferences pref = await _sharedPreferencesService.store();
-      Map<String,String> AuthHeaders = new Map<String, String>.from(json.decode(pref.getString("google_auth_header")));
+      var AuthHeaders = await _authenticationService.refreshSignInCredentials();
       var client = GoogleHttpClient(AuthHeaders);  
       var drive = ga.DriveApi(client);
       log.e(AuthHeaders);  
       
       // retrieve subject and notesmodel
       // log.e(_subjectsService.allSubjects);
+      log.e(note.subjectName);
       Subject subject = _subjectsService.getSubjectByName(note.subjectName);
+      log.e(subject);
       if (subject == null) {log.e("Subject is Null");return;}
       NotesViewModel notesViewModel = NotesViewModel();
       // Download File from Firebase
@@ -101,21 +103,29 @@ class GoogleDriveService {
 
       }
 
+      // if accidentally added to GDrive delete it from there too
+      String result;
+      if ( !addToGdrive && (note.GDriveLink != null && note.GDriveLink.length != 0))
+      {
+        log.w("File being deleted from GDrive");
+        result = await this.deleteFile(note: note);
+      }
+
       // Delete it from Firebase Storage
       _cloudStorageService.deleteDocument(note,addedToGdrive:addToGdrive);
 
-      return "upload successful";
+      return addToGdrive ? "upload successful" : result ?? "delete successful";
     } catch (e) {
       return _errorHandling(e, "While UPLOADING Notes from Firebase STORAGE to Google Drive , Error occurred");
     }
   }
 
-  deleteFile({Note note}) async {
+  Future<String> deleteFile({Note note}) async {
     try{
       log.e("File being deleted");
       // initialize http client and GDrive API
       SharedPreferences pref = await _sharedPreferencesService.store();
-      Map<String,String> AuthHeaders = new Map<String, String>.from(json.decode(pref.getString("google_auth_header")));
+      var AuthHeaders = await _authenticationService.refreshSignInCredentials();
       var client = GoogleHttpClient(AuthHeaders);
       log.e(_authenticationService.user.googleSignInAuthHeaders);  
       var drive = ga.DriveApi(client);
@@ -127,10 +137,10 @@ class GoogleDriveService {
       
       var response = await drive.files.delete(FileID);
       await _firestoreService.deleteDocument(note);
-      return "upload successful";
+      return "delete successful";
 
     }catch (e) {
-      return _errorHandling(e, "While UPLOADING Notes from Firebase STORAGE to Google Drive , Error occurred");
+      return _errorHandling(e, "While DELETING Notes IN Google Drive , Error occurred");
     }
   }
 

@@ -28,56 +28,56 @@ class _NotesViewState extends State<NotesView>
       onModelReady: (model) => model.fetchNotesAndVotes(widget.subjectName),
       builder: (context, model, child) => ModalProgressHUD(
         inAsyncCall: model.isloading ? true : false,
-        progressIndicator: Center(
-          child: Container(
-            padding: EdgeInsets.all(10),
-            height: 100,
-            width: 300,
-            color: Theme.of(context).scaffoldBackgroundColor,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                circularProgress(),
-                SizedBox(
-                  width: 20,
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Container(
-                      constraints: BoxConstraints(maxWidth: 180),
-                      child: Text(
-                          'Downloading...' +
-                              model.progress.toStringAsFixed(0) +
-                              '%',
-                          overflow: TextOverflow.clip,
-                          style: Theme.of(context)
-                              .textTheme
-                              .subtitle1
-                              .copyWith(fontSize: 18)),
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Container(
-                      constraints: BoxConstraints(maxWidth: 180),
-                      child: Text(
-                        'Large files may take some time...',
-                        overflow: TextOverflow.clip,
-                        style: Theme.of(context)
-                            .textTheme
-                            .subtitle1
-                            .copyWith(fontSize: 14),
-                      ),
-                    )
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ),
+        // progressIndicator: Center(
+        //   child: Container(
+        //     padding: EdgeInsets.all(10),
+        //     height: 100,
+        //     width: 300,
+        //     color: Theme.of(context).scaffoldBackgroundColor,
+        //     child: Row(
+        //       mainAxisAlignment: MainAxisAlignment.center,
+        //       crossAxisAlignment: CrossAxisAlignment.center,
+        //       children: <Widget>[
+        //         circularProgress(),
+        //         SizedBox(
+        //           width: 20,
+        //         ),
+        //         Column(
+        //           crossAxisAlignment: CrossAxisAlignment.start,
+        //           mainAxisAlignment: MainAxisAlignment.center,
+        //           children: <Widget>[
+        //             Container(
+        //               constraints: BoxConstraints(maxWidth: 180),
+        //               child: Text(
+        //                   'Downloading...' +
+        //                       model.progress.toStringAsFixed(0) +
+        //                       '%',
+        //                   overflow: TextOverflow.clip,
+        //                   style: Theme.of(context)
+        //                       .textTheme
+        //                       .subtitle1
+        //                       .copyWith(fontSize: 18)),
+        //             ),
+        //             SizedBox(
+        //               height: 10,
+        //             ),
+        //             Container(
+        //               constraints: BoxConstraints(maxWidth: 180),
+        //               child: Text(
+        //                 'Large files may take some time...',
+        //                 overflow: TextOverflow.clip,
+        //                 style: Theme.of(context)
+        //                     .textTheme
+        //                     .subtitle1
+        //                     .copyWith(fontSize: 14),
+        //               ),
+        //             )
+        //           ],
+        //         ),
+        //       ],
+        //     ),
+        //   ),
+        // ),
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,

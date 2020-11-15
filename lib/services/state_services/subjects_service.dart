@@ -160,7 +160,14 @@ class SubjectsService with ChangeNotifier {
     prefs.setString("all_subjects", json.encode(allSubjects));
   }
 
+  //* This was created for getting the subject by name
+  //* even if it is in userSubjects or allSubjects does not matter 
   Subject getSubjectByName(String subjectName) {
-    return _allSubjects.value.firstWhere((subject) => subject.name == subjectName,orElse: null);
+    Subject subject = null;
+    List<Subject> allSubs = this.allSubjects.value;
+    List<Subject> userSubs = this.userSubjects.value;
+    subject = allSubs.firstWhere((subject) => subject.name == subjectName,orElse: ()=>null);
+    if(subject==null){subject = userSubs.firstWhere((subject) => subject.name == subjectName,orElse:()=>null);}
+    return subject;
   }
 }

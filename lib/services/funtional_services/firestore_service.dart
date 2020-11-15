@@ -519,6 +519,7 @@ class FirestoreService {
     await _uploadLogCollectionReference.document(id).delete();
     await _reportCollectionReference.document(id).delete();
     await _linksCollectionReference.document("length").updateData({"len" : FieldValue.increment(-1)});
+    return null;
   }
 
 }
