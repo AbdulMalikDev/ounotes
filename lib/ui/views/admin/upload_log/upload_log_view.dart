@@ -83,6 +83,21 @@ class _UploadLogViewState extends State<UploadLogView>
                                       style: theme.textTheme.subtitle1
                                           .copyWith(fontSize: 18),
                                     ),
+                                    FutureBuilder(
+                                      future: model.getStatus(logItem),
+                                      builder: (context, AsyncSnapshot<String> snapshot) {
+                                        if (snapshot.hasData)
+                                        {
+                                        return Text(
+                                          "Status : " + snapshot.data ?? "0",
+                                          style: theme.textTheme.subtitle1
+                                              .copyWith(fontSize: 18),
+                                        );
+                                        }else{
+                                          return Text("EMPTY");
+                                        }
+                                      }
+                                    ),
                                     SizedBox(height: 20,),
                                     Row(
                                       children: [
@@ -113,7 +128,7 @@ class _UploadLogViewState extends State<UploadLogView>
                                               padding: const EdgeInsets.all(8.0),
                                               child: RaisedButton(
                                               color: Colors.red,
-                                          child: Text("DELETE",style: TextStyle(color: Colors.white),),
+                                          child: FittedBox(child: Text("DELETE",style: TextStyle(color: Colors.white),)),
                                           onPressed: () {
                                             model.deleteDocument(logItem);
                                           },

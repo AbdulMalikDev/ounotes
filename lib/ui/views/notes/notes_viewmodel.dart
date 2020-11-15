@@ -137,7 +137,7 @@ class NotesViewModel extends BaseViewModel {
       File file = new File('$dir/$id');
       await file.writeAsBytes(bytes);
       log.i("file path: ${file.path}");
-      return file.path;
+      return file;
     } catch (e) {
       log.e("While retreiving Notes from Firebase STORAGE , Error occurred");
       String error;

@@ -45,7 +45,7 @@ dependencies:
   flutter_secure_storage: ^3.3.1+1
   googleapis: ^0.54.0
   googleapis_auth: ^0.2.11
-  webview_flutter: ^1.0.0
+  flutter_webview_plugin: ^0.3.11
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -69,10 +69,10 @@ dependencies:
   dynamic_text_highlighting: ^2.2.0
   permission_handler: ^5.0.1+1
 
-  get_it: 
+  get_it:
   injectable:
-  flutter_hooks: 
-  observable_ish: 
+  flutter_hooks:
+  observable_ish:
   flutter_material_pickers: ^1.7.3
 
 dev_dependencies:
@@ -109,9 +109,9 @@ flutter:
     - family: Montserrat
       fonts:
         - asset: assets/fonts/Montserrat-Regular.ttf
-    - family:  Custom
+    - family: Custom
       fonts:
-      - asset: assets/fonts/Custom.ttf
+        - asset: assets/fonts/Custom.ttf
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
   # For details regarding adding assets from package dependencies, see

@@ -118,4 +118,12 @@ class UploadLogViewModel extends FutureViewModel{
         Link link = await _firestoreService.deleteLinkById(logItem.id);
       }
     }
+
+  Future<String> getStatus(UploadLog logItem) async {
+    if (logItem.type == Constants.notes){
+      Note note = await _firestoreService.getNoteById(logItem.id);
+      return note.GDriveLink==null ? "NOT UPLOADED" : "UPLOADED";
+    } 
+    return "None";
+  }
 }
