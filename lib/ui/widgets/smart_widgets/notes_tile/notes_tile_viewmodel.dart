@@ -144,7 +144,9 @@ class NotesTileViewModel extends BaseViewModel {
       List<Download> downloadedNotebySub,
       Note note}) {
     setBusy(true);
-    _noofvotes = voteval;
+    if (voteval != null) {
+      _noofvotes = voteval;
+    }
     for (int j = 0; j < downloadedNotebySub.length; j++) {
       if (downloadedNotebySub[j].filename == note.title) {
         _isnotedownloaded = true;
@@ -177,7 +179,8 @@ class NotesTileViewModel extends BaseViewModel {
         Report(id, subjectName, type, title, _authenticationService.user.email);
     var dialogResult = await _dialogService.showConfirmationDialog(
         title: "Are You Sure?",
-        description: "Are you sure you want to report this Document?\nUnnecessary reporting may result in a ban from the application!",
+        description:
+            "Are you sure you want to report this Document?\nUnnecessary reporting may result in a ban from the application!",
         cancelTitle: "NO",
         confirmationTitle: "YES");
     if (!dialogResult.confirmed) {
@@ -238,7 +241,7 @@ class NotesTileViewModel extends BaseViewModel {
       return;
     }
     setBusy(true);
-    var response = await _googleDriveService.deleteFile(note:note);
+    var response = await _googleDriveService.deleteFile(note: note);
     setBusy(false);
     if (response is String) {
       _dialogService.showDialog(title: "Error", description: response);
@@ -252,6 +255,4 @@ class NotesTileViewModel extends BaseViewModel {
         textColor: Colors.white,
         fontSize: 16.0);
   }
-
-  
 }

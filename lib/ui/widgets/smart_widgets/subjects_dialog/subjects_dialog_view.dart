@@ -19,7 +19,7 @@ class _SubjectsDialogViewState extends State<SubjectsDialogView> {
   Widget build(BuildContext context) {
     return ViewModelBuilder<SubjectsDialogViewModel>.reactive(
         builder: (context, model, child) => Container(
-              height: MediaQuery.of(context).size.height * 0.8,
+              height: MediaQuery.of(context).size.height * 0.82,
               color: Colors.transparent,
               child: Container(
                 decoration: BoxDecoration(

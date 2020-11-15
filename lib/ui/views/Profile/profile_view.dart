@@ -88,6 +88,7 @@ class ProfileView extends StatelessWidget {
                         },
                       ),
                     ),
+                    SizedBox(height: 10),
                   ],
                 ),
               ),
@@ -103,7 +104,7 @@ class ProfileView extends StatelessWidget {
 
 Widget buildTile(String title, String subtitle, BuildContext context) {
   return Container(
-    margin: const EdgeInsets.symmetric(vertical: 10),
+    margin: const EdgeInsets.symmetric(vertical: 5),
     child: ListTile(
       leading: Padding(
         padding: const EdgeInsets.only(top: 8.0, left: 20.0),

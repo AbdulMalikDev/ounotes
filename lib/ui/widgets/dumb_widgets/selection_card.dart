@@ -28,13 +28,15 @@ class _SelectionCardState extends State<SelectionCard> {
   Widget build(BuildContext context) {
     return Container(
       decoration: Constants.kBoxDecorationStyle,
-      height: App(context).appHeight(0.13),
+      height: App(context).appHeight(0.14),
       width: double.infinity,
       margin: const EdgeInsets.symmetric(vertical: 10),
       child: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.only(top: 12,),
+            padding: const EdgeInsets.only(
+              top: 12,
+            ),
             child: Text(
               widget.title,
               style: Theme.of(context).textTheme.headline5.copyWith(
@@ -42,48 +44,49 @@ class _SelectionCardState extends State<SelectionCard> {
                   ),
             ),
           ),
-
-          Container(
-            height: 35,
-            width: widget.isExpanded ? 250 : 150,
-            margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              border: Border.all(
-                color: Theme.of(context).primaryColor,
-                width: 0.5,
+          Center(
+            child: Container(
+              height: App(context).appHeight(0.04),
+              width: widget.isExpanded ? 250 : 150,
+              margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(
+                  color: Theme.of(context).primaryColor,
+                  width: 0.5,
+                ),
               ),
-            ),
-            child: GestureDetector(
-              onTap: () {
-                showMaterialScrollPicker(
-                  context: context,
-                  title: widget.title,
-                  items: widget.items,
-                  onChanged: widget.onChange,
-                  selectedItem: widget.value,
-                  showDivider: false,
-                  maxLongSide: MediaQuery.of(context).size.height * 0.7,
-                  cancelText: "",
-                  backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-                );
-              },
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      widget.value,
-                      style: Theme.of(context).textTheme.headline5.copyWith(
-                            fontSize: 15,
-                          ),
+              child: GestureDetector(
+                onTap: () {
+                  showMaterialScrollPicker(
+                    context: context,
+                    title: widget.title,
+                    items: widget.items,
+                    onChanged: widget.onChange,
+                    selectedItem: widget.value,
+                    showDivider: false,
+                    maxLongSide: MediaQuery.of(context).size.height * 0.7,
+                    cancelText: "",
+                    backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                  );
+                },
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        widget.value,
+                        style: Theme.of(context).textTheme.headline5.copyWith(
+                              fontSize: 15,
+                            ),
+                      ),
                     ),
-                  ),
-                  Icon(
-                    Icons.keyboard_arrow_down,
-                    color: Theme.of(context).primaryColor,
-                  ),
-                ],
+                    Icon(
+                      Icons.keyboard_arrow_down,
+                      color: Theme.of(context).primaryColor,
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

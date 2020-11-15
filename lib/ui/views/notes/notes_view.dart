@@ -88,7 +88,7 @@ class _NotesViewState extends State<NotesView>
                   Container(
                     height: widget.path != null
                         ? MediaQuery.of(context).size.height * 0.88
-                        : MediaQuery.of(context).size.height * 0.82,
+                        : MediaQuery.of(context).size.height * 0.75,
                     width: double.infinity,
                     child: model.isBusy
                         ? Center(

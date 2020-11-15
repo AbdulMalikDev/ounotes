@@ -25,7 +25,7 @@ class UserSubjectListView extends StatelessWidget {
                   Subject subject = userSubjects[index];
                   return Container(
                     key: ValueKey('value$index'),
-                    height: App(context).appScreenHeightWithOutSafeArea(0.09),
+                    height: App(context).appHeight(0.09),
                     margin: EdgeInsets.symmetric(horizontal: 14, vertical: 10),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(16),
@@ -66,72 +66,77 @@ class UserSubjectListView extends StatelessWidget {
                           color: Colors.white,
                         ),
                       ),
-                      child: Container(
-                        padding: const EdgeInsets.all(10),
-                        //color: Colors.yellow,
-                        height: 80,
-                        child: ListTile(
-                          title: Container(
-                            //color: Colors.blue,
-                            // constraints: BoxConstraints(maxWidth: 200),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                Expanded(
-                                  child: Text(
-                                    subject.name,
-                                    overflow: TextOverflow.clip,
-                                    style: theme.textTheme.subtitle1
-                                        .copyWith(fontSize: 15),
+                      child: Center(
+                        child: Container(
+                        //  padding: const EdgeInsets.all(10),
+                          // color: Colors.yellow,
+                          child: Center(
+                            child: ListTile(
+                              title: Container(
+                                //color: Colors.blue,
+                                // constraints: BoxConstraints(maxWidth: 200),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                  children: [
+                                    Expanded(
+                                      child: Text(
+                                        subject.name,
+                                        overflow: TextOverflow.clip,
+                                        style: theme.textTheme.subtitle1
+                                            .copyWith(fontSize: 15),
+                                      ),
+                                    ),
+                                    Icon(
+                                      Icons.arrow_forward_ios,
+                                      color: theme.colorScheme.onBackground,
+                                      size: 20,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              leading: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: <Widget>[
+                                  Container(
+                                    width: 8,
+                                    padding: EdgeInsets.all(0),
+                                    margin: EdgeInsets.all(0),
+                                    child: Icon(
+                                      Icons.more_vert,
+                                      color: theme.colorScheme.onBackground,
+                                    ),
                                   ),
-                                ),
-                                Icon(
-                                  Icons.arrow_forward_ios,
-                                  color: theme.colorScheme.onBackground,
-                                  size: 20,
-                                ),
-                              ],
+                                  Container(
+                                    padding: EdgeInsets.all(0),
+                                    margin: EdgeInsets.all(0),
+                                    child: Icon(
+                                      Icons.more_vert,
+                                      color: theme.colorScheme.onBackground,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                  CircleAvatar(
+                                    backgroundColor:
+                                        Theme.of(context).primaryColor,
+                                    child: Text(
+                                      subject.name.substring(0, 1).toUpperCase(),
+                                      style: theme.appBarTheme.textTheme.headline6
+                                          .copyWith(
+                                              fontSize: 17,
+                                              fontWeight: FontWeight.normal),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              onTap: () {
+                                model.onTap(subject.name);
+                              },
                             ),
                           ),
-                          leading: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: <Widget>[
-                              Container(
-                                width: 8,
-                                padding: EdgeInsets.all(0),
-                                margin: EdgeInsets.all(0),
-                                child: Icon(
-                                  Icons.more_vert,
-                                  color: theme.colorScheme.onBackground,
-                                ),
-                              ),
-                              Container(
-                                padding: EdgeInsets.all(0),
-                                margin: EdgeInsets.all(0),
-                                child: Icon(
-                                  Icons.more_vert,
-                                  color: theme.colorScheme.onBackground,
-                                ),
-                              ),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              CircleAvatar(
-                                backgroundColor: Theme.of(context).primaryColor,
-                                child: Text(
-                                  subject.name.substring(0, 1).toUpperCase(),
-                                  style: theme.appBarTheme.textTheme.headline6
-                                      .copyWith(
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.normal),
-                                ),
-                              ),
-                            ],
-                          ),
-                          onTap: () {
-                            model.onTap(subject.name);
-                          },
                         ),
                       ),
                     ),

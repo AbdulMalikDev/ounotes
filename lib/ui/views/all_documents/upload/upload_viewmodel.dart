@@ -312,10 +312,6 @@ class UploadViewModel extends BaseViewModel {
         //     textColor: Colors.black,
         //     fontSize: 16.0);
 
-        await _dialogService.showDialog(
-            title: "Thank you!",
-            description:
-                "Thank you for uploading ! The admins will verify if your uploaded document is relevant and it will be displayed in $subjectName.\n");
         showDialog(
             context: context,
             builder: (BuildContext context) {
@@ -323,18 +319,6 @@ class UploadViewModel extends BaseViewModel {
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20)),
                   backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-                  // title: Row(
-                  //   mainAxisSize: MainAxisSize.min,
-                  //   children: <Widget>[
-                  //     Text(
-                  //       "Thank You!",
-                  //       style: Theme.of(context)
-                  //           .textTheme
-                  //           .headline6
-                  //           .copyWith(fontSize: 18),
-                  //     ),
-                  //   ],
-                  // ),
                   content: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
@@ -349,13 +333,21 @@ class UploadViewModel extends BaseViewModel {
                         children: [
                           Icon(
                             Icons.warning,
-                            size: 15,
+                            size: 30,
                           ),
                           SizedBox(
                             width: 5,
                           ),
-                          Text(
-                              "Uploading irrelevant information may result in a ban from the application")
+                          Expanded(
+                            child: Text(
+                              "Uploading irrelevant information may result in a ban from the application",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .subtitle1
+                                  .copyWith(fontSize: 15),
+                              overflow: TextOverflow.clip,
+                            ),
+                          )
                         ],
                       )
                     ],
@@ -375,8 +367,8 @@ class UploadViewModel extends BaseViewModel {
                         }),
                   ]);
             });
-        Future.delayed(Duration(seconds: 2)).then((value) => _navigationService
-            .popUntil((route) => route.settings.name == Routes.homeViewRoute));
+        // Future.delayed(Duration(seconds: 2)).then((value) => _navigationService
+        //     .popUntil((route) => route.settings.name == Routes.homeViewRoute));
       } else if (result == 'file is not pdf') {
         showDialog(
             context: context,

@@ -22,7 +22,10 @@ class _AllDocumentsViewState extends State<AllDocumentsView>
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
     return ViewModelBuilder<AllDocumentsViewModel>.reactive(
-        onModelReady: (model)async{model.subjectName = widget.subjectName;await model.handleStartup(context);},
+        onModelReady: (model) async {
+          model.subjectName = widget.subjectName;
+          await model.handleStartup(context);
+        },
         builder: (context, model, child) => DefaultTabController(
               length: 4,
               child: Scaffold(
@@ -51,10 +54,12 @@ class _AllDocumentsViewState extends State<AllDocumentsView>
                         title: RichText(
                           text: TextSpan(
                             text: ' Resources',
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold),
+                            style:
+                                Theme.of(context).textTheme.subtitle1.copyWith(
+                                      color: Colors.white,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                           ),
                         ),
                         actions: <Widget>[
@@ -67,11 +72,15 @@ class _AllDocumentsViewState extends State<AllDocumentsView>
                               child: Shimmer.fromColors(
                                 baseColor: Colors.red,
                                 highlightColor: Colors.white,
-                                child: Text(
-                                  "UPLOAD DOCUMENT",
-                                  style: TextStyle(
+                                child: FittedBox(
+                                  child: Text(
+                                    "UPLOAD DOCUMENT",
+                                    style: TextStyle(
                                       color: Colors.white,
-                                      fontWeight: FontWeight.bold),
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 12,
+                                    ),
+                                  ),
                                 ),
                               ),
                               onPressed: () {
