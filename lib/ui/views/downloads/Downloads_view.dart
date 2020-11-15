@@ -1,3 +1,4 @@
+import 'package:FSOUNotes/ui/shared/app_config.dart';
 import 'package:FSOUNotes/ui/views/downloads/Downloads_viewmodel.dart';
 import 'package:FSOUNotes/ui/views/downloads/QuestionPapers/Downloadedqp_view.dart';
 import 'package:FSOUNotes/ui/views/downloads/Syllabus/Downloadedsyllabus_view.dart';
@@ -102,11 +103,12 @@ Widget noDownloadsOverlay(BuildContext context) {
   return Stack(
     children: <Widget>[
       Align(
-          alignment: Alignment.center,
-          child: Lottie.asset('assets/lottie/learn.json')),
+        alignment: Alignment.center,
+        child: Lottie.asset('assets/lottie/learn.json'),
+      ),
       Positioned(
-        top: 340,
-        left: 60,
+        top: App(context).appHeight(0.52),
+        left: 50,
         right: 50,
         child: Text(
           "Your downloads will appear here",

@@ -7,7 +7,7 @@ class DrawerHeaderView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: App(context).appScreenHeightWithOutSafeArea(0.3),
+      height: App(context).appHeight(0.23),
       child: DrawerHeader(
         margin: EdgeInsets.all(0),
         decoration: BoxDecoration(
@@ -51,8 +51,8 @@ class DrawerHeaderView extends StatelessWidget {
             Container(
               //color: Colors.yellow,
               //  alignment: Alignment.centerRight,
-              height: App(context).appScreenHeightWithOutSafeArea(0.2),
-              width: App(context).appScreenWidthWithOutSafeArea(0.3),
+              height: App(context).appHeight(0.15),
+              width: App(context).appWidth(0.3),
               //padding: EdgeInsets.only(left: 20),
               child: ClipRect(
                 child: Align(

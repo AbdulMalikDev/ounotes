@@ -111,7 +111,7 @@ class FirestoreService {
           .where('subjectName', isEqualTo: subjectName)
           .getDocuments();
       List<Note> notes =
-          snapshot.documents.map((doc) => Note.fromData(doc.data)).toList();
+          snapshot.documents.map((doc) => Note.fromData(doc.data,doc.documentID)).toList();
       _notesService.setNotes = notes;
       return notes;
     } catch (e) {
@@ -226,6 +226,7 @@ class FirestoreService {
       String id = newCuid();
       doc.setId = id;
       await _linksCollectionReference.document(doc.id).setData(doc.toJson());
+      await _linksCollectionReference.document("length").updateData({"len" : FieldValue.increment(1)});
       await _uploadLogCollectionReference
           .document(doc.id)
           .setData(_linkUploadLog(doc));
@@ -283,6 +284,9 @@ class FirestoreService {
         if (doc.id.length > 5) {
           await ref.document(doc.id).delete();
           await _uploadLogCollectionReference.document(doc.id).delete();
+          if (doc.path == Document.Links){
+            await _linksCollectionReference.document("length").updateData({"len" : FieldValue.increment(-1)});
+          }
           DocumentSnapshot docSnap =
               await _reportCollectionReference.document(doc.id).get();
           if (docSnap.exists) {
@@ -320,6 +324,26 @@ class FirestoreService {
   //   _subjectsToStore.forEach((subject) async {
 
   //       await Firestore.instance.collection("Subjects").document(subject["id"].toString()).setData(subject);
+
+  //   });
+  // }
+
+  //*used for loading all subjects to G-Drive [one-time] do not activate again
+  // loadSubjects() async
+  // {
+  //   // List<Map<String,dynamic>> _subjectsToStore = CourseInfo.allsubjects.map((e) => e.toJson()).toList();
+
+  //   // _subjectsToStore.forEach((subject) async {
+
+  //   //     await Firestore.instance.collection("Subjects").document(subject["id"].toString()).setData(subject);
+
+  //   // });
+  //   List<Subject> subs = _subjectsService.allSubjects.value;
+  //   subs.forEach((subject) {
+
+  //     print(subject.name);
+
+
 
   //   });
   // }
@@ -460,5 +484,14 @@ class FirestoreService {
 
   deleteUploadLog(UploadLog report) async {
     await _uploadLogCollectionReference.document(report.id).delete();
+  }
+
+  void updateSubjectInFirebase(Map subject) async {
+    await Firestore.instance.collection("Subjects").document(subject["id"].toString()).setData(subject);
+  }
+
+  updateNoteInFirebase(Map note) async {
+    log.e(note["firebaseId"].toString());
+    await Firestore.instance.collection("Notes").document(note["firebaseId"].toString()).setData(note);
   }
 }

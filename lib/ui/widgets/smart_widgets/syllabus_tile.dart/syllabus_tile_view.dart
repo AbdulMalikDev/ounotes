@@ -90,14 +90,15 @@ class SyllabusTileView extends StatelessWidget {
                                                 ? BoxConstraints(maxWidth: 150)
                                                 : BoxConstraints(maxWidth: 175),
                                             child: Text(
-                                              title,
-                                              overflow: TextOverflow.clip,
-                                              style: TextStyle(
-                                                  color: primary,
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 18),
+                                                title,
+                                                overflow: TextOverflow.ellipsis,
+                                                style: TextStyle(
+                                                    color: primary,
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 13),
+                                              ),
                                             ),
-                                          ),
+                                      
                                           model.isSyllabusdownloaded
                                               ? FittedBox(
                                                   child: Icon(Icons.done_all,
@@ -112,8 +113,7 @@ class SyllabusTileView extends StatelessWidget {
                                     PopupMenuButton(
                                       onSelected: (Menu selectedValue) {
                                         if (selectedValue == Menu.Report) {
-                                          model.reportNote(doc: syllabus
-                                          );
+                                          model.reportNote(doc: syllabus);
                                         }
                                       },
                                       icon: Icon(Icons.more_vert),

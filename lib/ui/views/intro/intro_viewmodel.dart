@@ -10,7 +10,6 @@ import 'package:stacked_services/stacked_services.dart';
 
 class IntroViewModel extends BaseViewModel {
   Logger log = getLogger("IntroViewModel");
-
   DialogService _dialogService = locator<DialogService>();
   AuthenticationService _authenticationService =
       locator<AuthenticationService>();

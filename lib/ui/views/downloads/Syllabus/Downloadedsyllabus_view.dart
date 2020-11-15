@@ -30,7 +30,7 @@ class DownloadedSyllabusView extends StatelessWidget {
                 child: FractionallySizedBox(
                   widthFactor: 0.99,
                   child: Container(
-                    height: MediaQuery.of(context).size.height * 0.18,
+                    height: MediaQuery.of(context).size.height * 0.1,
                     width: double.infinity,
                     margin: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
                     decoration: BoxDecoration(
@@ -104,13 +104,15 @@ class DownloadedSyllabusView extends StatelessWidget {
                                 ),
                                 Container(
                                   constraints: BoxConstraints(maxWidth: 200),
-                                  child: Text(
-                                    item,
-                                    overflow: TextOverflow.clip,
-                                    style: TextStyle(
-                                        color: primary,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 18),
+                                  child: FittedBox(
+                                    child: Text(
+                                      item,
+                                      overflow: TextOverflow.clip,
+                                      style: TextStyle(
+                                          color: primary,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 18),
+                                    ),
                                   ),
                                 ),
                                 SizedBox(
@@ -146,22 +148,22 @@ class DownloadedSyllabusView extends StatelessWidget {
 }
 
 void showSnackBar(
-    BuildContext context,
-    String item,
-  ) {
-    Scaffold.of(context).showSnackBar(
-      SnackBar(
-        content: Container(
-          constraints: BoxConstraints(maxWidth: 300),
-          child: Text(
-            "REMOVED $item",
-            style: Theme.of(context)
-                .textTheme
-                .subtitle1
-                .copyWith(fontSize: 15, color: Colors.black),
-          ),
+  BuildContext context,
+  String item,
+) {
+  Scaffold.of(context).showSnackBar(
+    SnackBar(
+      content: Container(
+        constraints: BoxConstraints(maxWidth: 300),
+        child: Text(
+          "REMOVED $item",
+          style: Theme.of(context)
+              .textTheme
+              .subtitle1
+              .copyWith(fontSize: 15, color: Colors.black),
         ),
-        duration: Duration(seconds: 1),
       ),
-    );
-  }
+      duration: Duration(seconds: 1),
+    ),
+  );
+}

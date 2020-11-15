@@ -25,7 +25,7 @@ class FilterSubjectsView extends StatelessWidget {
                   // ),
                   itemBuilder: (context, index) {
                     return Container(
-                      height: MediaQuery.of(context).size.height * 0.13,
+                      height: MediaQuery.of(context).size.height * 0.1,
                       margin: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(16),
@@ -48,10 +48,11 @@ class FilterSubjectsView extends StatelessWidget {
                             EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                         height: 80,
                         child: ListTile(
-                          title: Text(data[index].name,
-                              style: TextStyle(
-                                fontSize: 18,
-                              )),
+                          title: Text(
+                            data[index].name,
+                            style: theme.textTheme.subtitle1
+                                .copyWith(fontSize: 15),
+                          ),
                           leading: CircleAvatar(
                             backgroundColor: Theme.of(context).primaryColor,
                             child: Text(

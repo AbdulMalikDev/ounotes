@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:FSOUNotes/app/locator.dart';
 import 'package:FSOUNotes/app/logger.dart';
 import 'package:FSOUNotes/app/router.gr.dart';
-import 'package:FSOUNotes/misc/constants.dart';
+import 'package:FSOUNotes/enums/constants.dart';
 import 'package:FSOUNotes/models/document.dart';
 import 'package:FSOUNotes/models/download.dart';
 import 'package:FSOUNotes/models/notes.dart';
@@ -168,12 +168,14 @@ class NotesViewModel extends BaseViewModel {
         _progress = 0;
         notifyListeners();
         setLoading(true);
-        String PDFpath = await downloadFile(
+        File file = await downloadFile(
           notesName: notesName,
           subName: subName,
           type: type,
           note: note,
         );
+        String PDFpath = file.path;
+        log.e(file.path);
         if (PDFpath == 'error') {
           await Fluttertoast.showToast(
               msg:
@@ -195,6 +197,10 @@ class NotesViewModel extends BaseViewModel {
             arguments: PDFScreenArguments(pathPDF: PDFpath, title: notesName));
       }
     });
+  }
+
+  void navigateToWebView(Note note) {
+    _navigationService.navigateTo(Routes.webViewWidgetRoute,arguments: WebViewWidgetArguments(url: note.GDriveLink));
   }
 
   // @override

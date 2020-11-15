@@ -1,7 +1,9 @@
 import 'package:FSOUNotes/AppTheme/AppStateNotifier.dart';
 import 'package:FSOUNotes/AppTheme/AppTheme.dart';
+import 'package:FSOUNotes/app/config_reader.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stacked/stacked.dart';
+
 import './app/locator.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
@@ -19,6 +21,7 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
+  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<AppStateNotifier>.reactive(

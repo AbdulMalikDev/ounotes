@@ -38,12 +38,13 @@ class SubjectsService with ChangeNotifier {
 
   ValueNotifier<List<Subject>> get allSubjects => _allSubjects;
 
-  addUserSubject(Subject subject) async {
+  Future<dynamic> addUserSubject(Subject subject) async {
     if (_userSubjects.value.firstWhere(
             (element) =>
                 element.name.toLowerCase() == subject.name.toLowerCase(),
             orElse: () => null) !=
         null) {
+      print('repeated');
       return "Repeated";
     }
     List<Subject> subs = _userSubjects.value;
@@ -55,6 +56,7 @@ class SubjectsService with ChangeNotifier {
     _userSubjects.notifyListeners();
     _allSubjects.notifyListeners();
     await _saveStateToLocal();
+    return null;
   }
 
   removeUserSubject(Subject subject) async {
@@ -140,6 +142,7 @@ class SubjectsService with ChangeNotifier {
     }
 
     subjectObjects = [];
+    var subjects;
     //For User subjects
     if (prefs.containsKey("user_subjects")) {
       log.i("user subjects found in local storage");

@@ -23,7 +23,7 @@ class _SubjectsDialogViewState extends State<SubjectsDialogView> {
               color: Colors.transparent,
               child: Container(
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: Theme.of(context).scaffoldBackgroundColor,
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(30.0),
                     topRight: Radius.circular(30.0),
@@ -102,11 +102,7 @@ class _SubjectsDialogViewState extends State<SubjectsDialogView> {
                                 color: Theme.of(context).iconTheme.color,
                               ),
                             ),
-                            style: TextStyle(
-                                fontFamily: "Montserrat",
-                                fontSize: 17,
-                                fontWeight: FontWeight.w500,
-                                color: Colors.black),
+                            style: Theme.of(context).textTheme.headline5,
                             onChanged: (value) {
                               setState(() {
                                 searchKeyWord = value.toLowerCase();
@@ -117,7 +113,7 @@ class _SubjectsDialogViewState extends State<SubjectsDialogView> {
                       ),
                       Container(
                         height:
-                            App(context).appScreenHeightWithOutSafeArea(0.55),
+                            App(context).appScreenHeightWithOutSafeArea(0.6),
                         child: ValueListenableBuilder(
                             valueListenable: model.allSubjects,
                             builder: (context, allSubjects, child) {
@@ -198,10 +194,10 @@ class _SubjectsDialogViewState extends State<SubjectsDialogView> {
                               );
                             }),
                       ),
-                      SizedBox(
-                        height:
-                            App(context).appScreenHeightWithOutSafeArea(0.001),
-                      ),
+                      // SizedBox(
+                      //   height:
+                      //       App(context).appScreenHeightWithOutSafeArea(0.001),
+                      // ),
                     ],
                   ),
                 ),

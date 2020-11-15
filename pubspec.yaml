@@ -17,7 +17,7 @@ description: A new Flutter project.
 version: 99.99.99+99
 
 environment:
-  sdk: ">=2.7.0 <3.0.0"
+  sdk: ">=2.9.0 <3.0.0"
 
 dependencies:
   flutter:
@@ -42,22 +42,22 @@ dependencies:
   awesome_dialog: ^1.1.3
   lottie: ^0.4.1
   direct_select_flutter: ^1.0.6
+  flutter_secure_storage: ^3.3.1+1
+  googleapis: ^0.54.0
+  googleapis_auth: ^0.2.11
+  webview_flutter: ^1.0.0
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.3
-
-  stacked: ^1.6.0
+  stacked: 1.6.0
   stacked_hooks: 0.1.1+3
-  stacked_services: ^0.4.4+1
+  stacked_services: 0.4.4+1
   logger: ^0.6.0
-
   # http request
   http: ^0.12.0+2
-
   # async package to add additional Cancellable operations
   async: ^2.0.8
-
   firebase_auth: ^0.16.1
   cloud_firestore: ^0.13.7
   firebase_storage: ^3.1.6
@@ -80,10 +80,10 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
 
-  build_runner: 
-  auto_route_generator: 
-  injectable_generator: 
-  mockito: 
+  build_runner:
+  auto_route_generator:
+  injectable_generator:
+  mockito:
 
 flutter_icons:
   image_path: "assets/images/apnaicon.png"
@@ -92,9 +92,9 @@ flutter_icons:
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
+
 # The following section is specific to Flutter.
 flutter:
-
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
@@ -135,4 +135,3 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
-

@@ -29,7 +29,7 @@ class UploadViewModel extends BaseViewModel {
   SubjectsService _subjectsService = locator<SubjectsService>();
 
   List<DropdownMenuItem<String>> _dropDownMenuItemsofsemester;
-  
+
   List<DropdownMenuItem<String>> _dropDownMenuItemsofBranch;
   List<DropdownMenuItem<String>> _dropDownMenuItemForTypeYear;
   bool _ischecked = false;
@@ -72,18 +72,23 @@ class UploadViewModel extends BaseViewModel {
   // }
 
   getSuggestions(String query) {
-    List<String> userSub =
-        _subjectsService.userSubjects.value.map((sub) => sub.name).toList();
-    List<String> allSub =
-        _subjectsService.allSubjects.value.map((sub) => sub.name).toList();
-    List<String> subList = userSub + allSub;
-    subList = subList.toSet().toList();
+    List<String> subList = getAllSubjectsList();
     final List<String> suggestions = query.isEmpty
         ? []
         : subList
             .where((sub) => sub.toLowerCase().startsWith(query.toLowerCase()))
             .toList();
     return suggestions;
+  }
+
+  List<String> getAllSubjectsList() {
+    List<String> userSub =
+        _subjectsService.userSubjects.value.map((sub) => sub.name).toList();
+    List<String> allSub =
+        _subjectsService.allSubjects.value.map((sub) => sub.name).toList();
+    List<String> subList = userSub + allSub;
+    subList = subList.toSet().toList();
+    return subList;
   }
 
   initialise(Document path) {

@@ -1,3 +1,4 @@
+import 'package:FSOUNotes/ui/shared/app_config.dart';
 import 'package:FSOUNotes/ui/shared/ui_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
@@ -17,7 +18,7 @@ class NoSubjectsOverlay extends StatelessWidget {
               alignment: Alignment.center,
               child: Lottie.asset('assets/lottie/learn.json')),
           Positioned(
-            top: 320,
+            top: App(context).appHeight(0.5),
             left: 60,
             right: 50,
             child: Text(

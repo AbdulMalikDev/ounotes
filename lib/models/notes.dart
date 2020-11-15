@@ -1,4 +1,4 @@
-import 'package:FSOUNotes/misc/constants.dart';
+import 'package:FSOUNotes/enums/constants.dart';
 import 'package:FSOUNotes/enums/enums.dart';
 import 'package:FSOUNotes/models/document.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -20,6 +20,9 @@ class Note extends AbstractDocument {
   String type;
   int votes;
 
+  //* GDrive Link
+  String GDriveLink;
+
   Note({
     @required this.subjectName,
     @required this.title,
@@ -34,7 +37,7 @@ class Note extends AbstractDocument {
     this.votes,
   });
 
-  Note.fromData(Map<String, dynamic> data) {
+  Note.fromData(Map<String, dynamic> data , String documentID) {
     title = data['title'];
     subjectName = data['subjectName'];
     author = data['author'];
@@ -47,6 +50,8 @@ class Note extends AbstractDocument {
     type = Constants.notes;
     votes = data["votes"];
     size = data['size'];
+    GDriveLink = data['GDriveLink'] ?? "";
+    firebaseId = documentID;
   }
 
   Map<String, dynamic> toJson() {
@@ -61,11 +66,14 @@ class Note extends AbstractDocument {
       "isDownloaded": isDownloaded ?? false,
       "votes": votes,
       "size":size,
+      "GDriveLink":GDriveLink ?? "",
+      "firebaseId":firebaseId ?? "",
     };
   }
 
   set setId(String id) {
     this.id = id;
+    this.firebaseId = id;
   }
 
   set setIsDownloaded(bool id) {
@@ -94,6 +102,10 @@ class Note extends AbstractDocument {
   @override
   set setPath(Document path) {
     this.path = path;
+  }
+
+  setGdriveDownloadLink(String url){
+    this.GDriveLink = url;
   }
 
   DateTime _parseUploadDate(date) {

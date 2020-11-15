@@ -28,6 +28,7 @@ import 'package:FSOUNotes/ui/views/FilterDocuments/FD_DocumentDisplay/fd_documen
 import 'package:FSOUNotes/ui/views/about_us/privacy_policy/privacy_policyview.dart';
 import 'package:FSOUNotes/ui/views/about_us/privacy_policy/terms_and_conditionview.dart';
 import 'package:FSOUNotes/ui/views/admin/admin_view.dart';
+import 'package:FSOUNotes/ui/views/web_view/web_view.dart';
 
 abstract class Routes {
   static const splashViewRoute = '/';
@@ -50,6 +51,7 @@ abstract class Routes {
   static const privacyPolicyView = '/privacy-policy-view';
   static const termsAndConditionView = '/terms-and-condition-view';
   static const adminViewRoute = '/admin-view-route';
+  static const webViewWidgetRoute = '/web-view-widget-route';
   static const all = {
     splashViewRoute,
     introViewRoute,
@@ -71,6 +73,7 @@ abstract class Routes {
     privacyPolicyView,
     termsAndConditionView,
     adminViewRoute,
+    webViewWidgetRoute,
   };
 }
 
@@ -292,6 +295,17 @@ class Router extends RouterBase {
           builder: (context) => AdminView(),
           settings: settings,
         );
+      case Routes.webViewWidgetRoute:
+        if (hasInvalidArgs<WebViewWidgetArguments>(args)) {
+          return misTypedArgsRoute<WebViewWidgetArguments>(args);
+        }
+        final typedArgs =
+            args as WebViewWidgetArguments ?? WebViewWidgetArguments();
+        return MaterialPageRoute<dynamic>(
+          builder: (context) =>
+              WebViewWidget(url: typedArgs.url, key: typedArgs.key),
+          settings: settings,
+        );
       default:
         return unknownRoutePage(settings.name);
     }
@@ -431,4 +445,11 @@ class PrivacyPolicyViewArguments {
 class TermsAndConditionViewArguments {
   final Key key;
   TermsAndConditionViewArguments({this.key});
+}
+
+//WebViewWidget arguments holder class
+class WebViewWidgetArguments {
+  final String url;
+  final Key key;
+  WebViewWidgetArguments({this.url, this.key});
 }

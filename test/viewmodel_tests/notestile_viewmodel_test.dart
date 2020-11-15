@@ -11,12 +11,12 @@ void main() {
     group('Voting', () {
       test('When user pressed upvotes ,vote should be increased by 1', () {
         var model = NotesTileViewModel();
-        model.incrementvotes(1);
+        // model.incrementvotes(1);
         expect(model.noofvotes, 1);
       });
       test('When user pressed downvotes ,vote should be decremented by 1', () {
         var model = NotesTileViewModel();
-        model.decrementvotes(1);
+        // model.decrementvotes(1);
         expect(model.noofvotes, -1);
       });
     });

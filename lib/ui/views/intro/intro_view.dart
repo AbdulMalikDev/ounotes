@@ -76,7 +76,7 @@ class _IntroViewState extends State<IntroView> {
                         "Welcome To OUNotes",
                         style: theme.textTheme.headline6.copyWith(
                           fontSize: 25,
-                        //  color: theme.primaryColor,
+                          //  color: theme.primaryColor,
                           foreground: Paint()..shader = linearGradient,
                         ),
                       ),
@@ -122,18 +122,18 @@ class _IntroViewState extends State<IntroView> {
                           title: "Select College",
                           isExpanded: true,
                         ),
-                        Container(
-                          margin: const EdgeInsets.all(10),
-                          height:
-                              App(context).appScreenHeightWithOutSafeArea(0.08),
-                          child: GoogleSignInButton(
-                              borderRadius: 10,
-                              onPressed: () {
-                                model.handleSignUp();
-                              }),
-                        ),
-                        SizedBox(
-                          height: 20,
+                        FittedBox(
+                          child: Container(
+                            margin: const EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 30),
+                            height: App(context)
+                                .appScreenHeightWithOutSafeArea(0.06),
+                            child: GoogleSignInButton(
+                                borderRadius: 10,
+                                onPressed: () {
+                                  model.handleSignUp();
+                                }),
+                          ),
                         ),
                       ],
                     ),

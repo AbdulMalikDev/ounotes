@@ -19,6 +19,8 @@ class UserSubjectListViewModel extends BaseViewModel {
   ValueNotifier<List<Subject>> get userSubjects =>
       _subjectsService.userSubjects;
 
+  
+
   void onTap(subjectName) {
     _navigationService.navigateTo(Routes.allDocumentsViewRoute,
         arguments: AllDocumentsViewArguments(subjectName: subjectName));

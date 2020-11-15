@@ -15,7 +15,6 @@ class UserSubjectListView extends StatelessWidget {
           valueListenable: model.userSubjects,
           builder: (context, userSubjects, child) {
             return ReorderableListView(
-              
               scrollDirection: Axis.vertical,
               onReorder: (int oldIndex, int newIndex) {
                 model.updateMyItems(oldIndex, newIndex);
@@ -26,7 +25,7 @@ class UserSubjectListView extends StatelessWidget {
                   Subject subject = userSubjects[index];
                   return Container(
                     key: ValueKey('value$index'),
-                    height: App(context).appScreenHeightWithOutSafeArea(0.13),
+                    height: App(context).appScreenHeightWithOutSafeArea(0.1),
                     margin: EdgeInsets.symmetric(horizontal: 14, vertical: 10),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(16),
@@ -151,14 +150,15 @@ class UserSubjectListView extends StatelessWidget {
   ) {
     Scaffold.of(context).showSnackBar(
       SnackBar(
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         content: Container(
           constraints: BoxConstraints(maxWidth: 300),
+          color: Theme.of(context).scaffoldBackgroundColor,
           child: Text(
             "REMOVED $item",
-            style: Theme.of(context)
-                .textTheme
-                .subtitle1
-                .copyWith(fontSize: 15, color: Colors.white),
+            style: Theme.of(context).textTheme.subtitle1.copyWith(
+                  fontSize: 15,
+                ),
           ),
         ),
         duration: Duration(seconds: 1),

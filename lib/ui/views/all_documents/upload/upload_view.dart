@@ -119,7 +119,8 @@ class _UploadViewState extends State<UploadView> {
                                         "UPLOAD ${model.document.toUpperCase()}",
                                         style: TextStyle(
                                           color: Colors.white,
-                                          fontFamily: 'OpenSans',
+                                          letterSpacing: -0.03,
+                                          fontFamily: 'Montserrat',
                                           fontSize: 30.0,
                                           fontWeight: FontWeight.bold,
                                         ),
@@ -138,8 +139,6 @@ class _UploadViewState extends State<UploadView> {
                                                 Card(
                                                   color: Colors.transparent,
                                                   child: Container(
-                                                    alignment:
-                                                        Alignment.centerLeft,
                                                     decoration: Constants
                                                         .kBoxDecorationStyle,
                                                     height: 60,
@@ -154,16 +153,25 @@ class _UploadViewState extends State<UploadView> {
                                                               InputBorder.none,
                                                           contentPadding:
                                                               EdgeInsets.only(
-                                                                  top: 14.0),
+                                                                  top: 15.0),
                                                           prefixIcon: Icon(
                                                             Icons
                                                                 .arrow_forward_ios,
-                                                            color: Colors.white,
+                                                            color: Colors.blue,
                                                           ),
-                                                          hintText:
-                                                              "Indian Constitution ...",
-                                                          hintStyle: Constants
-                                                              .kHintTextStyle,
+                                                          // hintText:
+                                                          //     "Indian Constitution ...",
+                                                          // hintStyle:
+                                                          //     TextStyle(
+                                                          //   color: Colors
+                                                          //       .black,
+                                                          // ),
+                                                        ),
+                                                        style: TextStyle(
+                                                          color: Colors.black,
+                                                          letterSpacing: -0.03,
+                                                          fontFamily:
+                                                              'Montserrat',
                                                         ),
                                                       ),
                                                       suggestionsCallback:
@@ -203,8 +211,12 @@ class _UploadViewState extends State<UploadView> {
                                                         if (value.isEmpty) {
                                                           return 'Please select a subjectname';
                                                         } else if (value
-                                                                .length <
-                                                            3)
+                                                                    .length <
+                                                                3 ||
+                                                            !model
+                                                                .getAllSubjectsList()
+                                                                .contains(
+                                                                    value))
                                                           return "Please enter a valid subject name";
                                                         return null;
                                                       },
@@ -222,23 +234,17 @@ class _UploadViewState extends State<UploadView> {
                                               children: <Widget>[
                                                 Center(
                                                   child: Container(
+                                                    decoration: Constants
+                                                        .kBoxDecorationStyle,
                                                     height: App(context)
-                                                        .appScreenHeightWithOutSafeArea(
-                                                            0.15),
-                                                    width: App(context)
-                                                            .appScreenWidthWithOutSafeArea(
-                                                                1) -
-                                                        40,
-                                                    padding:
-                                                        EdgeInsets.symmetric(
-                                                            horizontal: 20,
-                                                            vertical: 5),
-                                                    decoration: BoxDecoration(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              16),
-                                                      color: Colors.white,
-                                                    ),
+                                                        .appHeight(0.12),
+                                                    width: double.infinity,
+                                                    margin: const EdgeInsets
+                                                            .symmetric(
+                                                        vertical: 10),
+                                                    padding: const EdgeInsets
+                                                            .symmetric(
+                                                        vertical: 10),
                                                     child: Column(
                                                       children: <Widget>[
                                                         Text(
@@ -253,10 +259,8 @@ class _UploadViewState extends State<UploadView> {
                                                         ),
                                                         Expanded(
                                                           child: Container(
-                                                            height: App(context)
-                                                                .appScreenHeightWithOutSafeArea(
-                                                                    0.085),
                                                             child: DropdownButton(
+                                                                elevation: 15,
                                                                 iconEnabledColor:
                                                                     Colors
                                                                         .black,
@@ -284,22 +288,15 @@ class _UploadViewState extends State<UploadView> {
                                                   height: 20,
                                                 ),
                                                 Container(
+                                                  decoration: Constants
+                                                      .kBoxDecorationStyle,
                                                   height: App(context)
-                                                      .appScreenHeightWithOutSafeArea(
-                                                          0.15),
-                                                  width: App(context)
-                                                          .appScreenWidthWithOutSafeArea(
-                                                              1) -
-                                                      10,
-                                                  padding: EdgeInsets.symmetric(
-                                                      horizontal: 10,
-                                                      vertical: 5),
-                                                  decoration: BoxDecoration(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            16),
-                                                    color: Colors.white,
-                                                  ),
+                                                      .appHeight(0.12),
+                                                  width: double.infinity,
+                                                  margin: const EdgeInsets
+                                                      .symmetric(vertical: 10),
+                                                  padding: const EdgeInsets
+                                                      .symmetric(vertical: 10),
                                                   child: Column(
                                                     children: <Widget>[
                                                       Text(
@@ -313,9 +310,6 @@ class _UploadViewState extends State<UploadView> {
                                                       ),
                                                       Expanded(
                                                         child: Container(
-                                                          height: App(context)
-                                                              .appScreenHeightWithOutSafeArea(
-                                                                  0.085),
                                                           child: DropdownButton(
                                                               iconEnabledColor:
                                                                   Colors.black,
@@ -359,27 +353,18 @@ class _UploadViewState extends State<UploadView> {
                                                     SizedBox(
                                                       height: 30.0,
                                                     ),
-                                                    SizedBox(
-                                                      height: 20,
-                                                    ),
                                                     Container(
+                                                      decoration: Constants
+                                                          .kBoxDecorationStyle,
                                                       height: App(context)
-                                                          .appScreenHeightWithOutSafeArea(
-                                                              0.15),
-                                                      width: App(context)
-                                                              .appScreenWidthWithOutSafeArea(
-                                                                  1) -
-                                                          40,
-                                                      padding:
-                                                          EdgeInsets.symmetric(
-                                                              horizontal: 20,
-                                                              vertical: 5),
-                                                      decoration: BoxDecoration(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(16),
-                                                        color: Colors.white,
-                                                      ),
+                                                          .appHeight(0.12),
+                                                      width: double.infinity,
+                                                      margin: const EdgeInsets
+                                                              .symmetric(
+                                                          vertical: 10),
+                                                      padding: const EdgeInsets
+                                                              .symmetric(
+                                                          vertical: 10),
                                                       child: Column(
                                                         children: <Widget>[
                                                           Text(
@@ -619,17 +604,19 @@ class _UploadViewState extends State<UploadView> {
             borderRadius: BorderRadius.circular(16),
             color: Colors.white,
           ),
-          padding: EdgeInsets.all(5),
+          padding: EdgeInsets.all(20),
           margin: EdgeInsets.all(5),
-          height: App(context).appScreenHeightWithOutSafeArea(0.085),
-          child: DropdownButton(
-            focusColor: Colors.transparent,
-            value: typeofyear,
-            items: dropdownofyear,
-            onChanged: changedropdownitemofyear,
-            style: TextStyle(color: Colors.black, fontSize: 18),
-            dropdownColor: Colors.white,
-            iconEnabledColor: Colors.black,
+          height: App(context).appHeight(0.08),
+          child: Expanded(
+            child: DropdownButton(
+              focusColor: Colors.transparent,
+              value: typeofyear,
+              items: dropdownofyear,
+              onChanged: changedropdownitemofyear,
+              style: TextStyle(color: Colors.black, fontSize: 20),
+              dropdownColor: Colors.white,
+              iconEnabledColor: Colors.black,
+            ),
           ),
         ),
         SizedBox(height: 10.0),
@@ -645,19 +632,19 @@ class _UploadViewState extends State<UploadView> {
                     keyboardType: TextInputType.number,
                     maxLength: 4,
                     style: TextStyle(
-                      color: Colors.white,
-                      fontFamily: 'OpenSans',
+                      color: Colors.black,
+                      letterSpacing: -0.03,
+                      fontFamily: 'Montserrat',
                     ),
                     decoration: InputDecoration(
-                      border: InputBorder.none,
-                      contentPadding: EdgeInsets.only(top: 14.0),
-                      prefixIcon: Icon(
-                        Icons.arrow_forward_ios,
-                        color: Colors.white,
-                      ),
-                      hintText: '2016',
-                      hintStyle: Constants.kHintTextStyle,
-                    ),
+                        border: InputBorder.none,
+                        contentPadding: EdgeInsets.only(top: 25.0),
+                        prefixIcon: Icon(
+                          Icons.arrow_forward_ios,
+                          color: Colors.blue,
+                        ),
+                        hintText: '2016',
+                        hintStyle: Constants.kHintTextStyle),
                     validator: (value) {
                       if (value.isEmpty) {
                         return 'Please enter year.';
@@ -686,15 +673,16 @@ class _UploadViewState extends State<UploadView> {
                           keyboardType: TextInputType.number,
                           maxLength: 4,
                           style: TextStyle(
-                            color: Colors.white,
-                            fontFamily: 'OpenSans',
+                            color: Colors.black,
+                            letterSpacing: -0.03,
+                            fontFamily: 'Montserrat',
                           ),
                           decoration: InputDecoration(
                             border: InputBorder.none,
-                            contentPadding: EdgeInsets.only(top: 14.0),
+                            contentPadding: EdgeInsets.only(top: 30.0),
                             prefixIcon: Icon(
                               Icons.arrow_forward_ios,
-                              color: Colors.white,
+                              color: Colors.blue,
                             ),
                             hintText: 'Start..',
                             hintStyle: Constants.kHintTextStyle,
@@ -729,15 +717,16 @@ class _UploadViewState extends State<UploadView> {
                           keyboardType: TextInputType.number,
                           maxLength: 4,
                           style: TextStyle(
-                            color: Colors.white,
-                            fontFamily: 'OpenSans',
+                            color: Colors.black,
+                            letterSpacing: -0.03,
+                            fontFamily: 'Montserrat',
                           ),
                           decoration: InputDecoration(
                             border: InputBorder.none,
-                            contentPadding: EdgeInsets.only(top: 14.0),
+                            contentPadding: EdgeInsets.only(top: 30.0),
                             prefixIcon: Icon(
                               Icons.arrow_forward_ios,
-                              color: Colors.white,
+                              color: Colors.blue,
                             ),
                             hintText: 'End..',
                             hintStyle: Constants.kHintTextStyle,

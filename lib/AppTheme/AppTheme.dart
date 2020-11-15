@@ -88,10 +88,11 @@ class AppTheme {
       ),
       textTheme: ThemeData.dark().textTheme.copyWith(
             headline6: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.w400,
-              color: Colors.white,
-            ),
+                fontSize: 20,
+                fontWeight: FontWeight.w500,
+                color: Colors.white,
+                letterSpacing: -0.03,
+                fontFamily: 'Montserrat'),
           ),
     ),
     colorScheme: ColorScheme.dark(
@@ -100,7 +101,7 @@ class AppTheme {
       //used for color of notes list tile
       onPrimary: Colors.grey[300],
       secondary: Color(0xfff29a94),
-      background: Colors.grey[800],
+      background: Colors.grey[700],
       onSurface: Colors.white60,
       onBackground: Colors.grey,
     ),
@@ -113,19 +114,39 @@ class AppTheme {
     ),
     accentIconTheme: IconThemeData(color: Colors.grey[850]),
     textTheme: ThemeData.light().textTheme.copyWith(
-          subtitle1: TextStyle(color: Colors.white, fontSize: 20),
-          subtitle2: TextStyle(color: Colors.white, fontSize: 20),
-          headline5: TextStyle(
-              fontWeight: FontWeight.w400, fontSize: 18, color: Colors.white),
-          headline4: TextStyle(
-              fontFamily: 'OpenSans',
-              fontWeight: FontWeight.w600,
-              fontSize: 15,
-              color: Colors.white),
-          button: TextStyle(color: Colors.white),
-          bodyText1: TextStyle(color: Colors.white),
           headline6: TextStyle(
-              color: Colors.white, fontSize: 20, fontWeight: FontWeight.w400),
+            fontSize: 20,
+            fontWeight: FontWeight.w600,
+            letterSpacing: -0.03,
+            fontFamily: 'Montserrat',
+            color: Colors.white,
+          ),
+          headline5: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.w400,
+            letterSpacing: -0.03,
+            fontFamily: 'Montserrat',
+            color: Colors.white,
+          ),
+          headline4: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.w400,
+              letterSpacing: -0.03,
+              fontFamily: 'Montserrat',
+              color: Colors.white),
+          button: TextStyle(
+            color: Colors.white,
+            fontFamily: 'Montserrat',
+            fontWeight: FontWeight.w400,
+            fontSize: 15,
+          ),
+          subtitle1: TextStyle(
+            color: Colors.white,
+            fontSize: 15,
+            fontFamily: 'Montserrat',
+          ),
+          subtitle2: TextStyle(color: Colors.white, fontSize: 20),
+          bodyText1: TextStyle(color: Colors.white),
           bodyText2: TextStyle(color: Colors.white),
         ),
   );

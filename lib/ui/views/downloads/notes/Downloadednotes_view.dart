@@ -26,7 +26,7 @@ class DownloadedNotesView extends StatelessWidget {
                   return FractionallySizedBox(
                     widthFactor: 0.99,
                     child: Container(
-                      height: MediaQuery.of(context).size.height * 0.12,
+                      height: MediaQuery.of(context).size.height * 0.1,
                       margin: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(16),
@@ -73,11 +73,13 @@ class DownloadedNotesView extends StatelessWidget {
                           child: ListTile(
                             title: Container(
                               constraints: BoxConstraints(maxWidth: 200),
-                              child: Text(
-                                model.notes[index].filename,
-                                overflow: TextOverflow.clip,
-                                style: TextStyle(
-                                  fontSize: 20,
+                              child: FittedBox(
+                                child: Text(
+                                  model.notes[index].filename,
+                                  overflow: TextOverflow.clip,
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                  ),
                                 ),
                               ),
                             ),

@@ -23,7 +23,8 @@ class DownloadedQuestionPaperView extends StatelessWidget {
             : ListView.builder(
                 itemCount: model.questionPapers.length,
                 itemBuilder: (context, index) {
-                  final item = model.questionPapers[index].subjectName+model.questionPapers[index].year;
+                  final item = model.questionPapers[index].subjectName +
+                      model.questionPapers[index].year;
                   return InkWell(
                     onTap: () {
                       model.onTap(
@@ -82,7 +83,7 @@ class DownloadedQuestionPaperView extends StatelessWidget {
                               Container(
                                 margin: EdgeInsets.only(right: 20),
                                 height:
-                                    MediaQuery.of(context).size.height * 0.13,
+                                    MediaQuery.of(context).size.height * 0.1,
                                 width: MediaQuery.of(context).size.width * 0.2,
                                 alignment: Alignment.center,
                                 decoration: BoxDecoration(
@@ -110,13 +111,16 @@ class DownloadedQuestionPaperView extends StatelessWidget {
                                       Container(
                                         constraints:
                                             BoxConstraints(maxWidth: 200),
-                                        child: Text(
-                                          model.questionPapers[index].subjectName,
-                                          overflow: TextOverflow.clip,
-                                          style: TextStyle(
-                                              color: primary,
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 18),
+                                        child: FittedBox(
+                                          child: Text(
+                                            model.questionPapers[index]
+                                                .subjectName,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: TextStyle(
+                                                color: primary,
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 18),
+                                          ),
                                         ),
                                       ),
                                       SizedBox(
@@ -144,22 +148,22 @@ class DownloadedQuestionPaperView extends StatelessWidget {
 }
 
 void showSnackBar(
-    BuildContext context,
-    String item,
-  ) {
-    Scaffold.of(context).showSnackBar(
-      SnackBar(
-        content: Container(
-          constraints: BoxConstraints(maxWidth: 300),
-          child: Text(
-            "REMOVED $item",
-            style: Theme.of(context)
-                .textTheme
-                .subtitle1
-                .copyWith(fontSize: 15, color: Colors.black),
-          ),
+  BuildContext context,
+  String item,
+) {
+  Scaffold.of(context).showSnackBar(
+    SnackBar(
+      content: Container(
+        constraints: BoxConstraints(maxWidth: 300),
+        child: Text(
+          "REMOVED $item",
+          style: Theme.of(context)
+              .textTheme
+              .subtitle1
+              .copyWith(fontSize: 15, color: Colors.black),
         ),
-        duration: Duration(seconds: 1),
       ),
-    );
-  }
+      duration: Duration(seconds: 1),
+    ),
+  );
+}

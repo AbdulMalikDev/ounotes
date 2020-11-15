@@ -1,12 +1,9 @@
-import 'package:FSOUNotes/models/user.dart';
 import 'package:FSOUNotes/ui/shared/app_config.dart';
 import 'package:FSOUNotes/ui/views/Profile/profile_viewmodel.dart';
 import 'package:FSOUNotes/ui/widgets/dumb_widgets/progress.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
-
 import 'package:stacked/stacked.dart';
 
 class ProfileView extends StatelessWidget {
@@ -28,15 +25,11 @@ class ProfileView extends StatelessWidget {
             ),
             body: Container(
               height: App(context).appScreenHeightWithOutSafeArea(1),
-              child:
-                  //  SingleChildScrollView(
-
-                  //     child:
-                  SingleChildScrollView(
+              child: SingleChildScrollView(
                 child: Column(
                   children: <Widget>[
                     Container(
-                      height: 150,
+                      height: App(context).appHeight(0.2),
                       child: Column(
                         children: <Widget>[
                           SizedBox(
@@ -56,7 +49,7 @@ class ProfileView extends StatelessWidget {
                             height: 10,
                           ),
                           FittedBox(
-                            child: Text(model.user.username ?? '',
+                            child: Text(model.user?.username ?? '',
                                 style: Theme.of(context).textTheme.headline6),
                           ),
                         ],
@@ -76,11 +69,14 @@ class ProfileView extends StatelessWidget {
                               'College', model.user.college ?? "", context),
                         ]),
                     SizedBox(
-                      height: 38,
+                      height: 40,
                     ),
                     Container(
-                      width: MediaQuery.of(context).size.width / 1.7,
-                      height: MediaQuery.of(context).size.height * 0.08,
+                      margin: const EdgeInsets.symmetric(horizontal: 60),
+                      height: MediaQuery.of(context).size.height * 0.06,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
                       child: FlatButton(
                         child: Text(
                           "CHANGE INFORMATION",
@@ -105,37 +101,37 @@ class ProfileView extends StatelessWidget {
   }
 }
 
-ListTile buildTile(String title, String subtitle, BuildContext context) {
-  return ListTile(
-    leading: Padding(
-      padding: const EdgeInsets.only(top: 8.0, left: 20.0),
-      child: Icon(
-        FontAwesomeIcons.solidCircle,
-        size: 12.0,
-        color: Theme.of(context).colorScheme.primary,
+Widget buildTile(String title, String subtitle, BuildContext context) {
+  return Container(
+    margin: const EdgeInsets.symmetric(vertical: 10),
+    child: ListTile(
+      leading: Padding(
+        padding: const EdgeInsets.only(top: 8.0, left: 20.0),
+        child: Icon(
+          FontAwesomeIcons.solidCircle,
+          size: 12.0,
+          color: Theme.of(context).colorScheme.primary,
+        ),
+      ),
+      title: Text(
+        title,
+        style: Theme.of(context)
+            .textTheme
+            .subtitle1
+            .copyWith(fontSize: 20, color: Colors.deepOrange),
+      ),
+      subtitle: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          SizedBox(
+            height: 5,
+          ),
+          Text(
+            subtitle,
+            style: Theme.of(context).textTheme.subtitle1.copyWith(fontSize: 18),
+          ),
+        ],
       ),
     ),
-    title: Text(
-      title,
-      style: Theme.of(context)
-          .textTheme
-          .subtitle1
-          .copyWith(fontSize: 20, color: Colors.deepOrange),
-    ),
-    subtitle: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        SizedBox(
-          height: 5,
-        ),
-        Text(
-          subtitle,
-          style: Theme.of(context).textTheme.subtitle1.copyWith(fontSize: 18),
-        ),
-      ],
-    ),
-    // trailing: Divider(
-    //   color: Colors.grey[600],
-    // ),
   );
 }

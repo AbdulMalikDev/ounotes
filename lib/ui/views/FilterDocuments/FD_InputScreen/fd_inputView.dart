@@ -1,4 +1,5 @@
 import 'package:FSOUNotes/AppTheme/AppStateNotifier.dart';
+import 'package:FSOUNotes/enums/constants.dart';
 import 'package:FSOUNotes/enums/enums.dart';
 import 'package:FSOUNotes/ui/shared/app_config.dart';
 import 'package:FSOUNotes/ui/views/FilterDocuments/FD_InputScreen/fd_inputViewmodel.dart';
@@ -47,26 +48,28 @@ class FDInputView extends StatelessWidget {
               ),
               Center(
                 child: Container(
-                  height: App(context).appScreenHeightWithOutSafeArea(0.15),
-                  width: App(context).appScreenWidthWithOutSafeArea(1) - 40,
-                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                  height: App(context).appHeight(0.13),
+                  width: App(context).appWidth(1) - 40,
+                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                   margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(16),
-                    color: theme.colorScheme.background,
-                    boxShadow: AppStateNotifier.isDarkModeOn
-                        ? []
-                        : [
-                            BoxShadow(
-                                offset: Offset(10, 10),
-                                color: theme.cardTheme.shadowColor,
-                                blurRadius: 25),
-                            BoxShadow(
-                                offset: Offset(-10, -10),
-                                color: theme.cardTheme.color,
-                                blurRadius: 25)
-                          ],
-                  ),
+                  // decoration: BoxDecoration(
+                  //   borderRadius: BorderRadius.circular(16),
+                  //   color: theme.colorScheme.background,
+                  //   boxShadow: AppStateNotifier.isDarkModeOn
+                  //       ? []
+                  //       : [
+                  //           BoxShadow(
+                  //               offset: Offset(10, 10),
+                  //               color: theme.cardTheme.shadowColor,
+                  //               blurRadius: 25),
+                  //           BoxShadow(
+                  //               offset: Offset(-10, -10),
+                  //               color: theme.cardTheme.color,
+                  //               blurRadius: 25)
+                  //         ],
+                  // ),
+                    decoration: Constants.defaultDecoration
+                    .copyWith(color: theme.colorScheme.background),
                   child: Column(
                     children: <Widget>[
                       Text(
@@ -77,12 +80,10 @@ class FDInputView extends StatelessWidget {
                             .copyWith(fontSize: 20),
                       ),
                       SizedBox(
-                        height: 3,
+                        height: 10,
                       ),
-                      Expanded(
+                      Flexible(
                         child: Container(
-                          height: App(context)
-                              .appScreenHeightWithOutSafeArea(0.085),
                           child: DropdownButton(
                             value: model.sem,
                             items: model.dropdownofsem,
@@ -101,26 +102,12 @@ class FDInputView extends StatelessWidget {
                 height: 20,
               ),
               Container(
-                height: App(context).appScreenHeightWithOutSafeArea(0.15),
-                width: App(context).appScreenWidthWithOutSafeArea(1) - 40,
-                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                height: App(context).appHeight(0.13),
+                width: App(context).appHeight(1) - 40,
+                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                 margin: EdgeInsets.symmetric(horizontal: 20, vertical: 0),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(16),
-                  color: Theme.of(context).colorScheme.background,
-                  boxShadow: AppStateNotifier.isDarkModeOn
-                      ? []
-                      : [
-                          BoxShadow(
-                              offset: Offset(10, 10),
-                              color: theme.cardTheme.shadowColor,
-                              blurRadius: 25),
-                          BoxShadow(
-                              offset: Offset(-10, -10),
-                              color: theme.cardTheme.color,
-                              blurRadius: 25)
-                        ],
-                ),
+                decoration: Constants.defaultDecoration
+                    .copyWith(color:theme.colorScheme.background),
                 child: Column(
                   children: <Widget>[
                     Text(
@@ -131,12 +118,10 @@ class FDInputView extends StatelessWidget {
                           .copyWith(fontSize: 20),
                     ),
                     SizedBox(
-                      height: 3,
+                      height: 10,
                     ),
-                    Expanded(
+                    Flexible(
                       child: Container(
-                        height:
-                            App(context).appScreenHeightWithOutSafeArea(0.085),
                         child: DropdownButton(
                           focusColor: Colors.transparent,
                           value: model.br,
@@ -158,6 +143,9 @@ class FDInputView extends StatelessWidget {
               FractionallySizedBox(
                 widthFactor: 0.8,
                 child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(25),
+                  ),
                   child: RaisedButton(
                     onPressed: () {
                       model.onTap(path);

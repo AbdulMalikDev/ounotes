@@ -1,32 +1,6 @@
 import 'package:FSOUNotes/enums/enums.dart';
 import 'package:flutter/material.dart';
 
-const Color primary = Color(0xff5177d6);
-const Color secondary = Color(0xffFFB800);
-const Color ternary = Color(0xffFF8282);
-const Color count_red = Color(0xffFF5F5F);
-const Color difficulty_hard = Color(0xffFF6D6D);
-const Color difficulty_medium = Color(0xffFFD600);
-const Color difficulty_easy = Color(0xff6CCFA8);
-
-//Default Text Styles
-//styles used for drawer
-const TextStyle listTitleDefaultTextStyle = TextStyle(
-    color: Colors.white,
-    fontSize: 20.0,
-    fontWeight: FontWeight.w600,
-    letterSpacing: -0.03,
-    fontFamily: 'Montserrat');
-
-//styles used for screens
-const TextStyle defaultTextStyle = TextStyle(
-  color: Colors.black,
-  fontSize: 15,
-  fontWeight: FontWeight.normal,
-  letterSpacing: -0.03,
-  fontFamily: 'Montserrat',
-);
-
 class Constants {
   //These are cloud storage constants so as to not mess up the URL while Uploading
   static String notes = "Notes";
@@ -37,7 +11,8 @@ class Constants {
   static String upvote = 'upvote';
   static String downvote = 'downvote';
   static TextStyle kHintTextStyle = TextStyle(
-    color: Colors.grey,
+    color: Colors.white54,
+    fontFamily: 'OpenSans',
   );
 
   static TextStyle kLabelStyle = TextStyle(
@@ -47,23 +22,21 @@ class Constants {
   );
 
   static BoxDecoration kBoxDecorationStyle = BoxDecoration(
-    color: Colors.white,
-    borderRadius: BorderRadius.circular(10),
-    border: Border.all(width: 0.3, color: Colors.black26),
+    color: Color(0xFF6CA8F1),
+    borderRadius: BorderRadius.circular(10.0),
     boxShadow: [
       BoxShadow(
-        offset: Offset(0, 0),
-        color: Colors.black,
-        spreadRadius: -10,
-        blurRadius: 14,
-      )
+        color: Colors.black12,
+        blurRadius: 6.0,
+        offset: Offset(0, 2),
+      ),
     ],
   );
 
   //* making fields null so that null checks can be performed
   //* and displayed accordingly in views
   static Map Notes = {
-    "TextFieldHeading1": "Notes Title",
+    "TextFieldHeading1": "Name",
     "TextFieldHeadingLabel1": "Unit 1...",
     "TextFieldHeading2": "Author",
     "TextFieldHeadingLabel2": "Sameer...",
@@ -89,7 +62,7 @@ class Constants {
   };
 
   static Map Links = {
-    "TextFieldHeading1": "Link Title",
+    "TextFieldHeading1": "Title",
     "TextFieldHeadingLabel1": "...",
     "TextFieldHeading2": "Description",
     "TextFieldHeadingLabel2": "...",
@@ -128,6 +101,46 @@ class Constants {
         break;
     }
   }
+
+ static BoxDecoration defaultDecoration = BoxDecoration(
+    color: Colors.white,
+    borderRadius: BorderRadius.circular(10),
+    border: Border.all(width: 0.3, color: Colors.black26),
+    boxShadow: [
+      BoxShadow(
+        offset: Offset(0, 0),
+        color: Colors.black,
+        spreadRadius: -10,
+        blurRadius: 14,
+      )
+    ],
+  );
+
+ static BoxDecoration kdecoration = BoxDecoration(
+    borderRadius: BorderRadius.circular(32),
+    color: Colors.white,
+    boxShadow: [
+      BoxShadow(
+        color: Colors.grey.withOpacity(0.5),
+        spreadRadius: 5,
+        blurRadius: 7,
+        offset: Offset(0, 3), // changes position of shadow
+      ),
+    ],
+  );
+
+ static BoxDecoration mdecoration = BoxDecoration(
+    borderRadius: BorderRadius.circular(16),
+    color: Colors.white,
+    boxShadow: [
+      BoxShadow(
+        color: Colors.grey.withOpacity(0.5),
+        spreadRadius: 2,
+        blurRadius: 3,
+        offset: Offset(0, 3), // changes position of shadow
+      ),
+    ],
+  );
 }
 
 //DO NOT DELETE THIS
