@@ -45,7 +45,7 @@ class QuestionPaperTileViewModel extends BaseViewModel {
         Report(doc.id, doc.subjectName, doc.type, doc.title, _authenticationService.user.email);
     var dialogResult = await _dialogService.showConfirmationDialog(
         title: "Are You Sure?",
-        description: "Are you sure you want to report this Document?",
+        description: "Are you sure you want to report this Document?\nUnnecessary reporting may result in a ban from the application!",
         cancelTitle: "NO",
         confirmationTitle: "YES");
     if (!dialogResult.confirmed) {

@@ -107,7 +107,7 @@ class NotesViewModel extends BaseViewModel {
     String notesName,
     String subName,
     String type,
-    AbstractDocument note,
+    String id,
   }) async {
     log.i("notesName : $notesName");
     log.i("Subject Name : $subName");
@@ -116,7 +116,6 @@ class NotesViewModel extends BaseViewModel {
       String fileUrl =
           "https://storage.googleapis.com/ou-notes.appspot.com/pdfs/$subName/$type/$notesName";
       log.i(Uri.parse(fileUrl));
-      //final filename = fileUrl.substring(url.lastIndexOf("/") + 1);
       var request = await HttpClient().getUrl(Uri.parse(fileUrl));
       var response = await request.close();
       log.w("downloading");
@@ -124,10 +123,6 @@ class NotesViewModel extends BaseViewModel {
         response,
         onBytesReceived: (bytesReceived, expectedContentLength) {
           if (expectedContentLength != null) {
-            // log.w("downloading" +
-            //     (bytesReceived / expectedContentLength * 100)
-            //         .toStringAsFixed(0) +
-            //     "%");
             _progress = (bytesReceived / expectedContentLength * 100);
             notifyListeners();
           }
@@ -136,10 +131,9 @@ class NotesViewModel extends BaseViewModel {
 
       String dir = (await getApplicationDocumentsDirectory()).path;
       String id = newCuid();
-      if (note.id == null || note.id.length == 0) {
-        note.setId = id;
-      }
-      note.setIsDownloaded = true;
+      // if (id == null || note.id.length == 0) {
+      //   note.setId = id;
+      // }
       File file = new File('$dir/$id');
       await file.writeAsBytes(bytes);
       log.i("file path: ${file.path}");
@@ -155,16 +149,11 @@ class NotesViewModel extends BaseViewModel {
   }
 
   void onTap({
-    Note note,
     String notesName,
     String subName,
     String type,
   }) async {
-    checkNoteInDownloads(note).then((val) async {
-      if (val) {
-        _navigationService.navigateTo(Routes.pdfScreenRoute,
-            arguments: PDFScreenArguments(pathPDF: filePath, title: notesName));
-      } else {
+    
         _progress = 0;
         notifyListeners();
         setLoading(true);
@@ -172,7 +161,6 @@ class NotesViewModel extends BaseViewModel {
           notesName: notesName,
           subName: subName,
           type: type,
-          note: note,
         );
         String PDFpath = file.path;
         log.e(file.path);
@@ -183,23 +171,15 @@ class NotesViewModel extends BaseViewModel {
           setLoading(false);
           return;
         }
-        _firestoreService.incrementView(note);
-        _downloadService.addDownload(
-          path: PDFpath,
-          id: note.id,
-          filename: notesName,
-          subjectName: subName,
-          type: type,
-          title: note.title,
-        );
+        // _firestoreService.incrementView(note);
         setLoading(false);
         _navigationService.navigateTo(Routes.pdfScreenRoute,
             arguments: PDFScreenArguments(pathPDF: PDFpath, title: notesName));
-      }
-    });
+      
   }
 
   void navigateToWebView(Note note) {
+    // TODO increment views
     _navigationService.navigateTo(Routes.webViewWidgetRoute,arguments: WebViewWidgetArguments(url: note.GDriveLink));
   }
 

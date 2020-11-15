@@ -101,7 +101,7 @@ class AppTheme {
       //used for color of notes list tile
       onPrimary: Colors.grey[300],
       secondary: Color(0xfff29a94),
-      background: Colors.grey[700],
+      background: Colors.grey[800],
       onSurface: Colors.white60,
       onBackground: Colors.grey,
     ),

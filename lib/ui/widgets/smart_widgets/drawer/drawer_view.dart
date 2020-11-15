@@ -85,18 +85,18 @@ class DrawerView extends StatelessWidget {
                               subtitle1,
                               model.navigateToUserUploadScreen,
                               Document.Drawer),
-                          if(model.isAdmin)NavItem(
-                              Icons.equalizer,
-                              "Admin Panel",
-                              subtitle1,
-                              model.navigateToAdminUploadScreen,
-                              Document.Drawer),
+                          if (model.isAdmin)
+                            NavItem(
+                                Icons.equalizer,
+                                "Admin Panel",
+                                subtitle1,
+                                model.navigateToAdminUploadScreen,
+                                Document.Drawer),
                           ListTile(
                             leading: SizedBox(
                               height: 30,
                               width: 40,
                               child: ClipRRect(
-                                
                                   child: Image.asset(
                                       "assets/images/github-logo.png")
                                   //)
@@ -107,7 +107,32 @@ class DrawerView extends StatelessWidget {
                               style: subtitle1,
                             ),
                             onTap: () async {
-                              const url = 'https://github.com/AbdulMalikDev/ounotes';
+                              const url =
+                                  'https://github.com/AbdulMalikDev/ounotes';
+                              if (await canLaunch(url)) {
+                                await launch(url);
+                              } else {
+                                throw 'Could not launch $url';
+                              }
+                            },
+                          ),
+                          ListTile(
+                            leading: SizedBox(
+                              height: 30,
+                              width: 40,
+                              child: ClipRRect(
+                                  child: Image.asset(
+                                      "assets/images/telegram-logo.png")
+                                  //)
+                                  ),
+                            ),
+                            title: Text(
+                              "Join us on telegram",
+                              style: subtitle1,
+                            ),
+                            onTap: () async {
+                              const url =
+                                  'https://t.me/ounotes';
                               if (await canLaunch(url)) {
                                 await launch(url);
                               } else {

@@ -112,15 +112,7 @@ class SubjectsService with ChangeNotifier {
         subjectObjects = allsubs
             .map((jsonSubject) => Subject.fromData(jsonSubject))
             .toList();
-        for (int i = 0; i < subjectObjects.length; i++) {
-          for (int j = 0; j < subjectObjects.length; j++) {
-            if (i != j &&
-                subjectObjects[i].name == subjectObjects[j].name &&
-                !subjectObjects[j].userSubject) {
-              subjectObjects.remove(subjectObjects[j]);
-            }
-          }
-        }
+       
         _allSubjects.value = subjectObjects;
       } else {
         //Get from Firebase
@@ -166,5 +158,9 @@ class SubjectsService with ChangeNotifier {
     List<Map<String, dynamic>> allSubjects =
         _allSubjects.value.map((sub) => sub.toJson()).toList();
     prefs.setString("all_subjects", json.encode(allSubjects));
+  }
+
+  Subject getSubjectByName(String subjectName) {
+    return _allSubjects.value.firstWhere((subject) => subject.name == subjectName,orElse: null);
   }
 }

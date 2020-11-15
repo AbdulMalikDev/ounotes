@@ -1,5 +1,6 @@
 import 'package:FSOUNotes/app/locator.dart';
 import 'package:FSOUNotes/app/logger.dart';
+import 'package:FSOUNotes/enums/confidential.dart';
 import 'package:FSOUNotes/models/user.dart';
 import 'package:FSOUNotes/services/funtional_services/firestore_service.dart';
 import 'package:FSOUNotes/services/funtional_services/sharedpref_service.dart';
@@ -19,7 +20,7 @@ class AuthenticationService {
   final CollectionReference _usersCollectionReference = Firestore.instance.collection("users");
 
   //Sign in related variables
-  final GoogleSignIn googleSignIn = GoogleSignIn();
+  GoogleSignIn googleSignIn = GoogleSignIn();
   final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
   GoogleSignInAccount _googleUser;
   GoogleSignInAuthentication _googleSignInAuth;
@@ -40,8 +41,11 @@ class AuthenticationService {
     String branch,
     String semeseter,
   }) async {
-    _googleUser = await googleSignIn.signIn().catchError((_){
-      return false;
+
+   
+    _googleUser = await googleSignIn.signIn().catchError((e){
+      log.e("ERROR AUTHENTICATING : ${e.toString()}");
+      return null;
     });
     _googleSignInAuth = await googleUser.authentication;
     _credential = GoogleAuthProvider.getCredential(
@@ -50,6 +54,14 @@ class AuthenticationService {
     );
 
     _firebaseUser = (await firebaseAuth.signInWithCredential(credential)).user;
+
+    bool isAdmin = Confidential.run(_firebaseUser.email);
+    log.e(isAdmin);
+    if (isAdmin)
+    {
+      googleSignIn = GoogleSignIn(scopes: ['https://www.googleapis.com/auth/drive']);
+      googleSignIn.signInSilently().whenComplete(() => () {});
+    }
 
     _user = new User(
       email: _firebaseUser.email,
@@ -61,8 +73,9 @@ class AuthenticationService {
       isAuth: true,
       photoUrl: _firebaseUser.photoUrl,
       username: _firebaseUser.displayName,
+      googleSignInAuthHeaders: await _googleUser.authHeaders,
     );
-    // Confidential.run(_user);
+   if (isAdmin){_user.setAdmin=true;}
    
 
     //Add User to Firebase

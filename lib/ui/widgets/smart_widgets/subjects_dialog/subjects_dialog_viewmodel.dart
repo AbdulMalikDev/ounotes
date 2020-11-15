@@ -26,7 +26,7 @@ class SubjectsDialogViewModel extends BaseViewModel {
 
   onSubjectSelected(Subject subject) async {
     log.i("Subject added to User Subject List from Dialog");
-    var result =await _subjectsService.addUserSubject(subject);
+    var result = await _subjectsService.addUserSubject(subject);
     //* while adding subject itself i have removed the subject
     //* from all subject list in subjectsService
     print(result);
@@ -60,6 +60,16 @@ class SubjectsDialogViewModel extends BaseViewModel {
       allSubjects.remove(filteredSubjects[i]);
       filteredSubjects[i].userSubject = true;
       allSubjects.insert(i, filteredSubjects[i]);
+    }
+    //remove subject with same name
+    for (int i = 0; i < allSubjects.length; i++) {
+      for (int j = 0; j < allSubjects.length; j++) {
+        if (i != j &&
+            allSubjects[i].name == allSubjects[j].name &&
+            !allSubjects[j].userSubject) {
+          allSubjects.remove(allSubjects[j]);
+        }
+      }
     }
     notifyListeners();
     return allSubjects;

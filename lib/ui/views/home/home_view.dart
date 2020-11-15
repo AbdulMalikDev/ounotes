@@ -17,7 +17,10 @@ class HomeView extends StatelessWidget {
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
     return ViewModelBuilder<HomeViewModel>.reactive(
-      onModelReady: (model) => model.showIntroDialog(context),
+      onModelReady: (model) {
+        model.showIntroDialog(context);
+        model.showTelgramDialog(context);
+      },
       builder: (context, model, child) => WillPopScope(
         onWillPop: () => Helper.showWillPopDialog(context: context),
         child: Scaffold(
@@ -208,47 +211,47 @@ class HomeView extends StatelessWidget {
 //     );
 //   }
 
-//   Future<void> _loginWithGoogle() async {  
-//    signedIn = await storage.read(key: "signedIn") == "true" ? true : false;  
-//    googleSignIn.onCurrentUserChanged  
-//        .listen((GoogleSignInAccount googleSignInAccount) async {  
-//      if (googleSignInAccount != null) {  
-//        _afterGoogleLogin(googleSignInAccount);  
-//      }  
-//    });  
-//    if (signedIn) {  
-//      try {  
-//        googleSignIn.signInSilently().whenComplete(() => () {});  
-//      } catch (e) {  
-//        storage.write(key: "signedIn", value: "false").then((value) {  
-//          setState(() {  
-//            signedIn = false;  
-//          });  
-//        });  
-//      }  
-//    } else {  
-//      googleSignInAccount =  
-//          await googleSignIn.signIn();  
-//      _afterGoogleLogin(googleSignInAccount);  
-//    }  
+//   Future<void> _loginWithGoogle() async {
+//    signedIn = await storage.read(key: "signedIn") == "true" ? true : false;
+//    googleSignIn.onCurrentUserChanged
+//        .listen((GoogleSignInAccount googleSignInAccount) async {
+//      if (googleSignInAccount != null) {
+//        _afterGoogleLogin(googleSignInAccount);
+//      }
+//    });
+//    if (signedIn) {
+//      try {
+//        googleSignIn.signInSilently().whenComplete(() => () {});
+//      } catch (e) {
+//        storage.write(key: "signedIn", value: "false").then((value) {
+//          setState(() {
+//            signedIn = false;
+//          });
+//        });
+//      }
+//    } else {
+//      googleSignInAccount =
+//          await googleSignIn.signIn();
+//      _afterGoogleLogin(googleSignInAccount);
+//    }
 //  }
 
-//  _uploadFileToGoogleDrive({HomeViewModel model}) async {  
+//  _uploadFileToGoogleDrive({HomeViewModel model}) async {
 //    print("DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDd");
-//    var client = GoogleHttpClient(await googleSignInAccount.authHeaders);  
+//    var client = GoogleHttpClient(await googleSignInAccount.authHeaders);
 //    var drive = ga.DriveApi(client);
 //   //  ga.File fileMetadata = ga.File();
 //   // fileMetadata.name = "ounotes";
 //   // fileMetadata.mimeType = "application/vnd.google-apps.folder";
 //   // var responsed = await drive.files.create(fileMetadata);
-//   // print("response file id: ${responsed.id}"); 
+//   // print("response file id: ${responsed.id}");
 
 //   // ga.File fileMetadataq = ga.File();
 //   // fileMetadataq.name = "something";
 //   // fileMetadataq.mimeType = "application/vnd.google-apps.folder";
-//   // fileMetadataq.parents = ["${responsed.id}"];  
+//   // fileMetadataq.parents = ["${responsed.id}"];
 //   // var responsedq = await drive.files.create(fileMetadata);
-//   // print("response file id: ${responsedq.id}"); 
+//   // print("response file id: ${responsedq.id}");
 // // // print("s");
 // //   var PDF_FOLDER = await drive.files.create(
 // //                   ga.File()
@@ -256,10 +259,10 @@ class HomeView extends StatelessWidget {
 // //                   // Optional if you want to create subfolder
 // //                     ..mimeType = 'application/vnd.google-apps.folder',  // this defines its folder
 // //                 );
-                
+
 //   List<Subject> allSubjects = model.allSubjects.value;
 //   print(allSubjects.length);
-  
+
 //   for (var subject in allSubjects) {
 //     print(subject.name);
 
@@ -269,19 +272,19 @@ class HomeView extends StatelessWidget {
 
 //     for ( var note in notes)
 //     {
-//       ga.File fileToUpload = ga.File();  
-//       //  var file = await FilePicker.getFile();  
+//       ga.File fileToUpload = ga.File();
+//       //  var file = await FilePicker.getFile();
 //       File file = await notesViewModel.downloadFile(note: note , notesName: note.title , subName: note.subjectName , type: Constants.notes);
 //       print(file.path);
 //       print(file.uri);
-//       fileToUpload.parents = [subject.gdriveNotesFolderID];  
-//       fileToUpload.name = note.title; 
-//       print("Uploading file..........."); 
-//       var response = await drive.files.create(  
-//         fileToUpload, 
-//         uploadMedia: ga.Media(file.openRead(), file.lengthSync()),  
+//       fileToUpload.parents = [subject.gdriveNotesFolderID];
+//       fileToUpload.name = note.title;
+//       print("Uploading file...........");
+//       var response = await drive.files.create(
+//         fileToUpload,
+//         uploadMedia: ga.Media(file.openRead(), file.lengthSync()),
 //       );
-//       String GDrive_URL = "https://drive.google.com/file/d/${response.id}/view?usp=sharing";  
+//       String GDrive_URL = "https://drive.google.com/file/d/${response.id}/view?usp=sharing";
 //       print(GDrive_URL);
 //       note.setGdriveDownloadLink(GDrive_URL);
 //       print(note.toJson());
@@ -290,15 +293,12 @@ class HomeView extends StatelessWidget {
 //       await Future.delayed(Duration(seconds: 1),(){});
 //     }
 
-
 //     await Future.delayed(Duration(seconds: 2),(){});
 
 //     // model.addSubjectToFirebase(subject);
 
-    
-    
 //   }
-//   // allSubjects.forEach((subject) async { 
+//   // allSubjects.forEach((subject) async {
 
 //   // });
 
@@ -318,61 +318,60 @@ class HomeView extends StatelessWidget {
 //   //   subject.addFolderID(subjectFolder.id);
 //   //   subject.addNotesFolderID(notesFolder.id);
 
+//   //  ga.File fileToUpload = ga.File();
+//   //  var file = await FilePicker.getFile();
+//   //  fileToUpload.parents = ["${notesFolder.id}"];
+//   //  fileToUpload.name = path.basename(file.absolute.path);
+//   //  print("UPloading file");
 
-//   //  ga.File fileToUpload = ga.File();  
-//   //  var file = await FilePicker.getFile();  
-//   //  fileToUpload.parents = ["${notesFolder.id}"];  
-//   //  fileToUpload.name = path.basename(file.absolute.path); 
-//   //  print("UPloading file"); 
-   
-//   //  var response = await drive.files.create(  
-//   //    fileToUpload, 
-//   //    uploadMedia: ga.Media(file.openRead(), file.lengthSync()),  
-//   //  );  
+//   //  var response = await drive.files.create(
+//   //    fileToUpload,
+//   //    uploadMedia: ga.Media(file.openRead(), file.lengthSync()),
+//   //  );
 //   //  drive.files.
-//   //  print(response);  
-//  } 
+//   //  print(response);
+//  }
 
-//  Future<void> _listGoogleDriveFiles() async {  
-//    var client = GoogleHttpClient(await googleSignInAccount.authHeaders);  
-//    var drive = ga.DriveApi(client);  
-//    drive.files.list(spaces: 'drive').then((value) {  
-//      setState(() {  
-//        list = value;  
-//      });  
-//      for (var i = 0; i < list.files.length; i++) {  
-//        print("Id: ${list.files[i].id} File Name:${list.files[i].name}");  
-//      }  
-//    });  
-//  }     
+//  Future<void> _listGoogleDriveFiles() async {
+//    var client = GoogleHttpClient(await googleSignInAccount.authHeaders);
+//    var drive = ga.DriveApi(client);
+//    drive.files.list(spaces: 'drive').then((value) {
+//      setState(() {
+//        list = value;
+//      });
+//      for (var i = 0; i < list.files.length; i++) {
+//        print("Id: ${list.files[i].id} File Name:${list.files[i].name}");
+//      }
+//    });
+//  }
 
-//  Future<void> _afterGoogleLogin(GoogleSignInAccount gSA) async {  
-//    var googleSignInAccount = gSA;  
-//    final GoogleSignInAuthentication googleSignInAuthentication =  
-//        await googleSignInAccount.authentication;  
-   
-//    final AuthCredential credential = GoogleAuthProvider.getCredential(  
-//      accessToken: googleSignInAuthentication.accessToken,  
-//      idToken: googleSignInAuthentication.idToken,  
-//    );  
-   
-//    final AuthResult authResult = await _auth.signInWithCredential(credential);  
-//    final FirebaseUser user = authResult.user;  
-   
-//    assert(!user.isAnonymous);  
-//    assert(await user.getIdToken() != null);  
-   
-//    final FirebaseUser currentUser = await _auth.currentUser();  
-//    assert(user.uid == currentUser.uid);  
-   
-//    print('signInWithGoogle succeeded: $user');  
-   
-//    storage.write(key: "signedIn", value: "true").then((value) {  
-//      setState(() {  
-//        signedIn = true;  
-//      });  
-//    });  
-//  }  
+//  Future<void> _afterGoogleLogin(GoogleSignInAccount gSA) async {
+//    var googleSignInAccount = gSA;
+//    final GoogleSignInAuthentication googleSignInAuthentication =
+//        await googleSignInAccount.authentication;
+
+//    final AuthCredential credential = GoogleAuthProvider.getCredential(
+//      accessToken: googleSignInAuthentication.accessToken,
+//      idToken: googleSignInAuthentication.idToken,
+//    );
+
+//    final AuthResult authResult = await _auth.signInWithCredential(credential);
+//    final FirebaseUser user = authResult.user;
+
+//    assert(!user.isAnonymous);
+//    assert(await user.getIdToken() != null);
+
+//    final FirebaseUser currentUser = await _auth.currentUser();
+//    assert(user.uid == currentUser.uid);
+
+//    print('signInWithGoogle succeeded: $user');
+
+//    storage.write(key: "signedIn", value: "true").then((value) {
+//      setState(() {
+//        signedIn = true;
+//      });
+//    });
+//  }
 // }
 // class GoogleHttpClient extends IOClient {
 //   Map<String, String> _headers;
@@ -387,4 +386,3 @@ class HomeView extends StatelessWidget {
 //   Future<http.Response> head(Object url, {Map<String, String> headers}) =>
 //       super.head(url, headers: headers..addAll(_headers));
 // }
-

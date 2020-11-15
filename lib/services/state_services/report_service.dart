@@ -22,6 +22,7 @@ class ReportsService{
         _reports = await prefs.loadReportsFromStorage();
       }
 
+
       addReport(Report report) async
       {
         SharedPreferencesService prefs = locator<SharedPreferencesService>();
@@ -30,7 +31,7 @@ class ReportsService{
           return "You have already reported this. Kindly wait for the admins to check it or use the feedback feature to contact us";
         
         }else{
-
+        
         _reports.add(report);
         await prefs.storeReport(_reports);
         return true;

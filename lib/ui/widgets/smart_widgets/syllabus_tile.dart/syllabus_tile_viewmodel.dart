@@ -38,7 +38,7 @@ class SyllabusTileViewModel extends BaseViewModel{
   void reportNote({@required AbstractDocument doc}) async{
     setBusy(true);
     Report report = Report(doc.id, doc.subjectName, doc.type, doc.title, _authenticationService.user.email);
-     var dialogResult = await _dialogService.showConfirmationDialog(title:"Are You Sure?",description: "Are you sure you want to report this Document?",cancelTitle: "NO",confirmationTitle: "YES");
+     var dialogResult = await _dialogService.showConfirmationDialog(title:"Are You Sure?",description: "Are you sure you want to report this Document?\nUnnecessary reporting may result in a ban from the application!",cancelTitle: "NO",confirmationTitle: "YES");
     if(!dialogResult.confirmed){setBusy(false);return;}
     var result = await _reportsService.addReport(report);
     if(result is String){_dialogService.showDialog(title: "Thank you for reporting" , description: result);}

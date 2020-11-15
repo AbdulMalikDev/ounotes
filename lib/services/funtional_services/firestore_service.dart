@@ -1,5 +1,6 @@
 import 'package:FSOUNotes/app/locator.dart';
 import 'package:FSOUNotes/app/logger.dart';
+import 'package:FSOUNotes/enums/constants.dart';
 import 'package:FSOUNotes/enums/enums.dart';
 import 'package:FSOUNotes/models/UploadLog.dart';
 import 'package:FSOUNotes/models/course_info.dart';
@@ -470,7 +471,7 @@ class FirestoreService {
     return {
       "id": note.id,
       "subjectName": note.subjectName,
-      "type": note.type,
+      "type": Constants.links,
       "fileName": note.title,
       "uploadedAt": DateTime.now(),
       "email": _authenticationService.user.email,
@@ -494,4 +495,30 @@ class FirestoreService {
     log.e(note["firebaseId"].toString());
     await Firestore.instance.collection("Notes").document(note["firebaseId"].toString()).setData(note);
   }
+
+  Future<Note> getNoteById(String id) async {
+    DocumentSnapshot doc = await _notesCollectionReference.document(id).get();
+    return Note.fromData(doc.data,doc.documentID);
+  }
+
+  Future<Link> getLinkById(String id) async {
+    DocumentSnapshot doc = await _linksCollectionReference.document(id).get();
+    return Link.fromData(doc.data);
+  }
+  Future<QuestionPaper> getQuestionPaperById(String id) async {
+    DocumentSnapshot doc = await _questionPapersCollectionReference.document(id).get();
+    return QuestionPaper.fromData(doc.data);
+  }
+  Future<Syllabus> getSyllabusById(String id) async {
+    DocumentSnapshot doc = await _syllabusCollectionReference.document(id).get();
+    return Syllabus.fromData(doc.data);
+  }
+
+  deleteLinkById(String id) async {
+    await _linksCollectionReference.document(id).delete();
+    await _uploadLogCollectionReference.document(id).delete();
+    await _reportCollectionReference.document(id).delete();
+    await _linksCollectionReference.document("length").updateData({"len" : FieldValue.increment(-1)});
+  }
+
 }

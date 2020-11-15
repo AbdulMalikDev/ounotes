@@ -68,8 +68,8 @@ class FDInputView extends StatelessWidget {
                   //               blurRadius: 25)
                   //         ],
                   // ),
-                    decoration: Constants.defaultDecoration
-                    .copyWith(color: theme.colorScheme.background),
+                  decoration: Constants.mdecoration
+                      .copyWith(color: theme.scaffoldBackgroundColor),
                   child: Column(
                     children: <Widget>[
                       Text(
@@ -106,8 +106,9 @@ class FDInputView extends StatelessWidget {
                 width: App(context).appHeight(1) - 40,
                 padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                 margin: EdgeInsets.symmetric(horizontal: 20, vertical: 0),
-                decoration: Constants.defaultDecoration
-                    .copyWith(color:theme.colorScheme.background),
+                decoration: Constants.mdecoration.copyWith(
+                  color: theme.scaffoldBackgroundColor,
+                ),
                 child: Column(
                   children: <Widget>[
                     Text(

@@ -17,8 +17,11 @@ class User{
   //is user allowed to upload?
   bool isUserAllowedToUpload = true;
 
+  // Google sign in credentials
+  Map<String,String> googleSignInAuthHeaders;
 
-  User({this.username, this.email, this.createdAt, this.semester, this.branch, this.college,this.isAuth,this.id,this.photoUrl,this.isUserAllowedToUpload});
+
+  User({this.username, this.email, this.createdAt, this.semester, this.branch, this.college,this.isAuth,this.id,this.photoUrl,this.isUserAllowedToUpload,this.googleSignInAuthHeaders});
 
   User.fromData(Map<String,dynamic> data)
   : username  = data['Username'],

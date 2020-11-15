@@ -25,7 +25,7 @@ class FilterSubjectsView extends StatelessWidget {
                   // ),
                   itemBuilder: (context, index) {
                     return Container(
-                      height: MediaQuery.of(context).size.height * 0.1,
+                      height: MediaQuery.of(context).size.height * 0.09,
                       margin: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(16),

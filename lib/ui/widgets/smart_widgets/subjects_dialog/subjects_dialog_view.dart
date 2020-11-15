@@ -117,6 +117,7 @@ class _SubjectsDialogViewState extends State<SubjectsDialogView> {
                         child: ValueListenableBuilder(
                             valueListenable: model.allSubjects,
                             builder: (context, allSubjects, child) {
+                              
                               List<Subject> allSubjectsAltered =
                                   model.alter(allSubjects);
 

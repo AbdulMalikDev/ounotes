@@ -44,16 +44,9 @@ app.*.map.json
 # Exceptions to above rules.
 !/packages/flutter_tools/test/data/dart_dependencies_test/**/.packages
 
-<<<<<<< HEAD
-.env
-/android/app/google-services.json
-/config/app_config.json
-contibuting.txt
-=======
 
 .env
 /android
 
 /lib/enums/confidential.dart
 /config
->>>>>>> dc63eed6c70632ce1900fa67cc5faf1c88654d48

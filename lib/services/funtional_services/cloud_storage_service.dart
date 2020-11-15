@@ -219,16 +219,20 @@ class CloudStorageService {
     return suffixes[i];
   }
 
-  Future deleteDocument(AbstractDocument doc) async {
-    //Deleted from storage
+  Future deleteDocument(AbstractDocument doc,{bool addedToGdrive = false}) async {
+    //Delete from storage
     try {
+      //Delete from firebase if not added to Gdrive
+      if (!addedToGdrive)
+      {
+          await _firestoreService.deleteDocument(doc);
+      }
       StorageReference docRef = _storageReference
           .child("pdfs/${doc.subjectName}/${doc.type}/${doc.title}");
-      log.e("pdfs/${doc.subjectName}/${doc.type}/${doc.title}");
+      log.e("pdfs/${doc.subjectName}/${doc.type}/${doc.title} DELETED");
       await docRef.delete();
 
-      //Delete from firebase
-      await _firestoreService.deleteDocument(doc);
+
     } catch (e) {
       return _errorHandling(
           e, "While deleting document in FIREBASE STORAGE , Error occurred");

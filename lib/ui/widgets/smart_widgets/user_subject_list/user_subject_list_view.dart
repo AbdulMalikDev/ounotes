@@ -25,7 +25,7 @@ class UserSubjectListView extends StatelessWidget {
                   Subject subject = userSubjects[index];
                   return Container(
                     key: ValueKey('value$index'),
-                    height: App(context).appScreenHeightWithOutSafeArea(0.1),
+                    height: App(context).appScreenHeightWithOutSafeArea(0.09),
                     margin: EdgeInsets.symmetric(horizontal: 14, vertical: 10),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(16),

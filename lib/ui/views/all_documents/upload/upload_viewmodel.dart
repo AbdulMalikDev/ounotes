@@ -303,16 +303,80 @@ class UploadViewModel extends BaseViewModel {
             msg: "An error occurred...please try again later");
       } else if (result == "upload successful") {
         setBusy(false);
-        Fluttertoast.showToast(
-            msg: "Document Uploaded ! Thank you !",
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.CENTER,
-            timeInSecForIosWeb: 1,
-            backgroundColor: Colors.greenAccent,
-            textColor: Colors.black,
-            fontSize: 16.0);
-        _navigationService
-            .popUntil((route) => route.settings.name == Routes.homeViewRoute);
+        // Fluttertoast.showToast(
+        //     msg: "Document Uploaded ! Thank you !",
+        //     toastLength: Toast.LENGTH_SHORT,
+        //     gravity: ToastGravity.CENTER,
+        //     timeInSecForIosWeb: 1,
+        //     backgroundColor: Colors.greenAccent,
+        //     textColor: Colors.black,
+        //     fontSize: 16.0);
+
+        await _dialogService.showDialog(
+            title: "Thank you!",
+            description:
+                "Thank you for uploading ! The admins will verify if your uploaded document is relevant and it will be displayed in $subjectName.\n");
+        showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20)),
+                  backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                  // title: Row(
+                  //   mainAxisSize: MainAxisSize.min,
+                  //   children: <Widget>[
+                  //     Text(
+                  //       "Thank You!",
+                  //       style: Theme.of(context)
+                  //           .textTheme
+                  //           .headline6
+                  //           .copyWith(fontSize: 18),
+                  //     ),
+                  //   ],
+                  // ),
+                  content: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      Text(
+                        "Thank you for uploading ! The admins will verify if your uploaded document is relevant and it will be displayed in $subjectName.\n",
+                        style: Theme.of(context)
+                            .textTheme
+                            .subtitle1
+                            .copyWith(fontSize: 18),
+                      ),
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.warning,
+                            size: 15,
+                          ),
+                          SizedBox(
+                            width: 5,
+                          ),
+                          Text(
+                              "Uploading irrelevant information may result in a ban from the application")
+                        ],
+                      )
+                    ],
+                  ),
+                  actions: <Widget>[
+                    FlatButton(
+                        child: Text(
+                          "ok",
+                          style: Theme.of(context)
+                              .textTheme
+                              .subtitle2
+                              .copyWith(fontSize: 17),
+                        ),
+                        onPressed: () {
+                          _navigationService.popUntil((route) =>
+                              route.settings.name == Routes.homeViewRoute);
+                        }),
+                  ]);
+            });
+        Future.delayed(Duration(seconds: 2)).then((value) => _navigationService
+            .popUntil((route) => route.settings.name == Routes.homeViewRoute));
       } else if (result == 'file is not pdf') {
         showDialog(
             context: context,
