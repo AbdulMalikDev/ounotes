@@ -26,7 +26,8 @@ class FilterSubjectsView extends StatelessWidget {
                   itemBuilder: (context, index) {
                     return Container(
                       height: MediaQuery.of(context).size.height * 0.09,
-                      margin: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+                      margin:
+                          EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(16),
                         color: theme.colorScheme.background,
@@ -43,33 +44,32 @@ class FilterSubjectsView extends StatelessWidget {
                                     blurRadius: 25)
                               ],
                       ),
-                      child: Container(
-                        margin:
-                            EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                        height: 80,
-                        child: ListTile(
-                          title: Text(
-                            data[index].name,
-                            style: theme.textTheme.subtitle1
-                                .copyWith(fontSize: 15),
-                          ),
-                          leading: CircleAvatar(
-                            backgroundColor: Theme.of(context).primaryColor,
-                            child: Text(
-                              data[index]
-                                  .name
-                                  .toUpperCase()
-                                  .substring(0, 1)
-                                  .toUpperCase(),
-                              style: theme.appBarTheme.textTheme.headline6
-                                  .copyWith(
-                                      fontSize: 17,
-                                      fontWeight: FontWeight.normal),
+                      child: Center(
+                        child: Container(
+                          child: ListTile(
+                            title: Text(
+                              data[index].name,
+                              style: theme.textTheme.subtitle1
+                                  .copyWith(fontSize: 15),
                             ),
+                            leading: CircleAvatar(
+                              backgroundColor: Theme.of(context).primaryColor,
+                              child: Text(
+                                data[index]
+                                    .name
+                                    .toUpperCase()
+                                    .substring(0, 1)
+                                    .toUpperCase(),
+                                style: theme.appBarTheme.textTheme.headline6
+                                    .copyWith(
+                                        fontSize: 17,
+                                        fontWeight: FontWeight.normal),
+                              ),
+                            ),
+                            onTap: () {
+                              model.onTap(data[index].name, path);
+                            },
                           ),
-                          onTap: () {
-                            model.onTap(data[index].name, path);
-                          },
                         ),
                       ),
                     );

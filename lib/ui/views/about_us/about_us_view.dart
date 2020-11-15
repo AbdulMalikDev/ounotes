@@ -24,13 +24,13 @@ class AboutUsView extends StatelessWidget {
             fit: StackFit.expand,
             children: <Widget>[
               Column(
-                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Expanded(
                     flex: 2,
                     child: Container(
                       child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.start,
                         children: <Widget>[
                           Container(
                             height: App(context)
@@ -85,7 +85,7 @@ class AboutUsView extends StatelessWidget {
                             height: 20,
                           ),
                           Container(
-                            height: MediaQuery.of(context).size.height * 0.23,
+                            // height: MediaQuery.of(context).size.height * 0.23,
                             padding:
                                 const EdgeInsets.symmetric(horizontal: 30.0),
                             child: Text(
@@ -94,6 +94,7 @@ class AboutUsView extends StatelessWidget {
                                   .copyWith(fontSize: 16),
                             ),
                           ),
+                          SizedBox(height: 10,),
                           Container(
                             alignment: Alignment.center,
                             child: Text(

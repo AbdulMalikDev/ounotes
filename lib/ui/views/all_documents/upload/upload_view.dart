@@ -468,6 +468,7 @@ class _UploadViewState extends State<UploadView> {
                                             width: 5,
                                           ),
                                           Column(
+                                            mainAxisSize: MainAxisSize.min,
                                             children: <Widget>[
                                               Row(
                                                 children: <Widget>[
@@ -486,14 +487,17 @@ class _UploadViewState extends State<UploadView> {
                                                       },
                                                       padding:
                                                           EdgeInsets.all(0),
-                                                      child: Text(
-                                                        "Privacy policy",
-                                                        style: TextStyle(
-                                                            color: Colors.white,
-                                                            fontSize: 14,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .bold),
+                                                      child: Flexible(
+                                                        child: Text(
+                                                          "Privacy policy",
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.white,
+                                                              fontSize: 14,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold),
+                                                        ),
                                                       ),
                                                     ),
                                                   )
@@ -509,23 +513,26 @@ class _UploadViewState extends State<UploadView> {
                                                       fontSize: 15,
                                                     ),
                                                   ),
-                                                  Container(
-                                                    height: 20,
-                                                    child: FlatButton(
-                                                      onPressed: () {
-                                                        model
-                                                            .navigateToTermsAndConditionView();
-                                                      },
-                                                      padding:
-                                                          EdgeInsets.all(0),
-                                                      child: Text(
-                                                        'Terms and condition',
-                                                        style: TextStyle(
-                                                            color: Colors.white,
-                                                            fontSize: 15,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .bold),
+                                                  Flexible(
+                                                    child: Container(
+                                                      height: 20,
+                                                      child: FlatButton(
+                                                        onPressed: () {
+                                                          model
+                                                              .navigateToTermsAndConditionView();
+                                                        },
+                                                        padding:
+                                                            EdgeInsets.all(0),
+                                                        child: Text(
+                                                          'Terms and condition',
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.white,
+                                                              fontSize: 15,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold),
+                                                        ),
                                                       ),
                                                     ),
                                                   )

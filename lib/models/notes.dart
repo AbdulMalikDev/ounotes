@@ -48,7 +48,7 @@ class Note extends AbstractDocument {
     isDownloaded = data['isDownloaded'] ?? false;
     path = Document.Notes;
     type = Constants.notes;
-    votes = data["votes"];
+    votes = data["votes"]??0;
     size = data['size'];
     GDriveLink = data['GDriveLink'] ?? null;
     firebaseId = documentID;

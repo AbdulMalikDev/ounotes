@@ -30,7 +30,7 @@ class DownloadedSyllabusView extends StatelessWidget {
                 child: FractionallySizedBox(
                   widthFactor: 0.99,
                   child: Container(
-                    height: MediaQuery.of(context).size.height * 0.1,
+                    height: MediaQuery.of(context).size.height * 0.12,
                     width: double.infinity,
                     margin: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
                     decoration: BoxDecoration(
@@ -133,7 +133,8 @@ class DownloadedSyllabusView extends StatelessWidget {
                                         letterSpacing: .3)),
                               ],
                             ),
-                          )
+                          ),
+                          SizedBox(height: 5),
                         ],
                       ),
                     ),

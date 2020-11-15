@@ -51,7 +51,7 @@ class DrawerHeaderView extends StatelessWidget {
             Container(
               //color: Colors.yellow,
               //  alignment: Alignment.centerRight,
-              height: App(context).appHeight(0.15),
+              height: App(context).appHeight(0.14),
               width: App(context).appWidth(0.3),
               //padding: EdgeInsets.only(left: 20),
               child: ClipRect(
