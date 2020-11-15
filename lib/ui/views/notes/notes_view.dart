@@ -152,6 +152,10 @@ class _NotesViewState extends State<NotesView>
                                         itemBuilder:
                                             (BuildContext context, int index) {
                                           Note note = model.notes[index];
+                                          //* No Gdrive Link do not display
+                                          if (note.GDriveLink == null){
+                                            return null;
+                                          }
                                           return InkWell(
                                               child: NotesTileView(
                                                 ctx: context,

@@ -1,11 +1,13 @@
 import 'package:FSOUNotes/app/locator.dart';
 import 'package:FSOUNotes/app/logger.dart';
 import 'package:FSOUNotes/enums/constants.dart';
+import 'package:FSOUNotes/enums/enums.dart';
 import 'package:FSOUNotes/models/UploadLog.dart';
 import 'package:FSOUNotes/models/link.dart';
 import 'package:FSOUNotes/models/notes.dart';
 import 'package:FSOUNotes/models/question_paper.dart';
 import 'package:FSOUNotes/models/syllabus.dart';
+import 'package:FSOUNotes/services/funtional_services/authentication_service.dart';
 import 'package:FSOUNotes/services/funtional_services/firestore_service.dart';
 import 'package:FSOUNotes/services/funtional_services/google_drive_service.dart';
 import 'package:FSOUNotes/ui/views/admin/upload_log/upload_log_view.dart';
@@ -18,6 +20,7 @@ import 'package:stacked_services/stacked_services.dart';
 class UploadLogViewModel extends FutureViewModel{
  FirestoreService _firestoreService = locator<FirestoreService>();
  DialogService _dialogService = locator<DialogService>();
+ AuthenticationService _authenticationService = locator<AuthenticationService>();
  Logger log = getLogger("UploadLogViewModel");
 
   List<UploadLog> _logs;
@@ -43,6 +46,7 @@ class UploadLogViewModel extends FutureViewModel{
   }
 
   void viewDocument(UploadLog logItem) {
+      setBusy(true);
       NotesViewModel notesViewModel = NotesViewModel();
 
       if (logItem.type == Constants.links){
@@ -56,33 +60,43 @@ class UploadLogViewModel extends FutureViewModel{
       );
 
       }
+      setBusy(false);
   }
 
   void uploadDocument(UploadLog logItem) async {
+    setBusy(true);
     GoogleDriveService _googleDriveService = locator<GoogleDriveService>();
     if (logItem.type != Constants.notes)
     {
       _dialogService.showDialog(title: "ERROR" , description: "You can only upload Notes from Admin Panel not other documents");
+      setBusy(false);
       return;
     }
     // since any other document except Notes do not need uploading
     Note note = await _firestoreService.getNoteById(logItem.id);
-    _googleDriveService.processFile(note: note, addToGdrive: true);
+    String result = await _googleDriveService.processFile(note: note, addToGdrive: true);
+    _dialogService.showDialog(title: "OUTPUT" , description: result);
+    setBusy(false);
   }
 
   void deleteDocument(UploadLog logItem) async {
+    setBusy(true);
     log.e(logItem);
-      log.e(logItem.type);
+    log.e(logItem.type);
 
     if (logItem.type != Constants.notes)
     {
+      log.e("document to be deleted is not Notes type");
       _deleteDocument(logItem);
+      setBusy(false);
       return;
     }
     GoogleDriveService _googleDriveService = locator<GoogleDriveService>();
     Note note = await _firestoreService.getNoteById(logItem.id);
-    _googleDriveService.processFile(note: note, addToGdrive: false);
-  
+    String result = await _googleDriveService.processFile(note: note, addToGdrive: false);
+    _dialogService.showDialog(title: "OUTPUT" , description: result);
+    setBusy(false);
+
     }
   
     void _showLink(UploadLog logItem) async {

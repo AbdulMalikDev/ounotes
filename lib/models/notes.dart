@@ -50,7 +50,7 @@ class Note extends AbstractDocument {
     type = Constants.notes;
     votes = data["votes"];
     size = data['size'];
-    GDriveLink = data['GDriveLink'] ?? "";
+    GDriveLink = data['GDriveLink'] ?? null;
     firebaseId = documentID;
   }
 
@@ -66,7 +66,7 @@ class Note extends AbstractDocument {
       "isDownloaded": isDownloaded ?? false,
       "votes": votes,
       "size":size,
-      "GDriveLink":GDriveLink ?? "",
+      "GDriveLink":GDriveLink ?? null,
       "firebaseId":firebaseId ?? "",
     };
   }

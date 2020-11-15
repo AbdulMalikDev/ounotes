@@ -23,7 +23,9 @@ class _UploadLogViewState extends State<UploadLogView>
           height: MediaQuery.of(context).size.height * 0.75,
           // alignment: Alignment.center,
           child: SingleChildScrollView(
-            child: Column(
+            child: 
+            model.isBusy ? Center(child:CircularProgressIndicator())
+            : Column(
               //mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[

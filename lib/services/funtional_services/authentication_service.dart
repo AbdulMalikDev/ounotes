@@ -91,6 +91,8 @@ class AuthenticationService {
     }
   }
 
+
+
 Future<bool> handleSignOut() async {
   FirebaseUser user = await FirebaseAuth.instance.currentUser();
   if (user != null) {
@@ -106,6 +108,13 @@ Future<bool> handleSignOut() async {
   //Store in state
   _user = userr;
   return true;
+}
+
+// *For Admins
+refreshSignInCredentials() async {
+   googleSignIn = GoogleSignIn(scopes: ['https://www.googleapis.com/auth/drive']);
+   GoogleSignInAccount ga = await googleSignIn.signInSilently().whenComplete(() => () {});
+   return ga.authHeaders;
 }
 
   
