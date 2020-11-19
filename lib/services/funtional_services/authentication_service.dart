@@ -2,6 +2,7 @@ import 'package:FSOUNotes/app/locator.dart';
 import 'package:FSOUNotes/app/logger.dart';
 import 'package:FSOUNotes/enums/confidential.dart';
 import 'package:FSOUNotes/models/user.dart';
+import 'package:FSOUNotes/services/funtional_services/analytics_service.dart';
 import 'package:FSOUNotes/services/funtional_services/firestore_service.dart';
 import 'package:FSOUNotes/services/funtional_services/sharedpref_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -9,6 +10,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:injectable/injectable.dart';
 import 'package:logger/logger.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 
 @lazySingleton
 class AuthenticationService {
@@ -16,6 +18,8 @@ class AuthenticationService {
   Logger log = getLogger("AuthenticationService");
 
   FirestoreService _firestoreService = locator<FirestoreService>();
+  AnalyticsService _analyticsService = locator<AnalyticsService>();
+  // OneSignal _oneSignal;
 
   final CollectionReference _usersCollectionReference = Firestore.instance.collection("users");
 
@@ -73,7 +77,7 @@ class AuthenticationService {
       isAuth: true,
       photoUrl: _firebaseUser.photoUrl,
       username: _firebaseUser.displayName,
-      googleSignInAuthHeaders: await _googleUser.authHeaders,
+      // googleSignInAuthHeaders: await _googleUser.authHeaders,
     );
    if (isAdmin){_user.setAdmin=true;}
    
@@ -84,38 +88,58 @@ class AuthenticationService {
     //Add User To Local Storage
     SharedPreferencesService _sharedPreferencesService = locator<SharedPreferencesService>();
     await _sharedPreferencesService.saveUserLocally(_user);
-     if(_firebaseUser!=null){
+
+    // Add this event Analytics
+    _addEventInfo(_user);
+
+    if(_firebaseUser!=null){
       return true;
     }else{
       return false;
     }
+
   }
-
-
-
-Future<bool> handleSignOut() async {
-  FirebaseUser user = await FirebaseAuth.instance.currentUser();
-  if (user != null) {
-    await FirebaseAuth.instance.signOut();
-    await googleSignIn.disconnect();
-    await googleSignIn.signOut().catchError((e) {
-      return false;
-    });
-  }
-  SharedPreferencesService _sharedPreferencesService = locator<SharedPreferencesService>();
-  User userr=User(isAuth: false);
-  await _sharedPreferencesService.saveUserLocally(userr);
-  //Store in state
-  _user = userr;
-  return true;
-}
-
-// *For Admins
-refreshSignInCredentials() async {
-   googleSignIn = GoogleSignIn(scopes: ['https://www.googleapis.com/auth/drive']);
-   GoogleSignInAccount ga = await googleSignIn.signInSilently().whenComplete(() => () {});
-   return ga.authHeaders;
-}
+    
+    
+    
+    Future<bool> handleSignOut() async {
+      FirebaseUser user = await FirebaseAuth.instance.currentUser();
+      if (user != null) {
+        await FirebaseAuth.instance.signOut();
+        await googleSignIn.disconnect();
+        await googleSignIn.signOut().catchError((e) {
+          return false;
+        });
+      }
+      SharedPreferencesService _sharedPreferencesService = locator<SharedPreferencesService>();
+      User userr=User(isAuth: false);
+      await _sharedPreferencesService.saveUserLocally(userr);
+      //Store in state
+      _user = userr;
+      return true;
+    }
+    
+    // *For Admins
+    refreshSignInCredentials() async {
+       googleSignIn = GoogleSignIn(scopes: ['https://www.googleapis.com/auth/drive']);
+       GoogleSignInAccount ga = await googleSignIn.signInSilently().whenComplete(() => () {});
+       return ga.authHeaders;
+    }
+    
+    void _addEventInfo(User user) {
+      _analyticsService.logEvent(name:"LogIn",parameters:_user.toJson());
+      _analyticsService.setUserProperty(name: 'college', value: _user.college);
+      _analyticsService.setUserProperty(name: 'branch', value: _user.branch);
+      _analyticsService.setUserProperty(name: 'semester', value: _user.semester);
+      Map<String, dynamic> tags = {
+        "college" : _user.college,
+        "branch" : _user.branch,
+        "semester" : _user.semester,
+        "email" : _user.email,
+        "username" : _user.username,
+      };
+      OneSignal.shared.sendTags(tags);
+    }
 
   
 }
