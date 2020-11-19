@@ -1,6 +1,7 @@
 import 'package:FSOUNotes/AppTheme/AppStateNotifier.dart';
 import 'package:FSOUNotes/AppTheme/AppTheme.dart';
 import 'package:FSOUNotes/app/config_reader.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stacked/stacked.dart';
 
@@ -13,7 +14,8 @@ import 'app/router.gr.dart' as router;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   setupLocator();
-  // await ConfigReader.initialize();
+  OneSignal.shared.init("88245c37-d424-4163-a9c3-2a9eb978a01f",);
+  OneSignal.shared.setInFocusDisplayType(OSNotificationDisplayType.notification);
   Logger.level = Level.verbose;
   SharedPreferences prefs = await SharedPreferences.getInstance();
   AppStateNotifier.isDarkModeOn = prefs.getBool('isdarkmodeon') ?? false;
