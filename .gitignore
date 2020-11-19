@@ -46,7 +46,7 @@ app.*.map.json
 
 
 .env
-/android
+/android/
 
 /lib/enums/confidential.dart
 /config
