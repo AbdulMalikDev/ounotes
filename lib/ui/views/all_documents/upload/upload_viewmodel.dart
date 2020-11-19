@@ -370,7 +370,8 @@ class UploadViewModel extends BaseViewModel {
         // Future.delayed(Duration(seconds: 2)).then((value) => _navigationService
         //     .popUntil((route) => route.settings.name == Routes.homeViewRoute));
       } else if (result == 'file is not pdf') {
-        showDialog(
+        
+        await showDialog(
             context: context,
             builder: (BuildContext context) {
               return AlertDialog(
@@ -452,10 +453,19 @@ class UploadViewModel extends BaseViewModel {
                   ]);
             });
         setBusy(false);
-      } else {
-        await _firestoreService.saveLink(doc);
-      }
+      } 
       setBusy(false);
+    }else {
+        Link link = doc;
+        bool isValidURL = Uri.parse(link.linkUrl).isAbsolute;
+        if (isValidURL){
+          await _firestoreService.saveLink(doc);
+          await _dialogService.showDialog(title:"SUCCESS" , description: "Thank you for sharing a resource with all the students ! Admins will review the link and display it in the app.");
+          _navigationService.popUntil((route) =>route.settings.name == Routes.homeViewRoute);
+        }else{
+          await _dialogService.showDialog(title:"Aww ! Wrong Link !" , description: "Looks like the link format is not valid, make sure to copy and paste the exact link and not just the domain name. For example, \"google.com\" is not valid, \"https://google.com\" is a valid URL");
+        }
+        setBusy(false);
     }
   }
 
