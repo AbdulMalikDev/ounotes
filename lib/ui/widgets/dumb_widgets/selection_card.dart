@@ -27,7 +27,9 @@ class _SelectionCardState extends State<SelectionCard> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: Constants.kBoxDecorationStyle,
+      decoration: Constants.kBoxDecorationStyle.copyWith(
+        color: Theme.of(context).canvasColor,
+      ),
       height: App(context).appHeight(0.14),
       width: double.infinity,
       margin: const EdgeInsets.symmetric(vertical: 10),
@@ -51,6 +53,7 @@ class _SelectionCardState extends State<SelectionCard> {
               margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
+                color: Theme.of(context).canvasColor,
                 borderRadius: BorderRadius.circular(10),
                 border: Border.all(
                   color: Theme.of(context).primaryColor,
