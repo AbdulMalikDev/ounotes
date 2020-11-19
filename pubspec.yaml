@@ -43,6 +43,7 @@ dependencies:
   direct_select_flutter: ^1.0.6
   flutter_secure_storage: ^3.3.1+1
   onesignal_flutter: ^2.6.1
+  flutter_dotenv: ^2.1.0
 
   # google/firebase packages
   googleapis: ^0.54.0
@@ -108,6 +109,7 @@ flutter:
   assets:
     - assets/images/
     - assets/lottie/
+    - .env
 
   fonts:
     - family: Montserrat
