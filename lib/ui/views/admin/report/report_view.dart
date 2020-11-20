@@ -86,6 +86,44 @@ class _ReportViewState extends State<ReportView>
                                       style: theme.textTheme.subtitle1
                                           .copyWith(fontSize: 18),
                                     ),
+                                    SizedBox(height: 20,),
+                                    Row(
+                                      children: [
+                                        Expanded(
+                                            child: Padding(
+                                              padding: const EdgeInsets.all(8.0),
+                                              child: RaisedButton(
+                                              color: Colors.teal,
+                                          child: FittedBox(child: Text("ACCEPT",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),)),
+                                          onPressed: () {
+                                            model.accept(report);
+                                          },
+                                        ),
+                                            )),
+                                        Expanded(
+                                            child: Padding(
+                                              padding: const EdgeInsets.all(8.0),
+                                              child: RaisedButton(
+                                              color: Colors.blue[700],
+                                          child: Text("DENY",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),),
+                                          onPressed: () {
+                                            model.deny(report);
+                                          },
+                                        ),
+                                            )),
+                                        Expanded(
+                                            child: Padding(
+                                              padding: const EdgeInsets.all(8.0),
+                                              child: RaisedButton(
+                                              color: Colors.red,
+                                          child: FittedBox(child: Text("BAN",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),)),
+                                          onPressed: () {
+                                            model.ban(report);
+                                          },
+                                        ),
+                                            )),
+                                      ],
+                                    ),
                                   ],
                                 ),
                                 onTap: () async {

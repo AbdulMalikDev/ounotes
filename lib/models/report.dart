@@ -1,3 +1,7 @@
+import 'package:FSOUNotes/app/logger.dart';
+import 'package:logger/logger.dart';
+
+Logger log = getLogger("Report");
 class Report {
   String id;
   String subjectName;
@@ -6,6 +10,7 @@ class Report {
   String email;
   DateTime date;
   int reports;
+  String reporter_id;
 
   Report(this.id, this.subjectName, this.type, this.title , this.email);
 
@@ -13,13 +18,18 @@ class Report {
   Report.fromData(Map<String,dynamic> data)
   {
 
-    id              = data['id'];
-    subjectName     = data['subjectName'];
-    type            = data['type'];
-    title           = data['title'];
-    email           = data['email'];
-    reports         = data["reports"] ?? 0;
-    date            = _parseUploadDate(data["date"]);
+    try {
+      id              = data['id'];
+      subjectName     = data['subjectName'];
+      type            = data['type'];
+      title           = data['title'];
+      email           = data['email'];
+      reports         = data["reports"] ?? 0;
+      date            = _parseUploadDate(data["date"]);
+      reporter_id     = data["reporter_id"];
+    } on Exception catch (e) {
+          log.e("Error while DESERIALIZING report from firebase ${e.toString()}");
+    }
   }
 
 

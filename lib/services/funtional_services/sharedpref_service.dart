@@ -26,12 +26,8 @@ class SharedPreferencesService {
 
   saveUserLocally(User user) async {
     SharedPreferences prefs = await store();
-    log.i("User saved locally");
-    prefs.setString("current_user", json.encode(user.toJson()));
-    log.e(user.googleSignInAuthHeaders);
-    prefs.setString(
-        "google_auth_header", json.encode(user.googleSignInAuthHeaders));
-    log.e(json.decode(prefs.getString("google_auth_header")));
+    log.i("User getting saved locally");
+    prefs.setString("current_user_is_logged_in", json.encode(user.toJson()));
   }
 
   Future<bool> isUserLoggedIn() async {
@@ -43,7 +39,7 @@ class SharedPreferencesService {
       return false;
     } else {
       log.i("User retreived from storage");
-      var user = User.fromData(json.decode(prefs.getString("current_user")));
+      var user = User.fromData(json.decode(prefs.getString("current_user_is_logged_in")));
       if (user == null) {
         return false;
       }
@@ -108,6 +104,19 @@ class SharedPreferencesService {
       telegramDialog = true;
     }
     return telegramDialog;
+  }
+
+  getUser() async {
+    SharedPreferences prefs = await store();
+    log.i("User trying to be retrieved from local storage");
+    String userJson = prefs.getString("current_user_is_logged_in");
+    if (userJson == null)
+    {
+      log.e("getUser - User is not present in local storage");
+      return null;
+    }
+    User user = User.fromData(json.decode(userJson));
+    return user;
   }
 }
 

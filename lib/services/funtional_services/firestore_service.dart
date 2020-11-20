@@ -54,6 +54,7 @@ class FirestoreService {
   LinksService _linksService = locator<LinksService>();
 
   AnalyticsService _analyticsService = locator<AnalyticsService>();
+  
 
   _getCollectionReferenceAccordingToType(Document path) {
     switch (path) {
@@ -202,6 +203,8 @@ class FirestoreService {
 
   Future saveNotes(AbstractDocument note) async {
     try {
+      AuthenticationService _authenticationService = locator<AuthenticationService>();
+      User user = await _authenticationService.getUser();
       String id = newCuid();
       note.setId = id;
       log.i("Document being saved");
@@ -214,7 +217,7 @@ class FirestoreService {
       await ref.document(note.id).setData(note.toJson());
       await _uploadLogCollectionReference
           .document(note.id)
-          .setData(_createUploadLog(note));
+          .setData(_createUploadLog(note,user));
     } catch (e) {
       log.e("Document id : ${note.id}");
       log.e("Document Subject Name : ${note.subjectName}");
@@ -227,6 +230,8 @@ class FirestoreService {
 
   saveLink(Link doc) async {
     try {
+      AuthenticationService _authenticationService = locator<AuthenticationService>();
+      User user = await _authenticationService.getUser();
       log.e("saving link");
       String id = newCuid();
       doc.setId = id;
@@ -234,7 +239,7 @@ class FirestoreService {
       await _linksCollectionReference.document("length").updateData({"len" : FieldValue.increment(1)});
       await _uploadLogCollectionReference
           .document(doc.id)
-          .setData(_linkUploadLog(doc));
+          .setData(_linkUploadLog(doc,user));
     } catch (e) {
       log.i("Url of link : ${doc.linkUrl}");
       log.i("title of link : ${doc.title}");
@@ -255,8 +260,10 @@ class FirestoreService {
   reportNote({Report report, AbstractDocument doc}) async {
     try {
       Map<String, dynamic> data = report.toJson();
-
+      AuthenticationService _authenticationService = locator<AuthenticationService>();
+      User user = await _authenticationService.getUser();
       data.addAll({
+        "reporter_id":user.id,
         "id": doc.id,
         "title": doc.title,
         "type": doc.type,
@@ -270,7 +277,7 @@ class FirestoreService {
       } else {
         await _reportCollectionReference.document(doc.id).setData(data);
       }
-      _analyticsService.logEvent(name:"REPORT",parameters:data,addInNotificationService: true);
+      _analyticsService.logEvent(name:"REPORT",parameters:report.toJson(),addInNotificationService: true);
     } catch (e) {
       return _errorHandling(
           e, "While uploading report to Firebase , Error occurred");
@@ -456,10 +463,11 @@ class FirestoreService {
     }
   }
 
-  Map<String, dynamic> _createUploadLog(AbstractDocument note) {
+  Map<String, dynamic> _createUploadLog(AbstractDocument note,User user) {
     AuthenticationService _authenticationService =
         locator<AuthenticationService>();
     Map<String,dynamic> uploadLog = {
+                                        "uploader_id":user.id,
                                         "id": note.id,
                                         "subjectName": note.subjectName,
                                         "type": note.type,
@@ -472,10 +480,11 @@ class FirestoreService {
     _analyticsService.logEvent(name:"UPLOAD" , parameters: uploadLog , addInNotificationService:true);
   }
 
-  Map<String, dynamic> _linkUploadLog(Link note) {
+  Map<String, dynamic> _linkUploadLog(Link note,User user) {
     AuthenticationService _authenticationService =
         locator<AuthenticationService>();
     Map<String,dynamic> uploadLog =  {
+      "uploader_id":user.id,
       "id": note.id,
       "subjectName": note.subjectName,
       "type": Constants.links,
