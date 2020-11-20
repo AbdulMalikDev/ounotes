@@ -270,6 +270,7 @@ class FirestoreService {
       } else {
         await _reportCollectionReference.document(doc.id).setData(data);
       }
+      _analyticsService.logEvent(name:"REPORT",parameters:data,addInNotificationService: true);
     } catch (e) {
       return _errorHandling(
           e, "While uploading report to Firebase , Error occurred");
@@ -474,7 +475,7 @@ class FirestoreService {
   Map<String, dynamic> _linkUploadLog(Link note) {
     AuthenticationService _authenticationService =
         locator<AuthenticationService>();
-    return {
+    Map<String,dynamic> uploadLog =  {
       "id": note.id,
       "subjectName": note.subjectName,
       "type": Constants.links,
@@ -483,6 +484,8 @@ class FirestoreService {
       "email": _authenticationService.user.email,
       "size": 0,
     };
+    _analyticsService.logEvent(name:"UPLOAD_LINK" , parameters: uploadLog , addInNotificationService:true);
+    return uploadLog;
   }
 
   deleteReport(Report report) async {

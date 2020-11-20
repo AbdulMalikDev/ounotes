@@ -41,12 +41,7 @@ class _WebViewWidgetState extends State<WebViewWidget> {
     // Add a listener to on url changed
     _onUrlChanged = flutterWebViewPlugin.onUrlChanged.listen((String url) {
       if (mounted) {
-        print("!!!!!!!!!!!!!!!!!!!!");
-        print(url);
-        print(url.contains("export=download"));
-        print(localModel);
         if ( ( url.contains("export=download") || url.contains("docs.googleusercontent.com/") ) && localModel != null) {
-          print("showDialog");
           localModel.showDownloadPreventDialog(flutterWebViewPlugin);
         }
         setState(() {

@@ -26,5 +26,9 @@ class AnalyticsService{
   void setUserProperty({String name, String value}) {
     analytics.setUserProperty(name: name, value: value);
   }
+
+  void addTagInNotificationService({String key,dynamic value}){
+    OneSignal.shared.sendTag(key, value);
+  }
   
 }
