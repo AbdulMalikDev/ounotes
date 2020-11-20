@@ -26,6 +26,9 @@ class AboutUsView extends StatelessWidget {
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
+                  SizedBox(
+                    height: App(context).appHeight(0.05),
+                  ),
                   Expanded(
                     flex: 2,
                     child: Container(
@@ -44,7 +47,8 @@ class AboutUsView extends StatelessWidget {
                           ),
                           Text("OU Notes", style: theme.textTheme.headline6),
                           GestureDetector(
-                            onTap: () => model.navigateToTermsAndConditionView(),
+                            onTap: () =>
+                                model.navigateToTermsAndConditionView(),
                             child: Container(
                               padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
                               height: 80,
@@ -81,9 +85,7 @@ class AboutUsView extends StatelessWidget {
                               ),
                             ),
                           ),
-                          SizedBox(
-                            height: 20,
-                          ),
+                          SizedBox(height: App(context).appHeight(0.05)),
                           Container(
                             // height: MediaQuery.of(context).size.height * 0.23,
                             padding:
@@ -94,7 +96,9 @@ class AboutUsView extends StatelessWidget {
                                   .copyWith(fontSize: 16),
                             ),
                           ),
-                          SizedBox(height: 10,),
+                          SizedBox(
+                            height: App(context).appHeight(0.03),
+                          ),
                           Container(
                             alignment: Alignment.center,
                             child: Text(

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:FSOUNotes/app/locator.dart';
 import 'package:FSOUNotes/app/logger.dart';
+import 'package:FSOUNotes/enums/enums.dart';
 import 'package:FSOUNotes/models/report.dart';
 import 'package:FSOUNotes/models/user.dart';
 import 'package:FSOUNotes/services/funtional_services/authentication_service.dart';
@@ -16,6 +17,7 @@ class SharedPreferencesService {
 
   bool introDialog;
   bool telegramDialog;
+  String modeOfView;
 
   Future<SharedPreferences> store() async {
     if (_store == null) {
@@ -39,7 +41,8 @@ class SharedPreferencesService {
       return false;
     } else {
       log.i("User retreived from storage");
-      var user = User.fromData(json.decode(prefs.getString("current_user_is_logged_in")));
+      var user = User.fromData(
+          json.decode(prefs.getString("current_user_is_logged_in")));
       if (user == null) {
         return false;
       }
@@ -51,6 +54,15 @@ class SharedPreferencesService {
 
       return user.isAuth;
     }
+  }
+
+  getModeOfView() async {
+    SharedPreferences prefs = await this.store();
+    if (!prefs.containsKey("modeofview")) {
+      return null;
+    }
+    String modeofview = prefs.getString("modeofview");
+    return modeofview;
   }
 
   loadSubjectsFromStorage() {}
@@ -110,8 +122,7 @@ class SharedPreferencesService {
     SharedPreferences prefs = await store();
     log.i("User trying to be retrieved from local storage");
     String userJson = prefs.getString("current_user_is_logged_in");
-    if (userJson == null)
-    {
+    if (userJson == null) {
       log.e("getUser - User is not present in local storage");
       return null;
     }
@@ -139,4 +150,6 @@ class SharedPreferencesService {
 //     });
 //   }
 //   return newMap;
+// }
+
 // }

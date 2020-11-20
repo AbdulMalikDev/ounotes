@@ -45,6 +45,7 @@ dependencies:
   onesignal_flutter: ^2.6.1
   flutter_dotenv: ^2.1.0
   in_app_review: ^1.0.3
+  material_design_icons_flutter: ^4.0.5755
 
   # google/firebase packages
   googleapis: ^0.54.0

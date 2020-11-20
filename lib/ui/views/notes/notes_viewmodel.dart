@@ -3,15 +3,18 @@ import 'package:FSOUNotes/app/locator.dart';
 import 'package:FSOUNotes/app/logger.dart';
 import 'package:FSOUNotes/app/router.gr.dart';
 import 'package:FSOUNotes/enums/constants.dart';
+import 'package:FSOUNotes/misc/helper.dart';
 import 'package:FSOUNotes/models/document.dart';
 import 'package:FSOUNotes/models/download.dart';
 import 'package:FSOUNotes/models/notes.dart';
 import 'package:FSOUNotes/models/vote.dart';
 import 'package:FSOUNotes/services/funtional_services/firestore_service.dart';
+import 'package:FSOUNotes/services/funtional_services/sharedpref_service.dart';
 import 'package:FSOUNotes/services/state_services/download_service.dart';
 import 'package:FSOUNotes/services/state_services/vote_service.dart';
 import 'package:cuid/cuid.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:logger/logger.dart';
@@ -27,12 +30,15 @@ class NotesViewModel extends BaseViewModel {
   List<Download> downloadedNotes = [];
   var _notes;
   NavigationService _navigationService = locator<NavigationService>();
+  SharedPreferencesService _sharedPreferencesService =
+      locator<SharedPreferencesService>();
   DownloadService _downloadService = locator<DownloadService>();
   VoteServie _voteServie = locator<VoteServie>();
   double _progress = 0;
   double get progress => _progress;
   String _notetitle = '';
   String get notetitle => _notetitle;
+  bool _ischecked = false;
 
   List<Vote> get voteslist => userVotedNotesList;
 
@@ -103,8 +109,66 @@ class NotesViewModel extends BaseViewModel {
     return false;
   }
 
- 
+  void openDoc(BuildContext context, Note note) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20)),
+              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+              title: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Expanded(
+                    child: Text(
+                      "Where do you want to open the file?",
+                      style: Theme.of(context)
+                          .textTheme
+                          .headline6
+                          .copyWith(fontSize: 18),
+                      overflow: TextOverflow.clip,
+                    ),
+                  ),
+                ],
+              ),
+              actions: <Widget>[
+                FlatButton(
+                    child: Text(
+                      "Open in App",
+                      style: Theme.of(context)
+                          .textTheme
+                          .subtitle2
+                          .copyWith(fontSize: 17),
+                    ),
+                    onPressed: () {
+                      _firestoreService.incrementView(note);
+                      Navigator.pop(context);
+                      navigateToWebView(note);
+                    }),
+                FlatButton(
+                    child: Text(
+                      "Open In Browser",
+                      style: Theme.of(context)
+                          .textTheme
+                          .subtitle2
+                          .copyWith(fontSize: 17),
+                    ),
+                    onPressed: () {
+                      _firestoreService.incrementView(note);
+                      Helper.launchURL(note.GDriveLink);
+                      Navigator.pop(context);
+                    }),
+              ]);
+        });
+  }
 
+  void navigateToWebView(Note note) {
+    _navigationService.navigateTo(Routes.webViewWidgetRoute,
+        arguments: WebViewWidgetArguments(note: note));
+  }
+
+  //download doc on tap
   void onTap({
     String notesName,
     String subName,
@@ -133,16 +197,9 @@ class NotesViewModel extends BaseViewModel {
         arguments: PDFScreenArguments(pathPDF: PDFpath, title: notesName));
   }
 
-  void navigateToWebView(Note note) {
-    // TODO increment views
-    _firestoreService.incrementView(note);
-    _navigationService.navigateTo(Routes.webViewWidgetRoute,
-        arguments: WebViewWidgetArguments(url: note.GDriveLink));
-  }
-
   // @override
   // Future futureToRun() =>fetchNotes();
-  
+
   //old download logic for firebase
   downloadFile({
     String notesName,

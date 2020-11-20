@@ -23,77 +23,75 @@ class ProfileView extends StatelessWidget {
               title: Text("My Profile"),
               iconTheme: IconThemeData(color: Colors.white),
             ),
-            body: Container(
-              height: App(context).appScreenHeightWithOutSafeArea(1),
-              child: SingleChildScrollView(
-                child: Column(
-                  children: <Widget>[
-                    Container(
-                      height: App(context).appHeight(0.2),
-                      child: Column(
-                        children: <Widget>[
-                          SizedBox(
-                            height: 10,
-                          ),
-                          Container(
-                            height: App(context)
-                                .appScreenHeightWithOutSafeArea(0.12),
-                            width: App(context)
-                                .appScreenWidthWithOutSafeArea(0.32),
-                            child: Image.asset(
-                              "assets/images/apnaicon.png",
-                              fit: BoxFit.contain,
-                            ),
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          FittedBox(
-                            child: Text(model.user?.username ?? '',
-                                style: Theme.of(context).textTheme.headline6),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.min,
-                        children: <Widget>[
-                          buildTile("Email", model.user.email ?? "", context),
-                          buildTile(
-                              "Semester", model.user.semester ?? " ", context),
-                          buildTile(
-                              "Branch", model.user.branch ?? " ", context),
-                          buildTile(
-                              'College', model.user.college ?? "", context),
-                        ]),
-                    SizedBox(
-                      height: 40,
-                    ),
-                    Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 60),
-                      height: MediaQuery.of(context).size.height * 0.06,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: FlatButton(
-                        child: Text(
-                          "CHANGE INFORMATION",
-                          style: TextStyle(color: Colors.white),
+            body: SingleChildScrollView(
+              scrollDirection: Axis.vertical,
+              child: Column(
+                children: <Widget>[
+                  Container(
+                    height: App(context).appHeight(0.2),
+                    child: Column(
+                      children: <Widget>[
+                        SizedBox(
+                          height: 10,
                         ),
-                        color: Theme.of(context).primaryColor,
-                        onPressed: () {
-                          model.handleSignOut();
-                        },
-                      ),
+                        Container(
+                          height:
+                              App(context).appScreenHeightWithOutSafeArea(0.12),
+                          width:
+                              App(context).appScreenWidthWithOutSafeArea(0.32),
+                          child: Image.asset(
+                            "assets/images/apnaicon.png",
+                            fit: BoxFit.contain,
+                          ),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        FittedBox(
+                          child: Text(model.user?.username ?? '',
+                              style: Theme.of(context).textTheme.headline6),
+                        ),
+                      ],
                     ),
-                    SizedBox(height: 10),
-                  ],
-                ),
+                  ),
+                  Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        buildTile("Email", model.user?.email ?? "", context),
+                        buildTile(
+                            "Semester", model.user?.semester ?? " ", context),
+                        buildTile("Branch", model.user?.branch ?? " ", context),
+                        buildTile(
+                            'College', model.user?.college ?? "", context),
+                      ]),
+                  SizedBox(
+                    height: 40,
+                  ),
+                  Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 60),
+                    height: MediaQuery.of(context).size.height * 0.06,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: FlatButton(
+                      child: Text(
+                        "CHANGE INFORMATION",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      color: Theme.of(context).primaryColor,
+                      onPressed: () {
+                        model.handleSignOut();
+                      },
+                    ),
+                  ),
+                  SizedBox(height: 10),
+                ],
               ),
             ),
           ),
+
           // ),
         );
       },

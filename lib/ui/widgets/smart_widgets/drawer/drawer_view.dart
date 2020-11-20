@@ -6,6 +6,7 @@ import 'package:FSOUNotes/ui/widgets/dumb_widgets/drawer_header.dart';
 import 'package:FSOUNotes/ui/widgets/dumb_widgets/nav_item.dart';
 import 'package:FSOUNotes/ui/widgets/smart_widgets/drawer/drawer_viewmodel.dart';
 import 'package:flutter/material.dart';
+import 'package:in_app_review/in_app_review.dart';
 import 'package:open_appstore/open_appstore.dart';
 import 'package:share/share.dart';
 import 'package:stacked/stacked.dart';
@@ -68,10 +69,17 @@ class DrawerView extends StatelessWidget {
                                     ? Colors.white
                                     : Colors.grey[700],
                               ),
-                              onTap: () {
+                              onTap: () async {
                                 OpenAppstore.launch(
                                     androidAppId: 'com.notes.ounotes',
                                     iOSAppId: 'com.notes.ounotes');
+                                // print('review');
+                                // final InAppReview inAppReview =
+                                //     InAppReview.instance;
+
+                                // if (await inAppReview.isAvailable()) {
+                                //   inAppReview.requestReview();
+                                // }
                               }),
                           NavItem(
                               Icons.arrow_drop_down_circle,
@@ -131,8 +139,7 @@ class DrawerView extends StatelessWidget {
                               style: subtitle1,
                             ),
                             onTap: () async {
-                              const url =
-                                  'https://t.me/ounotes';
+                              const url = 'https://t.me/ounotes';
                               if (await canLaunch(url)) {
                                 model.recordTelegramVisit();
                                 await launch(url);

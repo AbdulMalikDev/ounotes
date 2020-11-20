@@ -10,6 +10,8 @@ import 'package:FSOUNotes/ui/widgets/smart_widgets/notes_tile/notes_tile_viewmod
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:share/share.dart';
 import 'package:stacked/stacked.dart';
 
 class NotesTileView extends StatelessWidget {
@@ -113,18 +115,21 @@ class NotesTileView extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
                                   Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
                                     children: <Widget>[
                                       Container(
-                                        width: 180,
+                                        width: 160,
                                         child: Row(
                                           children: <Widget>[
                                             Container(
                                               constraints:
                                                   model.isnotedownloaded
                                                       ? BoxConstraints(
-                                                          maxWidth: 150)
+                                                          maxWidth: 140)
                                                       : BoxConstraints(
-                                                          maxWidth: 180),
+                                                          maxWidth: 160),
                                               child: Text(
                                                 title,
                                                 overflow: TextOverflow.clip,
@@ -140,33 +145,56 @@ class NotesTileView extends StatelessWidget {
                                                   )
                                                 : SizedBox(),
                                             model.isnotedownloaded
-                                                ? Icon(Icons.done_all,
+                                                ? Icon(
+                                                    Icons.done_all,
                                                     color:
                                                         theme.iconTheme.color,
-                                                    size: 18)
+                                                    size: 18,
+                                                  )
                                                 : SizedBox(),
                                           ],
                                         ),
                                       ),
-                                      PopupMenuButton(
-                                        onSelected: (Menu selectedValue) {
-                                          if (selectedValue == Menu.Report) {
-                                            model.reportNote(
-                                              doc: note,
-                                              id: note.id,
-                                              subjectName: note.subjectName,
-                                              title: note.title,
-                                              type: Constants.notes,
-                                            );
-                                          }
+                                      IconButton(
+                                        padding: EdgeInsets.zero,
+                                        icon: Icon(
+                                          MdiIcons.shareOutline,
+                                          color: theme.primaryColor,
+                                        ),
+                                        onPressed: () {
+                                          //TODO add share text
+                                          final RenderBox box =
+                                              context.findRenderObject();
+                                          Share.share(
+                                              "Yo Check out this ${note.subjectName} notes ${note.GDriveLink}",
+                                              sharePositionOrigin:
+                                                  box.localToGlobal(
+                                                          Offset.zero) &
+                                                      box.size);
                                         },
-                                        icon: Icon(Icons.more_vert),
-                                        itemBuilder: (_) => [
-                                          PopupMenuItem(
-                                            child: Text('Report'),
-                                            value: Menu.Report,
-                                          ),
-                                        ],
+                                      ),
+                                      Flexible(
+                                        child: PopupMenuButton(
+                                          padding: EdgeInsets.zero,
+                                          onSelected: (Menu selectedValue) {
+                                            if (selectedValue == Menu.Report) {
+                                              model.reportNote(
+                                                doc: note,
+                                                id: note.id,
+                                                subjectName: note.subjectName,
+                                                title: note.title,
+                                                type: Constants.notes,
+                                              );
+                                            }
+                                          },
+                                          icon: Icon(Icons.more_vert),
+                                          itemBuilder: (_) => [
+                                            PopupMenuItem(
+                                              child: Text('Report'),
+                                              value: Menu.Report,
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                     ],
                                   ),
