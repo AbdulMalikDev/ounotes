@@ -79,7 +79,7 @@ def keystoreProperties = new Properties()
             // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig signingConfigs.release
 
-            minifyEnabled true
+            // minifyEnabled true
             useProguard true
 
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
@@ -89,5 +89,16 @@ def keystoreProperties = new Properties()
 
 flutter {
     source '../..'
+}
+
+dependencies {
+    
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'androidx.test:runner:1.1.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
+    implementation 'androidx.fragment:fragment-ktx:1.2.2'
+    implementation 'com.google.firebase:firebase-analytics:17.2.3'
+    implementation 'com.onesignal:OneSignal:[3.11.2, 3.99.99]'
+    implementation 'com.google.android.gms:play-services-location:11.0.2'
 }
 
