@@ -38,7 +38,7 @@ class SharedPreferencesService {
     AuthenticationService _authenticationService =
         locator<AuthenticationService>();
     SharedPreferences prefs = await store();
-    if (!prefs.containsKey("current_user")) {
+    if (!prefs.containsKey("current_user_is_logged_in")) {
       return false;
     } else {
       log.i("User retreived from storage");
