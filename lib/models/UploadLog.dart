@@ -17,6 +17,7 @@ class UploadLog {
   String size;
   String email;
   String uploader_id;
+  String uploader_name;
 
   UploadLog(
       {this.id,
@@ -37,6 +38,7 @@ class UploadLog {
       email = data["email"].toString();
       size = data["size"].toString() ?? "0";
       uploader_id = data["uploader_id"];
+      uploader_name = data["uploader_name"];
 
     } catch (e) {
       log.e("While DESERIALIZING uploadLog model from Firebase , Error occurred");

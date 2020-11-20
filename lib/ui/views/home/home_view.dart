@@ -79,6 +79,17 @@ class HomeView extends StatelessWidget {
   }
 }
 
+
+
+
+
+
+
+
+
+
+
+
 // import 'dart:io';
 
 // import 'package:FSOUNotes/enums/constants.dart';
@@ -279,6 +290,7 @@ class HomeView extends StatelessWidget {
 //       print(file.uri);
 //       fileToUpload.parents = [subject.gdriveNotesFolderID];
 //       fileToUpload.name = note.title;
+//       fileToUpload.copyRequiresWriterPermission = true;
 //       print("Uploading file...........");
 //       var response = await drive.files.create(
 //         fileToUpload,
@@ -288,7 +300,7 @@ class HomeView extends StatelessWidget {
 //       print(GDrive_URL);
 //       note.setGdriveDownloadLink(GDrive_URL);
 //       print(note.toJson());
-//       model.updateNoteInFirebase(note);
+//       // model.updateNoteInFirebase(note);
 
 //       await Future.delayed(Duration(seconds: 1),(){});
 //     }

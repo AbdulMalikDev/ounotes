@@ -467,6 +467,7 @@ class FirestoreService {
     AuthenticationService _authenticationService =
         locator<AuthenticationService>();
     Map<String,dynamic> uploadLog = {
+                                        "uploader_name":user.username,
                                         "uploader_id":user.id,
                                         "id": note.id,
                                         "subjectName": note.subjectName,
@@ -476,8 +477,7 @@ class FirestoreService {
                                         "email": _authenticationService.user.email,
                                         "size": note.size,
                                     };
-
-    _analyticsService.logEvent(name:"UPLOAD" , parameters: uploadLog , addInNotificationService:true);
+    return uploadLog;
   }
 
   Map<String, dynamic> _linkUploadLog(Link note,User user) {
@@ -537,6 +537,12 @@ class FirestoreService {
     await _uploadLogCollectionReference.document(id).delete();
     await _reportCollectionReference.document(id).delete();
     await _linksCollectionReference.document("length").updateData({"len" : FieldValue.increment(-1)});
+    return null;
+  }
+  deleteNoteById(String id) async {
+    await _notesCollectionReference.document(id).delete();
+    await _uploadLogCollectionReference.document(id).delete();
+    await _reportCollectionReference.document(id).delete();
     return null;
   }
 
