@@ -1,5 +1,6 @@
 import 'package:FSOUNotes/app/locator.dart';
 import 'package:FSOUNotes/models/subject.dart';
+import 'package:FSOUNotes/services/funtional_services/analytics_service.dart';
 import 'package:FSOUNotes/services/funtional_services/sharedpref_service.dart';
 import 'package:FSOUNotes/services/state_services/subjects_service.dart';
 import 'package:flutter/cupertino.dart';
@@ -9,6 +10,7 @@ import 'package:stacked/stacked.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class HomeViewModel extends BaseViewModel {
+  AnalyticsService _analyticsService = locator<AnalyticsService>();
   SubjectsService _subjectsService = locator<SubjectsService>();
   ValueNotifier<List<Subject>> get userSubjects =>
       _subjectsService.userSubjects;
@@ -54,6 +56,7 @@ class HomeViewModel extends BaseViewModel {
                   ),
                   GestureDetector(
                     onTap: () {
+                      _analyticsService.addTagInNotificationService(key:"TELEGRAM",value:"VISITED");
                       launchURL("https://t.me/ounotes");
                     },
                     child: Container(

@@ -134,6 +134,7 @@ class DrawerView extends StatelessWidget {
                               const url =
                                   'https://t.me/ounotes';
                               if (await canLaunch(url)) {
+                                model.recordTelegramVisit();
                                 await launch(url);
                               } else {
                                 throw 'Could not launch $url';
