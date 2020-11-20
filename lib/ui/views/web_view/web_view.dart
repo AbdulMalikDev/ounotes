@@ -7,6 +7,10 @@ import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 import 'package:stacked/stacked.dart';
 // import 'package:webview_flutter/webview_flutter.dart';
 
+// TODO This is the webview widget file, add option to OPEN IN BROWSER or OPEN IN APP (WEB VIEW)
+// TODO Add dialog with check box asking above options and save in shared preferences accordingly
+// TODO Also give option in Appbar of this widget to change that option.
+
 class WebViewWidget extends StatefulWidget {
   String url;
   WebViewWidget({this.url, Key key}) : super(key: key);

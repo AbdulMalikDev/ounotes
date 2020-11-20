@@ -12,6 +12,7 @@ import 'package:FSOUNotes/models/report.dart';
 import 'package:FSOUNotes/models/subject.dart';
 import 'package:FSOUNotes/models/syllabus.dart';
 import 'package:FSOUNotes/models/user.dart';
+import 'package:FSOUNotes/services/funtional_services/analytics_service.dart';
 import 'package:FSOUNotes/services/funtional_services/authentication_service.dart';
 import 'package:FSOUNotes/services/state_services/links_service.dart';
 import 'package:FSOUNotes/services/state_services/notes_service.dart';
@@ -23,6 +24,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
 import 'package:injectable/injectable.dart';
 import 'package:logger/logger.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 
 @lazySingleton
 class FirestoreService {
@@ -50,6 +52,8 @@ class FirestoreService {
   QuestionPaperService _questionPaperService = locator<QuestionPaperService>();
   SyllabusService _syllabusService = locator<SyllabusService>();
   LinksService _linksService = locator<LinksService>();
+
+  AnalyticsService _analyticsService = locator<AnalyticsService>();
 
   _getCollectionReferenceAccordingToType(Document path) {
     switch (path) {
@@ -454,15 +458,17 @@ class FirestoreService {
   Map<String, dynamic> _createUploadLog(AbstractDocument note) {
     AuthenticationService _authenticationService =
         locator<AuthenticationService>();
-    return {
-      "id": note.id,
-      "subjectName": note.subjectName,
-      "type": note.type,
-      "fileName": note.title,
-      "uploadedAt": DateTime.now(),
-      "email": _authenticationService.user.email,
-      "size": note.size,
-    };
+    Map<String,dynamic> uploadLog = {
+                                        "id": note.id,
+                                        "subjectName": note.subjectName,
+                                        "type": note.type,
+                                        "fileName": note.title,
+                                        "uploadedAt": DateTime.now(),
+                                        "email": _authenticationService.user.email,
+                                        "size": note.size,
+                                    };
+
+    _analyticsService.logEvent(name:"UPLOAD" , parameters: uploadLog , addInNotificationService:true);
   }
 
   Map<String, dynamic> _linkUploadLog(Link note) {

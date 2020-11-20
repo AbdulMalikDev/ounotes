@@ -38,6 +38,7 @@ class SharedPreferencesService {
     AuthenticationService _authenticationService =
         locator<AuthenticationService>();
     SharedPreferences prefs = await store();
+    //Changed 20th November to force users to sign in again to log anaytics events
     if (!prefs.containsKey("current_user_is_logged_in")) {
       return false;
     } else {
