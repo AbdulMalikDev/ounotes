@@ -34,18 +34,19 @@ class CourseInfo {
     'PE',
   ];
   static List<String> colleges = [
+    "Muffakham Jah College of Engineering and Technology",
     "Osmania University's College of Technology",
     "CBIT",
-    "Vasavi ",
+    "Vasavi",
     "MVSR ",
     "Deccan College ",
     "ISL Engineering College",
     "Methodist ",
-    "Muffakham Jah College of Engineering and Technology",
     "Stanley College ",
     "University College of Engineering",
     "Matrusri Engineering College",
     "Swathi Institute of Technology & Science.",
+    "Other"
   ];
 
   static List<String> yeartype = [

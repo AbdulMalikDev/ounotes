@@ -153,34 +153,34 @@ class NotesViewModel extends BaseViewModel {
     String subName,
     String type,
   }) async {
-    
-        _progress = 0;
-        notifyListeners();
-        setLoading(true);
-        File file = await downloadFile(
-          notesName: notesName,
-          subName: subName,
-          type: type,
-        );
-        String PDFpath = file.path;
-        log.e(file.path);
-        if (PDFpath == 'error') {
-          await Fluttertoast.showToast(
-              msg:
-                  'An error has occurred while downloading document...Please Verify your internet connection.');
-          setLoading(false);
-          return;
-        }
-        // _firestoreService.incrementView(note);
-        setLoading(false);
-        _navigationService.navigateTo(Routes.pdfScreenRoute,
-            arguments: PDFScreenArguments(pathPDF: PDFpath, title: notesName));
-      
+    _progress = 0;
+    notifyListeners();
+    setLoading(true);
+    File file = await downloadFile(
+      notesName: notesName,
+      subName: subName,
+      type: type,
+    );
+    String PDFpath = file.path;
+    log.e(file.path);
+    if (PDFpath == 'error') {
+      await Fluttertoast.showToast(
+          msg:
+              'An error has occurred while downloading document...Please Verify your internet connection.');
+      setLoading(false);
+      return;
+    }
+    // _firestoreService.incrementView(note);
+    setLoading(false);
+    _navigationService.navigateTo(Routes.pdfScreenRoute,
+        arguments: PDFScreenArguments(pathPDF: PDFpath, title: notesName));
   }
 
   void navigateToWebView(Note note) {
     // TODO increment views
-    _navigationService.navigateTo(Routes.webViewWidgetRoute,arguments: WebViewWidgetArguments(url: note.GDriveLink));
+    _firestoreService.incrementView(note);
+    _navigationService.navigateTo(Routes.webViewWidgetRoute,
+        arguments: WebViewWidgetArguments(url: note.GDriveLink));
   }
 
   // @override

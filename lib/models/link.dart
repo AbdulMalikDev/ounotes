@@ -36,7 +36,7 @@ class Link extends AbstractDocument{
   }
 
   @override
-  void set setPath(Document path) {
+  set setPath(Document path) {
     this.path = path;
   }
 
@@ -53,14 +53,14 @@ class Link extends AbstractDocument{
   }
 
   @override
-  void set setSize(String size) {
+  set setSize(String size) {
       this.size =size;
     }
   
   
 
   @override
-  void set setUrl(String url) {
+  set setUrl(String url) {
     this.url = url;
   }
   @override

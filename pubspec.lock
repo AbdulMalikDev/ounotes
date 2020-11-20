@@ -274,7 +274,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.2.0-nullsafety.1"
-<<<<<<< HEAD
   ffi:
     dependency: transitive
     description:
@@ -282,8 +281,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.1.3"
-=======
->>>>>>> 381db2be2d7c16487bdaeb89906e09036151bb1a
   file:
     dependency: transitive
     description:
@@ -642,6 +639,20 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.1"
+  in_app_review:
+    dependency: "direct main"
+    description:
+      name: in_app_review
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.3"
+  in_app_review_platform_interface:
+    dependency: transitive
+    description:
+      name: in_app_review_platform_interface
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.4"
   injectable:
     dependency: "direct main"
     description:
@@ -796,6 +807,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.9.3"
+  package_info:
+    dependency: transitive
+    description:
+      name: package_info
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.4.3+2"
   path:
     dependency: transitive
     description:
@@ -942,7 +960,14 @@ packages:
       name: sa_anicoto
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.3"
+    version: "1.2.0"
+  sa_liquid:
+    dependency: transitive
+    description:
+      name: sa_liquid
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.0"
   sa_multi_tween:
     dependency: transitive
     description:
@@ -956,7 +981,7 @@ packages:
       name: sa_stateless_animation
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.3"
+    version: "1.1.0"
   sa_v1_migration:
     dependency: transitive
     description:
@@ -1040,7 +1065,7 @@ packages:
       name: simple_animations
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.2.3"
+    version: "2.3.0"
   sky_engine:
     dependency: transitive
     description: flutter
@@ -1066,7 +1091,7 @@ packages:
       name: sqflite
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.3.1+2"
+    version: "1.3.2+1"
   sqflite_common:
     dependency: transitive
     description:
@@ -1248,7 +1273,7 @@ packages:
       name: win32
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.7.3"
+    version: "1.7.4"
   xdg_directories:
     dependency: transitive
     description:
@@ -1271,9 +1296,5 @@ packages:
     source: hosted
     version: "2.2.1"
 sdks:
-  dart: ">=2.10.0-110 <2.11.0"
-<<<<<<< HEAD
-  flutter: ">=1.22.0 <2.0.0"
-=======
-  flutter: ">=1.16.0 <2.0.0"
->>>>>>> 381db2be2d7c16487bdaeb89906e09036151bb1a
+  dart: ">=2.10.2 <2.11.0"
+  flutter: ">=1.22.2 <2.0.0"
