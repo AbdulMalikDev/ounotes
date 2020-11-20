@@ -90,12 +90,12 @@ class Syllabus extends AbstractDocument{
   set setDate(DateTime id){this.uploadDate = id;}
 
   @override
-  void set setPath(Document path) {
+   set setPath(Document path) {
     this.path = path;
   }
 
    @override
-  void set setSize(String size) {
+   set setSize(String size) {
       this.size =size;
     }
 

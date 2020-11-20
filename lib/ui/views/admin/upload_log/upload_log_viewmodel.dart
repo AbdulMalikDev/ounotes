@@ -62,7 +62,8 @@ class UploadLogViewModel extends FutureViewModel{
       }
       setBusy(false);
   }
-
+  
+  
   void uploadDocument(UploadLog logItem) async {
     setBusy(true);
     GoogleDriveService _googleDriveService = locator<GoogleDriveService>();

@@ -29,6 +29,7 @@ import 'package:FSOUNotes/ui/views/about_us/privacy_policy/privacy_policyview.da
 import 'package:FSOUNotes/ui/views/about_us/privacy_policy/terms_and_conditionview.dart';
 import 'package:FSOUNotes/ui/views/admin/admin_view.dart';
 import 'package:FSOUNotes/ui/views/web_view/web_view.dart';
+import 'package:FSOUNotes/models/notes.dart';
 
 abstract class Routes {
   static const splashViewRoute = '/';
@@ -303,7 +304,7 @@ class Router extends RouterBase {
             args as WebViewWidgetArguments ?? WebViewWidgetArguments();
         return MaterialPageRoute<dynamic>(
           builder: (context) =>
-              WebViewWidget(url: typedArgs.url, key: typedArgs.key),
+              WebViewWidget(note: typedArgs.note, key: typedArgs.key),
           settings: settings,
         );
       default:
@@ -449,7 +450,7 @@ class TermsAndConditionViewArguments {
 
 //WebViewWidget arguments holder class
 class WebViewWidgetArguments {
-  final String url;
+  final Note note;
   final Key key;
-  WebViewWidgetArguments({this.url, this.key});
+  WebViewWidgetArguments({this.note, this.key});
 }

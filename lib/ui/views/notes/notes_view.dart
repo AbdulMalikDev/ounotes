@@ -156,7 +156,6 @@ class _NotesViewState extends State<NotesView>
                                         //  notes[index].subjectName),
                                       ),
                                       onTap: () {
-                                        // TODO GDRIVE LINK
                                         // model.onTap(
                                         //   notesName: note.title,
                                         //   subName: note.subjectName,
@@ -164,7 +163,7 @@ class _NotesViewState extends State<NotesView>
                                         //   //! This is used so that spelling is not messed up while uploading
                                         //   type: Constants.notes,
                                         // );
-                                        model.navigateToWebView(note);
+                                        model.openDoc(context,note);
                                       });
                                 }),
                   )

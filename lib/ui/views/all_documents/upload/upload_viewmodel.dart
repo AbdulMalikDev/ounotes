@@ -127,10 +127,10 @@ class UploadViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  void changeCheckMark(bool val) {
-    _ischecked = val;
-    notifyListeners();
-  }
+    void changeCheckMark(bool val) {
+      _ischecked = val;
+      notifyListeners();
+    }
 
   navigatetoPrivacyPolicy() {
     _navigationService.navigateTo(Routes.privacyPolicyView);

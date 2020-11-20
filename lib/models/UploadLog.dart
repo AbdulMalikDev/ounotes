@@ -1,9 +1,5 @@
 
 import 'package:FSOUNotes/app/logger.dart';
-import 'package:FSOUNotes/models/link.dart';
-import 'package:FSOUNotes/models/notes.dart';
-import 'package:FSOUNotes/models/question_paper.dart';
-import 'package:FSOUNotes/models/syllabus.dart';
 import 'package:flutter/services.dart';
 import 'package:logger/logger.dart';
 
