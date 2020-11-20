@@ -1,19 +1,15 @@
 import 'dart:async';
-import 'dart:io';
-
+import 'package:FSOUNotes/models/notes.dart';
 import 'package:FSOUNotes/ui/views/web_view/web_view_viewModel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
+import 'package:share/share.dart';
 import 'package:stacked/stacked.dart';
 // import 'package:webview_flutter/webview_flutter.dart';
 
-// TODO This is the webview widget file, add option to OPEN IN BROWSER or OPEN IN APP (WEB VIEW)
-// TODO Add dialog with check box asking above options and save in shared preferences accordingly
-// TODO Also give option in Appbar of this widget to change that option.
-
 class WebViewWidget extends StatefulWidget {
-  String url;
-  WebViewWidget({this.url, Key key}) : super(key: key);
+  Note note;
+  WebViewWidget({this.note, Key key}) : super(key: key);
 
   @override
   _WebViewWidgetState createState() => _WebViewWidgetState();
@@ -41,7 +37,9 @@ class _WebViewWidgetState extends State<WebViewWidget> {
     // Add a listener to on url changed
     _onUrlChanged = flutterWebViewPlugin.onUrlChanged.listen((String url) {
       if (mounted) {
-        if ( ( url.contains("export=download") || url.contains("docs.googleusercontent.com/") ) && localModel != null) {
+        if ((url.contains("export=download") ||
+                url.contains("docs.googleusercontent.com/")) &&
+            localModel != null) {
           localModel.showDownloadPreventDialog(flutterWebViewPlugin);
         }
         setState(() {
@@ -86,7 +84,7 @@ class _WebViewWidgetState extends State<WebViewWidget> {
               ),
             ),
             hidden: true,
-            url: widget.url,
+            url: widget.note.GDriveLink,
             appBar: isLandscape
                 ? null
                 : new AppBar(
@@ -94,6 +92,19 @@ class _WebViewWidgetState extends State<WebViewWidget> {
                       color: Colors.white, //change your color here
                     ),
                     title: new Text("Notes"),
+                    actions: [
+                      IconButton(
+                        icon: Icon(Icons.share),
+                        onPressed: () {
+                          //TODO add share text
+                          final RenderBox box = context.findRenderObject();
+                          Share.share(
+                              "Yo Check out this ${widget.note.subjectName} notes ${widget.note.GDriveLink}",
+                              sharePositionOrigin:
+                                  box.localToGlobal(Offset.zero) & box.size);
+                        },
+                      )
+                    ],
                   ),
           );
         },

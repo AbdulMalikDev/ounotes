@@ -10,6 +10,8 @@ class Constants {
   static String none = 'none';
   static String upvote = 'upvote';
   static String downvote = 'downvote';
+  static String openInBrowser = 'openInBrowser';
+  static String openInApp = 'openInApp';
   static TextStyle kHintTextStyle = TextStyle(
     color: Colors.white54,
     fontFamily: 'OpenSans',
@@ -102,7 +104,7 @@ class Constants {
     }
   }
 
- static BoxDecoration defaultDecoration = BoxDecoration(
+  static BoxDecoration defaultDecoration = BoxDecoration(
     color: Colors.white,
     borderRadius: BorderRadius.circular(10),
     border: Border.all(width: 0.3, color: Colors.black26),
@@ -116,7 +118,7 @@ class Constants {
     ],
   );
 
- static BoxDecoration kdecoration = BoxDecoration(
+  static BoxDecoration kdecoration = BoxDecoration(
     borderRadius: BorderRadius.circular(32),
     color: Colors.white,
     boxShadow: [
@@ -129,7 +131,7 @@ class Constants {
     ],
   );
 
- static BoxDecoration mdecoration = BoxDecoration(
+  static BoxDecoration mdecoration = BoxDecoration(
     borderRadius: BorderRadius.circular(16),
     color: Colors.white,
     boxShadow: [

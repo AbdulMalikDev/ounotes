@@ -1,12 +1,10 @@
 //*Path Enum for search bar to figure out where user came from to show appropriate results
-enum Path
-{
+enum Path {
   Appbar,
   Dialog,
 }
 
-enum Document
-{
+enum Document {
   Notes,
   QuestionPapers,
   Syllabus,
@@ -15,6 +13,6 @@ enum Document
   None,
 }
 
-enum Menu{
+enum Menu {
   Report,
 }
