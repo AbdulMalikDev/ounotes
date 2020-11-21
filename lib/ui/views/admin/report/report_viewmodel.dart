@@ -8,6 +8,7 @@ import 'package:FSOUNotes/models/report.dart';
 import 'package:FSOUNotes/models/syllabus.dart';
 import 'package:FSOUNotes/services/funtional_services/analytics_service.dart';
 import 'package:FSOUNotes/services/funtional_services/firestore_service.dart';
+import 'package:FSOUNotes/services/funtional_services/google_drive_service.dart';
 import 'package:FSOUNotes/services/state_services/report_service.dart';
 import 'package:FSOUNotes/ui/views/notes/notes_viewmodel.dart';
 import 'package:FSOUNotes/ui/widgets/smart_widgets/notes_tile/notes_tile_viewmodel.dart';
@@ -90,25 +91,26 @@ class ReportViewModel extends FutureViewModel {
 
   void deleteDocument(Report report) async {
     DialogResponse result = await _dialogService.showConfirmationDialog(title:"Sure?",description:"pakka?");
-    if (result.confirmed){
+      if (result.confirmed){
 
-    setBusy(true);
-    log.e(report);
-    log.e(report.type);
+        setBusy(true);
+        log.e(report);
+        log.e(report.type);
 
-    if (report.type != Constants.notes)
-    {
-      log.e("document to be deleted is not Notes type");
-      _deleteDocument(report);
-      setBusy(false);
-      return;
-    }
-    Note note = await _firestoreService.getNoteById(report.id);
-    await _firestoreService.deleteNoteById(note.id);
-    await _dialogService.showDialog(title: "OUTPUT" , description: "deleted");
-    setBusy(false);
-    
-    }
+        if (report.type != Constants.notes)
+        {
+          log.e("document to be deleted is not Notes type");
+          _deleteDocument(report);
+          setBusy(false);
+          return;
+        }
+        GoogleDriveService _googleDriveService = locator<GoogleDriveService>();
+        Note note = await _firestoreService.getNoteById(report.id);
+        String result = await _googleDriveService.processFile(note: note, addToGdrive: false);
+        _dialogService.showDialog(title: "OUTPUT" , description: result);
+        setBusy(false);
+      
+      }
     }
   
   void _deleteDocument(Report report) async {

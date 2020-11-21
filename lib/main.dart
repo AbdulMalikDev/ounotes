@@ -1,7 +1,9 @@
 import 'package:FSOUNotes/AppTheme/AppStateNotifier.dart';
 import 'package:FSOUNotes/AppTheme/AppTheme.dart';
+import 'package:FSOUNotes/services/funtional_services/remote_config_service.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stacked/stacked.dart';
@@ -16,9 +18,12 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   setupLocator();
-  await DotEnv().load('.env');
+  // await DotEnv().load('.env');
+  // DotEnv().env['ONESIGNAL_KEY'],
+  RemoteConfigService _remoteConfigService = locator<RemoteConfigService>();
+  await _remoteConfigService.init();
   OneSignal.shared.init(
-    DotEnv().env['ONESIGNAL_KEY'],
+    _remoteConfigService.remoteConfig.getString('ONESIGNAL_KEY')
   );
   OneSignal.shared
       .setInFocusDisplayType(OSNotificationDisplayType.notification);
