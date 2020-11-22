@@ -8,7 +8,9 @@ import 'package:FSOUNotes/models/document.dart';
 import 'package:FSOUNotes/models/download.dart';
 import 'package:FSOUNotes/models/notes.dart';
 import 'package:FSOUNotes/models/vote.dart';
+import 'package:FSOUNotes/services/funtional_services/admob_service.dart';
 import 'package:FSOUNotes/services/funtional_services/firestore_service.dart';
+import 'package:FSOUNotes/services/funtional_services/remote_config_service.dart';
 import 'package:FSOUNotes/services/funtional_services/sharedpref_service.dart';
 import 'package:FSOUNotes/services/state_services/download_service.dart';
 import 'package:FSOUNotes/services/state_services/vote_service.dart';
@@ -29,11 +31,16 @@ class NotesViewModel extends BaseViewModel {
   List<Vote> userVotedNotesList = [];
   List<Download> downloadedNotes = [];
   var _notes;
+
+  AdmobService _admobService = locator<AdmobService>();
+  RemoteConfigService _remoteConfigService = locator<RemoteConfigService>();
   NavigationService _navigationService = locator<NavigationService>();
   SharedPreferencesService _sharedPreferencesService =
       locator<SharedPreferencesService>();
   DownloadService _downloadService = locator<DownloadService>();
   VoteServie _voteServie = locator<VoteServie>();
+
+
   double _progress = 0;
   double get progress => _progress;
   String _notetitle = '';
@@ -41,6 +48,10 @@ class NotesViewModel extends BaseViewModel {
   bool _ischecked = false;
 
   List<Vote> get voteslist => userVotedNotesList;
+  AdmobService get admobService => _admobService;
+  RemoteConfigService get remoteConfig => _remoteConfigService;
+  String get ADMOB_AD_BANNER_ID => _remoteConfigService.remoteConfig.getString("ADMOB_AD_BANNER_ID");
+  String get ADMOB_APP_ID => _remoteConfigService.remoteConfig.getString("ADMOB_APP_ID");
 
   bool isloading = false;
   bool get loading => isloading;
@@ -89,25 +100,25 @@ class NotesViewModel extends BaseViewModel {
     return votesbySub;
   }
 
-  String filePath;
-  Future<bool> checkNoteInDownloads(Note note) async {
-    await _downloadService.fetchAndSetDownloads();
-    List<Download> allDownloads = _downloadService.downloadlist;
-    allDownloads.forEach((download) {
-      if (download.type == Constants.notes) {
-        downloadedNotes.add(download);
-      }
-    });
-    for (int i = 0; i < downloadedNotes.length; i++) {
-      if (downloadedNotes[i].filename == note.title &&
-          downloadedNotes[i].subjectName == note.subjectName) {
-        filePath = downloadedNotes[i].path;
-        notifyListeners();
-        return true;
-      }
-    }
-    return false;
-  }
+  // String filePath;
+  // Future<bool> checkNoteInDownloads(Note note) async {
+  //   await _downloadService.fetchAndSetDownloads();
+  //   List<Download> allDownloads = _downloadService.downloadlist;
+  //   allDownloads.forEach((download) {
+  //     if (download.type == Constants.notes) {
+  //       downloadedNotes.add(download);
+  //     }
+  //   });
+  //   for (int i = 0; i < downloadedNotes.length; i++) {
+  //     if (downloadedNotes[i].filename == note.title &&
+  //         downloadedNotes[i].subjectName == note.subjectName) {
+  //       filePath = downloadedNotes[i].path;
+  //       notifyListeners();
+  //       return true;
+  //     }
+  //   }
+  //   return false;
+  // }
 
   void openDoc(BuildContext context, Note note) {
     showDialog(
@@ -197,10 +208,10 @@ class NotesViewModel extends BaseViewModel {
         arguments: PDFScreenArguments(pathPDF: PDFpath, title: notesName));
   }
 
-  // @override
+  @override
   // Future futureToRun() =>fetchNotes();
 
-  //old download logic for firebase
+  // old download logic for firebase
   downloadFile({
     String notesName,
     String subName,
@@ -245,4 +256,23 @@ class NotesViewModel extends BaseViewModel {
       return "error";
     }
   }
+
+  void navigateBack() {
+    _navigationService.popRepeated(1);
+  }
+
+  @override
+  void dispose() {
+    this.admobService.hideNotesViewBanner();
+    this.admobService.hideNotesViewInterstitialAd();
+    super.dispose();
+  }
+
+  void incrementViewForAd() {
+    this.admobService.incrementNumberOfTimeNotesOpened();
+    if (this.admobService.shouldAdBeShown()) {
+        this.admobService.showNotesViewInterstitialAd();
+      }
+  }
+  
 }

@@ -3,6 +3,7 @@ import 'package:FSOUNotes/models/notes.dart';
 import 'package:FSOUNotes/models/vote.dart';
 import 'package:FSOUNotes/ui/widgets/dumb_widgets/progress.dart';
 import 'package:FSOUNotes/ui/widgets/smart_widgets/notes_tile/notes_tile_view.dart';
+import 'package:firebase_admob/firebase_admob.dart';
 import 'package:flutter/material.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:stacked/stacked.dart';
@@ -21,14 +22,145 @@ class NotesView extends StatefulWidget {
 
 class _NotesViewState extends State<NotesView>
     with AutomaticKeepAliveClientMixin {
+
   @override
   Widget build(BuildContext context) {
     super.build(context);
     return ViewModelBuilder<NotesViewModel>.reactive(
-      onModelReady: (model) => model.fetchNotesAndVotes(widget.subjectName),
-      builder: (context, model, child) => ModalProgressHUD(
-        inAsyncCall: model.isloading ? true : false,
-        // progressIndicator: Center(
+      onModelReady: (model) => _initState(model),
+      builder: (context, model, child) => WillPopScope(
+        onWillPop: () {
+          model.admobService.hideNotesViewBanner();
+          model.navigateBack();
+          return Future.value(false);
+        },
+              child: ModalProgressHUD(
+          inAsyncCall: model.isloading ? true : false,
+          
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Stack(
+                  children: <Widget>[
+                    Container(
+                      height: widget.path != null
+                          ? MediaQuery.of(context).size.height * 0.88
+                          : MediaQuery.of(context).size.height * 0.75,
+                      width: double.infinity,
+                      child: model.isBusy
+                          ? Center(
+                              child: CircularProgressIndicator(),
+                            )
+                          : model.notes.length == 0
+                              ? Center(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: <Widget>[
+                                      Image.asset(
+                                        'assets/images/study1.jpg',
+                                        alignment: Alignment.center,
+                                        width: 300,
+                                        height: 300,
+                                      ),
+                                      Text(
+                                        "Notes are empty!",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline6
+                                            .copyWith(
+                                                color: Theme.of(context)
+                                                    .colorScheme
+                                                    .onSurface,
+                                                fontWeight: FontWeight.w300),
+                                      ),
+                                      SizedBox(
+                                        height: 15,
+                                      ),
+                                      Text(
+                                        "why don't you upload some?",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline6
+                                            .copyWith(
+                                                color: Theme.of(context)
+                                                    .colorScheme
+                                                    .onSurface,
+                                                fontWeight: FontWeight.w300),
+                                      ),
+                                    ],
+                                  ),
+                                )
+                              : ListView.builder(
+                                padding: EdgeInsets.only(bottom:150),
+                                  itemCount: model.notes.length,
+                                  itemBuilder: (BuildContext context, int index) {
+                                    Note note = model.notes[index];
+                                    if (model.notes[index].GDriveLink == null) {
+                                      return Container();
+                                    }
+                                    return InkWell(
+                                        child: NotesTileView(
+                                          ctx: context,
+                                          note: note,
+                                          index: index,
+                                          votes: model.getListOfVoteBySub(
+                                              widget.subjectName),
+                                          downloadedNotes:
+                                              model.getListOfNotesInDownloads(
+                                                  widget.subjectName),
+                                          //votes: v.getListOfVoteBySub(
+                                          //  notes[index].subjectName),
+                                        ),
+                                        onTap: () {
+                                          // model.onTap(
+                                          //   notesName: note.title,
+                                          //   subName: note.subjectName,
+                                          //   note: note,
+                                          //   //! This is used so that spelling is not messed up while uploading
+                                          //   type: Constants.notes,
+                                          // );
+                                          model.incrementViewForAd();
+                                          model.openDoc(context,note);
+                                        });
+                                  }),
+                    )
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+      viewModelBuilder: () => NotesViewModel(),
+    );
+  }
+
+  @override
+  bool get wantKeepAlive => true;
+
+  _initState(NotesViewModel model) async {
+    model.fetchNotesAndVotes(widget.subjectName);
+    try {
+      //TODO firebase admob id
+      FirebaseAdMob.instance.initialize(appId: model.admobService.ADMOB_APP_ID);
+      model.admobService.showNotesViewBanner();
+      if (model.admobService.shouldAdBeShown()) {
+        model.admobService.showNotesViewInterstitialAd();
+      }
+    } on Exception catch (e) {
+          print(e.toString());
+    }
+  }
+}
+
+
+// Legacy code
+
+// progressIndicator: Center(
         //   child: Container(
         //     padding: EdgeInsets.all(10),
         //     height: 100,
@@ -78,105 +210,3 @@ class _NotesViewState extends State<NotesView>
         //     ),
         //   ),
         // ),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Stack(
-                children: <Widget>[
-                  Container(
-                    height: widget.path != null
-                        ? MediaQuery.of(context).size.height * 0.88
-                        : MediaQuery.of(context).size.height * 0.75,
-                    width: double.infinity,
-                    child: model.isBusy
-                        ? Center(
-                            child: CircularProgressIndicator(),
-                          )
-                        : model.notes.length == 0
-                            ? Center(
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: <Widget>[
-                                    Image.asset(
-                                      'assets/images/study1.jpg',
-                                      alignment: Alignment.center,
-                                      width: 300,
-                                      height: 300,
-                                    ),
-                                    Text(
-                                      "Notes are empty!",
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .headline6
-                                          .copyWith(
-                                              color: Theme.of(context)
-                                                  .colorScheme
-                                                  .onSurface,
-                                              fontWeight: FontWeight.w300),
-                                    ),
-                                    SizedBox(
-                                      height: 15,
-                                    ),
-                                    Text(
-                                      "why don't you upload some?",
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .headline6
-                                          .copyWith(
-                                              color: Theme.of(context)
-                                                  .colorScheme
-                                                  .onSurface,
-                                              fontWeight: FontWeight.w300),
-                                    ),
-                                  ],
-                                ),
-                              )
-                            : ListView.builder(
-                                itemCount: model.notes.length,
-                                itemBuilder: (BuildContext context, int index) {
-                                  Note note = model.notes[index];
-                                  if (model.notes[index].GDriveLink == null) {
-                                    return Container();
-                                  }
-                                  return InkWell(
-                                      child: NotesTileView(
-                                        ctx: context,
-                                        note: note,
-                                        index: index,
-                                        votes: model.getListOfVoteBySub(
-                                            widget.subjectName),
-                                        downloadedNotes:
-                                            model.getListOfNotesInDownloads(
-                                                widget.subjectName),
-                                        //votes: v.getListOfVoteBySub(
-                                        //  notes[index].subjectName),
-                                      ),
-                                      onTap: () {
-                                        // model.onTap(
-                                        //   notesName: note.title,
-                                        //   subName: note.subjectName,
-                                        //   note: note,
-                                        //   //! This is used so that spelling is not messed up while uploading
-                                        //   type: Constants.notes,
-                                        // );
-                                        model.openDoc(context,note);
-                                      });
-                                }),
-                  )
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
-      viewModelBuilder: () => NotesViewModel(),
-    );
-  }
-
-  @override
-  bool get wantKeepAlive => true;
-}

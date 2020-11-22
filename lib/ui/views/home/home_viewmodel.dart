@@ -3,6 +3,7 @@ import 'package:FSOUNotes/models/notes.dart';
 import 'package:FSOUNotes/models/question_paper.dart';
 import 'package:FSOUNotes/models/subject.dart';
 import 'package:FSOUNotes/models/syllabus.dart';
+import 'package:FSOUNotes/services/funtional_services/admob_service.dart';
 import 'package:FSOUNotes/services/funtional_services/analytics_service.dart';
 import 'package:FSOUNotes/services/funtional_services/firestore_service.dart';
 import 'package:FSOUNotes/services/funtional_services/sharedpref_service.dart';
@@ -16,6 +17,7 @@ import 'package:url_launcher/url_launcher.dart';
 class HomeViewModel extends BaseViewModel {
   AnalyticsService _analyticsService = locator<AnalyticsService>();
   FirestoreService _firestoreService = locator<FirestoreService>();
+  AdmobService _admobService = locator<AdmobService>();
   SubjectsService _subjectsService = locator<SubjectsService>();
   ValueNotifier<List<Subject>> get userSubjects =>
       _subjectsService.userSubjects;
@@ -24,6 +26,8 @@ class HomeViewModel extends BaseViewModel {
   
   SharedPreferencesService _sharedPreferencesService =
       locator<SharedPreferencesService>();
+      
+  AdmobService get admobService => _admobService;
 
   showTelgramDialog(BuildContext context) async {
     bool shouldShowTelegramDialog =
