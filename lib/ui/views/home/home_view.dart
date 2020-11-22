@@ -92,10 +92,14 @@ class HomeView extends StatelessWidget {
 
 // import 'dart:io';
 
+// import 'package:FSOUNotes/app/locator.dart';
 // import 'package:FSOUNotes/enums/constants.dart';
 // import 'package:FSOUNotes/enums/enums.dart';
 // import 'package:FSOUNotes/models/notes.dart';
+// import 'package:FSOUNotes/models/question_paper.dart';
 // import 'package:FSOUNotes/models/subject.dart';
+// import 'package:FSOUNotes/models/syllabus.dart';
+// import 'package:FSOUNotes/services/funtional_services/authentication_service.dart';
 // import 'package:FSOUNotes/ui/views/home/home_viewmodel.dart';
 // import 'package:FSOUNotes/ui/views/notes/notes_viewmodel.dart';
 // import 'package:FSOUNotes/ui/views/search/search_view.dart';
@@ -113,6 +117,7 @@ class HomeView extends StatelessWidget {
 // import 'package:http/http.dart' as http;
 // import 'package:path/path.dart' as path;
 // import 'package:http/io_client.dart';
+// import 'package:path_provider/path_provider.dart';
 // import 'package:stacked/stacked.dart';
 
 // class HomeView extends StatefulWidget {
@@ -134,7 +139,7 @@ class HomeView extends StatelessWidget {
 //   Widget build(BuildContext context) {
 //     var theme = Theme.of(context);
 //     return ViewModelBuilder<HomeViewModel>.reactive(
-//       onModelReady: (model) => model.showIntroDialog(),
+//       onModelReady: (model) => model.showIntroDialog(context),
 //       builder: (context, model, child) => WillPopScope(
 //         onWillPop: () => showDialog<bool>(
 //           context: context,
@@ -208,8 +213,9 @@ class HomeView extends StatelessWidget {
 //                 //     });
 //                 await _loginWithGoogle();
 //                 // _uploadFileToGoogleDrive();
-//                 // _listGoogleDriveFiles();
+//                 // await _listGoogleDriveFiles();
 //                 _uploadFileToGoogleDrive(model:model);
+//                 // _downloadGoogleDriveFile(model:model);
 
 //               },
 //               child: const Icon(Icons.add),
@@ -232,7 +238,7 @@ class HomeView extends StatelessWidget {
 //    });
 //    if (signedIn) {
 //      try {
-//        googleSignIn.signInSilently().whenComplete(() => () {});
+//        googleSignIn.signIn().whenComplete(() => () {});
 //      } catch (e) {
 //        storage.write(key: "signedIn", value: "false").then((value) {
 //          setState(() {
@@ -248,9 +254,12 @@ class HomeView extends StatelessWidget {
 //  }
 
 //  _uploadFileToGoogleDrive({HomeViewModel model}) async {
-//    print("DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDd");
-//    var client = GoogleHttpClient(await googleSignInAccount.authHeaders);
+//    print("LET'S START BOIS");
+//    AuthenticationService _authenticationService = locator<AuthenticationService>();
+//    var AuthHeaders = await _authenticationService.refreshSignInCredentials();
+//    var client = GoogleHttpClient(AuthHeaders);
 //    var drive = ga.DriveApi(client);
+//   // 
 //   //  ga.File fileMetadata = ga.File();
 //   // fileMetadata.name = "ounotes";
 //   // fileMetadata.mimeType = "application/vnd.google-apps.folder";
@@ -264,71 +273,213 @@ class HomeView extends StatelessWidget {
 //   // var responsedq = await drive.files.create(fileMetadata);
 //   // print("response file id: ${responsedq.id}");
 // // // print("s");
-// //   var PDF_FOLDER = await drive.files.create(
-// //                   ga.File()
-// //                     ..name = "PDFs"
-// //                   // Optional if you want to create subfolder
-// //                     ..mimeType = 'application/vnd.google-apps.folder',  // this defines its folder
-// //                 );
-
+//   // var PDF_FOLDER = await drive.files.create(
+//   //                 ga.File()
+//   //                   ..name = "PDFs_NEW"
+//   //                 // Optional if you want to create subfolder
+//   //                   ..mimeType = 'application/vnd.google-apps.folder',  // this defines its folder
+//   //               );
+//   print("Getting all subjects....");
 //   List<Subject> allSubjects = model.allSubjects.value;
+//   allSubjects.sort((a,b)=>a.name.compareTo(b.name));
 //   print(allSubjects.length);
-
+//   bool flag = false;
 //   for (var subject in allSubjects) {
+    
+//     if (subject.name == "WEB PROGRAMMING"){
+//       flag = true;
+//     }
+//     if (!flag){continue;}
 //     print(subject.name);
+//     print(subject.name == "WEB PROGRAMMING");
+//     NotesViewModel notesViewModel = NotesViewModel();
+//     // TODO CREATE SUBJECT FOLDER AND NOTES FOLDER INSIDE
 
+//     var subjectFolder = await drive.files.create(
+//                   ga.File()
+//                     ..name = subject.name
+//                     ..parents = ["13V7P7lLMo-uo2DohVFbJD8Q96V_dol_z"]// Optional if you want to create subfolder
+//                     ..mimeType = 'application/vnd.google-apps.folder',  // this defines its folder
+//                 );
+//     var notesFolder = await drive.files.create(
+//                   ga.File()
+//                     ..name = 'NOTES'
+//                     ..parents = [subjectFolder.id]// Optional if you want to create subfolder
+//                     ..mimeType = 'application/vnd.google-apps.folder',  // this defines its folder
+//                 );
+//     var questionPapersFolder = await drive.files.create(
+//                   ga.File()
+//                     ..name = 'QUESTION PAPERS'
+//                     ..parents = [subjectFolder.id]// Optional if you want to create subfolder
+//                     ..mimeType = 'application/vnd.google-apps.folder',  // this defines its folder
+//                 );
+//     var syllabusFolder = await drive.files.create(
+//                   ga.File()
+//                     ..name = 'SYLLABUS'
+//                     ..parents = [subjectFolder.id]// Optional if you want to create subfolder
+//                     ..mimeType = 'application/vnd.google-apps.folder',  // this defines its folder
+//                 );
+
+//     subject.addFolderID(subjectFolder.id);
+//     subject.addNotesFolderID(notesFolder.id);
+//     subject.addQuestionPapersFolderID(questionPapersFolder.id);
+//     subject.addSyllabusFolderID(syllabusFolder.id);
+
+//     // TODO UPLOAD ALL NOTES OF THAT PARTICULAR SUBJECT
 //     List<Note> notes = await model.getNotesFromFirebase(subject);
 //     print(notes);
-//     NotesViewModel notesViewModel = NotesViewModel();
 
-//     for ( var note in notes)
+//     for ( Note note in notes)
 //     {
+//       //TODO STEP 1 DOWNLOAD NOTE FILE FROM GOOGLE DRIVE
+//       //Extract File ID
+//       if (note.GDriveLink == null){continue;}
+//       String url = note.GDriveLink.split("https://drive.google.com/file/d/")[1];
+//       String FileID = url.split("/view?usp=sharing")[0];
+//       //download file
+//       ga.Media file = await drive.files.get(FileID,downloadOptions: ga.DownloadOptions.FullMedia);
+//       // write this file to local first
+//       File localFile;
+//       //TODO BAIGAN KA STORE KARO LOCALLY
+
+//               var response = file;
+//               Directory tempDir = await getTemporaryDirectory();
+//               List<int> dataStore = [];
+//                 response.stream.listen((data) {  
+//                 print("DataReceived: ${data.length}");
+//                 dataStore.insertAll(dataStore.length, data);     
+//               }, onDone: () async {  
+//                   //Get temp folder using Path Provider
+//                 String tempPath = tempDir.path; 
+//                   localFile = File('$tempPath/${new DateTime.now().millisecondsSinceEpoch}'); //Create a dummy file
+//                   await localFile.writeAsBytes(dataStore); 
+//                   print("Task Done");
+
+//       //file downloaded
+//       //TODO STEP 2 UPLOAD IT ON GOOGLE DRIVE
+//       //Make new GDrive file
 //       ga.File fileToUpload = ga.File();
-//       //  var file = await FilePicker.getFile();
-//       File file = await notesViewModel.downloadFile(note: note , notesName: note.title , subName: note.subjectName , type: Constants.notes);
-//       print(file.path);
-//       print(file.uri);
-//       fileToUpload.parents = [subject.gdriveNotesFolderID];
+//       //Add new contents
 //       fileToUpload.name = note.title;
 //       fileToUpload.copyRequiresWriterPermission = true;
-//       print("Uploading file...........");
-//       var response = await drive.files.create(
-//         fileToUpload,
-//         uploadMedia: ga.Media(file.openRead(), file.lengthSync()),
-//       );
-//       String GDrive_URL = "https://drive.google.com/file/d/${response.id}/view?usp=sharing";
-//       print(GDrive_URL);
-//       note.setGdriveDownloadLink(GDrive_URL);
-//       print(note.toJson());
-//       // model.updateNoteInFirebase(note);
+//       fileToUpload.parents = [subject.gdriveNotesFolderID];
+//       //upload to drive
+//       var response;
+//       try {
+//           response = await drive.files.create(
+//           fileToUpload,
+//           uploadMedia: ga.Media(localFile.openRead(), localFile.lengthSync()),
+//         );
+//       } on Exception catch (e) {
+//               print(e.toString());
+//       }
+//       if (response!= null && response.id!=null) {
+//         String GDrive_URL = "https://drive.google.com/file/d/${response.id}/view?usp=sharing";
+//         print(GDrive_URL);
+//         // save all info
+//         note.setGdriveDownloadLink(GDrive_URL);
+//         note.setGdriveID(response.id);
+//         note.setGDriveNotesFolderID(notesFolder.id);
+//         print(note.toJson());
+//         model.updateNoteInFirebase(note);
+//       }
 
-//       await Future.delayed(Duration(seconds: 1),(){});
+//               }, onError: (error) {  
+//                 print("Some Error ${error.toString()}");  
+//               });
+//       // await Future.delayed(Duration(seconds: 1),(){});
 //     }
 
-//     await Future.delayed(Duration(seconds: 2),(){});
+//     // await Future.delayed(Duration(seconds: 2),(){});
 
-//     // model.addSubjectToFirebase(subject);
+//     // TODO UPLOAD ALL QUESTION PAPERS OF THAT PARTICULAR SUBJECT
+//     List<QuestionPaper> questionPapers = await model.getQuestionPapersFromFirebase(subject);
+//     print(questionPapers);
 
+//      for ( var paper in questionPapers)
+//     {
+//       ga.File fileToUpload = ga.File();
+//       File file = await notesViewModel.downloadFile(notesName: paper.title , subName: paper.subjectName , type: Constants.questionPapers);
+//       print(file.path);
+//       print(file.uri);
+//       fileToUpload.parents = [subject.gdriveQuestionPapersFolderID];
+//       fileToUpload.name = paper.title;
+//       fileToUpload.copyRequiresWriterPermission = true;
+//       print("Uploading Question Paper");
+//       var response;
+//       try {
+//           response = await drive.files.create(
+//           fileToUpload,
+//           uploadMedia: ga.Media(file.openRead(), file.lengthSync()),
+//         );
+//       } on Exception catch (e) {
+//               print(e.toString());
+//       }
+//       if (response!= null && response.id!=null) {
+//       String GDrive_URL = "https://drive.google.com/file/d/${response.id}/view?usp=sharing";
+//       print(GDrive_URL);
+//       paper.setGdriveDownloadLink(GDrive_URL);
+//       paper.setGDriveQuestionPapersFolderID(subject.gdriveQuestionPapersFolderID);
+//       paper.setGdriveID(response.id);
+//       print(paper.toJson());
+//       model.updateQuestionPaperInFirebase(paper);
+//       }
+//       // await Future.delayed(Duration(seconds: 1),(){});
+//     }
+
+//     // await Future.delayed(Duration(seconds: 2),(){});
+//     // TODO UPLOAD ALL SYLLABUS OF THAT PARTICULAR SUBJECT
+//     List<Syllabus> syllabus = await model.getSyllabusFromFirebase(subject);
+//     print(syllabus);
+
+//      for ( var syllab in syllabus)
+//     {
+//       ga.File fileToUpload = ga.File();
+//       File file = await notesViewModel.downloadFile(notesName: syllab.title , subName: syllab.subjectName , type: Constants.syllabus);
+//       print(file.path);
+//       print(file.uri);
+//       fileToUpload.parents = [subject.gdriveSyllabusFolderID];
+//       fileToUpload.name = syllab.title;
+//       fileToUpload.copyRequiresWriterPermission = true;
+//       print("Uploading SYLLBUS BITCHES");
+//       var response;
+//       try {
+//           response = await drive.files.create(
+//           fileToUpload,
+//           uploadMedia: ga.Media(file.openRead(), file.lengthSync()),
+//         );
+//       } on Exception catch (e) {
+//               print(e.toString());
+//       }
+//       if (response!= null && response.id!=null) {
+//       String GDrive_URL = "https://drive.google.com/file/d/${response.id}/view?usp=sharing";
+//       print(GDrive_URL);
+//       syllab.setGdriveDownloadLink(GDrive_URL);
+//       syllab.setGDriveSyllabusFolderID(subject.gdriveQuestionPapersFolderID);
+//       syllab.setGdriveID(response.id);
+//       print(syllab.toJson());
+//       model.updateSyllabusInFirebase(syllab);
+//       }
+//       // await Future.delayed(Duration(seconds: 1),(){});
+//     }
+
+//     // await Future.delayed(Duration(seconds: 2),(){});
+
+
+//     // TODO UPDATE SUBJECT SINCE WE ADDED FOLDER LINKS
+//     model.addSubjectToFirebase(subject);
+//     print("subject added");
+//   //  AuthHeaders = await _authenticationService.refreshtoken();
+//   //  client = GoogleHttpClient(AuthHeaders);
+//   //  drive = ga.DriveApi(client);
+    
 //   }
+//  }
 //   // allSubjects.forEach((subject) async {
 
 //   // });
 
-//   // var subjectFolder = await drive.files.create(
-//   //                 ga.File()
-//   //                   ..name = subject.name
-//   //                   ..parents = [PDF_FOLDER.id]// Optional if you want to create subfolder
-//   //                   ..mimeType = 'application/vnd.google-apps.folder',  // this defines its folder
-//   //               );
-//   //   var notesFolder = await drive.files.create(
-//   //                 ga.File()
-//   //                   ..name = 'NOTES'
-//   //                   ..parents = [subjectFolder.id]// Optional if you want to create subfolder
-//   //                   ..mimeType = 'application/vnd.google-apps.folder',  // this defines its folder
-//   //               );
-
-//   //   subject.addFolderID(subjectFolder.id);
-//   //   subject.addNotesFolderID(notesFolder.id);
+  
 
 //   //  ga.File fileToUpload = ga.File();
 //   //  var file = await FilePicker.getFile();
@@ -342,19 +493,50 @@ class HomeView extends StatelessWidget {
 //   //  );
 //   //  drive.files.
 //   //  print(response);
-//  }
+ 
+
+// //  _getAFilePlease(response,file,tempDir)async {
+   
+   
+     
+// //  }
+
+//  Future<void> _downloadGoogleDriveFile({HomeViewModel model}) async {  
+//   //  var client = GoogleHttpClient(await googleSignInAccount.authHeaders);  
+//   //  var drive = ga.DriveApi(client);  
+//   //  ga.Media file = await drive.files  
+//   //      .get(gdID, downloadOptions: ga.DownloadOptions.FullMedia);  
+//   //  print(file.stream);  
+   
+//   //  final directory = await getExternalStorageDirectory();  
+//   //  print(directory.path);  
+//   //  final saveFile = File('${directory.path}/${new DateTime.now().millisecondsSinceEpoch}$fName');  
+//   //  List<int> dataStore = [];  
+//   //  file.stream.listen((data) {  
+//   //    print("DataReceived: ${data.length}");  
+//   //    dataStore.insertAll(dataStore.length, data);  
+//   //  }, onDone: () {  
+//   //    print("Task Done");  
+//   //    saveFile.writeAsBytes(dataStore);  
+//   //    print("File saved at ${saveFile.path}");  
+//   //  }, onError: (error) {  
+//   //    print("Some Error");  
+//   //  });  
+//  }  
 
 //  Future<void> _listGoogleDriveFiles() async {
 //    var client = GoogleHttpClient(await googleSignInAccount.authHeaders);
 //    var drive = ga.DriveApi(client);
-//    drive.files.list(spaces: 'drive').then((value) {
-//      setState(() {
-//        list = value;
-//      });
-//      for (var i = 0; i < list.files.length; i++) {
-//        print("Id: ${list.files[i].id} File Name:${list.files[i].name}");
-//      }
-//    });
+//   //  drive.files.list(q: "mimeType = 'application/vnd.google-apps.folder'").then((value) {
+//   //   //  setState(() {
+//   //   //  });
+//   //    list = value;
+//   //    for (var i = 0; i < list.files.length; i++) {
+//   //      print("Id: ${list.files[i].id} File Name:${list.files[i].name}");
+//   //    }
+//   //  });
+//    ga.File resonse = await drive.files.get("1ec2t2jLDMyG3Kef-3BlS9ZnInBZbhxon");
+//    print(resonse.id);
 //  }
 
 //  Future<void> _afterGoogleLogin(GoogleSignInAccount gSA) async {

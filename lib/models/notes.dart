@@ -21,6 +21,8 @@ class Note extends AbstractDocument {
 
   //* GDrive Link
   String GDriveLink;
+  String GDriveID;
+  String GDriveNotesFolderID;
 
   Note({
     @required this.subjectName,
@@ -50,6 +52,8 @@ class Note extends AbstractDocument {
     votes = data["votes"]??0;
     size = data['size'];
     GDriveLink = data['GDriveLink'] ?? null;
+    GDriveID = data['GDriveID'] ?? null;
+    GDriveNotesFolderID = data['GDriveNotesFolderID'] ?? null;
     firebaseId = documentID;
   }
 
@@ -66,6 +70,8 @@ class Note extends AbstractDocument {
       "votes": votes,
       "size":size,
       "GDriveLink":GDriveLink ?? null,
+      "GDriveID":GDriveID ?? null,
+      "GDriveNotesFolderID":GDriveNotesFolderID ?? null,
       "firebaseId":firebaseId ?? "",
     };
   }
@@ -105,6 +111,12 @@ class Note extends AbstractDocument {
 
   setGdriveDownloadLink(String url){
     this.GDriveLink = url;
+  }
+  setGdriveID(String url){
+    this.GDriveID = url;
+  }
+  setGDriveNotesFolderID(String url){
+    this.GDriveNotesFolderID = url;
   }
 
   DateTime _parseUploadDate(date) {

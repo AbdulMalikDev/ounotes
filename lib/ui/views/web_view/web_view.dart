@@ -99,7 +99,7 @@ class _WebViewWidgetState extends State<WebViewWidget> {
                           //TODO add share text
                           final RenderBox box = context.findRenderObject();
                           Share.share(
-                              "Yo Check out this ${widget.note.subjectName} notes ${widget.note.GDriveLink}",
+                              "Notes Name: ${widget.note.title}\n\nSubject Name: ${widget.note.subjectName}\n\nLink:${widget.note.GDriveLink}\n\nFind Latest Notes | Question Papers | Syllabus | Resources for Osmania University at the OU NOTES App\n\nhttps://play.google.com/store/apps/details?id=com.notes.ounotes",
                               sharePositionOrigin:
                                   box.localToGlobal(Offset.zero) & box.size);
                         },

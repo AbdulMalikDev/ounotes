@@ -505,13 +505,56 @@ class FirestoreService {
     await _uploadLogCollectionReference.document(report.id).delete();
   }
 
-  void updateSubjectInFirebase(Map subject) async {
-    await Firestore.instance.collection("Subjects").document(subject["id"].toString()).setData(subject);
+  updateSubjectInFirebase(Map subject) async {
+    try {
+      await Firestore.instance.collection("Subjects").document(subject["id"].toString()).setData(subject);
+    } on Exception catch (e) {
+          log.e(e.toString());
+    }
   }
 
-  updateNoteInFirebase(Map note) async {
-    log.e(note["firebaseId"].toString());
-    await Firestore.instance.collection("Notes").document(note["firebaseId"].toString()).setData(note);
+  updateNoteInFirebase(Note note) async {
+    CollectionReference ref = _notesCollectionReference;
+    try {
+      if (note.id != null && note.id.length > 3) {
+        log.w("Document being deleted using ID");
+        if (note.id.length > 5) {
+          await ref.document(note.id).setData(note.toJson());
+          if (note.path == Document.Links){
+            await _linksCollectionReference.document("length").updateData({"len" : FieldValue.increment(-1)});
+          }
+        }
+      } else {
+        log.w(
+            "Document being deleted using url matching in firebase , may cause more reads");
+        QuerySnapshot snapshot =
+            await ref.where("title", isEqualTo: note.title).getDocuments();
+        snapshot.documents.forEach((doc) async {
+          await doc.reference.updateData(note.toJson());
+        });
+      }
+      // await Firestore.instance.collection("Notes").document(note["firebaseId"].toString()).setData(note);
+    } on Exception catch (e) {
+          log.e(e.toString());
+    }
+  }
+  updateQuestionPaperInFirebase(QuestionPaper note) async {
+    log.e(note.id);
+    
+    try {
+      await _questionPapersCollectionReference.document(note.id).setData(note.toJson());
+    } on Exception catch (e) {
+          log.e(e.toString());
+    }
+  }
+  updateSyllabusInFirebase(Syllabus note) async {
+    log.e(note.id);
+    
+    try {
+      await _syllabusCollectionReference.document(note.id).setData(note.toJson());
+    } on Exception catch (e) {
+          log.e(e.toString());
+    }
   }
 
   Future<Note> getNoteById(String id) async {

@@ -64,42 +64,43 @@ class GoogleDriveService {
       log.e("Should this be added to GDrive : $addToGdrive");
       if (addToGdrive){
 
-      // initialize http client and GDrive API
-      var AuthHeaders = await _authenticationService.refreshSignInCredentials();
-      var client = GoogleHttpClient(AuthHeaders);  
-      var drive = ga.DriveApi(client);
-      log.e(AuthHeaders);  
-      
-      // retrieve subject and notesmodel
-      // log.e(_subjectsService.allSubjects);
-      log.e(note.subjectName);
-      Subject subject = _subjectsService.getSubjectByName(note.subjectName);
-      log.e(subject);
-      if (subject == null) {log.e("Subject is Null");return;}
-      NotesViewModel notesViewModel = NotesViewModel();
-      // Download File from Firebase
-      ga.File fileToUpload = ga.File();  
-      File file = await notesViewModel.downloadFile(notesName: note.title , subName: note.subjectName , type: Constants.notes);
-      log.e(file);
-      // Upload File To GDrive
-      fileToUpload.parents = [subject.gdriveNotesFolderID];  
-      fileToUpload.name = note.title; 
-      print("Uploading file..........."); 
-      var response = await drive.files.create(  
-        fileToUpload, 
-        uploadMedia: ga.Media(file.openRead(), file.lengthSync()),  
-      );
+        // initialize http client and GDrive API
+        var AuthHeaders = await _authenticationService.refreshSignInCredentials();
+        var client = GoogleHttpClient(AuthHeaders);  
+        var drive = ga.DriveApi(client);
+        log.e(AuthHeaders);  
+        
+        // retrieve subject and notesmodel
+        // log.e(_subjectsService.allSubjects);
+        log.e(note.subjectName);
+        Subject subject = _subjectsService.getSubjectByName(note.subjectName);
+        log.e(subject);
+        if (subject == null) {log.e("Subject is Null");return;}
+        NotesViewModel notesViewModel = NotesViewModel();
+        // Download File from Firebase
+        ga.File fileToUpload = ga.File();  
+        File file = await notesViewModel.downloadFile(notesName: note.title , subName: note.subjectName , type: Constants.notes);
+        log.e(file);
+        // Upload File To GDrive
+        fileToUpload.parents = [subject.gdriveNotesFolderID];  
+        fileToUpload.name = note.title;
+        fileToUpload.copyRequiresWriterPermission = true; 
+        print("Uploading file..........."); 
+        var response = await drive.files.create(  
+          fileToUpload, 
+          uploadMedia: ga.Media(file.openRead(), file.lengthSync()),  
+        );
 
-      // Create Gdrive View Link
-      String GDrive_URL = "https://drive.google.com/file/d/${response.id}/view?usp=sharing";  
-      log.w(GDrive_URL);
+        // Create Gdrive View Link
+        String GDrive_URL = "https://drive.google.com/file/d/${response.id}/view?usp=sharing";  
+        log.w(GDrive_URL);
 
-      // add the link to the note object
-      note.setGdriveDownloadLink(GDrive_URL);
-      log.w(note.toJson());
+        // add the link to the note object
+        note.setGdriveDownloadLink(GDrive_URL);
+        log.w(note.toJson());
 
-      // update in firestore with GDrive Link
-      _firestoreService.updateNoteInFirebase(note.toJson());
+        // update in firestore with GDrive Link
+        _firestoreService.updateNoteInFirebase(note);
 
       }
 
@@ -124,7 +125,6 @@ class GoogleDriveService {
     try{
       log.e("File being deleted");
       // initialize http client and GDrive API
-      SharedPreferences pref = await _sharedPreferencesService.store();
       var AuthHeaders = await _authenticationService.refreshSignInCredentials();
       var client = GoogleHttpClient(AuthHeaders);
       log.e(_authenticationService.user.googleSignInAuthHeaders);  

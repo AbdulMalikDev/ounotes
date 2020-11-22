@@ -25,6 +25,11 @@ class QuestionPaper extends AbstractDocument{
   String branch;
   String year;
   String type;
+
+  //GDrive info
+  String GDriveID;
+  String GDriveLink;
+  String GDriveQuestionPaperFolderID;
   
   
 
@@ -56,6 +61,9 @@ class QuestionPaper extends AbstractDocument{
     path         = Document.QuestionPapers;
     year         = data["year"].toString() ?? "";
     type         = Constants.questionPapers;
+    GDriveID     = data["GDriveID"]; 
+    GDriveLink   = data["GDriveLink"];
+    GDriveQuestionPaperFolderID   = data["GDriveQuestionPaperFolderID"];
    
     }catch(e)
     {
@@ -81,6 +89,9 @@ class QuestionPaper extends AbstractDocument{
       "id"          : id,
       "title"       : title,
       "isDownloaded": isDownloaded ?? false,
+      "GDriveID": GDriveID,
+      "GDriveLink": GDriveLink,
+      "GDriveQuestionPaperFolderID": GDriveQuestionPaperFolderID,
       
     };
   }
@@ -114,5 +125,15 @@ class QuestionPaper extends AbstractDocument{
 
    @override
   set setTitle(String value){this.title = value;}
+
+  setGdriveDownloadLink(String url){
+    this.GDriveLink = url;
+  }
+  setGdriveID(String url){
+    this.GDriveID = url;
+  }
+  setGDriveQuestionPapersFolderID(String url){
+    this.GDriveQuestionPaperFolderID = url;
+  }
 
 }

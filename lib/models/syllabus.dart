@@ -24,6 +24,11 @@ class Syllabus extends AbstractDocument{
   String branch;
   String year;
   String type;
+
+  //GDrive info
+  String GDriveID;
+  String GDriveLink;
+  String GDriveSyllabusFolderID;
   
   
 
@@ -57,6 +62,9 @@ class Syllabus extends AbstractDocument{
     branch       = data["branch"];
     type         = Constants.syllabus;
     year         = data["year"] ?? "";
+    GDriveID     = data["GDriveID"];
+    GDriveLink   = data["GDriveLink"];
+    GDriveSyllabusFolderID   = data["GDriveSyllabusFolderID"];
 
     } catch (e) {
       log.e("While DESERIALIZING syllabus model from Firebase , Error occurred");
@@ -80,6 +88,9 @@ class Syllabus extends AbstractDocument{
       "semester"    : semester,
       "branch"      : branch,
       "year"        : year,
+      "GDriveID"    : GDriveID,
+      "GDriveLink"  : GDriveLink,
+      "GDriveSyllabusFolderID"  : GDriveSyllabusFolderID,
     };
   }
 
@@ -114,5 +125,15 @@ class Syllabus extends AbstractDocument{
   {
     
       return DateTime.parse(date.toDate().toString());
+  }
+
+  setGdriveDownloadLink(String url){
+    this.GDriveLink = url;
+  }
+  setGdriveID(String url){
+    this.GDriveID = url;
+  }
+  setGDriveSyllabusFolderID(String url){
+    this.GDriveSyllabusFolderID = url;
   }
 }
