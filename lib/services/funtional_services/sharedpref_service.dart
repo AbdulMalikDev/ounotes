@@ -2,9 +2,11 @@ import 'dart:convert';
 import 'package:FSOUNotes/app/locator.dart';
 import 'package:FSOUNotes/app/logger.dart';
 import 'package:FSOUNotes/enums/enums.dart';
+import 'package:FSOUNotes/models/notes_view.dart';
 import 'package:FSOUNotes/models/report.dart';
 import 'package:FSOUNotes/models/user.dart';
 import 'package:FSOUNotes/services/funtional_services/authentication_service.dart';
+import 'package:FSOUNotes/services/funtional_services/firestore_service.dart';
 import 'package:injectable/injectable.dart';
 import 'package:logger/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -63,6 +65,50 @@ class SharedPreferencesService {
     }
     String modeofview = prefs.getString("modeofview");
     return modeofview;
+  }
+
+  updateView(String docId) async {
+    SharedPreferences prefs = await this.store();
+    //if notes_view is not present in the local storage then add the current view with docId with currTime
+    if (!prefs.containsKey("notes_view")) {
+      log.i("notes views not present in local storage");
+      NotesView notesView =
+          NotesView(time: DateTime.now().toString(), views: {docId: 1});
+      prefs.setString("notes_view", jsonEncode(notesView.toJson()));
+      return;
+    }
+
+    log.i("notes views present in local storage");
+    //fetch notes_view from local storage
+    Map<String, dynamic> data = jsonDecode(prefs.getString("notes_view"));
+    NotesView notesView = NotesView.fromData(data);
+    if (notesView.views.keys.contains(docId)) {
+      notesView.views[docId]++;
+    } else {
+      notesView.views[docId] = 1;
+    }
+
+    DateTime startTime = DateTime.parse(notesView.time);
+
+    Duration currStartTimediff = DateTime.now().difference(startTime);
+    print(currStartTimediff.inDays);
+    if (currStartTimediff.inDays >= 3) {
+      FirestoreService _firestoreService = locator<FirestoreService>();
+      log.i("Updating views to server");
+      //update views to the server
+      notesView.views.forEach((docId, view) {
+        if (view != 0) {
+          print("id"+ docId + " view: " + view.toString());
+          _firestoreService.incrementView(docId, view);
+        }
+        notesView.views[docId] = 0;
+      });
+
+      //update time
+      notesView.time = DateTime.now().toString();
+    }
+
+    prefs.setString("notes_view", jsonEncode(notesView.toJson()));
   }
 
   loadSubjectsFromStorage() {}

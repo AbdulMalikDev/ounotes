@@ -19,7 +19,9 @@ class DrawerView extends StatelessWidget {
   Widget build(BuildContext context) {
     var subtitle1 =
         Theme.of(context).textTheme.subtitle1.copyWith(fontSize: 16);
+
     return ViewModelBuilder<DrawerViewModel>.reactive(
+        onModelReady: (model) {},
         builder: (context, model, child) => Container(
               width: App(context).appScreenWidthWithOutSafeArea(0.78),
               child: Drawer(
@@ -81,18 +83,33 @@ class DrawerView extends StatelessWidget {
                                 //   inAppReview.requestReview();
                                 // }
                               }),
-                          NavItem(
-                              Icons.arrow_drop_down_circle,
-                              "My Downloads",
-                              subtitle1,
-                              model.navigateToDownloadScreen,
-                              Document.None),
+                          // NavItem(
+                          //     Icons.arrow_drop_down_circle,
+                          //     "My Downloads",
+                          //     subtitle1,
+                          //     model.navigateToDownloadScreen,
+                          //     Document.None),
                           NavItem(
                               Icons.file_upload,
                               "Upload",
                               subtitle1,
                               model.navigateToUserUploadScreen,
                               Document.Drawer),
+                          // ListTile(
+                          //     leading: SizedBox(
+                          //       height: 30,
+                          //       width: 40,
+                          //       child: ClipRRect(
+                          //           child: Image.asset(
+                          //               "assets/images/donate-icon.png")
+                          //           //)
+                          //           ),
+                          //     ),
+                          //     title: Text(
+                          //       "Donate",
+                          //       style: subtitle1,
+                          //     ),
+                          //     onTap: model.navigateToDonateScreen),
                           if (model.isAdmin)
                             NavItem(
                                 Icons.equalizer,

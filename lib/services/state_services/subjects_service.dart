@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:FSOUNotes/app/locator.dart';
 import 'package:FSOUNotes/app/logger.dart';
-import 'package:FSOUNotes/models/course_info.dart';
+import 'package:FSOUNotes/misc/course_info.dart';
 import 'package:FSOUNotes/models/subject.dart';
 import 'package:FSOUNotes/services/funtional_services/firestore_service.dart';
 import 'package:FSOUNotes/services/funtional_services/sharedpref_service.dart';

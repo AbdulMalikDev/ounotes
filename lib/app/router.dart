@@ -6,8 +6,6 @@ import 'package:FSOUNotes/ui/views/about_us/privacy_policy/privacy_policyview.da
 import 'package:FSOUNotes/ui/views/about_us/privacy_policy/terms_and_conditionview.dart';
 import 'package:FSOUNotes/ui/views/admin/admin_view.dart';
 import 'package:FSOUNotes/ui/views/all_documents/all_documents_view.dart';
-import 'package:FSOUNotes/ui/views/all_documents/upload/upload_selection/upload_selection_view.dart';
-import 'package:FSOUNotes/ui/views/all_documents/upload/upload_view.dart';
 import 'package:FSOUNotes/ui/views/downloads/Downloads_view.dart';
 import 'package:FSOUNotes/ui/views/home/home_view.dart';
 import 'package:FSOUNotes/ui/views/intro/intro_view.dart';
@@ -17,6 +15,8 @@ import 'package:FSOUNotes/ui/views/pdf/pdf_view.dart';
 import 'package:FSOUNotes/ui/views/question_papers/question_papers_view.dart';
 import 'package:FSOUNotes/ui/views/splash/spash_view.dart';
 import 'package:FSOUNotes/ui/views/syllabus/syllabus_view.dart';
+import 'package:FSOUNotes/ui/views/upload/upload_selection/upload_selection_view.dart';
+import 'package:FSOUNotes/ui/views/upload/upload_view.dart';
 import 'package:FSOUNotes/ui/views/web_view/web_view.dart';
 import 'package:auto_route/auto_route_annotations.dart';
 import 'package:FSOUNotes/ui/views/about_us/about_us_view.dart';

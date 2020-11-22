@@ -20,7 +20,7 @@ class HomeView extends StatelessWidget {
       onModelReady: (model) async {
         await model.admobService.hideNotesViewBanner();
         model.showIntroDialog(context);
-        model.showTelgramDialog(context);
+      
       },
       builder: (context, model, child) => WillPopScope(
         onWillPop: () => Helper.showWillPopDialog(context: context),

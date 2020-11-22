@@ -2,13 +2,13 @@ import 'package:FSOUNotes/app/locator.dart';
 import 'package:FSOUNotes/app/logger.dart';
 import 'package:FSOUNotes/app/router.gr.dart';
 import 'package:FSOUNotes/misc/constants.dart';
-import 'package:FSOUNotes/enums/enums.dart';
+import 'package:FSOUNotes/misc/helper.dart';
 import 'package:FSOUNotes/models/download.dart';
-import 'package:FSOUNotes/models/notes.dart';
 import 'package:FSOUNotes/models/question_paper.dart';
 import 'package:FSOUNotes/services/funtional_services/cloud_storage_service.dart';
 import 'package:FSOUNotes/services/funtional_services/firestore_service.dart';
 import 'package:FSOUNotes/services/state_services/download_service.dart';
+import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:logger/logger.dart';
 import 'package:stacked/stacked.dart';
@@ -91,6 +91,68 @@ class QuestionPapersViewModel extends BaseViewModel {
     return false;
   }
 
+  void openDoc(BuildContext context, QuestionPaper questionPaper) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20)),
+              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+              title: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Expanded(
+                    child: Text(
+                      "Where do you want to open the file?",
+                      style: Theme.of(context)
+                          .textTheme
+                          .headline6
+                          .copyWith(fontSize: 18),
+                      overflow: TextOverflow.clip,
+                    ),
+                  ),
+                ],
+              ),
+              actions: <Widget>[
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    FlatButton(
+                        child: Text(
+                          "Open in App",
+                          style: Theme.of(context)
+                              .textTheme
+                              .subtitle1
+                              .copyWith(fontSize: 15),
+                        ),
+                        onPressed: () {
+                          Navigator.pop(context);
+                          navigateToWebView(questionPaper);
+                        }),
+                    FlatButton(
+                        child: Text(
+                          "Open In Browser",
+                          style: Theme.of(context)
+                              .textTheme
+                              .subtitle1
+                              .copyWith(fontSize: 15),
+                        ),
+                        onPressed: () {
+                          Helper.launchURL(questionPaper.GDriveLink);
+                          Navigator.pop(context);
+                        }),
+                  ],
+                ),
+              ]);
+        });
+  }
+
+  void navigateToWebView(QuestionPaper questionPaper) {
+    _navigationService.navigateTo(Routes.webViewWidgetRoute,
+        arguments: WebViewWidgetArguments(questionPaper:questionPaper));
+  }
+
   void onTap({
     QuestionPaper note,
     String notesName,
@@ -112,7 +174,7 @@ class QuestionPapersViewModel extends BaseViewModel {
           type: type,
           note: note,
         );
-          if (PDFpath == 'error') {
+        if (PDFpath == 'error') {
           await Fluttertoast.showToast(
               msg:
                   'An error has occurred while downloading document...Please Verify your internet connection.');

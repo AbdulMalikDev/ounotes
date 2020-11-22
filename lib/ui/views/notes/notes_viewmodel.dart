@@ -144,32 +144,37 @@ class NotesViewModel extends BaseViewModel {
                 ],
               ),
               actions: <Widget>[
-                FlatButton(
-                    child: Text(
-                      "Open in App",
-                      style: Theme.of(context)
-                          .textTheme
-                          .subtitle2
-                          .copyWith(fontSize: 17),
-                    ),
-                    onPressed: () {
-                      _firestoreService.incrementView(note);
-                      Navigator.pop(context);
-                      navigateToWebView(note);
-                    }),
-                FlatButton(
-                    child: Text(
-                      "Open In Browser",
-                      style: Theme.of(context)
-                          .textTheme
-                          .subtitle2
-                          .copyWith(fontSize: 17),
-                    ),
-                    onPressed: () {
-                      _firestoreService.incrementView(note);
-                      Helper.launchURL(note.GDriveLink);
-                      Navigator.pop(context);
-                    }),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    FlatButton(
+                        child: Text(
+                          "Open in App",
+                          style: Theme.of(context)
+                              .textTheme
+                              .subtitle1
+                              .copyWith(fontSize: 15),
+                        ),
+                        onPressed: () {
+                          _sharedPreferencesService.updateView(note.id);
+                          Navigator.pop(context);
+                          navigateToWebView(note);
+                        }),
+                    FlatButton(
+                        child: Text(
+                          "Open In Browser",
+                          style: Theme.of(context)
+                              .textTheme
+                              .subtitle1
+                              .copyWith(fontSize: 15),
+                        ),
+                        onPressed: () {
+                          _sharedPreferencesService.updateView(note.id);
+                          Helper.launchURL(note.GDriveLink);
+                          Navigator.pop(context);
+                        }),
+                  ],
+                ),
               ]);
         });
   }

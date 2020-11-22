@@ -1,5 +1,5 @@
 import 'package:FSOUNotes/enums/enums.dart';
-import 'package:FSOUNotes/ui/views/all_documents/upload/upload_selection/upload_selection_viewmodel.dart';
+import 'package:FSOUNotes/ui/views/upload/upload_selection/upload_selection_viewmodel.dart';
 import 'package:FSOUNotes/ui/widgets/dumb_widgets/SaveButtonView.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';

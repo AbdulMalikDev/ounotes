@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'package:FSOUNotes/models/notes.dart';
+import 'package:FSOUNotes/models/question_paper.dart';
+import 'package:FSOUNotes/models/syllabus.dart';
 import 'package:FSOUNotes/ui/views/web_view/web_view_viewModel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
@@ -8,8 +10,11 @@ import 'package:stacked/stacked.dart';
 // import 'package:webview_flutter/webview_flutter.dart';
 
 class WebViewWidget extends StatefulWidget {
-  Note note;
-  WebViewWidget({this.note, Key key}) : super(key: key);
+  final Note note;
+  final QuestionPaper questionPaper;
+  final Syllabus syllabus;
+  WebViewWidget({this.note, Key key, this.questionPaper, this.syllabus})
+      : super(key: key);
 
   @override
   _WebViewWidgetState createState() => _WebViewWidgetState();
@@ -29,10 +34,32 @@ class _WebViewWidgetState extends State<WebViewWidget> {
 
   WebViewModel localModel;
 
+  String subjectName;
+  String title;
+  String url;
+  String br;
+  String year;
+
   @override
   void initState() {
     super.initState();
     flutterWebViewPlugin.close();
+
+    if (widget.note != null) {
+      subjectName = widget.note.subjectName;
+      title = widget.note.title;
+      url = widget.note.GDriveLink;
+    } else if (widget.questionPaper != null) {
+      subjectName = widget.questionPaper.subjectName;
+      year = widget.questionPaper.year;
+      br = widget.questionPaper.branch;
+      url = widget.questionPaper.GDriveLink;
+    } else {
+      subjectName = widget.syllabus.subjectName;
+      year = widget.syllabus.year;
+      br = widget.syllabus.branch;
+      url = widget.syllabus.GDriveLink;
+    }
 
     // Add a listener to on url changed
     _onUrlChanged = flutterWebViewPlugin.onUrlChanged.listen((String url) {
@@ -84,7 +111,7 @@ class _WebViewWidgetState extends State<WebViewWidget> {
               ),
             ),
             hidden: true,
-            url: widget.note.GDriveLink,
+            url: url,
             appBar: isLandscape
                 ? null
                 : new AppBar(
@@ -96,10 +123,20 @@ class _WebViewWidgetState extends State<WebViewWidget> {
                       IconButton(
                         icon: Icon(Icons.share),
                         onPressed: () {
-                          //TODO add share text
                           final RenderBox box = context.findRenderObject();
-                          Share.share(
-                              "Notes Name: ${widget.note.title}\n\nSubject Name: ${widget.note.subjectName}\n\nLink:${widget.note.GDriveLink}\n\nFind Latest Notes | Question Papers | Syllabus | Resources for Osmania University at the OU NOTES App\n\nhttps://play.google.com/store/apps/details?id=com.notes.ounotes",
+                          String share = "";
+
+                          if (widget.note != null) {
+                            share =
+                                "Notes Name: $title\n\nSubject Name: $subjectName\n\nLink:$url\n\nFind Latest Notes | Question Papers | Syllabus | Resources for Osmania University at the OU NOTES App\n\nhttps://play.google.com/store/apps/details?id=com.notes.ounotes";
+                          } else if (widget.questionPaper != null) {
+                            share =
+                                "QuestionPaper year: $year\n\nSubject Name: $subjectName\n\nLink:$url\n\nFind Latest Notes | Question Papers | Syllabus | Resources for Osmania University at the OU NOTES App\n\nhttps://play.google.com/store/apps/details?id=com.notes.ounotes";
+                          } else {
+                            share =
+                                "Syllabus Branch: $br\n\nSubject Name: $subjectName\n\nLink:$url\n\nFind Latest Notes | Question Papers | Syllabus | Resources for Osmania University at the OU NOTES App\n\nhttps://play.google.com/store/apps/details?id=com.notes.ounotes";
+                          }
+                          Share.share(share,
                               sharePositionOrigin:
                                   box.localToGlobal(Offset.zero) & box.size);
                         },

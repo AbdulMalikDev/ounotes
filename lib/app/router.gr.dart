@@ -18,9 +18,9 @@ import 'package:FSOUNotes/ui/views/syllabus/syllabus_view.dart';
 import 'package:FSOUNotes/ui/views/links/links_view.dart';
 import 'package:FSOUNotes/ui/views/about_us/about_us_view.dart';
 import 'package:FSOUNotes/ui/views/Profile/profile_view.dart';
-import 'package:FSOUNotes/ui/views/all_documents/upload/upload_view.dart';
+import 'package:FSOUNotes/ui/views/upload/upload_view.dart';
 import 'package:FSOUNotes/enums/enums.dart';
-import 'package:FSOUNotes/ui/views/all_documents/upload/upload_selection/upload_selection_view.dart';
+import 'package:FSOUNotes/ui/views/upload/upload_selection/upload_selection_view.dart';
 import 'package:FSOUNotes/ui/views/downloads/Downloads_view.dart';
 import 'package:FSOUNotes/ui/views/FilterDocuments/FD_InputScreen/fd_inputView.dart';
 import 'package:FSOUNotes/ui/views/FilterDocuments/FD_subjectdisplay/fd_subjectview.dart';
@@ -30,6 +30,8 @@ import 'package:FSOUNotes/ui/views/about_us/privacy_policy/terms_and_conditionvi
 import 'package:FSOUNotes/ui/views/admin/admin_view.dart';
 import 'package:FSOUNotes/ui/views/web_view/web_view.dart';
 import 'package:FSOUNotes/models/notes.dart';
+import 'package:FSOUNotes/models/question_paper.dart';
+import 'package:FSOUNotes/models/syllabus.dart';
 
 abstract class Routes {
   static const splashViewRoute = '/';
@@ -303,8 +305,11 @@ class Router extends RouterBase {
         final typedArgs =
             args as WebViewWidgetArguments ?? WebViewWidgetArguments();
         return MaterialPageRoute<dynamic>(
-          builder: (context) =>
-              WebViewWidget(note: typedArgs.note, key: typedArgs.key),
+          builder: (context) => WebViewWidget(
+              note: typedArgs.note,
+              key: typedArgs.key,
+              questionPaper: typedArgs.questionPaper,
+              syllabus: typedArgs.syllabus),
           settings: settings,
         );
       default:
@@ -452,5 +457,8 @@ class TermsAndConditionViewArguments {
 class WebViewWidgetArguments {
   final Note note;
   final Key key;
-  WebViewWidgetArguments({this.note, this.key});
+  final QuestionPaper questionPaper;
+  final Syllabus syllabus;
+  WebViewWidgetArguments(
+      {this.note, this.key, this.questionPaper, this.syllabus});
 }

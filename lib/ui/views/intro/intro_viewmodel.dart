@@ -1,7 +1,7 @@
 import 'package:FSOUNotes/app/locator.dart';
 import 'package:FSOUNotes/app/logger.dart';
 import 'package:FSOUNotes/app/router.gr.dart';
-import 'package:FSOUNotes/models/course_info.dart';
+import 'package:FSOUNotes/misc/course_info.dart';
 import 'package:FSOUNotes/services/funtional_services/authentication_service.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';

@@ -2,6 +2,8 @@ import 'package:FSOUNotes/AppTheme/AppStateNotifier.dart';
 import 'package:FSOUNotes/enums/enums.dart';
 import 'package:FSOUNotes/models/question_paper.dart';
 import 'package:FSOUNotes/ui/widgets/smart_widgets/question_paper_tile/question_paper_tile_viewmodel.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:share/share.dart';
 import 'package:stacked/stacked.dart';
 import 'package:flutter/material.dart';
 import 'package:FSOUNotes/models/download.dart';
@@ -87,16 +89,16 @@ class QuestionPaperTileView extends StatelessWidget {
                                     Row(
                                       children: <Widget>[
                                         Container(
-                                          width: 180,
+                                          width: 160,
                                           child: Row(
                                             children: <Widget>[
                                               Container(
-                                               constraints:
-                                                  model.isQPdownloaded
-                                                      ? BoxConstraints(
-                                                          maxWidth: 150)
-                                                      : BoxConstraints(
-                                                          maxWidth: 180),
+                                                constraints:
+                                                    model.isQPdownloaded
+                                                        ? BoxConstraints(
+                                                            maxWidth: 140)
+                                                        : BoxConstraints(
+                                                            maxWidth: 160),
                                                 child: Text(
                                                   "Year :${note.year} ${note.branch}",
                                                   overflow: TextOverflow.clip,
@@ -107,25 +109,30 @@ class QuestionPaperTileView extends StatelessWidget {
                                                       fontSize: 18),
                                                 ),
                                               ),
-                                              model.isQPdownloaded
-                                                  ? SizedBox(
-                                                      width: 5,
-                                                    )
-                                                  : SizedBox(),
-                                              model.isQPdownloaded
-                                                  ? Icon(Icons.done_all,
-                                                      color:
-                                                          theme.iconTheme.color,
-                                                      size: 18)
-                                                  : SizedBox(),
                                             ],
                                           ),
+                                        ),
+                                        IconButton(
+                                          padding: EdgeInsets.zero,
+                                          icon: Icon(
+                                            MdiIcons.shareOutline,
+                                            color: theme.primaryColor,
+                                          ),
+                                          onPressed: () {
+                                            final RenderBox box =
+                                                context.findRenderObject();
+                                            Share.share(
+                                                "Question Paper year: ${note.year}\n\nSubject Name: ${note.subjectName}\n\nLink:${note.GDriveLink}\n\nFind Latest Notes | Question Papers | Syllabus | Resources for Osmania University at the OU NOTES App\n\nhttps://play.google.com/store/apps/details?id=com.notes.ounotes",
+                                                sharePositionOrigin:
+                                                    box.localToGlobal(
+                                                            Offset.zero) &
+                                                        box.size);
+                                          },
                                         ),
                                         PopupMenuButton(
                                           onSelected: (Menu selectedValue) {
                                             if (selectedValue == Menu.Report) {
                                               model.reportNote(doc: note);
-                                          
                                             }
                                           },
                                           icon: Icon(Icons.more_vert),

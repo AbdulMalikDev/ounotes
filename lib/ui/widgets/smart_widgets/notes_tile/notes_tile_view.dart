@@ -82,7 +82,7 @@ class NotesTileView extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
                         FittedBox(
-                                                  child: Row(
+                          child: Row(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: <Widget>[
@@ -136,7 +136,8 @@ class NotesTileView extends StatelessWidget {
                                                   overflow: TextOverflow.clip,
                                                   style: TextStyle(
                                                       color: primary,
-                                                      fontWeight: FontWeight.bold,
+                                                      fontWeight:
+                                                          FontWeight.bold,
                                                       fontSize: 18),
                                                 ),
                                               ),
@@ -163,7 +164,6 @@ class NotesTileView extends StatelessWidget {
                                             color: theme.primaryColor,
                                           ),
                                           onPressed: () {
-                                            //TODO add share text
                                             final RenderBox box =
                                                 context.findRenderObject();
                                             Share.share(
@@ -178,7 +178,8 @@ class NotesTileView extends StatelessWidget {
                                           child: PopupMenuButton(
                                             padding: EdgeInsets.zero,
                                             onSelected: (Menu selectedValue) {
-                                              if (selectedValue == Menu.Report) {
+                                              if (selectedValue ==
+                                                  Menu.Report) {
                                                 model.reportNote(
                                                   doc: note,
                                                   id: note.id,
@@ -283,10 +284,10 @@ class NotesTileView extends StatelessWidget {
                                                 padding: EdgeInsets.all(0.0),
                                                 icon: FaIcon(FontAwesomeIcons
                                                     .longArrowAltUp),
-                                                color:
-                                                    model.vote == Constants.upvote
-                                                        ? Colors.green
-                                                        : Colors.white,
+                                                color: model.vote ==
+                                                        Constants.upvote
+                                                    ? Colors.green
+                                                    : Colors.white,
                                                 iconSize: 30,
                                                 onPressed: () {
                                                   model.handleVotes(model.vote,

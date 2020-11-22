@@ -3,7 +3,7 @@ import 'package:FSOUNotes/app/logger.dart';
 import 'package:FSOUNotes/enums/constants.dart';
 import 'package:FSOUNotes/enums/enums.dart';
 import 'package:FSOUNotes/models/UploadLog.dart';
-import 'package:FSOUNotes/models/course_info.dart';
+import 'package:FSOUNotes/misc/course_info.dart';
 import 'package:FSOUNotes/models/document.dart';
 import 'package:FSOUNotes/models/link.dart';
 import 'package:FSOUNotes/models/notes.dart';
@@ -419,20 +419,21 @@ class FirestoreService {
     }
   }
 
-  incrementView(Note doc) {
+  incrementView(String docId,int views) {
     CollectionReference ref = _notesCollectionReference;
     try {
-      if (doc.id != null && doc.id.length > 5) {
+      if (docId != null && docId.length > 5) {
         log.i("Document being increment view using ID");
         // if (doc.id.length > 5) {
-        ref.document(doc.id).updateData({"view": FieldValue.increment(1)});
+        ref.document(docId).updateData({"view": FieldValue.increment(views)});
         //}
-      } else {
-        log.i("Document view being incremented in firebase");
-        return _notesCollectionReference
-            .document("Note_${doc.subjectName}_${doc.title}")
-            .updateData({"view": FieldValue.increment(1)});
-      }
+      } 
+      // else {
+      //   log.i("Document view being incremented in firebase");
+      //   return _notesCollectionReference
+      //       .document("Note_${doc.subjectName}_${doc.title}")
+      //       .updateData({"view": FieldValue.increment(1)});
+      // }
     } catch (e) {
       return _errorHandling(
           e, "While increment view notes in Firebase , Error occurred");

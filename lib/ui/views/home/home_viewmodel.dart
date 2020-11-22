@@ -68,7 +68,8 @@ class HomeViewModel extends BaseViewModel {
                   ),
                   GestureDetector(
                     onTap: () {
-                      _analyticsService.addTagInNotificationService(key:"TELEGRAM",value:"VISITED");
+                      _analyticsService.addTagInNotificationService(
+                          key: "TELEGRAM", value: "VISITED");
                       launchURL("https://t.me/ounotes");
                     },
                     child: Container(
@@ -177,6 +178,7 @@ class HomeViewModel extends BaseViewModel {
                   ),
                   onPressed: () {
                     Navigator.of(context).pop();
+                    showTelgramDialog(context);
                   }),
             ],
           );
