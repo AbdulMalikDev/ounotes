@@ -19,14 +19,12 @@ class ProfileView extends StatelessWidget {
           opacity: 0.5,
           progressIndicator: circularProgress(),
           child: Scaffold(
-            appBar: AppBar(
-              title: Text("My Profile"),
-              iconTheme: IconThemeData(color: Colors.white),
-            ),
-            body: SingleChildScrollView(
-              scrollDirection: Axis.vertical,
-              child: Column(
-                children: <Widget>[
+              appBar: AppBar(
+                title: Text("My Profile"),
+                iconTheme: IconThemeData(color: Colors.white),
+              ),
+              body: ListView(
+                children: [
                   Container(
                     height: App(context).appHeight(0.2),
                     child: Column(
@@ -47,10 +45,8 @@ class ProfileView extends StatelessWidget {
                         SizedBox(
                           height: 10,
                         ),
-                        FittedBox(
-                          child: Text(model.user?.username ?? '',
-                              style: Theme.of(context).textTheme.headline6),
-                        ),
+                        Text(model.user?.username ?? '',
+                            style: Theme.of(context).textTheme.headline6),
                       ],
                     ),
                   ),
@@ -88,9 +84,7 @@ class ProfileView extends StatelessWidget {
                   ),
                   SizedBox(height: 10),
                 ],
-              ),
-            ),
-          ),
+              )),
 
           // ),
         );

@@ -18,9 +18,9 @@ import 'package:FSOUNotes/ui/views/syllabus/syllabus_view.dart';
 import 'package:FSOUNotes/ui/views/links/links_view.dart';
 import 'package:FSOUNotes/ui/views/about_us/about_us_view.dart';
 import 'package:FSOUNotes/ui/views/Profile/profile_view.dart';
-import 'package:FSOUNotes/ui/views/all_documents/upload/upload_view.dart';
+import 'package:FSOUNotes/ui/views/upload/upload_view.dart';
 import 'package:FSOUNotes/enums/enums.dart';
-import 'package:FSOUNotes/ui/views/all_documents/upload/upload_selection/upload_selection_view.dart';
+import 'package:FSOUNotes/ui/views/upload/upload_selection/upload_selection_view.dart';
 import 'package:FSOUNotes/ui/views/downloads/Downloads_view.dart';
 import 'package:FSOUNotes/ui/views/FilterDocuments/FD_InputScreen/fd_inputView.dart';
 import 'package:FSOUNotes/ui/views/FilterDocuments/FD_subjectdisplay/fd_subjectview.dart';
@@ -53,6 +53,7 @@ abstract class Routes {
   static const termsAndConditionView = '/terms-and-condition-view';
   static const adminViewRoute = '/admin-view-route';
   static const webViewWidgetRoute = '/web-view-widget-route';
+  static const upiPayment = '/upi-payment';
   static const all = {
     splashViewRoute,
     introViewRoute,
@@ -75,6 +76,7 @@ abstract class Routes {
     termsAndConditionView,
     adminViewRoute,
     webViewWidgetRoute,
+    upiPayment,
   };
 }
 

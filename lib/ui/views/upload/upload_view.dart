@@ -1,8 +1,8 @@
 import 'package:FSOUNotes/misc/constants.dart';
 import 'package:FSOUNotes/enums/enums.dart';
-import 'package:FSOUNotes/models/course_info.dart';
+import 'package:FSOUNotes/misc/course_info.dart';
 import 'package:FSOUNotes/ui/shared/app_config.dart';
-import 'package:FSOUNotes/ui/views/all_documents/upload/upload_viewmodel.dart';
+import 'package:FSOUNotes/ui/views/upload/upload_viewmodel.dart';
 import 'package:FSOUNotes/ui/widgets/dumb_widgets/SaveButtonView.dart';
 import 'package:FSOUNotes/ui/widgets/dumb_widgets/TextFieldView.dart';
 import 'package:flutter/material.dart';

@@ -28,7 +28,8 @@ class LinksTileView extends StatelessWidget {
                   const EdgeInsets.symmetric(horizontal: 12.0, vertical: 5),
               child: ExpansionTileCard(
                 elevation: 5,
-                contentPadding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 5),
+                contentPadding:
+                    const EdgeInsets.symmetric(horizontal: 12.0, vertical: 5),
                 baseColor: AppStateNotifier.isDarkModeOn
                     ? Theme.of(context).colorScheme.background
                     : Colors.grey[100],
@@ -119,27 +120,22 @@ class LinksTileView extends StatelessWidget {
                           SizedBox(
                             height: 10,
                           ),
-                          RichText(
-                            text: TextSpan(
-                              children: [
-                                TextSpan(
-                                  text: 'Link :',
-                                  style: new TextStyle(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .primary),
-                                ),
-                                TextSpan(
-                                  text: url,
-                                  style: TextStyle(color: Colors.blue),
-                                  recognizer: TapGestureRecognizer()
-                                    ..onTap = () {
-                                      model.launchURL(url);
-                                    },
-                                ),
-                              ],
+                          Align(
+                            alignment: Alignment.center,
+                            child: FlatButton(
+                              color: Theme.of(context).primaryColor,
+                              child: Text(
+                                'Open Link',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .subtitle1
+                                    .copyWith(color: Colors.white),
+                              ),
+                              onPressed: () {
+                                model.openLink(url);
+                              },
                             ),
-                          ),
+                          )
                         ],
                       ),
                     ),

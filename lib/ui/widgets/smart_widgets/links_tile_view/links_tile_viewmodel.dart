@@ -1,5 +1,6 @@
 import 'package:FSOUNotes/models/document.dart';
 import 'package:FSOUNotes/services/funtional_services/cloud_storage_service.dart';
+import 'package:googleapis/chat/v1.dart';
 import 'package:stacked/stacked.dart';
 import 'package:FSOUNotes/app/locator.dart';
 import 'package:FSOUNotes/models/report.dart';
@@ -12,41 +13,64 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class LinksTileViewModel extends BaseViewModel{
-
+class LinksTileViewModel extends BaseViewModel {
   FirestoreService _firestoreService = locator<FirestoreService>();
-  AuthenticationService _authenticationService = locator<AuthenticationService>();
-  SharedPreferencesService _sharedPreferencesService = locator<SharedPreferencesService>();
+  AuthenticationService _authenticationService =
+      locator<AuthenticationService>();
+  SharedPreferencesService _sharedPreferencesService =
+      locator<SharedPreferencesService>();
   ReportsService _reportsService = locator<ReportsService>();
   CloudStorageService _cloudStorageService = locator<CloudStorageService>();
   DialogService _dialogService = locator<DialogService>();
 
   bool get isAdmin => _authenticationService.user.isAdmin;
 
-
-  void reportNote({@required AbstractDocument doc}) async{
+  void reportNote({@required AbstractDocument doc}) async {
     setBusy(true);
-    Report report = Report(doc.id, doc.subjectName, doc.type, doc.title, _authenticationService.user.email);
-    var dialogResult = await _dialogService.showConfirmationDialog(title:"Are You Sure?",description: "Are you sure you want to report this link?\nUnnecessary reporting may result in a ban from the application!",cancelTitle: "NO",confirmationTitle: "YES");
-  if(!dialogResult.confirmed){setBusy(false);return;}
+    Report report = Report(doc.id, doc.subjectName, doc.type, doc.title,
+        _authenticationService.user.email);
+    var dialogResult = await _dialogService.showConfirmationDialog(
+        title: "Are You Sure?",
+        description:
+            "Are you sure you want to report this link?\nUnnecessary reporting may result in a ban from the application!",
+        cancelTitle: "NO",
+        confirmationTitle: "YES");
+    if (!dialogResult.confirmed) {
+      setBusy(false);
+      return;
+    }
     var result = await _reportsService.addReport(report);
-    if(result is String){_dialogService.showDialog(title: "Thank you for reporting" , description: result);}
-    else{
-      await _firestoreService.reportNote(report: report,doc:doc);
+    if (result is String) {
+      _dialogService.showDialog(
+          title: "Thank you for reporting", description: result);
+    } else {
+      await _firestoreService.reportNote(report: report, doc: doc);
       Fluttertoast.showToast(
-        msg: "Your report has been recorded. The admins will look into this.",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.CENTER,
-        timeInSecForIosWeb: 1,
-        backgroundColor: Colors.red,
-        textColor: Colors.white,
-        fontSize: 16.0
-    );
+          msg: "Your report has been recorded. The admins will look into this.",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0);
     }
     setBusy(false);
   }
 
-   launchURL(String url) async {
+  openLink(String url) async {
+    var dialogResult = await _dialogService.showConfirmationDialog(
+        title: "Confirmation",
+        description: "Are you sure you want to open this link? $url",
+        cancelTitle: "NO",
+        confirmationTitle: "YES");
+    if (!dialogResult.confirmed) {
+      return;
+    } else {
+      launchURL(url);
+    }
+  }
+
+  launchURL(String url) async {
     if (await canLaunch(url)) {
       await launch(url);
     } else {
@@ -60,19 +84,23 @@ class LinksTileViewModel extends BaseViewModel{
         description: "You sure you want to delete this?",
         cancelTitle: "NO",
         confirmationTitle: "YES");
-    if(!result.confirmed){setBusy(false);return;}
+    if (!result.confirmed) {
+      setBusy(false);
+      return;
+    }
     setBusy(true);
     var response = await _firestoreService.deleteDocument(doc);
     setBusy(false);
-    if(response is String){_dialogService.showDialog(title:"Error",description: response);}
+    if (response is String) {
+      _dialogService.showDialog(title: "Error", description: response);
+    }
     Fluttertoast.showToast(
-          msg: "Delete hogaya , khush? baigan...",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.CENTER,
-          timeInSecForIosWeb: 1,
-          backgroundColor: Colors.red,
-          textColor: Colors.white,
-          fontSize: 16.0
-    );
+        msg: "Delete hogaya , khush? baigan...",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0);
   }
 }

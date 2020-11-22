@@ -6,6 +6,7 @@ import 'package:FSOUNotes/ui/widgets/dumb_widgets/drawer_header.dart';
 import 'package:FSOUNotes/ui/widgets/dumb_widgets/nav_item.dart';
 import 'package:FSOUNotes/ui/widgets/smart_widgets/drawer/drawer_viewmodel.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_upi/flutter_upi.dart';
 import 'package:in_app_review/in_app_review.dart';
 import 'package:open_appstore/open_appstore.dart';
 import 'package:share/share.dart';
@@ -19,7 +20,9 @@ class DrawerView extends StatelessWidget {
   Widget build(BuildContext context) {
     var subtitle1 =
         Theme.of(context).textTheme.subtitle1.copyWith(fontSize: 16);
+
     return ViewModelBuilder<DrawerViewModel>.reactive(
+        onModelReady: (model) {},
         builder: (context, model, child) => Container(
               width: App(context).appScreenWidthWithOutSafeArea(0.78),
               child: Drawer(
@@ -81,18 +84,33 @@ class DrawerView extends StatelessWidget {
                                 //   inAppReview.requestReview();
                                 // }
                               }),
-                          NavItem(
-                              Icons.arrow_drop_down_circle,
-                              "My Downloads",
-                              subtitle1,
-                              model.navigateToDownloadScreen,
-                              Document.None),
+                          // NavItem(
+                          //     Icons.arrow_drop_down_circle,
+                          //     "My Downloads",
+                          //     subtitle1,
+                          //     model.navigateToDownloadScreen,
+                          //     Document.None),
                           NavItem(
                               Icons.file_upload,
                               "Upload",
                               subtitle1,
                               model.navigateToUserUploadScreen,
                               Document.Drawer),
+                          // ListTile(
+                          //     leading: SizedBox(
+                          //       height: 30,
+                          //       width: 40,
+                          //       child: ClipRRect(
+                          //           child: Image.asset(
+                          //               "assets/images/donate-icon.png")
+                          //           //)
+                          //           ),
+                          //     ),
+                          //     title: Text(
+                          //       "Donate",
+                          //       style: subtitle1,
+                          //     ),
+                          //     onTap: model.navigateToDonateScreen),
                           if (model.isAdmin)
                             NavItem(
                                 Icons.equalizer,
