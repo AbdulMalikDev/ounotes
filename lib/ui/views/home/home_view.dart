@@ -17,7 +17,8 @@ class HomeView extends StatelessWidget {
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
     return ViewModelBuilder<HomeViewModel>.reactive(
-      onModelReady: (model) {
+      onModelReady: (model) async {
+        await model.admobService.hideNotesViewBanner();
         model.showIntroDialog(context);
       
       },

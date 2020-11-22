@@ -81,251 +81,268 @@ class NotesTileView extends StatelessWidget {
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: <Widget>[
-                            SizedBox(
-                              width: 10,
-                            ),
-                            Column(
-                              children: <Widget>[
-                                Container(
-                                  margin: EdgeInsets.only(right: 25),
-                                  height: App(context)
-                                      .appScreenHeightWithOutSafeArea(0.11),
-                                  width: App(context)
-                                      .appScreenWidthWithOutSafeArea(0.2),
-                                  alignment: Alignment.center,
-                                  decoration: BoxDecoration(
-                                    image: DecorationImage(
-                                      image: AssetImage(
-                                        'assets/images/pdf.png',
-                                      ),
-                                      // colorFilter: ColorFilter.mode(
-                                      //     Colors.black.withOpacity(0.1), BlendMode.dstATop),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Padding(
-                              padding: EdgeInsets.symmetric(vertical: 10),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                        FittedBox(
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: <Widget>[
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Column(
                                 children: <Widget>[
-                                  Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceAround,
-                                    children: <Widget>[
-                                      Container(
-                                        width: 160,
-                                        child: Row(
-                                          children: <Widget>[
-                                            Container(
-                                              constraints:
-                                                  model.isnotedownloaded
-                                                      ? BoxConstraints(
-                                                          maxWidth: 140)
-                                                      : BoxConstraints(
-                                                          maxWidth: 160),
-                                              child: Text(
-                                                title,
-                                                overflow: TextOverflow.clip,
-                                                style: TextStyle(
-                                                    color: primary,
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 18),
-                                              ),
-                                            ),
-                                          ],
+                                  Container(
+                                    margin: EdgeInsets.only(right: 25),
+                                    height: App(context)
+                                        .appScreenHeightWithOutSafeArea(0.11),
+                                    width: App(context)
+                                        .appScreenWidthWithOutSafeArea(0.2),
+                                    alignment: Alignment.center,
+                                    decoration: BoxDecoration(
+                                      image: DecorationImage(
+                                        image: AssetImage(
+                                          'assets/images/pdf.png',
                                         ),
+                                        // colorFilter: ColorFilter.mode(
+                                        //     Colors.black.withOpacity(0.1), BlendMode.dstATop),
                                       ),
-                                      IconButton(
-                                        padding: EdgeInsets.zero,
-                                        icon: Icon(
-                                          MdiIcons.shareOutline,
-                                          color: theme.primaryColor,
-                                        ),
-                                        onPressed: () {
-                                          final RenderBox box =
-                                              context.findRenderObject();
-                                          Share.share(
-                                              "Notes Name: ${note.title}\n\nSubject Name: ${note.subjectName}\n\nLink:${note.GDriveLink}\n\nFind Latest Notes | Question Papers | Syllabus | Resources for Osmania University at the OU NOTES App\n\nhttps://play.google.com/store/apps/details?id=com.notes.ounotes",
-                                              sharePositionOrigin:
-                                                  box.localToGlobal(
-                                                          Offset.zero) &
-                                                      box.size);
-                                        },
-                                      ),
-                                      Flexible(
-                                        child: PopupMenuButton(
-                                          padding: EdgeInsets.zero,
-                                          onSelected: (Menu selectedValue) {
-                                            if (selectedValue == Menu.Report) {
-                                              model.reportNote(
-                                                doc: note,
-                                                id: note.id,
-                                                subjectName: note.subjectName,
-                                                title: note.title,
-                                                type: Constants.notes,
-                                              );
-                                            }
-                                          },
-                                          icon: Icon(Icons.more_vert),
-                                          itemBuilder: (_) => [
-                                            PopupMenuItem(
-                                              child: Text('Report'),
-                                              value: Menu.Report,
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    height: 6,
-                                  ),
-                                  Row(
-                                    children: <Widget>[
-                                      Icon(
-                                        Icons.person,
-                                        color: secondary,
-                                        size: 20,
-                                      ),
-                                      SizedBox(
-                                        width: 5,
-                                      ),
-                                      Text("Author :$author",
-                                          style: TextStyle(
-                                              color: primary,
-                                              fontSize: 13,
-                                              letterSpacing: .3)),
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    height: 6,
-                                  ),
-                                  Row(
-                                    children: <Widget>[
-                                      Icon(
-                                        Icons.calendar_today,
-                                        color: secondary,
-                                        size: 20,
-                                      ),
-                                      SizedBox(
-                                        width: 5,
-                                      ),
-                                      Text("Upload Date :$dateString",
-                                          style: TextStyle(
-                                              color: primary,
-                                              fontSize: 13,
-                                              letterSpacing: .3)),
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    height: 6,
-                                  ),
-                                  Row(
-                                    children: <Widget>[
-                                      Icon(
-                                        Icons.remove_red_eye,
-                                        color: secondary,
-                                        size: 20,
-                                      ),
-                                      SizedBox(
-                                        width: 5,
-                                      ),
-                                      Text(
-                                        view.toString(),
-                                        style: TextStyle(
-                                            color: primary,
-                                            fontSize: 13,
-                                            letterSpacing: .3),
-                                      ),
-                                      SizedBox(
-                                        width: 10,
-                                      ),
-                                      Text(
-                                        size,
-                                        style: TextStyle(
-                                            color: primary,
-                                            fontSize: 13,
-                                            letterSpacing: .3),
-                                      ),
-                                      SizedBox(
-                                        width: 15,
-                                      ),
-                                      GestureDetector(
-                                        onTap: () {
-                                          model.handleVotes(model.vote,
-                                              Constants.upvote, note);
-                                        },
-                                        child: Container(
-                                          width: 30,
-                                          child: IconButton(
-                                              padding: EdgeInsets.all(0.0),
-                                              icon: FaIcon(FontAwesomeIcons
-                                                  .longArrowAltUp),
-                                              color:
-                                                  model.vote == Constants.upvote
-                                                      ? Colors.green
-                                                      : Colors.white,
-                                              iconSize: 30,
-                                              onPressed: () {
-                                                model.handleVotes(model.vote,
-                                                    Constants.upvote, note);
-                                              }),
-                                        ),
-                                      ),
-                                      GestureDetector(
-                                        onTap: () {
-                                          model.handleVotes(model.vote,
-                                              Constants.downvote, note);
-                                        },
-                                        child: Container(
-                                          width: 30,
-                                          child: IconButton(
-                                              icon: FaIcon(FontAwesomeIcons
-                                                  .longArrowAltDown),
-                                              color: model.vote ==
-                                                      Constants.downvote
-                                                  ? Colors.red
-                                                  : Colors.white,
-                                              iconSize: 30,
-                                              onPressed: () {
-                                                model.handleVotes(model.vote,
-                                                    Constants.downvote, note);
-                                              }),
-                                        ),
-                                      ),
-                                      model.isBusy
-                                          ? circularProgress()
-                                          : Container(
-                                              height: 20,
-                                              width: 20,
-                                              child: FittedBox(
-                                                child: Text(
-                                                  model.noofvotes.toString(),
-                                                  style: theme
-                                                      .textTheme.subtitle1
-                                                      .copyWith(fontSize: 18),
-                                                ),
-                                              ),
-                                            ),
-                                      SizedBox(
-                                        width: 10,
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    height: 20,
+                                    ),
                                   ),
                                 ],
                               ),
-                            )
-                          ],
+                              Padding(
+                                padding: EdgeInsets.symmetric(vertical: 10),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceAround,
+                                      children: <Widget>[
+                                        Container(
+                                          width: 160,
+                                          child: Row(
+                                            children: <Widget>[
+                                              Container(
+                                                constraints:
+                                                    model.isnotedownloaded
+                                                        ? BoxConstraints(
+                                                            maxWidth: 140)
+                                                        : BoxConstraints(
+                                                            maxWidth: 160),
+                                                child: Text(
+                                                  title,
+                                                  overflow: TextOverflow.clip,
+                                                  style: TextStyle(
+                                                      color: primary,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 18),
+                                                ),
+                                              ),
+                                              model.isnotedownloaded
+                                                  ? SizedBox(
+                                                      width: 10,
+                                                    )
+                                                  : SizedBox(),
+                                              model.isnotedownloaded
+                                                  ? Icon(
+                                                      Icons.done_all,
+                                                      color:
+                                                          theme.iconTheme.color,
+                                                      size: 18,
+                                                    )
+                                                  : SizedBox(),
+                                            ],
+                                          ),
+                                        ),
+                                        IconButton(
+                                          padding: EdgeInsets.zero,
+                                          icon: Icon(
+                                            MdiIcons.shareOutline,
+                                            color: theme.primaryColor,
+                                          ),
+                                          onPressed: () {
+                                            final RenderBox box =
+                                                context.findRenderObject();
+                                            Share.share(
+                                                "Notes Name: ${note.title}\n\nSubject Name: ${note.subjectName}\n\nLink:${note.GDriveLink}\n\nFind Latest Notes | Question Papers | Syllabus | Resources for Osmania University at the OU NOTES App\n\nhttps://play.google.com/store/apps/details?id=com.notes.ounotes",
+                                                sharePositionOrigin:
+                                                    box.localToGlobal(
+                                                            Offset.zero) &
+                                                        box.size);
+                                          },
+                                        ),
+                                        Flexible(
+                                          child: PopupMenuButton(
+                                            padding: EdgeInsets.zero,
+                                            onSelected: (Menu selectedValue) {
+                                              if (selectedValue ==
+                                                  Menu.Report) {
+                                                model.reportNote(
+                                                  doc: note,
+                                                  id: note.id,
+                                                  subjectName: note.subjectName,
+                                                  title: note.title,
+                                                  type: Constants.notes,
+                                                );
+                                              }
+                                            },
+                                            icon: Icon(Icons.more_vert),
+                                            itemBuilder: (_) => [
+                                              PopupMenuItem(
+                                                child: Text('Report'),
+                                                value: Menu.Report,
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      height: 6,
+                                    ),
+                                    Row(
+                                      children: <Widget>[
+                                        Icon(
+                                          Icons.person,
+                                          color: secondary,
+                                          size: 20,
+                                        ),
+                                        SizedBox(
+                                          width: 5,
+                                        ),
+                                        Text("Author :$author",
+                                            style: TextStyle(
+                                                color: primary,
+                                                fontSize: 13,
+                                                letterSpacing: .3)),
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      height: 6,
+                                    ),
+                                    Row(
+                                      children: <Widget>[
+                                        Icon(
+                                          Icons.calendar_today,
+                                          color: secondary,
+                                          size: 20,
+                                        ),
+                                        SizedBox(
+                                          width: 5,
+                                        ),
+                                        Text("Upload Date :$dateString",
+                                            style: TextStyle(
+                                                color: primary,
+                                                fontSize: 13,
+                                                letterSpacing: .3)),
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      height: 6,
+                                    ),
+                                    Row(
+                                      children: <Widget>[
+                                        Icon(
+                                          Icons.remove_red_eye,
+                                          color: secondary,
+                                          size: 20,
+                                        ),
+                                        SizedBox(
+                                          width: 5,
+                                        ),
+                                        Text(
+                                          view.toString(),
+                                          style: TextStyle(
+                                              color: primary,
+                                              fontSize: 13,
+                                              letterSpacing: .3),
+                                        ),
+                                        SizedBox(
+                                          width: 10,
+                                        ),
+                                        Text(
+                                          size,
+                                          style: TextStyle(
+                                              color: primary,
+                                              fontSize: 13,
+                                              letterSpacing: .3),
+                                        ),
+                                        SizedBox(
+                                          width: 15,
+                                        ),
+                                        GestureDetector(
+                                          onTap: () {
+                                            model.handleVotes(model.vote,
+                                                Constants.upvote, note);
+                                          },
+                                          child: Container(
+                                            width: 30,
+                                            child: IconButton(
+                                                padding: EdgeInsets.all(0.0),
+                                                icon: FaIcon(FontAwesomeIcons
+                                                    .longArrowAltUp),
+                                                color: model.vote ==
+                                                        Constants.upvote
+                                                    ? Colors.green
+                                                    : Colors.white,
+                                                iconSize: 30,
+                                                onPressed: () {
+                                                  model.handleVotes(model.vote,
+                                                      Constants.upvote, note);
+                                                }),
+                                          ),
+                                        ),
+                                        GestureDetector(
+                                          onTap: () {
+                                            model.handleVotes(model.vote,
+                                                Constants.downvote, note);
+                                          },
+                                          child: Container(
+                                            width: 30,
+                                            child: IconButton(
+                                                icon: FaIcon(FontAwesomeIcons
+                                                    .longArrowAltDown),
+                                                color: model.vote ==
+                                                        Constants.downvote
+                                                    ? Colors.red
+                                                    : Colors.white,
+                                                iconSize: 30,
+                                                onPressed: () {
+                                                  model.handleVotes(model.vote,
+                                                      Constants.downvote, note);
+                                                }),
+                                          ),
+                                        ),
+                                        model.isBusy
+                                            ? circularProgress()
+                                            : Container(
+                                                height: 20,
+                                                width: 20,
+                                                child: FittedBox(
+                                                  child: Text(
+                                                    model.noofvotes.toString(),
+                                                    style: theme
+                                                        .textTheme.subtitle1
+                                                        .copyWith(fontSize: 18),
+                                                  ),
+                                                ),
+                                              ),
+                                        SizedBox(
+                                          width: 10,
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      height: 20,
+                                    ),
+                                  ],
+                                ),
+                              )
+                            ],
+                          ),
                         ),
                         model.isAdmin
                             ? Container(
