@@ -93,6 +93,7 @@ class _QuestionPapersViewState extends State<QuestionPapersView>
                                     child: CircularProgressIndicator(),
                                   )
                                 : ListView.builder(
+                                  padding: EdgeInsets.only(bottom:150),
                                     itemCount: model.questionPapers.length,
                                     itemBuilder:
                                         (BuildContext context, int index) {

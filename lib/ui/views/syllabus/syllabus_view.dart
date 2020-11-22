@@ -93,6 +93,7 @@ class _SyllabusViewState extends State<SyllabusView>
                                     child: CircularProgressIndicator(),
                                   )
                                 : ListView.builder(
+                                  padding: EdgeInsets.only(bottom:150),
                                     itemCount: model.syllabus.length,
                                     itemBuilder:
                                         (BuildContext context, int index) {
