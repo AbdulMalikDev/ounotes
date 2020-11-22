@@ -41,6 +41,7 @@ class _QuestionPapersViewState extends State<QuestionPapersView>
                             ? MediaQuery.of(context).size.height * 0.68 //chota
                             : MediaQuery.of(context).size.height * 0.73, //bada
 
+
                     width: double.infinity,
                     child: model.isBusy
                         ? Center(

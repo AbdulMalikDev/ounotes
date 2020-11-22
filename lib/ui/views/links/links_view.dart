@@ -100,6 +100,7 @@ class _LinksViewState extends State<LinksView>
                                       ),
                                     )
                                   : ListView.builder(
+                                    padding: EdgeInsets.only(bottom:150),
                                       itemCount: model.linksList.length,
                                       itemBuilder:
                                           (BuildContext context, int index) {

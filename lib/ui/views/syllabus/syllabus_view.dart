@@ -44,10 +44,11 @@ class _SyllabusViewState extends State<SyllabusView>
                             ? MediaQuery.of(context).size.height * 0.68 //chota
                             : MediaQuery.of(context).size.height * 0.73, //bada
 
+
                     width: double.infinity,
                     child: model.isBusy
                         ? Center(
-                            child: CircularProgressIndicator(),
+                            child: CircularProgressIndicator();
                           )
                         : ListView.builder(
                             itemCount: model.syllabus.length,
