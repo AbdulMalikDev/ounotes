@@ -69,15 +69,15 @@ class UploadLogViewModel extends FutureViewModel{
   void uploadDocument(UploadLog logItem) async {
     setBusy(true);
     GoogleDriveService _googleDriveService = locator<GoogleDriveService>();
-    if (logItem.type != Constants.notes)
+    if (logItem.type == Constants.links)
     {
-      _dialogService.showDialog(title: "ERROR" , description: "You can only upload Notes from Admin Panel not other documents");
+      _dialogService.showDialog(title: "ERROR" , description: "This is a link Bruh.");
       setBusy(false);
       return;
     }
     // since any other document except Notes do not need uploading
-    Note note = await _firestoreService.getNoteById(logItem.id);
-    String result = await _googleDriveService.processFile(note: note, addToGdrive: true);
+    dynamic doc = await _firestoreService.getDocumentById(logItem.id,Constants.getDocFromConstant(logItem.type));
+    String result = await _googleDriveService.processFile(doc: doc, document:Constants.getDocFromConstant(logItem.type) , addToGdrive: true);
     _dialogService.showDialog(title: "OUTPUT" , description: result);
     setBusy(false);
   }
@@ -87,16 +87,17 @@ class UploadLogViewModel extends FutureViewModel{
     log.e(logItem);
     log.e(logItem.type);
 
-    if (logItem.type != Constants.notes)
+    if (logItem.type == Constants.links)
     {
-      log.e("document to be deleted is not Notes type");
+      log.e("document to be deleted is a link");
       _deleteDocument(logItem);
       setBusy(false);
       return;
     }
+
     GoogleDriveService _googleDriveService = locator<GoogleDriveService>();
-    Note note = await _firestoreService.getNoteById(logItem.id);
-    String result = await _googleDriveService.processFile(note: note, addToGdrive: false);
+    dynamic doc = await _firestoreService.getDocumentById(logItem.id,Constants.getDocFromConstant(logItem.type));
+    String result = await _googleDriveService.processFile(doc: doc, document:Constants.getDocFromConstant(logItem.type) , addToGdrive: false);
     _dialogService.showDialog(title: "OUTPUT" , description: result);
     setBusy(false);
 

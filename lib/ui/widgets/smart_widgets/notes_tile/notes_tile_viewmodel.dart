@@ -241,7 +241,7 @@ class NotesTileViewModel extends BaseViewModel {
       return;
     }
     setBusy(true);
-    var response = await _googleDriveService.deleteFile(note: note);
+    var response = await _googleDriveService.deleteFile(doc: note);
     setBusy(false);
     if (response is String) {
       _dialogService.showDialog(title: "Error", description: response);

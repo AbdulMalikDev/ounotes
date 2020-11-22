@@ -589,4 +589,40 @@ class FirestoreService {
     return null;
   }
 
+  updateDocument(dynamic doc,Document document) async {
+
+    switch(document){
+      case Document.Notes:
+        await this.updateNoteInFirebase(doc);
+        break;
+      case Document.QuestionPapers:
+        await this.updateQuestionPaperInFirebase(doc);
+        break;
+      case Document.Syllabus:
+        await this.updateSyllabusInFirebase(doc);
+        break;
+      default:
+        break;
+    }
+
+  }
+
+  getDocumentById(String id , Document document) async {
+
+    switch(document){
+      case Document.Notes:
+        return await this.getNoteById(id);
+        break;
+      case Document.QuestionPapers:
+        return await this.getQuestionPaperById(id);
+        break;
+      case Document.Syllabus:
+        return await this.getSyllabusById(id);
+        break;
+      default:
+        break;
+    }
+
+  }
+
 }

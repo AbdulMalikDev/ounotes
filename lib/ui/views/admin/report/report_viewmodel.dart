@@ -97,16 +97,16 @@ class ReportViewModel extends FutureViewModel {
         log.e(report);
         log.e(report.type);
 
-        if (report.type != Constants.notes)
+        if (report.type == Constants.links)
         {
-          log.e("document to be deleted is not Notes type");
+          log.e("document to be deleted is link type");
           _deleteDocument(report);
           setBusy(false);
           return;
         }
         GoogleDriveService _googleDriveService = locator<GoogleDriveService>();
-        Note note = await _firestoreService.getNoteById(report.id);
-        String result = await _googleDriveService.processFile(note: note, addToGdrive: false);
+        dynamic doc = await _firestoreService.getDocumentById(report.id,Constants.getDocFromConstant(report.type));
+        String result = await _googleDriveService.processFile(doc: doc, document:Constants.getDocFromConstant(report.type) , addToGdrive: false);
         _dialogService.showDialog(title: "OUTPUT" , description: result);
         setBusy(false);
       
