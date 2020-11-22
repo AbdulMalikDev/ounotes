@@ -94,6 +94,43 @@ class _ReportViewState extends State<ReportView>
                                               padding: const EdgeInsets.all(8.0),
                                               child: RaisedButton(
                                               color: Colors.teal,
+                                          child: FittedBox(child: Text("VIEW",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),)),
+                                          onPressed: () {
+                                            model.viewDocument(report);
+                                          },
+                                        ),
+                                            )),
+                                        // Expanded(
+                                        //     child: Padding(
+                                        //       padding: const EdgeInsets.all(8.0),
+                                        //       child: RaisedButton(
+                                        //       color: Colors.blue[700],
+                                        //   child: Text("DELETE",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),),
+                                        //   onPressed: () {
+                                        //     model.deny(report);
+                                        //   },
+                                        // ),
+                                        //     )),
+                                        Expanded(
+                                            child: Padding(
+                                              padding: const EdgeInsets.all(8.0),
+                                              child: RaisedButton(
+                                              color: Colors.red,
+                                          child: FittedBox(child: Text("DELETE",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),)),
+                                          onPressed: () {
+                                            model.ban(report);
+                                          },
+                                        ),
+                                            )),
+                                      ],
+                                    ),
+                                    Row(
+                                      children: [
+                                        Expanded(
+                                            child: Padding(
+                                              padding: const EdgeInsets.all(8.0),
+                                              child: RaisedButton(
+                                              color: Colors.teal,
                                           child: FittedBox(child: Text("ACCEPT",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),)),
                                           onPressed: () {
                                             model.accept(report);

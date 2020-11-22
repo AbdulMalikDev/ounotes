@@ -1,5 +1,6 @@
 import 'package:FSOUNotes/models/document.dart';
 import 'package:FSOUNotes/services/funtional_services/cloud_storage_service.dart';
+import 'package:FSOUNotes/services/funtional_services/google_drive_service.dart';
 import 'package:stacked/stacked.dart';
 import 'package:FSOUNotes/app/locator.dart';
 import 'package:FSOUNotes/models/report.dart';
@@ -24,6 +25,7 @@ class QuestionPaperTileViewModel extends BaseViewModel {
   ReportsService _reportsService = locator<ReportsService>();
   DialogService _dialogService = locator<DialogService>();
   CloudStorageService _cloudStorageService = locator<CloudStorageService>();
+  GoogleDriveService _googleDriveService = locator<GoogleDriveService>();
 
   bool get isAdmin => _authenticationService.user.isAdmin;
   bool _isQPdownloaded = false;
@@ -81,7 +83,7 @@ class QuestionPaperTileViewModel extends BaseViewModel {
       return;
     }
     setBusy(true);
-    var response = await _cloudStorageService.deleteDocument(doc);
+    var response = await _googleDriveService.deleteFile(doc: doc);
     setBusy(false);
     if (response is String) {
       _dialogService.showDialog(title: "Error", description: response);

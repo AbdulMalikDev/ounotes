@@ -8,7 +8,9 @@ import 'package:FSOUNotes/enums/constants.dart';
 import 'package:FSOUNotes/enums/enums.dart';
 import 'package:FSOUNotes/models/document.dart';
 import 'package:FSOUNotes/models/notes.dart';
+import 'package:FSOUNotes/models/question_paper.dart';
 import 'package:FSOUNotes/models/subject.dart';
+import 'package:FSOUNotes/models/syllabus.dart';
 import 'package:FSOUNotes/services/funtional_services/authentication_service.dart';
 import 'package:FSOUNotes/services/funtional_services/cloud_storage_service.dart';
 import 'package:FSOUNotes/services/funtional_services/db_service.dart';
@@ -56,63 +58,64 @@ class GoogleDriveService {
   Logger log = getLogger("GoogleDriveService");
 
   processFile({
-    @required Note note,
+    @required dynamic doc,
     @required bool addToGdrive,
+    @required Document document,
   }) async {
     log.i("Uploading File from Firebase Storage to Google Drive");
     try {
       log.e("Should this be added to GDrive : $addToGdrive");
       if (addToGdrive){
 
-      // initialize http client and GDrive API
-      var AuthHeaders = await _authenticationService.refreshSignInCredentials();
-      var client = GoogleHttpClient(AuthHeaders);  
-      var drive = ga.DriveApi(client);
-      log.e(AuthHeaders);  
-      
-      // retrieve subject and notesmodel
-      // log.e(_subjectsService.allSubjects);
-      log.e(note.subjectName);
-      Subject subject = _subjectsService.getSubjectByName(note.subjectName);
-      log.e(subject);
-      if (subject == null) {log.e("Subject is Null");return;}
-      NotesViewModel notesViewModel = NotesViewModel();
-      // Download File from Firebase
-      ga.File fileToUpload = ga.File();  
-      File file = await notesViewModel.downloadFile(notesName: note.title , subName: note.subjectName , type: Constants.notes);
-      log.e(file);
-      // Upload File To GDrive
-      fileToUpload.parents = [subject.gdriveNotesFolderID];  
-      fileToUpload.name = note.title; 
-      print("Uploading file..........."); 
-      var response = await drive.files.create(  
-        fileToUpload, 
-        uploadMedia: ga.Media(file.openRead(), file.lengthSync()),  
-      );
+        // initialize http client and GDrive API
+        var AuthHeaders = await _authenticationService.refreshSignInCredentials();
+        var client = GoogleHttpClient(AuthHeaders);  
+        var drive = ga.DriveApi(client);
+        log.e(AuthHeaders);  
+        
+        // retrieve subject and notesmodel
+        Subject subject = _subjectsService.getSubjectByName(doc.subjectName);
+        String subjectSubFolderID = _getFolderIDForType(subject,document);
+        if (subject == null) {log.e("Subject is Null");return;}
+        NotesViewModel notesViewModel = NotesViewModel();
+        // Download File from Firebase
+        ga.File fileToUpload = ga.File();  
+        File file = await notesViewModel.downloadFile(notesName: doc.title , subName: doc.subjectName , type: Constants.getConstantFromDoc(document));
+        log.e(file);
+        // Upload File To GDrive
+        fileToUpload.parents = [subjectSubFolderID];  
+        fileToUpload.name = doc.title;
+        fileToUpload.copyRequiresWriterPermission = true; 
+        print("Uploading file..........."); 
+        var response = await drive.files.create(  
+          fileToUpload, 
+          uploadMedia: ga.Media(file.openRead(), file.lengthSync()),  
+        );
 
-      // Create Gdrive View Link
-      String GDrive_URL = "https://drive.google.com/file/d/${response.id}/view?usp=sharing";  
-      log.w(GDrive_URL);
+        // Create Gdrive View Link
+        String GDrive_URL = "https://drive.google.com/file/d/${response.id}/view?usp=sharing";  
+        log.w(GDrive_URL);
 
-      // add the link to the note object
-      note.setGdriveDownloadLink(GDrive_URL);
-      log.w(note.toJson());
+        // add the link to the document
+        doc = _setLinkToDocument(doc,GDrive_URL,response.id,subjectSubFolderID,document);
+        
+        log.w(doc.toJson());
 
-      // update in firestore with GDrive Link
-      _firestoreService.updateNoteInFirebase(note.toJson());
+        // update in firestore with GDrive Link
+        _firestoreService.updateDocument(doc,document);
 
       }
 
       // if accidentally added to GDrive delete it from there too
       String result;
-      if ( !addToGdrive && (note.GDriveLink != null && note.GDriveLink.length != 0))
+      if ( !addToGdrive && (doc.GDriveLink != null && doc.GDriveLink.length != 0))
       {
         log.w("File being deleted from GDrive");
-        result = await this.deleteFile(note: note);
+        result = await this.deleteFile(doc:doc);
       }
 
       // Delete it from Firebase Storage
-      _cloudStorageService.deleteDocument(note,addedToGdrive:addToGdrive);
+      _cloudStorageService.deleteDocument(doc,addedToGdrive:addToGdrive);
 
       return addToGdrive ? "upload successful" : result ?? "delete successful";
     } catch (e) {
@@ -120,23 +123,17 @@ class GoogleDriveService {
     }
   }
 
-  Future<String> deleteFile({Note note}) async {
+  Future<String> deleteFile({dynamic doc}) async {
     try{
       log.e("File being deleted");
       // initialize http client and GDrive API
-      SharedPreferences pref = await _sharedPreferencesService.store();
       var AuthHeaders = await _authenticationService.refreshSignInCredentials();
       var client = GoogleHttpClient(AuthHeaders);
       log.e(_authenticationService.user.googleSignInAuthHeaders);  
       var drive = ga.DriveApi(client);
-      
-      //Extract File ID
-      String url = note.GDriveLink.split("https://drive.google.com/file/d/")[1];
-      String FileID = url.split("/view?usp=sharing")[0];
 
-      
-      var response = await drive.files.delete(FileID);
-      await _firestoreService.deleteDocument(note);
+      var response = await drive.files.delete(doc.GDriveID);
+      await _firestoreService.deleteDocument(doc);
       return "delete successful";
 
     }catch (e) {
@@ -153,6 +150,50 @@ class GoogleDriveService {
     error = e.toString();
     log.e(error);
     return error;
+  }
+
+  String _getFolderIDForType(Subject subject, Document document) {
+    switch(document){
+      case Document.Notes:
+        return subject.gdriveNotesFolderID;
+        break;
+      case Document.QuestionPapers:
+        return subject.gdriveQuestionPapersFolderID;
+        break;
+      case Document.Syllabus:
+        return subject.gdriveSyllabusFolderID;
+        break;
+      default:
+        break;
+    }
+  }
+
+  _setLinkToDocument(dynamic doc,String gDrive_URL, String id, String subjectSubFolderID, Document document) {
+    switch(document){
+      case Document.Notes:
+        Note note = doc;
+        note.setGdriveDownloadLink(gDrive_URL);
+        note.setGdriveID(id);
+        note.setGDriveNotesFolderID(subjectSubFolderID);
+        return note;
+        break;
+      case Document.QuestionPapers:
+        QuestionPaper paper = doc;
+        paper.setGdriveDownloadLink(gDrive_URL);
+        paper.setGdriveID(id);
+        paper.setGDriveQuestionPapersFolderID(subjectSubFolderID);
+        return paper;
+        break;
+      case Document.Syllabus:
+        Syllabus syllabus = doc;
+        syllabus.setGdriveDownloadLink(gDrive_URL);
+        syllabus.setGdriveID(id);
+        syllabus.setGDriveSyllabusFolderID(subjectSubFolderID);
+        return syllabus;
+        break;
+      default:
+        break;
+    }
   }
 }
 

@@ -118,9 +118,30 @@ class AuthenticationService {
   
   // *For Admins
   refreshSignInCredentials() async {
-      googleSignIn = GoogleSignIn(scopes: ['https://www.googleapis.com/auth/drive']);
-      GoogleSignInAccount ga = await googleSignIn.signInSilently().whenComplete(() => () {});
+      googleSignIn = GoogleSignIn(scopes: ['https://www.googleapis.com/auth/drive.file',
+    'https://www.googleapis.com/auth/drive',
+    'https://www.googleapis.com/auth/drive.file',
+    'https://www.googleapis.com/auth/drive.metadata'
+  ]);
+      GoogleSignInAccount ga = await googleSignIn.signIn().whenComplete(() => () {});
       return ga.authHeaders;
+  }
+
+  refreshtoken() async {
+     final GoogleSignInAccount googleSignInAccount =
+        await googleSignIn.signInSilently();
+    final GoogleSignInAuthentication googleSignInAuthentication =
+        await googleSignInAccount.authentication;
+
+    final AuthCredential credential = GoogleAuthProvider.getCredential(
+      accessToken: googleSignInAuthentication.accessToken,
+      idToken: googleSignInAuthentication.idToken,
+    );
+
+    await firebaseAuth.signInWithCredential(credential);
+
+    return googleSignInAccount.authHeaders; //new token
+
   }
 
   Future<User> getUser() async {

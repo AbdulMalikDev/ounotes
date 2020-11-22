@@ -7,6 +7,7 @@ import 'package:FSOUNotes/models/link.dart';
 import 'package:FSOUNotes/models/notes.dart';
 import 'package:FSOUNotes/models/question_paper.dart';
 import 'package:FSOUNotes/models/syllabus.dart';
+import 'package:FSOUNotes/services/funtional_services/analytics_service.dart';
 import 'package:FSOUNotes/services/funtional_services/authentication_service.dart';
 import 'package:FSOUNotes/services/funtional_services/firestore_service.dart';
 import 'package:FSOUNotes/services/funtional_services/google_drive_service.dart';
@@ -21,6 +22,7 @@ class UploadLogViewModel extends FutureViewModel{
  FirestoreService _firestoreService = locator<FirestoreService>();
  DialogService _dialogService = locator<DialogService>();
  AuthenticationService _authenticationService = locator<AuthenticationService>();
+ AnalyticsService _analyticsService = locator<AnalyticsService>();
  Logger log = getLogger("UploadLogViewModel");
 
   List<UploadLog> _logs;
@@ -67,15 +69,15 @@ class UploadLogViewModel extends FutureViewModel{
   void uploadDocument(UploadLog logItem) async {
     setBusy(true);
     GoogleDriveService _googleDriveService = locator<GoogleDriveService>();
-    if (logItem.type != Constants.notes)
+    if (logItem.type == Constants.links)
     {
-      _dialogService.showDialog(title: "ERROR" , description: "You can only upload Notes from Admin Panel not other documents");
+      _dialogService.showDialog(title: "ERROR" , description: "This is a link Bruh.");
       setBusy(false);
       return;
     }
     // since any other document except Notes do not need uploading
-    Note note = await _firestoreService.getNoteById(logItem.id);
-    String result = await _googleDriveService.processFile(note: note, addToGdrive: true);
+    dynamic doc = await _firestoreService.getDocumentById(logItem.id,Constants.getDocFromConstant(logItem.type));
+    String result = await _googleDriveService.processFile(doc: doc, document:Constants.getDocFromConstant(logItem.type) , addToGdrive: true);
     _dialogService.showDialog(title: "OUTPUT" , description: result);
     setBusy(false);
   }
@@ -85,16 +87,17 @@ class UploadLogViewModel extends FutureViewModel{
     log.e(logItem);
     log.e(logItem.type);
 
-    if (logItem.type != Constants.notes)
+    if (logItem.type == Constants.links)
     {
-      log.e("document to be deleted is not Notes type");
+      log.e("document to be deleted is a link");
       _deleteDocument(logItem);
       setBusy(false);
       return;
     }
+
     GoogleDriveService _googleDriveService = locator<GoogleDriveService>();
-    Note note = await _firestoreService.getNoteById(logItem.id);
-    String result = await _googleDriveService.processFile(note: note, addToGdrive: false);
+    dynamic doc = await _firestoreService.getDocumentById(logItem.id,Constants.getDocFromConstant(logItem.type));
+    String result = await _googleDriveService.processFile(doc: doc, document:Constants.getDocFromConstant(logItem.type) , addToGdrive: false);
     _dialogService.showDialog(title: "OUTPUT" , description: result);
     setBusy(false);
 
@@ -126,5 +129,33 @@ class UploadLogViewModel extends FutureViewModel{
       return note.GDriveLink==null ? "NOT UPLOADED" : "UPLOADED";
     } 
     return "None";
+  }
+
+   void accept(UploadLog uploadLog) async {
+    String title = "Thank you for uploading ${uploadLog.uploader_name ?? ''} !!";
+    String message = "We have reviewed the document you have uploaded \" ${uploadLog.fileName} \" in the \" ${uploadLog.subjectName} \" subject and it is LIVE ! Thank you again for making OU Notes a better place and helping all of us !";
+    DialogResponse result = await _dialogService.showConfirmationDialog(title: "Sure?",description: "");
+    if(result.confirmed){
+    _analyticsService.sendNotification(id: uploadLog.uploader_id,message: message,title: title);
+    }
+  }
+
+
+  void deny(UploadLog uploadLog) async {
+    String title = "Thank you for uploading ${uploadLog.uploader_name ?? ''} !!";
+    String message = "We have reviewed the document you have uploaded \" ${uploadLog.fileName} \" in the \" ${uploadLog.subjectName} \" subject and the document does not match our standards. Please try again with a better document. Feel free to contact us using the feedback feature !";
+    DialogResponse result = await _dialogService.showConfirmationDialog(title: "Sure?",description: "");
+    if(result.confirmed){
+    _analyticsService.sendNotification(id: uploadLog.uploader_id,message: message,title: title);
+    }
+  }
+
+  void ban(UploadLog uploadLog) async {
+    String title = "We're Sorry !";
+    String message = "We're sad to say that you won't be allowed to report or upload any documents. Feel free to contact us using the feedback feature !";
+    DialogResponse result = await _dialogService.showConfirmationDialog(title: "Sure?",description: "");
+    if(result.confirmed){
+    _analyticsService.sendNotification(id: uploadLog.uploader_id,message: message,title: title);
+    }
   }
 }

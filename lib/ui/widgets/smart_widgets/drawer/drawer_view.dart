@@ -6,7 +6,6 @@ import 'package:FSOUNotes/ui/widgets/dumb_widgets/drawer_header.dart';
 import 'package:FSOUNotes/ui/widgets/dumb_widgets/nav_item.dart';
 import 'package:FSOUNotes/ui/widgets/smart_widgets/drawer/drawer_viewmodel.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_upi/flutter_upi.dart';
 import 'package:in_app_review/in_app_review.dart';
 import 'package:open_appstore/open_appstore.dart';
 import 'package:share/share.dart';

@@ -3,15 +3,15 @@ import 'package:flutter/material.dart';
 
 class Constants {
   //These are cloud storage constants so as to not mess up the URL while Uploading
-  static String notes = "Notes";
-  static String questionPapers = "Question Papers";
-  static String syllabus = "Syllabus";
-  static String links = "Links";
-  static String none = 'none';
-  static String upvote = 'upvote';
-  static String downvote = 'downvote';
-  static String openInBrowser = 'openInBrowser';
-  static String openInApp = 'openInApp';
+  static const String notes = "Notes";
+  static const String questionPapers = "Question Papers";
+  static const String syllabus = "Syllabus";
+  static const String links = "Links";
+  static const String none = 'none';
+  static const String upvote = 'upvote';
+  static const String downvote = 'downvote';
+  static const String openInBrowser = 'openInBrowser';
+  static const String openInApp = 'openInApp';
   static TextStyle kHintTextStyle = TextStyle(
     color: Colors.white54,
     fontFamily: 'OpenSans',
@@ -143,6 +143,41 @@ class Constants {
       ),
     ],
   );
+
+
+static getConstantFromDoc(Document document){
+  switch(document){
+    case Document.Notes:
+        return Constants.notes;
+        break;
+    case Document.QuestionPapers:
+      return Constants.questionPapers;
+      break;
+    case Document.Syllabus:
+      return Constants.syllabus;
+      break;
+    default:
+      break;
+  }
+}
+
+static Document getDocFromConstant(String constant){
+  switch(constant){
+    case Constants.notes:
+        return Document.Notes;
+        break;
+    case Constants.questionPapers:
+      return Document.QuestionPapers;
+      break;
+    case Constants.syllabus:
+      return Document.Syllabus;
+      break;
+    default:
+      break;
+  }
+}
+
+
 }
 
 //DO NOT DELETE THIS

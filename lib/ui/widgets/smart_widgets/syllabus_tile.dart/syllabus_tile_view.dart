@@ -4,6 +4,8 @@ import 'package:FSOUNotes/enums/enums.dart';
 import 'package:FSOUNotes/models/syllabus.dart';
 import 'package:FSOUNotes/ui/widgets/smart_widgets/syllabus_tile.dart/syllabus_tile_viewmodel.dart';
 import 'package:flutter/material.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:share/share.dart';
 import 'package:stacked/stacked.dart';
 import 'package:FSOUNotes/models/download.dart';
 
@@ -81,34 +83,41 @@ class SyllabusTileView extends StatelessWidget {
                                 Row(
                                   children: <Widget>[
                                     Container(
-                                      width: 180,
+                                      width: 160,
                                       child: Row(
                                         children: <Widget>[
                                           Container(
                                             constraints: model
                                                     .isSyllabusdownloaded
-                                                ? BoxConstraints(maxWidth: 150)
-                                                : BoxConstraints(maxWidth: 175),
+                                                ? BoxConstraints(maxWidth: 140)
+                                                : BoxConstraints(maxWidth: 160),
                                             child: Text(
-                                                title,
-                                                overflow: TextOverflow.ellipsis,
-                                                style: TextStyle(
-                                                    color: primary,
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 13),
-                                              ),
+                                              title,
+                                              overflow: TextOverflow.ellipsis,
+                                              style: TextStyle(
+                                                  color: primary,
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 13),
                                             ),
-                                      
-                                          model.isSyllabusdownloaded
-                                              ? FittedBox(
-                                                  child: Icon(Icons.done_all,
-                                                      color:
-                                                          theme.iconTheme.color,
-                                                      size: 18),
-                                                )
-                                              : SizedBox(),
+                                          ),
                                         ],
                                       ),
+                                    ),
+                                    IconButton(
+                                      padding: EdgeInsets.zero,
+                                      icon: Icon(
+                                        MdiIcons.shareOutline,
+                                        color: theme.primaryColor,
+                                      ),
+                                      onPressed: () {
+                                        final RenderBox box =
+                                            context.findRenderObject();
+                                        Share.share(
+                                            "Syllabus Branch: ${syllabus.branch}\n\nSubject Name: ${syllabus.subjectName}\n\nLink:${syllabus.GDriveLink}\n\nFind Latest Notes | Question Papers | Syllabus | Resources for Osmania University at the OU NOTES App\n\nhttps://play.google.com/store/apps/details?id=com.notes.ounotes",
+                                            sharePositionOrigin:
+                                                box.localToGlobal(Offset.zero) &
+                                                    box.size);
+                                      },
                                     ),
                                     PopupMenuButton(
                                       onSelected: (Menu selectedValue) {

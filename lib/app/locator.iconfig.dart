@@ -19,6 +19,7 @@ import 'package:FSOUNotes/services/state_services/links_service.dart';
 import 'package:FSOUNotes/services/state_services/notes_service.dart';
 import 'package:FSOUNotes/utils/permission_handler.dart';
 import 'package:FSOUNotes/services/state_services/question_paper_service.dart';
+import 'package:FSOUNotes/services/funtional_services/remote_config_service.dart';
 import 'package:FSOUNotes/services/state_services/report_service.dart';
 import 'package:FSOUNotes/services/funtional_services/sharedpref_service.dart';
 import 'package:FSOUNotes/services/state_services/subjects_service.dart';
@@ -45,6 +46,7 @@ void $initGetIt(GetIt g, {String environment}) {
   g.registerLazySingleton<NotesService>(() => NotesService());
   g.registerLazySingleton<PermissionHandler>(() => PermissionHandler());
   g.registerLazySingleton<QuestionPaperService>(() => QuestionPaperService());
+  g.registerLazySingleton<RemoteConfigService>(() => RemoteConfigService());
   g.registerLazySingleton<ReportsService>(() => ReportsService());
   g.registerLazySingleton<SharedPreferencesService>(
       () => SharedPreferencesService());

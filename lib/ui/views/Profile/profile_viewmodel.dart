@@ -24,7 +24,6 @@ class ProfileViewModel extends BaseViewModel {
     setBusy(true);
     SharedPreferences prefs = await _sharedPreferencesService.store();
     User user = User.fromData(json.decode(prefs.getString("current_user_is_logged_in")));
-    print(user);
     _user = user;
     setBusy(false);
     notifyListeners();

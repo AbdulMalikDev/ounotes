@@ -1,6 +1,10 @@
 import 'package:FSOUNotes/app/locator.dart';
+import 'package:FSOUNotes/models/notes.dart';
+import 'package:FSOUNotes/models/question_paper.dart';
 import 'package:FSOUNotes/models/subject.dart';
+import 'package:FSOUNotes/models/syllabus.dart';
 import 'package:FSOUNotes/services/funtional_services/analytics_service.dart';
+import 'package:FSOUNotes/services/funtional_services/firestore_service.dart';
 import 'package:FSOUNotes/services/funtional_services/sharedpref_service.dart';
 import 'package:FSOUNotes/services/state_services/subjects_service.dart';
 import 'package:flutter/cupertino.dart';
@@ -11,9 +15,13 @@ import 'package:url_launcher/url_launcher.dart';
 
 class HomeViewModel extends BaseViewModel {
   AnalyticsService _analyticsService = locator<AnalyticsService>();
+  FirestoreService _firestoreService = locator<FirestoreService>();
   SubjectsService _subjectsService = locator<SubjectsService>();
   ValueNotifier<List<Subject>> get userSubjects =>
       _subjectsService.userSubjects;
+  ValueNotifier<List<Subject>> get allSubjects =>
+      _subjectsService.allSubjects;
+  
   SharedPreferencesService _sharedPreferencesService =
       locator<SharedPreferencesService>();
 
@@ -182,4 +190,37 @@ class HomeViewModel extends BaseViewModel {
       throw 'Could not launch $url';
     }
   }
+
+
+  void updateNoteInFirebase(Note note) async {
+    await _firestoreService.updateNoteInFirebase(note);
+  }
+
+  void updateQuestionPaperInFirebase(QuestionPaper paper) async {
+    await _firestoreService.updateQuestionPaperInFirebase(paper);
+  }
+
+  void updateSyllabusInFirebase(Syllabus syllabus) async {
+    await _firestoreService.updateSyllabusInFirebase(syllabus);
+  }
+
+  void addSubjectToFirebase(Subject subject) async {
+    await _firestoreService.updateSubjectInFirebase(subject.toJson());
+  }
+
+  getNotesFromFirebase(Subject subject) async {
+    var notes = await _firestoreService.loadNotesFromFirebase(subject.name);
+    return notes;
+  }
+
+  getQuestionPapersFromFirebase(Subject subject) async {
+    var notes = await _firestoreService.loadQuestionPapersFromFirebase(subject.name);
+    return notes;
+  }
+
+  getSyllabusFromFirebase(Subject subject) async {
+    var notes = await _firestoreService.loadSyllabusFromFirebase(subject.name);
+    return notes;
+  }
+
 }

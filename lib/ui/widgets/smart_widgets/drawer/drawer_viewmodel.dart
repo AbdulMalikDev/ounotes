@@ -11,7 +11,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
-import 'package:upi_pay/upi_pay.dart';
 
 class DrawerViewModel extends BaseViewModel {
   NavigationService _navigationService = locator<NavigationService>();

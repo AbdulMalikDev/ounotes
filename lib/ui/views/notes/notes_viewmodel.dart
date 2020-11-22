@@ -145,7 +145,7 @@ class NotesViewModel extends BaseViewModel {
                               .copyWith(fontSize: 15),
                         ),
                         onPressed: () {
-                          _firestoreService.incrementView(note);
+                          _sharedPreferencesService.updateView(note.id);
                           Navigator.pop(context);
                           navigateToWebView(note);
                         }),
@@ -158,7 +158,7 @@ class NotesViewModel extends BaseViewModel {
                               .copyWith(fontSize: 15),
                         ),
                         onPressed: () {
-                          _firestoreService.incrementView(note);
+                          _sharedPreferencesService.updateView(note.id);
                           Helper.launchURL(note.GDriveLink);
                           Navigator.pop(context);
                         }),

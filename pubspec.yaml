@@ -22,69 +22,77 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  async: ^2.0.8
-  auto_route: ^0.5.0
-  awesome_dialog: ^1.1.3
-  cached_network_image: ^2.2.0+1
-  cloud_firestore: ^0.13.7
-  cuid: ^0.1.2
-  cupertino_icons: ^0.1.3
-  direct_select_flutter: ^1.0.6
-  dynamic_text_highlighting: ^2.2.0
-  expansion_tile_card: ^1.0.3
-  file_picker: ^1.12.0
-  firebase_analytics: 5.0.0
-  firebase_auth: ^0.16.1
-  firebase_storage: ^3.1.6
-  flutter_auth_buttons: ^0.6.0
-  flutter_dotenv: ^2.1.0
-  flutter_full_pdf_viewer: ^1.0.6
-  flutter_hooks: null
-  flutter_mailer: ^0.5.1
-  flutter_material_pickers: ^1.7.3
-  flutter_secure_storage: ^3.3.1+1
-  flutter_typeahead: ^1.8.1
-  flutter_upi: ^0.0.2
-  flutter_webview_plugin: ^0.3.11
+  shared_preferences: ^0.5.7+3
   fluttertoast: ^4.0.1
+  flutter_mailer: ^0.5.1
+  open_appstore: ^1.0.2
+  share: ^0.6.4+3
+  intl: ^0.16.1
   font_awesome_flutter: ^8.8.1
-  get_it: null
-  google_sign_in: ^4.5.1
+  flutter_full_pdf_viewer: ^1.0.6
+  path_provider: ^1.6.11
+  cuid: ^0.1.2
+  shimmer: ^1.1.1
+  file_picker: ^1.12.0
+  url_launcher: ^5.4.11
+  expansion_tile_card: ^1.0.3
+  flutter_typeahead: ^1.8.1
+  mime: ^0.9.6+3
+  awesome_dialog: ^1.1.3
+  lottie: ^0.4.1
+  direct_select_flutter: ^1.0.6
+  flutter_secure_storage: ^3.3.1+1
+  onesignal_flutter: ^2.6.1
+  flutter_dotenv: ^2.1.0
+  in_app_review: ^1.0.3
+  material_design_icons_flutter: ^4.0.5755
+
+  # google/firebase packages
   googleapis: ^0.54.0
   googleapis_auth: ^0.2.11
-  http: ^0.12.0+2
-  image_picker: ^0.6.7+2
-  in_app_review: ^1.0.3
-  injectable: null
-  intl: ^0.16.1
-  logger: ^0.6.0
-  lottie: ^0.4.1
-  material_design_icons_flutter: ^4.0.5755
-  mime: ^0.9.6+3
-  modal_progress_hud: ^0.1.3
-  observable_ish: null
-  onesignal_flutter: ^2.6.1
-  open_appstore: ^1.0.2
-  path_provider: ^1.6.11
-  permission_handler: ^5.0.1+1
-  share: ^0.6.4+3
-  shared_preferences: ^0.5.7+3
-  shimmer: ^1.1.1
+  flutter_webview_plugin: ^0.3.11
+  google_sign_in: ^4.5.1
+  firebase_analytics: 5.0.0
+  firebase_auth: ^0.16.1
+  cloud_firestore: ^0.13.7
+  firebase_storage: ^3.1.6
+  firebase_remote_config: 0.3.1+1
+
+  # The following adds the Cupertino Icons font to your application.
+  # Use with the CupertinoIcons class for iOS style icons.
+  cupertino_icons: ^0.1.3
+
   stacked: 1.6.0
   stacked_hooks: 0.1.1+3
   stacked_services: 0.4.4+1
-  upi_pay: ^0.2.4
-  url_launcher: ^5.4.11
+  logger: ^0.6.0
+  # http request
+  http: ^0.12.0+2
+  # async package to add additional Cancellable operations
+  async: ^2.0.8
+  image_picker: ^0.6.7+2
+  cached_network_image: ^2.2.0+1
+  flutter_auth_buttons: ^0.6.0
+  auto_route: ^0.5.0
+  modal_progress_hud: ^0.1.3
+  dynamic_text_highlighting: ^2.2.0
+  permission_handler: ^5.0.1+1
+
+  get_it:
+  injectable:
+  flutter_hooks:
+  observable_ish:
+  flutter_material_pickers: ^1.7.3
 
 dev_dependencies:
+  flutter_launcher_icons: "^0.7.3"
   flutter_test:
     sdk: flutter
-  auto_route_generator: null
 
-  build_runner: null
-  flutter_launcher_icons: "^0.7.3"
-  injectable_generator: null
-  mockito: null
+  build_runner:
+  auto_route_generator:
+  injectable_generator:
+  mockito:
 
 flutter_icons:
   image_path: "assets/images/apnaicon.png"
@@ -93,6 +101,7 @@ flutter_icons:
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
+
 # The following section is specific to Flutter.
 flutter:
   # The following line ensures that the Material Icons font is

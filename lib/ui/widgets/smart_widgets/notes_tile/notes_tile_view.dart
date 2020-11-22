@@ -139,19 +139,6 @@ class NotesTileView extends StatelessWidget {
                                                     fontSize: 18),
                                               ),
                                             ),
-                                            model.isnotedownloaded
-                                                ? SizedBox(
-                                                    width: 10,
-                                                  )
-                                                : SizedBox(),
-                                            model.isnotedownloaded
-                                                ? Icon(
-                                                    Icons.done_all,
-                                                    color:
-                                                        theme.iconTheme.color,
-                                                    size: 18,
-                                                  )
-                                                : SizedBox(),
                                           ],
                                         ),
                                       ),
@@ -162,11 +149,10 @@ class NotesTileView extends StatelessWidget {
                                           color: theme.primaryColor,
                                         ),
                                         onPressed: () {
-                                          //TODO add share text
                                           final RenderBox box =
                                               context.findRenderObject();
                                           Share.share(
-                                              "Yo Check out this ${note.subjectName} notes ${note.GDriveLink}",
+                                              "Notes Name: ${note.title}\n\nSubject Name: ${note.subjectName}\n\nLink:${note.GDriveLink}\n\nFind Latest Notes | Question Papers | Syllabus | Resources for Osmania University at the OU NOTES App\n\nhttps://play.google.com/store/apps/details?id=com.notes.ounotes",
                                               sharePositionOrigin:
                                                   box.localToGlobal(
                                                           Offset.zero) &

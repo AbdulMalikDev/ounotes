@@ -419,20 +419,21 @@ class FirestoreService {
     }
   }
 
-  incrementView(Note doc) {
+  incrementView(String docId,int views) {
     CollectionReference ref = _notesCollectionReference;
     try {
-      if (doc.id != null && doc.id.length > 5) {
+      if (docId != null && docId.length > 5) {
         log.i("Document being increment view using ID");
         // if (doc.id.length > 5) {
-        ref.document(doc.id).updateData({"view": FieldValue.increment(1)});
+        ref.document(docId).updateData({"view": FieldValue.increment(views)});
         //}
-      } else {
-        log.i("Document view being incremented in firebase");
-        return _notesCollectionReference
-            .document("Note_${doc.subjectName}_${doc.title}")
-            .updateData({"view": FieldValue.increment(1)});
-      }
+      } 
+      // else {
+      //   log.i("Document view being incremented in firebase");
+      //   return _notesCollectionReference
+      //       .document("Note_${doc.subjectName}_${doc.title}")
+      //       .updateData({"view": FieldValue.increment(1)});
+      // }
     } catch (e) {
       return _errorHandling(
           e, "While increment view notes in Firebase , Error occurred");
@@ -467,6 +468,7 @@ class FirestoreService {
     AuthenticationService _authenticationService =
         locator<AuthenticationService>();
     Map<String,dynamic> uploadLog = {
+                                        "uploader_name":user.username,
                                         "uploader_id":user.id,
                                         "id": note.id,
                                         "subjectName": note.subjectName,
@@ -476,8 +478,7 @@ class FirestoreService {
                                         "email": _authenticationService.user.email,
                                         "size": note.size,
                                     };
-
-    _analyticsService.logEvent(name:"UPLOAD" , parameters: uploadLog , addInNotificationService:true);
+    return uploadLog;
   }
 
   Map<String, dynamic> _linkUploadLog(Link note,User user) {
@@ -505,13 +506,56 @@ class FirestoreService {
     await _uploadLogCollectionReference.document(report.id).delete();
   }
 
-  void updateSubjectInFirebase(Map subject) async {
-    await Firestore.instance.collection("Subjects").document(subject["id"].toString()).setData(subject);
+  updateSubjectInFirebase(Map subject) async {
+    try {
+      await Firestore.instance.collection("Subjects").document(subject["id"].toString()).setData(subject);
+    } on Exception catch (e) {
+          log.e(e.toString());
+    }
   }
 
-  updateNoteInFirebase(Map note) async {
-    log.e(note["firebaseId"].toString());
-    await Firestore.instance.collection("Notes").document(note["firebaseId"].toString()).setData(note);
+  updateNoteInFirebase(Note note) async {
+    CollectionReference ref = _notesCollectionReference;
+    try {
+      if (note.id != null && note.id.length > 3) {
+        log.w("Document being deleted using ID");
+        if (note.id.length > 5) {
+          await ref.document(note.id).setData(note.toJson());
+          if (note.path == Document.Links){
+            await _linksCollectionReference.document("length").updateData({"len" : FieldValue.increment(-1)});
+          }
+        }
+      } else {
+        log.w(
+            "Document being deleted using url matching in firebase , may cause more reads");
+        QuerySnapshot snapshot =
+            await ref.where("title", isEqualTo: note.title).getDocuments();
+        snapshot.documents.forEach((doc) async {
+          await doc.reference.updateData(note.toJson());
+        });
+      }
+      // await Firestore.instance.collection("Notes").document(note["firebaseId"].toString()).setData(note);
+    } on Exception catch (e) {
+          log.e(e.toString());
+    }
+  }
+  updateQuestionPaperInFirebase(QuestionPaper note) async {
+    log.e(note.id);
+    
+    try {
+      await _questionPapersCollectionReference.document(note.id).setData(note.toJson());
+    } on Exception catch (e) {
+          log.e(e.toString());
+    }
+  }
+  updateSyllabusInFirebase(Syllabus note) async {
+    log.e(note.id);
+    
+    try {
+      await _syllabusCollectionReference.document(note.id).setData(note.toJson());
+    } on Exception catch (e) {
+          log.e(e.toString());
+    }
   }
 
   Future<Note> getNoteById(String id) async {
@@ -538,6 +582,48 @@ class FirestoreService {
     await _reportCollectionReference.document(id).delete();
     await _linksCollectionReference.document("length").updateData({"len" : FieldValue.increment(-1)});
     return null;
+  }
+  deleteNoteById(String id) async {
+    await _notesCollectionReference.document(id).delete();
+    await _uploadLogCollectionReference.document(id).delete();
+    await _reportCollectionReference.document(id).delete();
+    return null;
+  }
+
+  updateDocument(dynamic doc,Document document) async {
+
+    switch(document){
+      case Document.Notes:
+        await this.updateNoteInFirebase(doc);
+        break;
+      case Document.QuestionPapers:
+        await this.updateQuestionPaperInFirebase(doc);
+        break;
+      case Document.Syllabus:
+        await this.updateSyllabusInFirebase(doc);
+        break;
+      default:
+        break;
+    }
+
+  }
+
+  getDocumentById(String id , Document document) async {
+
+    switch(document){
+      case Document.Notes:
+        return await this.getNoteById(id);
+        break;
+      case Document.QuestionPapers:
+        return await this.getQuestionPaperById(id);
+        break;
+      case Document.Syllabus:
+        return await this.getSyllabusById(id);
+        break;
+      default:
+        break;
+    }
+
   }
 
 }
