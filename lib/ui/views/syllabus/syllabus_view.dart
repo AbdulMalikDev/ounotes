@@ -48,7 +48,7 @@ class _SyllabusViewState extends State<SyllabusView>
                     width: double.infinity,
                     child: model.isBusy
                         ? Center(
-                            child: CircularProgressIndicator();
+                            child: CircularProgressIndicator(),
                           )
                         : ListView.builder(
                             itemCount: model.syllabus.length,

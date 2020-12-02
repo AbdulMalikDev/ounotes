@@ -66,9 +66,9 @@ class NotesViewModel extends BaseViewModel {
   Future fetchNotesAndVotes(String subjectName) async {
     setBusy(true);
     _notes = await _firestoreService.loadNotesFromFirebase(subjectName);
-    if (_notes == 'error') {
+    if (_notes is String) {
       await Fluttertoast.showToast(
-          msg: "Please verify your internet connection");
+          msg: "You are facing an error in loading the notes. If you are facing this error more than once, please let us know by using the 'feedback' option in the app drawer.");
       return;
     }
     await _voteServie.fetchAndSetVotes();

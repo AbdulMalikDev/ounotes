@@ -19,22 +19,43 @@ class AdmobService{
   BannerAd notes_view_banner_ad;
   InterstitialAd notes_view_interstitial_ad;
 
-  int _NumberOfTimeNotesOpened;
-  int _NumberOfAdsShown;
+  int _NumberOfTimeNotesOpened = 1;
+  int _NumberOfAdsShown = 0;
 
   int get NumberOfTimeNotesOpened => _NumberOfTimeNotesOpened;
   set NumberOfTimeNotesOpened(int value) => _NumberOfTimeNotesOpened = value;
-  incrementNumberOfTimeNotesOpened() { if(_NumberOfTimeNotesOpened==null){_NumberOfTimeNotesOpened=0;}_NumberOfTimeNotesOpened++;print(_NumberOfTimeNotesOpened);}
-  bool shouldAdBeShown() {
-    bool ad =_NumberOfTimeNotesOpened % 5 == 0;
-    if (ad){
-      if(_NumberOfAdsShown==null){_NumberOfAdsShown=0;}
-      _NumberOfAdsShown++;
-    } 
-    return ad;
+
+  incrementNumberOfTimeNotesOpened() {
+     if(_NumberOfTimeNotesOpened==null){
+       _NumberOfTimeNotesOpened=0;
+      }
+      _NumberOfTimeNotesOpened++;
+      print(_NumberOfTimeNotesOpened);
   }
 
-  //TODO firebase admob id
+  bool shouldAdBeShown() {
+
+    try {
+      if(_NumberOfTimeNotesOpened==null){_NumberOfTimeNotesOpened=0;}
+      if(_NumberOfAdsShown==null){_NumberOfAdsShown=0;}
+      
+      bool ad =_NumberOfTimeNotesOpened % 5 == 0;
+      
+      if (ad){
+        
+        if(_NumberOfTimeNotesOpened==null){_NumberOfTimeNotesOpened=0;}
+        _NumberOfTimeNotesOpened++;
+        _NumberOfAdsShown++;
+      }
+      return ad ?? false;
+
+    } on Exception catch (e) {
+      log.e("shouldAdBeShown - ERROR while calculating whather add should be shown ${e.toString()}");
+      return false;
+    }
+  }
+
+  
   BannerAd getNotesViewBannerAd(){
     return BannerAd(adUnitId:ADMOB_AD_BANNER_ID,size: AdSize.fullBanner);
   }

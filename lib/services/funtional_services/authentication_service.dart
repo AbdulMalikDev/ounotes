@@ -50,6 +50,8 @@ class AuthenticationService {
       log.e("ERROR AUTHENTICATING : ${e.toString()}");
       return null;
     });
+    if(_googleUser == null){return false;}
+    
     _googleSignInAuth = await googleUser.authentication;
     _credential = GoogleAuthProvider.getCredential(
       idToken: _googleSignInAuth.idToken,

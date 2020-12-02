@@ -9,6 +9,7 @@ import 'package:FSOUNotes/services/funtional_services/analytics_service.dart';
 import 'package:FSOUNotes/AppTheme/AppStateNotifier.dart';
 import 'package:FSOUNotes/services/funtional_services/authentication_service.dart';
 import 'package:FSOUNotes/services/funtional_services/cloud_storage_service.dart';
+import 'package:FSOUNotes/services/funtional_services/crashlytics_service.dart';
 import 'package:FSOUNotes/services/funtional_services/db_service.dart';
 import 'package:FSOUNotes/services/funtional_services/third_party_services_module.dart';
 import 'package:stacked_services/stacked_services.dart';
@@ -35,6 +36,7 @@ void $initGetIt(GetIt g, {String environment}) {
   g.registerLazySingleton<AppStateNotifier>(() => AppStateNotifier());
   g.registerLazySingleton<AuthenticationService>(() => AuthenticationService());
   g.registerLazySingleton<CloudStorageService>(() => CloudStorageService());
+  g.registerLazySingleton<CrashlyticsService>(() => CrashlyticsService());
   g.registerLazySingleton<DBService>(() => DBService());
   g.registerLazySingleton<DialogService>(
       () => thirdPartyServicesModule.dialogService);

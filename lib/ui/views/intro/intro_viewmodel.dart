@@ -112,7 +112,7 @@ class IntroViewModel extends BaseViewModel {
 
     if (dialogResult.confirmed) {
       setBusy(true);
-      await _authenticationService.handleSignIn(
+      bool result = await _authenticationService.handleSignIn(
         college: _selectedCollege ?? "",
         branch: _selectedBranch ?? "",
         semeseter: _selectedSemester ?? "",

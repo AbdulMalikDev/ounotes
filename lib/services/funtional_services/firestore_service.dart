@@ -115,6 +115,7 @@ class FirestoreService {
     try {
       QuerySnapshot snapshot = await _notesCollectionReference
           .where('subjectName', isEqualTo: subjectName)
+          .orderBy('votes',descending: true)
           .getDocuments();
       List<Note> notes =
           snapshot.documents.map((doc) => Note.fromData(doc.data,doc.documentID)).toList();
@@ -440,29 +441,29 @@ class FirestoreService {
     }
   }
 
-  getSnapShotOfVotes(Note doc) {
-    // return _notesCollectionReference
-    //     .document("Note_${note.subjectName}_${note.title}")
-    //     .snapshots();
-    CollectionReference ref = _notesCollectionReference;
-    try {
-      if (doc.id != null && doc.id.length > 5) {
-        log.i("snapshot of votes called using ID");
-        // if () {
-        return ref.document(doc.id).snapshots();
-        // }
-      } else {
-        log.i("Getting snapshot of votes");
-        return _notesCollectionReference
-            .document("Note_${doc.subjectName}_${doc.title}")
-            .snapshots();
-        // });
-      }
-    } catch (e) {
-      return _errorHandling(
-          e, "While increment view notes in Firebase , Error occurred");
-    }
-  }
+  // getSnapShotOfVotes(Note doc) {
+  //   // return _notesCollectionReference
+  //   //     .document("Note_${note.subjectName}_${note.title}")
+  //   //     .snapshots();
+  //   CollectionReference ref = _notesCollectionReference;
+  //   try {
+  //     if (doc.id != null && doc.id.length > 5) {
+  //       log.i("snapshot of votes called using ID");
+  //       // if () {
+  //       return ref.document(doc.id).snapshots();
+  //       // }
+  //     } else {
+  //       log.i("Getting snapshot of votes");
+  //       return _notesCollectionReference
+  //           .document("Note_${doc.subjectName}_${doc.title}")
+  //           .snapshots();
+  //       // });
+  //     }
+  //   } catch (e) {
+  //     return _errorHandling(
+  //         e, "While increment view notes in Firebase , Error occurred");
+  //   }
+  // }
 
   Map<String, dynamic> _createUploadLog(AbstractDocument note,User user) {
     AuthenticationService _authenticationService =

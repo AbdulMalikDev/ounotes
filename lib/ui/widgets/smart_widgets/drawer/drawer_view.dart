@@ -219,7 +219,7 @@ class DrawerView extends StatelessWidget {
                             onTap: () {
                               final RenderBox box = context.findRenderObject();
                               Share.share(
-                                  'OU Notes is probably the best App to find all Academic Material for Osmania University including\n 1. Notes (PDF , e-books etc.)\n 2. Syllabus\n 3. Previous Question Papers\n 4. Resources (helpful links for learning online)\n I\'ve ever used so far.Check it out on Google Play!\n https://play.google.com/store/apps/details?id=com.notes.ounotes',
+                                  'OU Notes is probably the an App to find all lastest Academic Material for Osmania University including\n 1. Notes (PDF , e-books etc.)\n 2. Syllabus\n 3. Previous Question Papers\n 4. Resources (helpful links for learning online)\n. Check it out on Google Play!\n https://play.google.com/store/apps/details?id=com.notes.ounotes',
                                   sharePositionOrigin:
                                       box.localToGlobal(Offset.zero) &
                                           box.size);
