@@ -77,7 +77,7 @@ class UploadLogViewModel extends FutureViewModel{
     }
     // since any other document except Notes do not need uploading
     dynamic doc = await _firestoreService.getDocumentById(logItem.id,Constants.getDocFromConstant(logItem.type));
-    if(doc.GDriveLink != null){await _dialogService.showDialog(title: "ERROR" , description: "ALREADY UPLOADED");return;}
+    if(doc.GDriveLink != null){await _dialogService.showDialog(title: "ERROR" , description: "ALREADY UPLOADED");setBusy(false);return;}
     String result = await _googleDriveService.processFile(doc: doc, document:Constants.getDocFromConstant(logItem.type) , addToGdrive: true);
     _dialogService.showDialog(title: "OUTPUT" , description: result);
     setBusy(false);
