@@ -558,6 +558,24 @@ class FirestoreService {
           log.e(e.toString());
     }
   }
+  updateUploadLogInFirebase(UploadLog note) async {
+    log.e(note.id);
+    
+    try {
+      await _uploadLogCollectionReference.document(note.id).setData(note.toJson());
+    } on Exception catch (e) {
+          log.e(e.toString());
+    }
+  }
+  updateReportInFirebase(Report note) async {
+    log.e(note.id);
+    
+    try {
+      await _reportCollectionReference.document(note.id).setData(note.toJson());
+    } on Exception catch (e) {
+          log.e(e.toString());
+    }
+  }
 
   Future<Note> getNoteById(String id) async {
     DocumentSnapshot doc = await _notesCollectionReference.document(id).get();
@@ -602,6 +620,12 @@ class FirestoreService {
         break;
       case Document.Syllabus:
         await this.updateSyllabusInFirebase(doc);
+        break;
+      case Document.UploadLog:
+        await this.updateUploadLogInFirebase(doc);
+        break;
+      case Document.Report:
+        await this.updateReportInFirebase(doc);
         break;
       default:
         break;

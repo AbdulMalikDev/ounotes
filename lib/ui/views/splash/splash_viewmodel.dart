@@ -26,38 +26,40 @@ class SplashViewModel extends FutureViewModel{
     handleStartUpLogic() async 
     {
 
-    var hasLoggedInUser = await _sharedPreferencesService.isUserLoggedIn();
+      var hasLoggedInUser = await _sharedPreferencesService.isUserLoggedIn();
 
-    //Check if user has outdated version
-    await _checkForUpdatedVersionAndShowDialog();
-    
-    
-    if(hasLoggedInUser)
-    {
+      //Check if user has outdated version
+      await _checkForUpdatedVersionAndShowDialog();
+      
+      
+      if(hasLoggedInUser)
+      {
 
-       await _subjectsService.loadSubjects();
-       _navigationService.replaceWith(Routes.homeViewRoute);
+        await _subjectsService.loadSubjects();
+        _navigationService.replaceWith(Routes.homeViewRoute);
 
-    }else{
+      }else{
 
-      _navigationService.replaceWith(Routes.introViewRoute);
+        _navigationService.replaceWith(Routes.introViewRoute);
 
-    }
-
-
+      }
     
     }
 
     _checkForUpdatedVersionAndShowDialog() async {
-      String updatedVersion = _remoteConfigService.remoteConfig.getString('APP_VERSION');
-      log.e(updatedVersion);
+
       PackageInfo packageInfo = await PackageInfo.fromPlatform();
+      String updatedVersion = _remoteConfigService.remoteConfig.getString('APP_VERSION');
       String version = packageInfo.version;
       String buildNumber = packageInfo.buildNumber;
       String currentVersion = "$version $buildNumber" ;
-      log.e("$version $buildNumber");
-      log.e(currentVersion == updatedVersion);
-      if(currentVersion != updatedVersion)
+      log.i("Updated Version :" + updatedVersion);
+      log.i("Current Version :" + "$version $buildNumber");
+      log.i("Are Both Equal ?");
+      log.i(currentVersion == updatedVersion);
+      // if update needed show a prompt
+      log.e(_isCurrentVersionOudated(currentVersion,updatedVersion));
+      if(_isCurrentVersionOudated(currentVersion,updatedVersion))
       {
         DialogResponse response = await _dialogService.showConfirmationDialog(title: "Update App?" , description: "A new version of OU Notes is available. Please update the app to avoid crashes and access new features");
         if(response.confirmed)
@@ -69,8 +71,33 @@ class SplashViewModel extends FutureViewModel{
       }
     }
 
+  bool _isCurrentVersionOudated(String currentCompleteVersion, String updatedCompleteVersion) {
+
+    String currentVersion = currentCompleteVersion.split(" ")[0];
+    String updatedVersion = updatedCompleteVersion.split(" ")[0];
+
+    int sumOfCurrentVersion = currentVersion.split(".").map((a)=>int.parse(a)).toList().reduce((a,b)=>a+b);
+    int sumOfUpdatedVersion = updatedVersion.split(".").map((a)=>int.parse(a)).toList().reduce((a,b)=>a+b);
+
+    if (sumOfCurrentVersion < sumOfUpdatedVersion){
+      return true;
+    }
+
+    else if(sumOfCurrentVersion == sumOfUpdatedVersion){
+      int currentBuild = int.parse(currentCompleteVersion.split(" ")[1]);
+      int updatedBuild = int.parse(updatedCompleteVersion.split(" ")[1]);
+
+      if( currentBuild < updatedBuild ){
+        return true;
+      }
+    }
+
+    return false;
+  }
+  
   @override
   Future futureToRun() => handleStartUpLogic();
+
 
 
 

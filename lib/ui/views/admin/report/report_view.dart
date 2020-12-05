@@ -86,6 +86,22 @@ class _ReportViewState extends State<ReportView>
                                       style: theme.textTheme.subtitle1
                                           .copyWith(fontSize: 18),
                                     ),
+                                    Text(""),
+                                    FutureBuilder(
+                                      future: model.getNotificationStatus(report),
+                                      builder: (context, AsyncSnapshot<String> snapshot) {
+                                        if (snapshot.hasData)
+                                        {
+                                        return Text(
+                                          "Notification Status : " + snapshot.data ?? "NONE",
+                                          style: theme.textTheme.subtitle1
+                                              .copyWith(fontSize: 18),
+                                        );
+                                        }else{
+                                          return Text("EMPTY");
+                                        }
+                                      }
+                                    ),
                                     SizedBox(height: 20,),
                                     Row(
                                       children: [

@@ -13,7 +13,8 @@ class WebViewWidget extends StatefulWidget {
   final Note note;
   final QuestionPaper questionPaper;
   final Syllabus syllabus;
-  WebViewWidget({this.note, Key key, this.questionPaper, this.syllabus})
+  final String url;
+  WebViewWidget({this.note, Key key, this.questionPaper, this.syllabus,this.url})
       : super(key: key);
 
   @override
@@ -54,7 +55,7 @@ class _WebViewWidgetState extends State<WebViewWidget> {
       year = widget.questionPaper.year;
       br = widget.questionPaper.branch;
       url = widget.questionPaper.GDriveLink;
-    } else {
+    } else if(widget.syllabus != null) {
       subjectName = widget.syllabus.subjectName;
       year = widget.syllabus.year;
       br = widget.syllabus.branch;
@@ -111,7 +112,7 @@ class _WebViewWidgetState extends State<WebViewWidget> {
               ),
             ),
             hidden: true,
-            url: url,
+            url: url ?? widget.url,
             appBar: isLandscape
                 ? null
                 : new AppBar(
@@ -132,7 +133,7 @@ class _WebViewWidgetState extends State<WebViewWidget> {
                           } else if (widget.questionPaper != null) {
                             share =
                                 "QuestionPaper year: $year\n\nSubject Name: $subjectName\n\nLink:$url\n\nFind Latest Notes | Question Papers | Syllabus | Resources for Osmania University at the OU NOTES App\n\nhttps://play.google.com/store/apps/details?id=com.notes.ounotes";
-                          } else {
+                          } else if(widget.syllabus != null) {
                             share =
                                 "Syllabus Branch: $br\n\nSubject Name: $subjectName\n\nLink:$url\n\nFind Latest Notes | Question Papers | Syllabus | Resources for Osmania University at the OU NOTES App\n\nhttps://play.google.com/store/apps/details?id=com.notes.ounotes";
                           }

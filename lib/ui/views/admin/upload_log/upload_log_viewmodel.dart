@@ -3,7 +3,9 @@ import 'package:FSOUNotes/app/logger.dart';
 import 'package:FSOUNotes/enums/constants.dart';
 import 'package:FSOUNotes/enums/enums.dart';
 import 'package:FSOUNotes/models/UploadLog.dart';
+import 'package:FSOUNotes/models/document.dart';
 import 'package:FSOUNotes/models/link.dart';
+import 'package:FSOUNotes/enums/constants.dart';
 import 'package:FSOUNotes/models/notes.dart';
 import 'package:FSOUNotes/models/question_paper.dart';
 import 'package:FSOUNotes/models/syllabus.dart';
@@ -124,12 +126,16 @@ class UploadLogViewModel extends FutureViewModel{
       }
     }
 
-  Future<String> getStatus(UploadLog logItem) async {
-    if (logItem.type == Constants.notes){
-      Note note = await _firestoreService.getNoteById(logItem.id);
-      return note.GDriveLink==null ? "NOT UPLOADED" : "UPLOADED";
+  Future<String> getUploadStatus(UploadLog logItem) async {
+    if (logItem.type != Constants.links){
+      var document = await _firestoreService.getDocumentById(logItem.id,Constants.getDocFromConstant(logItem.type));
+      return document.GDriveLink==null ? "NOT UPLOADED" : "UPLOADED";
     } 
     return "None";
+  }
+  
+  getNotificationStatus(UploadLog logItem) {
+    return logItem.notificationSent??false ? Future.value("SENT") : Future.value("NOT SENT");
   }
 
    void accept(UploadLog uploadLog) async {
@@ -137,7 +143,9 @@ class UploadLogViewModel extends FutureViewModel{
     String message = "We have reviewed the document you have uploaded \" ${uploadLog.fileName} \" in the \" ${uploadLog.subjectName} \" subject and it is LIVE ! Thank you again for making OU Notes a better place and helping all of us !";
     DialogResponse result = await _dialogService.showConfirmationDialog(title: "Sure?",description: "");
     if(result.confirmed){
-    _analyticsService.sendNotification(id: uploadLog.uploader_id,message: message,title: title);
+      _analyticsService.sendNotification(id: uploadLog.uploader_id,message: message,title: title);
+      uploadLog.setNotificationSent = true;
+      _firestoreService.updateDocument(uploadLog, Document.UploadLog);
     }
   }
 
@@ -147,7 +155,9 @@ class UploadLogViewModel extends FutureViewModel{
     String message = "We have reviewed the document you have uploaded \" ${uploadLog.fileName} \" in the \" ${uploadLog.subjectName} \" subject and the document does not match our standards. Please try again with a better document. Feel free to contact us using the feedback feature !";
     DialogResponse result = await _dialogService.showConfirmationDialog(title: "Sure?",description: "");
     if(result.confirmed){
-    _analyticsService.sendNotification(id: uploadLog.uploader_id,message: message,title: title);
+      _analyticsService.sendNotification(id: uploadLog.uploader_id,message: message,title: title);
+      uploadLog.setNotificationSent = true;
+      _firestoreService.updateDocument(uploadLog, Document.UploadLog);
     }
   }
 
@@ -156,7 +166,10 @@ class UploadLogViewModel extends FutureViewModel{
     String message = "We're sad to say that you won't be allowed to report or upload any documents. Feel free to contact us using the feedback feature !";
     DialogResponse result = await _dialogService.showConfirmationDialog(title: "Sure?",description: "");
     if(result.confirmed){
-    _analyticsService.sendNotification(id: uploadLog.uploader_id,message: message,title: title);
+      _analyticsService.sendNotification(id: uploadLog.uploader_id,message: message,title: title);
+      uploadLog.setNotificationSent = true;
+      _firestoreService.updateDocument(uploadLog, Document.UploadLog);
     }
   }
+
 }

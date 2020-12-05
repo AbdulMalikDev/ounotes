@@ -309,7 +309,8 @@ class Router extends RouterBase {
               note: typedArgs.note,
               key: typedArgs.key,
               questionPaper: typedArgs.questionPaper,
-              syllabus: typedArgs.syllabus),
+              syllabus: typedArgs.syllabus,
+              url: typedArgs.url),
           settings: settings,
         );
       default:
@@ -459,6 +460,7 @@ class WebViewWidgetArguments {
   final Key key;
   final QuestionPaper questionPaper;
   final Syllabus syllabus;
+  final String url;
   WebViewWidgetArguments(
-      {this.note, this.key, this.questionPaper, this.syllabus});
+      {this.note, this.key, this.questionPaper, this.syllabus, this.url});
 }
