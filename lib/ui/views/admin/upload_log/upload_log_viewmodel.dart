@@ -9,10 +9,12 @@ import 'package:FSOUNotes/enums/constants.dart';
 import 'package:FSOUNotes/models/notes.dart';
 import 'package:FSOUNotes/models/question_paper.dart';
 import 'package:FSOUNotes/models/syllabus.dart';
+import 'package:FSOUNotes/models/user.dart';
 import 'package:FSOUNotes/services/funtional_services/analytics_service.dart';
 import 'package:FSOUNotes/services/funtional_services/authentication_service.dart';
 import 'package:FSOUNotes/services/funtional_services/firestore_service.dart';
 import 'package:FSOUNotes/services/funtional_services/google_drive_service.dart';
+import 'package:FSOUNotes/services/funtional_services/sharedpref_service.dart';
 import 'package:FSOUNotes/ui/views/admin/upload_log/upload_log_view.dart';
 import 'package:FSOUNotes/ui/views/notes/notes_viewmodel.dart';
 import 'package:FSOUNotes/ui/widgets/smart_widgets/notes_tile/notes_tile_viewmodel.dart';
@@ -25,6 +27,7 @@ class UploadLogViewModel extends FutureViewModel{
  DialogService _dialogService = locator<DialogService>();
  AuthenticationService _authenticationService = locator<AuthenticationService>();
  AnalyticsService _analyticsService = locator<AnalyticsService>();
+ SharedPreferencesService _sharedPreferencesService = locator<SharedPreferencesService>();
  Logger log = getLogger("UploadLogViewModel");
 
   List<UploadLog> _logs;
@@ -77,10 +80,14 @@ class UploadLogViewModel extends FutureViewModel{
       setBusy(false);
       return;
     }
-    // since any other document except Notes do not need uploading
     dynamic doc = await _firestoreService.getDocumentById(logItem.id,Constants.getDocFromConstant(logItem.type));
     if(doc.GDriveLink != null){await _dialogService.showDialog(title: "ERROR" , description: "ALREADY UPLOADED");setBusy(false);return;}
     String result = await _googleDriveService.processFile(doc: doc, document:Constants.getDocFromConstant(logItem.type) , addToGdrive: true);
+    User user = await _sharedPreferencesService.getUser();
+    user.incrementAcceptedUploads();
+    user.addToUploadedDocuments(logItem.id);
+    log.e(user.numOfAcceptedUploads);
+    _firestoreService.updateUserInFirebase(user);
     _dialogService.showDialog(title: "OUTPUT" , description: result);
     setBusy(false);
   }
@@ -169,6 +176,9 @@ class UploadLogViewModel extends FutureViewModel{
       _analyticsService.sendNotification(id: uploadLog.uploader_id,message: message,title: title);
       uploadLog.setNotificationSent = true;
       _firestoreService.updateDocument(uploadLog, Document.UploadLog);
+      User user = await _sharedPreferencesService.getUser();
+      user.banUser = true;
+      _firestoreService.updateUserInFirebase(user);
     }
   }
 

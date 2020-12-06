@@ -20,40 +20,60 @@ class User{
   // Google sign in credentials
   Map<String,String> googleSignInAuthHeaders;
 
+  //User uploads
+  List uploads;
+
+  //Upload stats of user
+  int numOfUploads;
+  int numOfAcceptedUploads;
 
   User({this.username, this.email, this.createdAt, this.semester, this.branch, this.college,this.isAuth,this.id,this.photoUrl,this.isUserAllowedToUpload,this.googleSignInAuthHeaders});
 
   User.fromData(Map<String,dynamic> data)
-  : username  = data['Username'],
-    email     = data['email'],
-    createdAt = data['createdAt'].toString(),
-    semester  = data['Semester'],
-    branch    = data['Branch'],
-    college   = data['College'],
-    isAuth    = data['isAuth'] ?? false,
-    id        = data['id'],
-    photoUrl  = data['photoUrl'],
-    isAdmin   = data['isAdmin'] ?? false,
-    isUserAllowedToUpload   = data['isUserAllowedToUpload'] ?? true;
+  : username                  = data['Username'],
+    email                     = data['email'],
+    createdAt                 = data['createdAt'].toString(),
+    semester                  = data['Semester'],
+    branch                    = data['Branch'],
+    college                   = data['College'],
+    isAuth                    = data['isAuth'] ?? false,
+    id                        = data['id'],
+    photoUrl                  = data['photoUrl'],
+    isAdmin                   = data['isAdmin'] ?? false,
+    uploads                   = data["uploads"],
+    numOfUploads              = data["numOfUploads"],
+    numOfAcceptedUploads      = data["numOfAcceptedUploads"],
+    isUserAllowedToUpload     = data['isUserAllowedToUpload'] ?? true;
 
 
   Map<String,dynamic> toJson() {
     return {
-      "Username" : username,
-      "email"    : email,
-      "createdAt": createdAt.toString(),
-      "Semester" : semester,
-      "Branch"   : branch,
-      "College"  : college,
-      "isAuth"   : isAuth ?? false,
-      "id"       : id,
-      "photoUrl" : photoUrl,
-      "isAdmin"  : isAdmin ?? false,
+      "Username"               : username,
+      "email"                  : email,
+      "createdAt"              : createdAt.toString(),
+      "Semester"               : semester,
+      "Branch"                 : branch, 
+      "College"                : college,
+      "isAuth"                 : isAuth ?? false,
+      "id"                     : id,
+      "photoUrl"               : photoUrl,
+      "isAdmin"                : isAdmin ?? false,
+      "uploads"                : uploads,
+      "numOfUploads"           : numOfUploads,
+      "numOfAcceptedUploads"   : numOfAcceptedUploads,
       "isUserAllowedToUpload"  : isUserAllowedToUpload ?? true,
     };
   }
 
     set setAdmin(bool value){this.isAdmin = value;}
 
+    set banUser(bool value){this.isUserAllowedToUpload = value;}
+
     set setIsUserAllowedToUpload(bool value){this.isUserAllowedToUpload = false;}
+
+    incrementUploads(){if(numOfUploads==null){numOfUploads=0;} numOfUploads++;}
+
+    incrementAcceptedUploads(){if(numOfAcceptedUploads==null){numOfAcceptedUploads=0;} numOfAcceptedUploads++;}
+
+    addToUploadedDocuments(String documentId){if(uploads==null){uploads=[];}uploads.add(documentId);}
 }
