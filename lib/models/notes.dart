@@ -38,6 +38,12 @@ class Note extends AbstractDocument {
     this.isDownloaded = false,
     @required this.path,
     this.votes,
+    this.GDriveID,
+    this.GDriveLink,
+    this.GDriveNotesFolderID,
+    this.firebaseId,
+    this.id,
+    this.uploader_id,
   });
 
   Note.fromData(Map<String, dynamic> data , String documentID) {

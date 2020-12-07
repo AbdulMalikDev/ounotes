@@ -6,9 +6,9 @@ import 'package:FSOUNotes/models/document.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:logger/logger.dart';
+Logger log = getLogger("QuestionPaper");
 
 class QuestionPaper extends AbstractDocument{
-  Logger log = getLogger("QuestionPaper");
   String id;
 
   //For question papers , the title is the year
@@ -46,6 +46,11 @@ class QuestionPaper extends AbstractDocument{
     this.branch,
     this.year,
     @required this.type,
+    this.GDriveID,
+    this.GDriveLink,
+    this.GDriveQuestionPaperFolderID,
+    this.id,
+    this.uploader_id,
   });
 
   

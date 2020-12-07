@@ -32,6 +32,7 @@ import 'package:FSOUNotes/ui/views/web_view/web_view.dart';
 import 'package:FSOUNotes/models/notes.dart';
 import 'package:FSOUNotes/models/question_paper.dart';
 import 'package:FSOUNotes/models/syllabus.dart';
+import 'package:FSOUNotes/ui/views/edit/edit_view.dart';
 
 abstract class Routes {
   static const splashViewRoute = '/';
@@ -55,6 +56,7 @@ abstract class Routes {
   static const termsAndConditionView = '/terms-and-condition-view';
   static const adminViewRoute = '/admin-view-route';
   static const webViewWidgetRoute = '/web-view-widget-route';
+  static const editViewRoute = '/edit-view-route';
   static const all = {
     splashViewRoute,
     introViewRoute,
@@ -77,6 +79,7 @@ abstract class Routes {
     termsAndConditionView,
     adminViewRoute,
     webViewWidgetRoute,
+    editViewRoute,
   };
 }
 
@@ -313,6 +316,21 @@ class Router extends RouterBase {
               url: typedArgs.url),
           settings: settings,
         );
+      case Routes.editViewRoute:
+        if (hasInvalidArgs<EditViewArguments>(args, isRequired: true)) {
+          return misTypedArgsRoute<EditViewArguments>(args);
+        }
+        final typedArgs = args as EditViewArguments;
+        return MaterialPageRoute<dynamic>(
+          builder: (context) => EditView(
+              key: typedArgs.key,
+              title: typedArgs.title,
+              textFieldsMap: typedArgs.textFieldsMap,
+              path: typedArgs.path,
+              note: typedArgs.note,
+              subjectName: typedArgs.subjectName),
+          settings: settings,
+        );
       default:
         return unknownRoutePage(settings.name);
     }
@@ -463,4 +481,21 @@ class WebViewWidgetArguments {
   final String url;
   WebViewWidgetArguments(
       {this.note, this.key, this.questionPaper, this.syllabus, this.url});
+}
+
+//EditView arguments holder class
+class EditViewArguments {
+  final Key key;
+  final String title;
+  final Map<dynamic, dynamic> textFieldsMap;
+  final Document path;
+  final dynamic note;
+  final String subjectName;
+  EditViewArguments(
+      {this.key,
+      @required this.title,
+      @required this.textFieldsMap,
+      @required this.path,
+      this.note,
+      @required this.subjectName});
 }

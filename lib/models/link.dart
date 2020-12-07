@@ -16,7 +16,7 @@ class Link extends AbstractDocument{
   Document path;
   String uploader_id;
 
-  Link({this.subjectName, this.title, this.description, this.linkUrl, this.id, this.path});
+  Link({this.subjectName, this.title, this.description, this.linkUrl, this.id, this.path,this.uploader_id});
 
 
   Link.fromData(Map<String,dynamic> data)

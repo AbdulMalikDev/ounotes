@@ -19,3 +19,11 @@ NOTE : FILENAME is the only thing that differs across Notes/Question Papers and 
 but then 2 papers may cause collision to title == year , and the collision will take care of adding #
 
 --> for syllabus , FILENAME == "notes.sem + notes.branch" , so title configured accordingly
+
+
+--> If document models are updated to hold more information following logics need to be updated
+        - Edit View
+        - Upload Log
+        - Upload Screen to enter data
+        - The model itself
+        - The view where the document is being shown

@@ -345,16 +345,31 @@ class NotesTileView extends StatelessWidget {
                           ),
                         ),
                         model.isAdmin
-                            ? Container(
-                                child: RaisedButton(
-                                  child: Text("DELETE",
-                                      style: TextStyle(color: Colors.white)),
-                                  color: Colors.red,
-                                  onPressed: () async {
-                                    await model.deleteFromGdrive(note);
-                                  },
+                            ? 
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                Container(
+                                  child: RaisedButton(
+                                    child: Text("EDIT",
+                                        style: TextStyle(color: Colors.white)),
+                                    color: Colors.blue,
+                                    onPressed: () async {
+                                      await model.navigateToEditView(note);
+                                    },
+                                  ),
                                 ),
-                              )
+                                Container(
+                                  child: RaisedButton(
+                                    child: Text("DELETE",
+                                        style: TextStyle(color: Colors.white)),
+                                    color: Colors.red,
+                                    onPressed: () async {
+                                      await model.deleteFromGdrive(note);
+                                    },
+                                  ),
+                                ),
+                              ])
                             : Container(),
                       ],
                     ),
