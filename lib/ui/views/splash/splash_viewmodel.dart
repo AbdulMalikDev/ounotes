@@ -31,7 +31,6 @@ class SplashViewModel extends FutureViewModel{
       //Check if user has outdated version
       await _checkForUpdatedVersionAndShowDialog();
       
-      
       if(hasLoggedInUser)
       {
 
@@ -58,7 +57,6 @@ class SplashViewModel extends FutureViewModel{
       log.i("Are Both Equal ?");
       log.i(currentVersion == updatedVersion);
       // if update needed show a prompt
-      log.e(_isCurrentVersionOudated(currentVersion,updatedVersion));
       if(_isCurrentVersionOudated(currentVersion,updatedVersion))
       {
         DialogResponse response = await _dialogService.showConfirmationDialog(title: "Update App?" , description: "A new version of OU Notes is available. Please update the app to avoid crashes and access new features");
