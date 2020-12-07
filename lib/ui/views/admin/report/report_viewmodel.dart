@@ -1,6 +1,8 @@
 import 'package:FSOUNotes/app/locator.dart';
 import 'package:FSOUNotes/app/logger.dart';
+import 'package:FSOUNotes/app/router.gr.dart';
 import 'package:FSOUNotes/enums/constants.dart';
+import 'package:FSOUNotes/enums/enums.dart';
 import 'package:FSOUNotes/models/link.dart';
 import 'package:FSOUNotes/models/notes.dart';
 import 'package:FSOUNotes/models/question_paper.dart';
@@ -20,6 +22,7 @@ class ReportViewModel extends FutureViewModel {
   FirestoreService _firestoreService = locator<FirestoreService>();
   DialogService _dialogService = locator<DialogService>();
   AnalyticsService _analyticsService = locator<AnalyticsService>();
+  NavigationService _navigationService = locator<NavigationService>();
   Logger log = getLogger("UploadLogViewModel");
 
   List<Report> _reports;
@@ -49,7 +52,9 @@ class ReportViewModel extends FutureViewModel {
     String message = "We have reviewed the document you have reported \" ${report.title} \" in the \" ${report.subjectName} \" subject and we have removed it ! Thank you again for making OU Notes a better place !";
     DialogResponse result = await _dialogService.showConfirmationDialog(title: "Sure?",description: "");
     if(result.confirmed){
-    _analyticsService.sendNotification(id: report.reporter_id,message: message,title: title);
+      _analyticsService.sendNotification(id: report.reporter_id,message: message,title: title);
+      report.setNotificationSent = true;
+      _firestoreService.updateDocument(report, Document.Report);
     }
   }
 
@@ -58,7 +63,9 @@ class ReportViewModel extends FutureViewModel {
     String message = "We have reviewed the document you have reported \" ${report.title} \" in the \" ${report.subjectName} \" subject and we have found NO ISSUE with it. Feel free to contact us using the feedback feature !";
     DialogResponse result = await _dialogService.showConfirmationDialog(title: "Sure?",description: "");
     if(result.confirmed){
-    _analyticsService.sendNotification(id: report.reporter_id,message: message,title: title);
+      _analyticsService.sendNotification(id: report.reporter_id,message: message,title: title);
+      report.setNotificationSent = true;
+      _firestoreService.updateDocument(report, Document.Report);
     }
   }
 
@@ -67,23 +74,21 @@ class ReportViewModel extends FutureViewModel {
     String message = "We're sad to say that you won't be allowed to report or upload any documents. Feel free to contact us using the feedback feature !";
     DialogResponse result = await _dialogService.showConfirmationDialog(title: "Sure?",description: "");
     if(result.confirmed){
-    _analyticsService.sendNotification(id: report.reporter_id,message: message,title: title);
+      _analyticsService.sendNotification(id: report.reporter_id,message: message,title: title);
+      report.setNotificationSent = true;
+      _firestoreService.updateDocument(report, Document.Report);
     }
   }
 
-  void viewDocument(Report report) {
+  void viewDocument(Report report) async {
       setBusy(true);
-      NotesViewModel notesViewModel = NotesViewModel();
 
       if (report.type == Constants.links){
         _showLink(report);
       }else{
 
-      notesViewModel.onTap(
-        notesName: report.title, 
-        subName: report.subjectName,
-        type: report.type,
-      );
+        var document = await _firestoreService.getDocumentById(report.id, Constants.getDocFromConstant(report.type));
+        _navigationService.navigateTo(Routes.webViewWidgetRoute,arguments: WebViewWidgetArguments(url: document.GDriveLink));
 
       }
       setBusy(false);
@@ -132,4 +137,15 @@ class ReportViewModel extends FutureViewModel {
       Link link = await _firestoreService.getLinkById(report.id);
       _dialogService.showDialog(title: "Link Content" , description: link.linkUrl);
     }
+
+  getNotificationStatus(Report report) {
+    print(report.notificationSent);
+    print(report.notificationSent);
+    print(report.notificationSent);
+    print(report.notificationSent);
+    print(report.notificationSent);
+    print(report.notificationSent);
+    print(report.notificationSent);
+    return report.notificationSent??false ? Future.value("SENT") : Future.value("NOT SENT");
+  }
 }

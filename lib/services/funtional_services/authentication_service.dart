@@ -50,6 +50,8 @@ class AuthenticationService {
       log.e("ERROR AUTHENTICATING : ${e.toString()}");
       return null;
     });
+    if(_googleUser == null){return false;}
+    
     _googleSignInAuth = await googleUser.authentication;
     _credential = GoogleAuthProvider.getCredential(
       idToken: _googleSignInAuth.idToken,
@@ -78,11 +80,11 @@ class AuthenticationService {
       username: _firebaseUser.displayName,
       // googleSignInAuthHeaders: await _googleUser.authHeaders,
     );
-   if (isAdmin){_user.setAdmin=true;}
+    if (isAdmin){_user.setAdmin=true;}
    
 
     //Add User to Firebase
-    await _firestoreService.saveUser(_user.toJson());
+    await _firestoreService.saveUser(_user);
 
     //Add User To Local Storage
     SharedPreferencesService _sharedPreferencesService = locator<SharedPreferencesService>();
@@ -157,7 +159,11 @@ class AuthenticationService {
   
   void _addEventInfo(User user) {
     _analyticsService.logEvent(name:"LogIn",parameters:_user.toJson());
-    _analyticsService.setUserProperty(name: 'college', value: _user.college);
+    String college = _user.college;
+    if(college.length > 34){
+      college = college.substring(0,34);
+    }
+    _analyticsService.setUserProperty(name: 'college', value: college);
     _analyticsService.setUserProperty(name: 'branch', value: _user.branch);
     _analyticsService.setUserProperty(name: 'semester', value: _user.semester);
     Map<String, dynamic> tags = {

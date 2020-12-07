@@ -9,6 +9,7 @@ abstract class AbstractDocument {
   String url;
   String size;
   String type;
+  String uploader_id;
   
 
   set setDate(DateTime setDate) {}
@@ -17,6 +18,10 @@ abstract class AbstractDocument {
 
   set setId(String id) {
     this.id = id;
+  }
+
+  set setUploaderId(String id) {
+    this.uploader_id = id;
   }
 
   set setPath(Document path);

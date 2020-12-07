@@ -31,6 +31,7 @@ class QuestionPaper extends AbstractDocument{
   String GDriveLink;
   String GDriveQuestionPaperFolderID;
   
+  String uploader_id;
   
 
   QuestionPaper({
@@ -59,6 +60,7 @@ class QuestionPaper extends AbstractDocument{
     id           = data['id']?.toString() ?? "";
     isDownloaded = data['isDownloaded'] ?? false;
     path         = Document.QuestionPapers;
+    uploader_id  = data["uploader_id"];
     year         = data["year"].toString() ?? "";
     type         = Constants.questionPapers;
     GDriveID     = data["GDriveID"]; 
@@ -88,6 +90,7 @@ class QuestionPaper extends AbstractDocument{
       "uploadDate"  : uploadDate,
       "id"          : id,
       "title"       : title,
+      "uploader_id" : uploader_id,
       "isDownloaded": isDownloaded ?? false,
       "GDriveID": GDriveID,
       "GDriveLink": GDriveLink,
@@ -109,6 +112,9 @@ class QuestionPaper extends AbstractDocument{
   }
 
   set setId(String id){this.id = id;}
+  set setUploaderId(String id) {
+    this.uploader_id = id;
+  }
   set setIsDownloaded(bool id){this.isDownloaded = id;}
   set setDate(DateTime id){this.uploadDate = id;}
 

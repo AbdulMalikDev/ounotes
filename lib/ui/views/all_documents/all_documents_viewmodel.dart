@@ -24,9 +24,10 @@ class AllDocumentsViewModel extends BaseViewModel {
     _navigationService.navigateTo(Routes.uploadSelectionViewRoute,
         arguments: UploadSelectionViewArguments(subjectName: _subjectName));
   }
-
+  
   handleStartup(BuildContext context) async {
-    await _permissionHandler.askPermission();
+    //permission for storage not needed
+    // await _permissionHandler.askPermission();
    bool shouldShow = await _sharedPreferencesService.shouldIShowIntroDialog();
    if (shouldShow) {
       await showDialog(

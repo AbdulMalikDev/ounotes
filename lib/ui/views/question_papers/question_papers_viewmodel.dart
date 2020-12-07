@@ -46,7 +46,7 @@ class QuestionPapersViewModel extends BaseViewModel {
         await _firestoreService.loadQuestionPapersFromFirebase(subjectName);
     if (result is String) {
       _dialogService.showDialog(
-          title: "Error", description: "Error in loading documents");
+          title: "Error", description: "Error in loading documents " + "$result");
       setBusy(false);
     } else {
       _questionPapers = result;

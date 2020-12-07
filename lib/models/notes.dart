@@ -24,6 +24,8 @@ class Note extends AbstractDocument {
   String GDriveID;
   String GDriveNotesFolderID;
 
+  String uploader_id;
+
   Note({
     @required this.subjectName,
     @required this.title,
@@ -51,6 +53,7 @@ class Note extends AbstractDocument {
     type = Constants.notes;
     votes = data["votes"]??0;
     size = data['size'];
+    uploader_id = data['uploader_id'];
     GDriveLink = data['GDriveLink'] ?? null;
     GDriveID = data['GDriveID'] ?? null;
     GDriveNotesFolderID = data['GDriveNotesFolderID'] ?? null;
@@ -69,6 +72,7 @@ class Note extends AbstractDocument {
       "isDownloaded": isDownloaded ?? false,
       "votes": votes,
       "size":size,
+      "uploader_id":uploader_id,
       "GDriveLink":GDriveLink ?? null,
       "GDriveID":GDriveID ?? null,
       "GDriveNotesFolderID":GDriveNotesFolderID ?? null,
@@ -79,6 +83,10 @@ class Note extends AbstractDocument {
   set setId(String id) {
     this.id = id;
     this.firebaseId = id;
+  }
+
+  set setUploaderId(String id) {
+    this.uploader_id = id;
   }
 
   set setIsDownloaded(bool id) {

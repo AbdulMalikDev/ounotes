@@ -126,9 +126,9 @@ class NotesTileViewModel extends BaseViewModel {
     );
   }
 
-  getSnapShotOfVotes(Note note) {
-    return _firestoreService.getSnapShotOfVotes(note);
-  }
+  // getSnapShotOfVotes(Note note) {
+  //   return _firestoreService.getSnapShotOfVotes(note);
+  // }
 
   // getListOfVoteBySub(String subname) {
   //   votesbySub.forEach((vote) {

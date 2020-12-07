@@ -164,7 +164,7 @@ class SharedPreferencesService {
     return telegramDialog;
   }
 
-  getUser() async {
+  Future getUser() async {
     SharedPreferences prefs = await store();
     log.i("User trying to be retrieved from local storage");
     String userJson = prefs.getString("current_user_is_logged_in");

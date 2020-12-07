@@ -104,16 +104,20 @@ class CloudStorageService {
   }) async {
     AuthenticationService _authenticationService =
         locator<AuthenticationService>();
+
     bool result1 = await _firestoreService.areUsersAllowed();
     bool result2 =
         await _firestoreService.isUserAllowed(_authenticationService.user.id);
     if (!result1 || !result2) {
       return "BLOCKED";
     }
+
+    //Log values to console
     log.i("Values recieved to upload the file :");
     log.i("notesName : ${note.title}");
     log.i("Subject Name : ${note.subjectName}");
     log.i("Type : $type");
+    
     try {
       File document = await _filePickerService.selectFile();
       String mimeStr = lookupMimeType(document.path);
@@ -187,6 +191,8 @@ class CloudStorageService {
         return null;
         break;
       case Document.None:
+      case Document.Report:
+      case Document.UploadLog:
       case Document.Drawer:
         return null;
         break;

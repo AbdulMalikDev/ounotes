@@ -14,6 +14,7 @@ class UploadLog {
   String email;
   String uploader_id;
   String uploader_name;
+  bool notificationSent = false;
 
   UploadLog(
       {this.id,
@@ -26,15 +27,16 @@ class UploadLog {
 
   UploadLog.fromData(Map<String, dynamic> data) {
     try {
-      fileName = data["fileName"] ?? "";
-      subjectName = data['subjectName'].toString();
-      id = data['id'].toString() ?? "";
-      type = data["type"].toString();
-      date = _parseUploadDate(data["uploadedAt"]);
-      email = data["email"].toString();
-      size = data["size"].toString() ?? "0";
-      uploader_id = data["uploader_id"];
-      uploader_name = data["uploader_name"];
+      fileName          = data["fileName"] ?? "";
+      subjectName       = data['subjectName'].toString();
+      id                = data['id'].toString() ?? "";
+      type              = data["type"].toString();
+      date              = _parseUploadDate(data["uploadedAt"]);
+      email             = data["email"].toString();
+      size              = data["size"].toString() ?? "0";
+      uploader_id       = data["uploader_id"];
+      uploader_name     = data["uploader_name"];
+      notificationSent  = data["notificationSent"] ?? false;
 
     } catch (e) {
       log.e("While DESERIALIZING uploadLog model from Firebase , Error occurred");
@@ -47,15 +49,18 @@ class UploadLog {
 
   Map<String, dynamic> toJson() {
     return {
-      "fileName": fileName,
-      "subjectName": subjectName,
-      "email": email,
-      "type": type,
-      "id": id,
-      "uploadedAt": date,
-      "size" : size??"0",
+      "fileName":          fileName,
+      "subjectName":       subjectName,
+      "email":             email,
+      "type":              type,
+      "id":                id,
+      "uploadedAt":        date,
+      "size" :             size??"0",
+      "notificationSent" : notificationSent,
     };
   }
+
+  set setNotificationSent(bool isNotificationSent) => this.notificationSent = isNotificationSent;
 
   DateTime _parseUploadDate(date) {
     return DateTime.parse(date.toDate().toString());

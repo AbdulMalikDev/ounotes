@@ -1,7 +1,6 @@
 import 'package:FSOUNotes/models/subject.dart';
 
 class CourseInfo {
-  
   static List<String> semestersInNumbers = [
     "1",
     "2",
@@ -45,9 +44,10 @@ class CourseInfo {
     "ISL Engineering College",
     "Methodist ",
     "Stanley College ",
+    "NGIT",
     "University College of Engineering",
     "Matrusri Engineering College",
-    "Swathi Institute of Technology & Science.",
+    "Swathi Institute of Technology & Science",
     "JNTU Affiliated Colleges",
     "Other"
   ];

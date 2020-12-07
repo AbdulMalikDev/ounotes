@@ -14,6 +14,7 @@ class Link extends AbstractDocument{
   //* variables needed for upload/download related features
   String id;
   Document path;
+  String uploader_id;
 
   Link({this.subjectName, this.title, this.description, this.linkUrl, this.id, this.path});
 
@@ -28,6 +29,7 @@ class Link extends AbstractDocument{
     path         = Document.Links;
     id           = data["id"] ?? getNewId();
     type         = Constants.links;
+    uploader_id         = data["uploader_id"];
   }
 
   getNewId(){
@@ -49,6 +51,7 @@ class Link extends AbstractDocument{
     "description" : description,
     "url"         : linkUrl,
     "id"          : id,
+    "uploader_id" : uploader_id,
     };
   }
 
@@ -62,6 +65,9 @@ class Link extends AbstractDocument{
   @override
   set setUrl(String url) {
     this.url = url;
+  }
+  set setUploaderId(String id) {
+    this.uploader_id = id;
   }
   @override
   set setTitle(String value){this.title = value;}

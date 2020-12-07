@@ -84,12 +84,27 @@ class _UploadLogViewState extends State<UploadLogView>
                                           .copyWith(fontSize: 18),
                                     ),
                                     FutureBuilder(
-                                      future: model.getStatus(logItem),
+                                      future: model.getUploadStatus(logItem),
                                       builder: (context, AsyncSnapshot<String> snapshot) {
                                         if (snapshot.hasData)
                                         {
                                         return Text(
-                                          "Status : " + snapshot.data ?? "0",
+                                          "Upload Status : " + snapshot.data ?? "0",
+                                          style: theme.textTheme.subtitle1
+                                              .copyWith(fontSize: 18),
+                                        );
+                                        }else{
+                                          return Text("EMPTY");
+                                        }
+                                      }
+                                    ),
+                                    FutureBuilder(
+                                      future: model.getNotificationStatus(logItem),
+                                      builder: (context, AsyncSnapshot<String> snapshot) {
+                                        if (snapshot.hasData)
+                                        {
+                                        return Text(
+                                          "Notification Status : " + snapshot.data ?? "NONE",
                                           style: theme.textTheme.subtitle1
                                               .copyWith(fontSize: 18),
                                         );

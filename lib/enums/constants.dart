@@ -7,6 +7,8 @@ class Constants {
   static const String questionPapers = "Question Papers";
   static const String syllabus = "Syllabus";
   static const String links = "Links";
+  static const String uploadLog = "Upload Log";
+  static const String report = "Report";
   static const String none = 'none';
   static const String upvote = 'upvote';
   static const String downvote = 'downvote';
@@ -96,6 +98,12 @@ class Constants {
         break;
       case Document.Links:
         return links;
+        break;
+      case Document.UploadLog:
+        return uploadLog;
+        break;
+      case Document.Report:
+        return report;
         break;
       case Document.None:
       case Document.Drawer:

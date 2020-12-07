@@ -10,6 +10,8 @@ enum Document {
   Syllabus,
   Links,
   Drawer,
+  UploadLog,
+  Report,
   None,
 }
 

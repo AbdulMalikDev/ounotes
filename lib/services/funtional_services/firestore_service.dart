@@ -14,6 +14,7 @@ import 'package:FSOUNotes/models/syllabus.dart';
 import 'package:FSOUNotes/models/user.dart';
 import 'package:FSOUNotes/services/funtional_services/analytics_service.dart';
 import 'package:FSOUNotes/services/funtional_services/authentication_service.dart';
+import 'package:FSOUNotes/services/funtional_services/sharedpref_service.dart';
 import 'package:FSOUNotes/services/state_services/links_service.dart';
 import 'package:FSOUNotes/services/state_services/notes_service.dart';
 import 'package:FSOUNotes/services/state_services/question_paper_service.dart';
@@ -52,8 +53,10 @@ class FirestoreService {
   QuestionPaperService _questionPaperService = locator<QuestionPaperService>();
   SyllabusService _syllabusService = locator<SyllabusService>();
   LinksService _linksService = locator<LinksService>();
+  
 
   AnalyticsService _analyticsService = locator<AnalyticsService>();
+  SharedPreferencesService _sharedPreferencesService = locator<SharedPreferencesService>();
   
 
   _getCollectionReferenceAccordingToType(Document path) {
@@ -71,6 +74,8 @@ class FirestoreService {
         return _linksCollectionReference;
         break;
       case Document.None:
+      case Document.Report:
+      case Document.UploadLog:
       case Document.Drawer:
         break;
     }
@@ -87,9 +92,15 @@ class FirestoreService {
     return areUsersAllowedToUpload;
   }
 
-  saveUser(Map<String, dynamic> data) async {
+  saveUser(User user) async {
+    Map<String, dynamic> data = user.toJson();
     try {
       await _usersCollectionReference.document(data["id"]).setData(data);
+      await _usersCollectionReference.document("user_stats").updateData({
+        user.college : FieldValue.increment(1),
+        user.semester : FieldValue.increment(1),
+        user.branch : FieldValue.increment(1),
+      });
     } catch (e) {
       return _errorHandling(
           e, "While saving user to Firebase , Error occurred");
@@ -115,6 +126,7 @@ class FirestoreService {
     try {
       QuerySnapshot snapshot = await _notesCollectionReference
           .where('subjectName', isEqualTo: subjectName)
+          .orderBy('votes',descending: true)
           .getDocuments();
       List<Note> notes =
           snapshot.documents.map((doc) => Note.fromData(doc.data,doc.documentID)).toList();
@@ -204,9 +216,10 @@ class FirestoreService {
   Future saveNotes(AbstractDocument note) async {
     try {
       AuthenticationService _authenticationService = locator<AuthenticationService>();
-      User user = await _authenticationService.getUser();
+      User user = await _sharedPreferencesService.getUser();
       String id = newCuid();
       note.setId = id;
+      note.setUploaderId = user.id;
       log.i("Document being saved");
       CollectionReference ref =
           _getCollectionReferenceAccordingToType(note.path);
@@ -235,6 +248,7 @@ class FirestoreService {
       log.e("saving link");
       String id = newCuid();
       doc.setId = id;
+      doc.setUploaderId = user.id;
       await _linksCollectionReference.document(doc.id).setData(doc.toJson());
       await _linksCollectionReference.document("length").updateData({"len" : FieldValue.increment(1)});
       await _uploadLogCollectionReference
@@ -292,6 +306,15 @@ class FirestoreService {
     //Before rewriting whole application , there was no real system of ids
     //In an effort to be backward compatible we had to take care of both cases
     try {
+
+      //Remove document from the user who uploaded this document and update his stats
+      if(doc.uploader_id!=null)
+      {
+        _usersCollectionReference.document(doc.uploader_id).updateData({"uploads":FieldValue.arrayRemove([doc.id])});
+        _usersCollectionReference.document(doc.uploader_id).updateData({"numOfAcceptedUploads":FieldValue.increment(-1)});
+        _usersCollectionReference.document(doc.uploader_id).updateData({"numOfUploads":FieldValue.increment(-1)});
+      }
+
       if (doc.id != null) {
         log.w("Document being deleted using ID");
         if (doc.id.length > 5) {
@@ -315,6 +338,8 @@ class FirestoreService {
           await doc.reference.delete();
         });
       }
+      
+    
     } catch (e) {
       return _errorHandling(
           e, "While Deleting document in Firebase , Error occurred");
@@ -440,29 +465,29 @@ class FirestoreService {
     }
   }
 
-  getSnapShotOfVotes(Note doc) {
-    // return _notesCollectionReference
-    //     .document("Note_${note.subjectName}_${note.title}")
-    //     .snapshots();
-    CollectionReference ref = _notesCollectionReference;
-    try {
-      if (doc.id != null && doc.id.length > 5) {
-        log.i("snapshot of votes called using ID");
-        // if () {
-        return ref.document(doc.id).snapshots();
-        // }
-      } else {
-        log.i("Getting snapshot of votes");
-        return _notesCollectionReference
-            .document("Note_${doc.subjectName}_${doc.title}")
-            .snapshots();
-        // });
-      }
-    } catch (e) {
-      return _errorHandling(
-          e, "While increment view notes in Firebase , Error occurred");
-    }
-  }
+  // getSnapShotOfVotes(Note doc) {
+  //   // return _notesCollectionReference
+  //   //     .document("Note_${note.subjectName}_${note.title}")
+  //   //     .snapshots();
+  //   CollectionReference ref = _notesCollectionReference;
+  //   try {
+  //     if (doc.id != null && doc.id.length > 5) {
+  //       log.i("snapshot of votes called using ID");
+  //       // if () {
+  //       return ref.document(doc.id).snapshots();
+  //       // }
+  //     } else {
+  //       log.i("Getting snapshot of votes");
+  //       return _notesCollectionReference
+  //           .document("Note_${doc.subjectName}_${doc.title}")
+  //           .snapshots();
+  //       // });
+  //     }
+  //   } catch (e) {
+  //     return _errorHandling(
+  //         e, "While increment view notes in Firebase , Error occurred");
+  //   }
+  // }
 
   Map<String, dynamic> _createUploadLog(AbstractDocument note,User user) {
     AuthenticationService _authenticationService =
@@ -478,6 +503,8 @@ class FirestoreService {
                                         "email": _authenticationService.user.email,
                                         "size": note.size,
                                     };
+    user.incrementUploads();
+    updateUserInFirebase(user);
     return uploadLog;
   }
 
@@ -505,6 +532,8 @@ class FirestoreService {
   deleteUploadLog(UploadLog report) async {
     await _uploadLogCollectionReference.document(report.id).delete();
   }
+
+  //* Methods to update models in Firestore Database
 
   updateSubjectInFirebase(Map subject) async {
     try {
@@ -557,6 +586,37 @@ class FirestoreService {
           log.e(e.toString());
     }
   }
+  updateUploadLogInFirebase(UploadLog note) async {
+    log.e(note.id);
+    
+    try {
+      await _uploadLogCollectionReference.document(note.id).setData(note.toJson());
+    } on Exception catch (e) {
+          log.e(e.toString());
+    }
+  }
+  updateReportInFirebase(Report note) async {
+    log.e(note.id);
+    
+    try {
+      await _reportCollectionReference.document(note.id).setData(note.toJson());
+    } on Exception catch (e) {
+          log.e(e.toString());
+    }
+  }
+  updateUserInFirebase(User user,{bool updateLocally = true}) async {
+    
+    try {
+      if (user!=null){
+
+        await _usersCollectionReference.document(user.id).setData(user.toJson());
+        if(updateLocally){_sharedPreferencesService.saveUserLocally(user);}
+
+      }else{log.e("User is Null, not found in Local Storage");}
+    } on Exception catch (e) {
+          log.e(e.toString());
+    }
+  }
 
   Future<Note> getNoteById(String id) async {
     DocumentSnapshot doc = await _notesCollectionReference.document(id).get();
@@ -574,6 +634,10 @@ class FirestoreService {
   Future<Syllabus> getSyllabusById(String id) async {
     DocumentSnapshot doc = await _syllabusCollectionReference.document(id).get();
     return Syllabus.fromData(doc.data);
+  }
+  Future<User> getUserById(String id) async {
+    DocumentSnapshot doc = await _usersCollectionReference.document(id).get();
+    return User.fromData(doc.data);
   }
 
   deleteLinkById(String id) async {
@@ -601,6 +665,12 @@ class FirestoreService {
         break;
       case Document.Syllabus:
         await this.updateSyllabusInFirebase(doc);
+        break;
+      case Document.UploadLog:
+        await this.updateUploadLogInFirebase(doc);
+        break;
+      case Document.Report:
+        await this.updateReportInFirebase(doc);
         break;
       default:
         break;
