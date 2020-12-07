@@ -1,4 +1,8 @@
+import 'package:FSOUNotes/app/router.gr.dart';
+import 'package:FSOUNotes/enums/constants.dart';
+import 'package:FSOUNotes/enums/enums.dart';
 import 'package:FSOUNotes/models/document.dart';
+import 'package:FSOUNotes/models/link.dart';
 import 'package:FSOUNotes/services/funtional_services/cloud_storage_service.dart';
 import 'package:googleapis/chat/v1.dart';
 import 'package:stacked/stacked.dart';
@@ -22,6 +26,7 @@ class LinksTileViewModel extends BaseViewModel {
   ReportsService _reportsService = locator<ReportsService>();
   CloudStorageService _cloudStorageService = locator<CloudStorageService>();
   DialogService _dialogService = locator<DialogService>();
+  NavigationService _navigationService = locator<NavigationService>();
 
   bool get isAdmin => _authenticationService.user.isAdmin;
 
@@ -102,5 +107,9 @@ class LinksTileViewModel extends BaseViewModel {
         backgroundColor: Colors.red,
         textColor: Colors.white,
         fontSize: 16.0);
+  }
+
+  navigateToEditView(Link note) {
+    _navigationService.navigateTo(Routes.editViewRoute,arguments:EditViewArguments(path: Document.Links,subjectName: note.subjectName,textFieldsMap: Constants.Links,note: note,title:note.title));
   }
 }

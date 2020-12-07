@@ -547,7 +547,7 @@ class FirestoreService {
     CollectionReference ref = _notesCollectionReference;
     try {
       if (note.id != null && note.id.length > 3) {
-        log.w("Document being deleted using ID");
+        log.w("Document being updated using ID");
         if (note.id.length > 5) {
           await ref.document(note.id).setData(note.toJson());
           if (note.path == Document.Links){
@@ -556,7 +556,7 @@ class FirestoreService {
         }
       } else {
         log.w(
-            "Document being deleted using url matching in firebase , may cause more reads");
+            "Document being updated using url matching in firebase , may cause more reads");
         QuerySnapshot snapshot =
             await ref.where("title", isEqualTo: note.title).getDocuments();
         snapshot.documents.forEach((doc) async {
@@ -582,6 +582,16 @@ class FirestoreService {
     
     try {
       await _syllabusCollectionReference.document(note.id).setData(note.toJson());
+    } on Exception catch (e) {
+          log.e(e.toString());
+    }
+  }
+  updateLinkInFirebase(Link note) async {
+    log.e(note.id);
+    
+    try {
+      await _linksCollectionReference.document(note.id).setData(note.toJson());
+      log.e(note.toJson());
     } on Exception catch (e) {
           log.e(e.toString());
     }
@@ -665,6 +675,9 @@ class FirestoreService {
         break;
       case Document.Syllabus:
         await this.updateSyllabusInFirebase(doc);
+        break;
+      case Document.Links:
+        await this.updateLinkInFirebase(doc);
         break;
       case Document.UploadLog:
         await this.updateUploadLogInFirebase(doc);

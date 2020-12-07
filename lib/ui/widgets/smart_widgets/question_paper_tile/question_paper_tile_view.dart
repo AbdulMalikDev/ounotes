@@ -168,16 +168,32 @@ class QuestionPaperTileView extends StatelessWidget {
                             ],
                           ),
                           model.isAdmin
-                              ? Container(
+                            ? 
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                Container(
                                   child: RaisedButton(
-                                  child: Text("DELETE",
-                                      style: TextStyle(color: Colors.white)),
-                                  color: Colors.red,
-                                  onPressed: () async {
-                                    await model.delete(note);
-                                  },
-                                ))
-                              : Container(),
+                                    child: Text("EDIT",
+                                        style: TextStyle(color: Colors.white)),
+                                    color: Colors.blue,
+                                    onPressed: () async {
+                                      await model.navigateToEditView(note);
+                                    },
+                                  ),
+                                ),
+                                Container(
+                                  child: RaisedButton(
+                                    child: Text("DELETE",
+                                        style: TextStyle(color: Colors.white)),
+                                    color: Colors.red,
+                                    onPressed: () async {
+                                      await model.delete(note);
+                                    },
+                                  ),
+                                ),
+                              ])
+                            : Container(),
                         ],
                       ),
               ),

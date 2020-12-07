@@ -1,3 +1,6 @@
+import 'package:FSOUNotes/app/router.gr.dart';
+import 'package:FSOUNotes/enums/constants.dart';
+import 'package:FSOUNotes/enums/enums.dart';
 import 'package:FSOUNotes/models/document.dart';
 import 'package:FSOUNotes/services/funtional_services/cloud_storage_service.dart';
 import 'package:FSOUNotes/services/funtional_services/google_drive_service.dart';
@@ -26,6 +29,7 @@ class QuestionPaperTileViewModel extends BaseViewModel {
   DialogService _dialogService = locator<DialogService>();
   CloudStorageService _cloudStorageService = locator<CloudStorageService>();
   GoogleDriveService _googleDriveService = locator<GoogleDriveService>();
+  NavigationService _navigationService = locator<NavigationService>();
 
   bool get isAdmin => _authenticationService.user.isAdmin;
   bool _isQPdownloaded = false;
@@ -96,5 +100,9 @@ class QuestionPaperTileViewModel extends BaseViewModel {
         backgroundColor: Colors.red,
         textColor: Colors.white,
         fontSize: 16.0);
+  }
+
+  navigateToEditView(QuestionPaper note) {
+    _navigationService.navigateTo(Routes.editViewRoute,arguments:EditViewArguments(path: Document.QuestionPapers,subjectName: note.subjectName,textFieldsMap: Constants.QuestionPaper,note: note,title:note.title));
   }
 }

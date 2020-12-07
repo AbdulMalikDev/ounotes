@@ -1,5 +1,7 @@
 import 'package:FSOUNotes/app/locator.dart';
 import 'package:FSOUNotes/app/logger.dart';
+import 'package:FSOUNotes/app/router.gr.dart';
+import 'package:FSOUNotes/enums/enums.dart';
 import 'package:FSOUNotes/misc/constants.dart';
 import 'package:FSOUNotes/models/document.dart';
 import 'package:FSOUNotes/models/download.dart';
@@ -22,6 +24,7 @@ class NotesTileViewModel extends BaseViewModel {
   final log = getLogger("BuildTileOfNotes");
 
   FirestoreService _firestoreService = locator<FirestoreService>();
+  NavigationService _navigationService = locator<NavigationService>();
   AuthenticationService _authenticationService =
       locator<AuthenticationService>();
   SharedPreferencesService _sharedPreferencesService =
@@ -276,5 +279,9 @@ class NotesTileViewModel extends BaseViewModel {
         backgroundColor: Colors.red,
         textColor: Colors.white,
         fontSize: 16.0);
+  }
+
+  navigateToEditView(Note note) {
+    _navigationService.navigateTo(Routes.editViewRoute,arguments:EditViewArguments(path: Document.Notes,subjectName: note.subjectName,textFieldsMap: Constants.Notes,note: note,title:note.title));
   }
 }

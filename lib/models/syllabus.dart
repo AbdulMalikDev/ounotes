@@ -6,9 +6,9 @@ import 'package:FSOUNotes/models/document.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:logger/logger.dart';
+Logger log = getLogger("SyllabusModel");
 
 class Syllabus extends AbstractDocument{
-  Logger log = getLogger("SyllabusModel");
   String id;
 
   //For Syllabus , the title is the year + branch
@@ -45,6 +45,11 @@ class Syllabus extends AbstractDocument{
     this.semester,
     this.year,
     @required this.type,
+    this.GDriveID,
+    this.GDriveLink,
+    this.GDriveSyllabusFolderID,
+    this.id,
+    this.uploader_id,
   });
 
   

@@ -7,6 +7,7 @@ import 'package:FSOUNotes/ui/views/about_us/privacy_policy/terms_and_conditionvi
 import 'package:FSOUNotes/ui/views/admin/admin_view.dart';
 import 'package:FSOUNotes/ui/views/all_documents/all_documents_view.dart';
 import 'package:FSOUNotes/ui/views/downloads/Downloads_view.dart';
+import 'package:FSOUNotes/ui/views/edit/edit_view.dart';
 import 'package:FSOUNotes/ui/views/home/home_view.dart';
 import 'package:FSOUNotes/ui/views/intro/intro_view.dart';
 import 'package:FSOUNotes/ui/views/links/links_view.dart';
@@ -45,4 +46,5 @@ class $Router {
   TermsAndConditionView termsAndConditionView;
   AdminView adminViewRoute;
   WebViewWidget webViewWidgetRoute;
+  EditView editViewRoute;
 }

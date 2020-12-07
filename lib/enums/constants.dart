@@ -165,6 +165,15 @@ static getConstantFromDoc(Document document){
     case Document.Syllabus:
       return Constants.syllabus;
       break;
+    case Document.Links:
+      return Constants.links;
+      break;
+    case Document.Report:
+      return Constants.report;
+      break;
+    case Document.UploadLog:
+      return Constants.uploadLog;
+      break;
     default:
       break;
   }
