@@ -47,7 +47,7 @@ class CourseInfo {
     "Stanley College ",
     "University College of Engineering",
     "Matrusri Engineering College",
-    "Swathi Institute of Technology & Science.",
+    "Swathi Institute of Technology & Science",
     "JNTU Affiliated Colleges",
     "Other"
   ];

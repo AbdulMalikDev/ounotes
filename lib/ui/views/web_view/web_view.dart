@@ -5,6 +5,7 @@ import 'package:FSOUNotes/models/syllabus.dart';
 import 'package:FSOUNotes/ui/views/web_view/web_view_viewModel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
+import 'package:flutter_windowmanager/flutter_windowmanager.dart';
 import 'package:share/share.dart';
 import 'package:stacked/stacked.dart';
 // import 'package:webview_flutter/webview_flutter.dart';
@@ -45,7 +46,7 @@ class _WebViewWidgetState extends State<WebViewWidget> {
   void initState() {
     super.initState();
     flutterWebViewPlugin.close();
-
+    _screenshotDisable(true);
     if (widget.note != null) {
       subjectName = widget.note.subjectName;
       title = widget.note.title;
@@ -81,6 +82,7 @@ class _WebViewWidgetState extends State<WebViewWidget> {
   void dispose() {
     flutterWebViewPlugin.dispose();
     _onUrlChanged.cancel();
+    _screenshotDisable(false);
     super.dispose();
   }
 
@@ -147,5 +149,14 @@ class _WebViewWidgetState extends State<WebViewWidget> {
           );
         },
         viewModelBuilder: () => WebViewModel());
+  }
+
+  void _screenshotDisable(bool isDisable) async {
+    if(isDisable)
+    {
+      await FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE); 
+    }else{
+      await FlutterWindowManager.clearFlags(FlutterWindowManager.FLAG_SECURE);
+    }
   }
 }

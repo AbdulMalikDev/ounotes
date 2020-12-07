@@ -50,8 +50,8 @@ class NotesViewModel extends BaseViewModel {
   List<Vote> get voteslist => userVotedNotesList;
   AdmobService get admobService => _admobService;
   RemoteConfigService get remoteConfig => _remoteConfigService;
-  String get ADMOB_AD_BANNER_ID => _remoteConfigService.remoteConfig.getString("ADMOB_AD_BANNER_ID");
-  String get ADMOB_APP_ID => _remoteConfigService.remoteConfig.getString("ADMOB_APP_ID");
+  String get ADMOB_AD_BANNER_ID => _admobService.ADMOB_AD_BANNER_ID;
+  String get ADMOB_APP_ID => _admobService.ADMOB_APP_ID;
 
   bool isloading = false;
   bool get loading => isloading;

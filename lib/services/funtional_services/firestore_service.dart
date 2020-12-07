@@ -92,9 +92,15 @@ class FirestoreService {
     return areUsersAllowedToUpload;
   }
 
-  saveUser(Map<String, dynamic> data) async {
+  saveUser(User user) async {
+    Map<String, dynamic> data = user.toJson();
     try {
       await _usersCollectionReference.document(data["id"]).setData(data);
+      await _usersCollectionReference.document("user_stats").updateData({
+        user.college : FieldValue.increment(1),
+        user.semester : FieldValue.increment(1),
+        user.branch : FieldValue.increment(1),
+      });
     } catch (e) {
       return _errorHandling(
           e, "While saving user to Firebase , Error occurred");
