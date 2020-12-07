@@ -1,7 +1,4 @@
-import 'package:FSOUNotes/misc/constants.dart';
 import 'package:FSOUNotes/models/notes.dart';
-import 'package:FSOUNotes/models/vote.dart';
-import 'package:FSOUNotes/ui/widgets/dumb_widgets/progress.dart';
 import 'package:FSOUNotes/ui/widgets/smart_widgets/notes_tile/notes_tile_view.dart';
 import 'package:firebase_admob/firebase_admob.dart';
 import 'package:flutter/material.dart';
@@ -22,21 +19,19 @@ class NotesView extends StatefulWidget {
 
 class _NotesViewState extends State<NotesView>
     with AutomaticKeepAliveClientMixin {
-
   @override
   Widget build(BuildContext context) {
     super.build(context);
     return ViewModelBuilder<NotesViewModel>.reactive(
-      onModelReady: (model) => _initState(model),
+      onModelReady: (model) => _initState(model, context),
       builder: (context, model, child) => WillPopScope(
         onWillPop: () {
           model.admobService.hideNotesViewBanner();
           model.navigateBack();
           return Future.value(false);
         },
-              child: ModalProgressHUD(
+        child: ModalProgressHUD(
           inAsyncCall: model.isloading ? true : false,
-          
           child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -57,7 +52,8 @@ class _NotesViewState extends State<NotesView>
                               ? Center(
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
                                     mainAxisSize: MainAxisSize.min,
                                     children: <Widget>[
                                       Image.asset(
@@ -94,39 +90,10 @@ class _NotesViewState extends State<NotesView>
                                     ],
                                   ),
                                 )
-                              : ListView.builder(
-                                padding: EdgeInsets.only(bottom:150),
-                                  itemCount: model.notes.length,
-                                  itemBuilder: (BuildContext context, int index) {
-                                    Note note = model.notes[index];
-                                    if (model.notes[index].GDriveLink == null) {
-                                      return Container();
-                                    }
-                                    return InkWell(
-                                        child: NotesTileView(
-                                          ctx: context,
-                                          note: note,
-                                          index: index,
-                                          votes: model.getListOfVoteBySub(
-                                              widget.subjectName),
-                                          downloadedNotes:
-                                              model.getListOfNotesInDownloads(
-                                                  widget.subjectName),
-                                          //votes: v.getListOfVoteBySub(
-                                          //  notes[index].subjectName),
-                                        ),
-                                        onTap: () {
-                                          // model.onTap(
-                                          //   notesName: note.title,
-                                          //   subName: note.subjectName,
-                                          //   note: note,
-                                          //   //! This is used so that spelling is not messed up while uploading
-                                          //   type: Constants.notes,
-                                          // );
-                                          model.incrementViewForAd();
-                                          model.openDoc(context,note);
-                                        });
-                                  }),
+                              : ListView(
+                                  padding: EdgeInsets.only(bottom: 150),
+                                  children: model.notesTiles,
+                                ),
                     )
                   ],
                 ),
@@ -142,8 +109,8 @@ class _NotesViewState extends State<NotesView>
   @override
   bool get wantKeepAlive => true;
 
-  _initState(NotesViewModel model) async {
-    model.fetchNotesAndVotes(widget.subjectName);
+  _initState(NotesViewModel model, BuildContext context) async {
+    model.fetchNotesAndVotes(widget.subjectName, context);
     try {
       //TODO firebase admob id
       FirebaseAdMob.instance.initialize(appId: model.admobService.ADMOB_APP_ID);
@@ -152,61 +119,60 @@ class _NotesViewState extends State<NotesView>
         model.admobService.showNotesViewInterstitialAd();
       }
     } on Exception catch (e) {
-          print(e.toString());
+      print(e.toString());
     }
   }
 }
 
-
 // Legacy code
 
 // progressIndicator: Center(
-        //   child: Container(
-        //     padding: EdgeInsets.all(10),
-        //     height: 100,
-        //     width: 300,
-        //     color: Theme.of(context).scaffoldBackgroundColor,
-        //     child: Row(
-        //       mainAxisAlignment: MainAxisAlignment.center,
-        //       crossAxisAlignment: CrossAxisAlignment.center,
-        //       children: <Widget>[
-        //         circularProgress(),
-        //         SizedBox(
-        //           width: 20,
-        //         ),
-        //         Column(
-        //           crossAxisAlignment: CrossAxisAlignment.start,
-        //           mainAxisAlignment: MainAxisAlignment.center,
-        //           children: <Widget>[
-        //             Container(
-        //               constraints: BoxConstraints(maxWidth: 180),
-        //               child: Text(
-        //                   'Downloading...' +
-        //                       model.progress.toStringAsFixed(0) +
-        //                       '%',
-        //                   overflow: TextOverflow.clip,
-        //                   style: Theme.of(context)
-        //                       .textTheme
-        //                       .subtitle1
-        //                       .copyWith(fontSize: 18)),
-        //             ),
-        //             SizedBox(
-        //               height: 10,
-        //             ),
-        //             Container(
-        //               constraints: BoxConstraints(maxWidth: 180),
-        //               child: Text(
-        //                 'Large files may take some time...',
-        //                 overflow: TextOverflow.clip,
-        //                 style: Theme.of(context)
-        //                     .textTheme
-        //                     .subtitle1
-        //                     .copyWith(fontSize: 14),
-        //               ),
-        //             )
-        //           ],
-        //         ),
-        //       ],
-        //     ),
-        //   ),
-        // ),
+//   child: Container(
+//     padding: EdgeInsets.all(10),
+//     height: 100,
+//     width: 300,
+//     color: Theme.of(context).scaffoldBackgroundColor,
+//     child: Row(
+//       mainAxisAlignment: MainAxisAlignment.center,
+//       crossAxisAlignment: CrossAxisAlignment.center,
+//       children: <Widget>[
+//         circularProgress(),
+//         SizedBox(
+//           width: 20,
+//         ),
+//         Column(
+//           crossAxisAlignment: CrossAxisAlignment.start,
+//           mainAxisAlignment: MainAxisAlignment.center,
+//           children: <Widget>[
+//             Container(
+//               constraints: BoxConstraints(maxWidth: 180),
+//               child: Text(
+//                   'Downloading...' +
+//                       model.progress.toStringAsFixed(0) +
+//                       '%',
+//                   overflow: TextOverflow.clip,
+//                   style: Theme.of(context)
+//                       .textTheme
+//                       .subtitle1
+//                       .copyWith(fontSize: 18)),
+//             ),
+//             SizedBox(
+//               height: 10,
+//             ),
+//             Container(
+//               constraints: BoxConstraints(maxWidth: 180),
+//               child: Text(
+//                 'Large files may take some time...',
+//                 overflow: TextOverflow.clip,
+//                 style: Theme.of(context)
+//                     .textTheme
+//                     .subtitle1
+//                     .copyWith(fontSize: 14),
+//               ),
+//             )
+//           ],
+//         ),
+//       ],
+//     ),
+//   ),
+// ),

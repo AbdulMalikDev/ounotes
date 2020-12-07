@@ -14,6 +14,7 @@ import 'package:FSOUNotes/services/funtional_services/remote_config_service.dart
 import 'package:FSOUNotes/services/funtional_services/sharedpref_service.dart';
 import 'package:FSOUNotes/services/state_services/download_service.dart';
 import 'package:FSOUNotes/services/state_services/vote_service.dart';
+import 'package:FSOUNotes/ui/widgets/smart_widgets/notes_tile/notes_tile_view.dart';
 import 'package:cuid/cuid.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -40,7 +41,6 @@ class NotesViewModel extends BaseViewModel {
   DownloadService _downloadService = locator<DownloadService>();
   VoteServie _voteServie = locator<VoteServie>();
 
-
   double _progress = 0;
   double get progress => _progress;
   String _notetitle = '';
@@ -52,6 +52,9 @@ class NotesViewModel extends BaseViewModel {
   RemoteConfigService get remoteConfig => _remoteConfigService;
   String get ADMOB_AD_BANNER_ID => _admobService.ADMOB_AD_BANNER_ID;
   String get ADMOB_APP_ID => _admobService.ADMOB_APP_ID;
+  List<Widget> _notesTiles = [];
+
+  List<Widget> get notesTiles => _notesTiles;
 
   bool isloading = false;
   bool get loading => isloading;
@@ -63,17 +66,49 @@ class NotesViewModel extends BaseViewModel {
 
   List<Note> get notes => _notes;
 
-  Future fetchNotesAndVotes(String subjectName) async {
+  Future fetchNotesAndVotes(String subjectName, BuildContext context) async {
     setBusy(true);
     _notes = await _firestoreService.loadNotesFromFirebase(subjectName);
     if (_notes is String) {
       await Fluttertoast.showToast(
-          msg: "You are facing an error in loading the notes. If you are facing this error more than once, please let us know by using the 'feedback' option in the app drawer.");
+          msg:
+              "You are facing an error in loading the notes. If you are facing this error more than once, please let us know by using the 'feedback' option in the app drawer.");
       return;
     }
     await _voteServie.fetchAndSetVotes();
     await _downloadService.fetchAndSetDownloads();
     userVotedNotesList = _voteServie.userVotesList;
+
+    for (int i = 0; i < _notes.length; i++) {
+      Note note = _notes[i];
+      if (notes[i].GDriveLink == null) {
+        continue;
+      }
+      _notesTiles.add(
+        InkWell(
+          child: NotesTileView(
+            ctx: context,
+            note: note,
+            index: i,
+            votes: getListOfVoteBySub(subjectName),
+            downloadedNotes: getListOfNotesInDownloads(subjectName),
+            //votes: v.getListOfVoteBySub(
+            //  notes[index].subjectName),
+          ),
+          onTap: () {
+            // model.onTap(
+            //   notesName: note.title,
+            //   subName: note.subjectName,
+            //   note: note,
+            //   //! This is used so that spelling is not messed up while uploading
+            //   type: Constants.notes,
+            // );
+            incrementViewForAd();
+            openDoc(context, note);
+          },
+        ),
+      );
+    }
     setBusy(false);
     notifyListeners();
   }
@@ -90,7 +125,7 @@ class NotesViewModel extends BaseViewModel {
     return downloadsbysub;
   }
 
-  getListOfVoteBySub(String subname) {
+  List<Vote> getListOfVoteBySub(String subname) {
     List<Vote> votesbySub = [];
     userVotedNotesList.forEach((vote) {
       if (vote.subname.toLowerCase() == subname.toLowerCase()) {
@@ -276,8 +311,7 @@ class NotesViewModel extends BaseViewModel {
   void incrementViewForAd() {
     this.admobService.incrementNumberOfTimeNotesOpened();
     if (this.admobService.shouldAdBeShown()) {
-        this.admobService.showNotesViewInterstitialAd();
-      }
+      this.admobService.showNotesViewInterstitialAd();
+    }
   }
-  
 }

@@ -67,7 +67,7 @@ class _LinksViewState extends State<LinksView>
                                             height: 200,
                                             width: 200,
                                             child: Image.asset(
-                                                'assets/images/study3.jpg'),
+                                                'assets/images/study4.jpg'),
                                           ),
                                           Text(
                                             "Resources/Links are empty!",
@@ -100,7 +100,7 @@ class _LinksViewState extends State<LinksView>
                                       ),
                                     )
                                   : ListView.builder(
-                                    padding: EdgeInsets.only(bottom:150),
+                                      padding: EdgeInsets.only(bottom: 150),
                                       itemCount: model.linksList.length,
                                       itemBuilder:
                                           (BuildContext context, int index) {
@@ -111,7 +111,8 @@ class _LinksViewState extends State<LinksView>
                                               index: index,
                                             ),
                                             onTap: () {});
-                                      }),
+                                      },
+                                    ),
                         )
                       ],
                     ),

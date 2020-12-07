@@ -9,7 +9,6 @@ import 'package:FSOUNotes/services/funtional_services/firestore_service.dart';
 import 'package:FSOUNotes/services/funtional_services/sharedpref_service.dart';
 import 'package:FSOUNotes/services/state_services/subjects_service.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -21,14 +20,12 @@ class HomeViewModel extends BaseViewModel {
   SubjectsService _subjectsService = locator<SubjectsService>();
   ValueNotifier<List<Subject>> get userSubjects =>
       _subjectsService.userSubjects;
-  ValueNotifier<List<Subject>> get allSubjects =>
-      _subjectsService.allSubjects;
-  
+  ValueNotifier<List<Subject>> get allSubjects => _subjectsService.allSubjects;
+
   SharedPreferencesService _sharedPreferencesService =
       locator<SharedPreferencesService>();
-      
-  AdmobService get admobService => _admobService;
 
+  AdmobService get admobService => _admobService;
   showTelgramDialog(BuildContext context) async {
     bool shouldShowTelegramDialog =
         await _sharedPreferencesService.shouldIShowTelegramDialog();
@@ -95,45 +92,8 @@ class HomeViewModel extends BaseViewModel {
                   SizedBox(
                     height: 20,
                   ),
-                  // RichText(
-                  //   text: TextSpan(
-                  //     children: [
-                  //       TextSpan(
-                  //         text: 'Link :',
-                  //         style: Theme.of(context)
-                  //             .textTheme
-                  //             .subtitle1
-                  //             .copyWith(fontSize: 18),
-                  //       ),
-                  //       TextSpan(
-                  //         text: "https://t.me/ounotes",
-                  //         style: Theme.of(context)
-                  //             .textTheme
-                  //             .subtitle1
-                  //             .copyWith(fontSize: 18, color: Colors.blue),
-                  //         recognizer: TapGestureRecognizer()
-                  //           ..onTap = () {
-                  //             launchURL("https://t.me/ounotes");
-                  //           },
-                  //       ),
-                  //     ],
-                  //   ),
-                  // )
                 ],
               ),
-              // actions: <Widget>[
-              //   FlatButton(
-              //       child: Text(
-              //         "Ok",
-              //         style: Theme.of(context)
-              //             .textTheme
-              //             .subtitle2
-              //             .copyWith(fontSize: 17),
-              //       ),
-              //       onPressed: () {
-              //         Navigator.of(context).pop();
-              //       }),
-              // ],
             );
           });
     }
@@ -195,7 +155,6 @@ class HomeViewModel extends BaseViewModel {
     }
   }
 
-
   void updateNoteInFirebase(Note note) async {
     await _firestoreService.updateNoteInFirebase(note);
   }
@@ -218,7 +177,8 @@ class HomeViewModel extends BaseViewModel {
   }
 
   getQuestionPapersFromFirebase(Subject subject) async {
-    var notes = await _firestoreService.loadQuestionPapersFromFirebase(subject.name);
+    var notes =
+        await _firestoreService.loadQuestionPapersFromFirebase(subject.name);
     return notes;
   }
 
@@ -226,5 +186,4 @@ class HomeViewModel extends BaseViewModel {
     var notes = await _firestoreService.loadSyllabusFromFirebase(subject.name);
     return notes;
   }
-
 }

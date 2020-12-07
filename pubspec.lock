@@ -148,6 +148,20 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.2.0-nullsafety.1"
+  charts_common:
+    dependency: transitive
+    description:
+      name: charts_common
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.9.0"
+  charts_flutter:
+    dependency: "direct main"
+    description:
+      name: charts_flutter
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.9.0"
   checked_yaml:
     dependency: transitive
     description:
@@ -716,6 +730,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.1.0"
+  kf_drawer:
+    dependency: "direct main"
+    description:
+      name: kf_drawer
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.1.2"
   logger:
     dependency: "direct main"
     description:

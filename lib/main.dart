@@ -24,10 +24,10 @@ void main() async {
   RemoteConfigService _remoteConfigService = locator<RemoteConfigService>();
   CrashlyticsService _crashlyticsService = locator<CrashlyticsService>();
   await _remoteConfigService.init();
-  _crashlyticsService.sentryClient = SentryClient(dsn: _remoteConfigService.remoteConfig.getString('SentryKey'));
-  OneSignal.shared.init(
-    _remoteConfigService.remoteConfig.getString('ONESIGNAL_KEY')
-  );
+  _crashlyticsService.sentryClient = SentryClient(
+      dsn: _remoteConfigService.remoteConfig.getString('SentryKey'));
+  OneSignal.shared
+      .init(_remoteConfigService.remoteConfig.getString('ONESIGNAL_KEY'));
   OneSignal.shared
       .setInFocusDisplayType(OSNotificationDisplayType.notification);
   Logger.level = Level.verbose;
@@ -37,10 +37,10 @@ void main() async {
     _crashlyticsService.sentryClient.captureException(
       exception: details.exception,
       stackTrace: details.stack,
-      );
+    );
   };
-  
-   runZonedGuarded(
+
+  runZonedGuarded(
     () => runApp(MyApp()),
     (error, stackTrace) async {
       await _crashlyticsService.sentryClient.captureException(
@@ -57,7 +57,6 @@ class MyApp extends StatelessWidget {
       FirebaseAnalyticsObserver(analytics: FirebaseAnalytics());
   @override
   Widget build(BuildContext context) {
-    
     return ViewModelBuilder<AppStateNotifier>.reactive(
       builder: (context, model, child) => MaterialApp(
         navigatorObservers: <NavigatorObserver>[observer],

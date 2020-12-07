@@ -42,6 +42,8 @@ class NotesTileViewModel extends BaseViewModel {
   int _noofvotes = 0;
   int get noofvotes => _noofvotes;
 
+  List<Vote> recentlyAddedVotes = [];
+
   bool _isnotedownloaded = false;
   bool get isnotedownloaded => _isnotedownloaded;
 
@@ -118,6 +120,13 @@ class NotesTileViewModel extends BaseViewModel {
       hasUpvotes: hasupvotes,
       subname: note.subjectName,
     );
+    recentlyAddedVotes.add(
+      Vote(
+          notesName: note.title,
+          hasDownvoted: hasdownvotes,
+          hasUpvoted: hasupvotes,
+          subname: note.subjectName),
+    );
   }
 
   updateVotes({bool hasupvotes, bool hasdownvotes, Note note}) {
@@ -126,6 +135,18 @@ class NotesTileViewModel extends BaseViewModel {
       hasDownvotes: hasdownvotes,
       hasUpvotes: hasupvotes,
       subname: note.subjectName,
+    );
+    for (int i = 0; i < recentlyAddedVotes.length; i++) {
+      if (recentlyAddedVotes[i].notesName == note.title) {
+        recentlyAddedVotes.removeAt(i);
+      }
+    }
+    recentlyAddedVotes.add(
+      Vote(
+          notesName: note.title,
+          hasDownvoted: hasdownvotes,
+          hasUpvoted: hasupvotes,
+          subname: note.subjectName),
     );
   }
 
@@ -155,6 +176,7 @@ class NotesTileViewModel extends BaseViewModel {
         _isnotedownloaded = true;
       }
     }
+    votesbySub = recentlyAddedVotes + votesbySub;
     for (int i = 0; i < votesbySub.length; i++) {
       if (note.title.toLowerCase() == votesbySub[i].notesName.toLowerCase()) {
         log.i("checking if user voted");

@@ -20,7 +20,6 @@ class HomeView extends StatelessWidget {
       onModelReady: (model) async {
         await model.admobService.hideNotesViewBanner();
         model.showIntroDialog(context);
-      
       },
       builder: (context, model, child) => WillPopScope(
         onWillPop: () => Helper.showWillPopDialog(context: context),
@@ -79,17 +78,6 @@ class HomeView extends StatelessWidget {
     );
   }
 }
-
-
-
-
-
-
-
-
-
-
-
 
 // import 'dart:io';
 
@@ -260,7 +248,7 @@ class HomeView extends StatelessWidget {
 //    var AuthHeaders = await _authenticationService.refreshSignInCredentials();
 //    var client = GoogleHttpClient(AuthHeaders);
 //    var drive = ga.DriveApi(client);
-//   // 
+//   //
 //   //  ga.File fileMetadata = ga.File();
 //   // fileMetadata.name = "ounotes";
 //   // fileMetadata.mimeType = "application/vnd.google-apps.folder";
@@ -286,7 +274,7 @@ class HomeView extends StatelessWidget {
 //   print(allSubjects.length);
 //   bool flag = false;
 //   for (var subject in allSubjects) {
-    
+
 //     if (subject.name == "WEB PROGRAMMING"){
 //       flag = true;
 //     }
@@ -346,14 +334,14 @@ class HomeView extends StatelessWidget {
 //               var response = file;
 //               Directory tempDir = await getTemporaryDirectory();
 //               List<int> dataStore = [];
-//                 response.stream.listen((data) {  
+//                 response.stream.listen((data) {
 //                 print("DataReceived: ${data.length}");
-//                 dataStore.insertAll(dataStore.length, data);     
-//               }, onDone: () async {  
+//                 dataStore.insertAll(dataStore.length, data);
+//               }, onDone: () async {
 //                   //Get temp folder using Path Provider
-//                 String tempPath = tempDir.path; 
+//                 String tempPath = tempDir.path;
 //                   localFile = File('$tempPath/${new DateTime.now().millisecondsSinceEpoch}'); //Create a dummy file
-//                   await localFile.writeAsBytes(dataStore); 
+//                   await localFile.writeAsBytes(dataStore);
 //                   print("Task Done");
 
 //       //file downloaded
@@ -385,8 +373,8 @@ class HomeView extends StatelessWidget {
 //         model.updateNoteInFirebase(note);
 //       }
 
-//               }, onError: (error) {  
-//                 print("Some Error ${error.toString()}");  
+//               }, onError: (error) {
+//                 print("Some Error ${error.toString()}");
 //               });
 //       // await Future.delayed(Duration(seconds: 1),(){});
 //     }
@@ -466,21 +454,18 @@ class HomeView extends StatelessWidget {
 
 //     // await Future.delayed(Duration(seconds: 2),(){});
 
-
 //     // TODO UPDATE SUBJECT SINCE WE ADDED FOLDER LINKS
 //     model.addSubjectToFirebase(subject);
 //     print("subject added");
 //   //  AuthHeaders = await _authenticationService.refreshtoken();
 //   //  client = GoogleHttpClient(AuthHeaders);
 //   //  drive = ga.DriveApi(client);
-    
+
 //   }
 //  }
 //   // allSubjects.forEach((subject) async {
 
 //   // });
-
-  
 
 //   //  ga.File fileToUpload = ga.File();
 //   //  var file = await FilePicker.getFile();
@@ -494,36 +479,33 @@ class HomeView extends StatelessWidget {
 //   //  );
 //   //  drive.files.
 //   //  print(response);
- 
 
 // //  _getAFilePlease(response,file,tempDir)async {
-   
-   
-     
+
 // //  }
 
-//  Future<void> _downloadGoogleDriveFile({HomeViewModel model}) async {  
-//   //  var client = GoogleHttpClient(await googleSignInAccount.authHeaders);  
-//   //  var drive = ga.DriveApi(client);  
-//   //  ga.Media file = await drive.files  
-//   //      .get(gdID, downloadOptions: ga.DownloadOptions.FullMedia);  
-//   //  print(file.stream);  
-   
-//   //  final directory = await getExternalStorageDirectory();  
-//   //  print(directory.path);  
-//   //  final saveFile = File('${directory.path}/${new DateTime.now().millisecondsSinceEpoch}$fName');  
-//   //  List<int> dataStore = [];  
-//   //  file.stream.listen((data) {  
-//   //    print("DataReceived: ${data.length}");  
-//   //    dataStore.insertAll(dataStore.length, data);  
-//   //  }, onDone: () {  
-//   //    print("Task Done");  
-//   //    saveFile.writeAsBytes(dataStore);  
-//   //    print("File saved at ${saveFile.path}");  
-//   //  }, onError: (error) {  
-//   //    print("Some Error");  
-//   //  });  
-//  }  
+//  Future<void> _downloadGoogleDriveFile({HomeViewModel model}) async {
+//   //  var client = GoogleHttpClient(await googleSignInAccount.authHeaders);
+//   //  var drive = ga.DriveApi(client);
+//   //  ga.Media file = await drive.files
+//   //      .get(gdID, downloadOptions: ga.DownloadOptions.FullMedia);
+//   //  print(file.stream);
+
+//   //  final directory = await getExternalStorageDirectory();
+//   //  print(directory.path);
+//   //  final saveFile = File('${directory.path}/${new DateTime.now().millisecondsSinceEpoch}$fName');
+//   //  List<int> dataStore = [];
+//   //  file.stream.listen((data) {
+//   //    print("DataReceived: ${data.length}");
+//   //    dataStore.insertAll(dataStore.length, data);
+//   //  }, onDone: () {
+//   //    print("Task Done");
+//   //    saveFile.writeAsBytes(dataStore);
+//   //    print("File saved at ${saveFile.path}");
+//   //  }, onError: (error) {
+//   //    print("Some Error");
+//   //  });
+//  }
 
 //  Future<void> _listGoogleDriveFiles() async {
 //    var client = GoogleHttpClient(await googleSignInAccount.authHeaders);

@@ -4,29 +4,33 @@ import 'package:FSOUNotes/misc/course_info.dart';
 import 'package:FSOUNotes/services/funtional_services/firestore_service.dart';
 import 'package:logger/logger.dart';
 import 'package:stacked/stacked.dart';
-Logger log = getLogger("UserStatsViewModel");
-class UserStatsViewModel extends FutureViewModel{
 
+Logger log = getLogger("UserStatsViewModel");
+
+class UserStatsViewModel extends FutureViewModel {
   FirestoreService _firestoreService = locator<FirestoreService>();
 
-  Map<String,int> _colleges = {};
-  Map<String,int> _branches = {};
-  Map<String,int> _semesters = {};
+  List<College> _colleges = [];
+  List<Branch> _branches = [];
+  List<Sem> _semesters = [];
+  List<College> get colleges => _colleges;
+  List<Branch> get branches => _branches;
+  List<Sem> get semesters => _semesters;
 
-  Map<String,dynamic> userStats;
+  Map<String, dynamic> userStats;
 
   fetchUserStats() async {
     setBusy(true);
     userStats = await _firestoreService.getUserStats();
     log.e(userStats);
-    CourseInfo.colleges.forEach((college) async { 
-      _colleges.addAll({college:userStats[college]});       
+    CourseInfo.colleges.forEach((college) async {
+      _colleges.add(College(college, userStats[college]));
     });
-    CourseInfo.branch.forEach((branch) async { 
-      _branches.addAll({branch:userStats[branch]});       
+    CourseInfo.branch.forEach((branch) async {
+      _branches.add(Branch(branch, userStats[branch]));
     });
-    CourseInfo.semesters.forEach((semester) async { 
-      _semesters.addAll({semester:userStats[semester]});       
+    CourseInfo.semesters.forEach((semester) async {
+      _semesters.add(Sem(semester, userStats[semester]));
     });
     log.e(_colleges);
     log.e(_branches);
@@ -35,17 +39,46 @@ class UserStatsViewModel extends FutureViewModel{
     notifyListeners();
   }
 
-
+  Map<String, String> _clgs = {
+    "Muffakham Jah College of Engineering and Technology": "MJCET",
+    "Osmania University's College of Technology": "Osmania",
+    "CBIT": "CBIT",
+    "Vasavi": "VASAVI",
+    "MVSR ": "MVSR",
+    "Deccan College ": "DECCAN",
+    "ISL Engineering College": "ISL",
+    "Methodist": "METHODIST",
+    "Stanley College ": "STANLEY",
+    "NGIT": "NGIT",
+    "University College of Engineering": "UNIVERSITY",
+    "Matrusri Engineering College": "MATRUSRI",
+    "Swathi Institute of Technology & Science": "SWATHI",
+    "JNTU Affiliated Colleges": "JNTU",
+    "Other": "OTHER",
+  };
+  Map<String, String> get clgs => _clgs;
 
   @override
   Future futureToRun() => fetchUserStats();
+}
 
-  //Getters and Setters
-  Map<String,int> get colleges => _colleges;
-  set colleges(Map<String,int> value) => _colleges = value;
-  Map<String,int> get branches => _branches;
-  set branches(Map<String,int> value) => _branches = value;
-  Map<String,int> get semesters => _semesters;
-  set semesters(Map<String,int> value) => _semesters = value;
+class College {
+  final String collegeName;
+  final int noOfStudents;
 
+  College(this.collegeName, this.noOfStudents);
+}
+
+class Sem {
+  final String sem;
+  final int noOfStudents;
+
+  Sem(this.sem, this.noOfStudents);
+}
+
+class Branch {
+  final String br;
+  final int noOfStudents;
+
+  Branch(this.br, this.noOfStudents);
 }

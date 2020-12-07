@@ -47,7 +47,6 @@ class NotesTileView extends StatelessWidget {
     var theme = Theme.of(context);
 
     return ViewModelBuilder<NotesTileViewModel>.reactive(
-        createNewModelOnInsert: true,
         onModelReady: (model) => model.checkIfUserVotedAndDownloadedNote(
             voteval: votevalue,
             downloadedNotebySub: downloadedNotes,
