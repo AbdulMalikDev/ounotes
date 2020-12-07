@@ -125,9 +125,9 @@ class _IntroViewState extends State<IntroView> {
                         FittedBox(
                           child: Container(
                             margin: const EdgeInsets.symmetric(
-                                horizontal: 10, vertical: 30),
+                                horizontal: 10, vertical: 20),
                             height: App(context)
-                                .appScreenHeightWithOutSafeArea(0.06),
+                                .appScreenHeightWithOutSafeArea(0.07),
                             child: GoogleSignInButton(
                                 borderRadius: 10,
                                 onPressed: () {
@@ -135,6 +135,7 @@ class _IntroViewState extends State<IntroView> {
                                 }),
                           ),
                         ),
+                        SizedBox(height: 10)
                       ],
                     ),
                   ),
