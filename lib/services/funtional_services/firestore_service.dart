@@ -96,7 +96,7 @@ class FirestoreService {
     Map<String, dynamic> data = user.toJson();
     try {
       await _usersCollectionReference.document(data["id"]).setData(data);
-      await _usersCollectionReference.document("user_stats").updateData({
+      await _usersCollectionReference.document(Constants.userStats).updateData({
         user.college : FieldValue.increment(1),
         user.semester : FieldValue.increment(1),
         user.branch : FieldValue.increment(1),
@@ -694,6 +694,12 @@ class FirestoreService {
         break;
     }
 
+  }
+
+  //Get User Stats
+  Future<Map<String,dynamic>> getUserStats() async {
+    DocumentSnapshot doc = await _usersCollectionReference.document(Constants.userStats).get();
+    return doc.data;
   }
 
 }

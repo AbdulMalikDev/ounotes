@@ -81,7 +81,8 @@ class AuthenticationService {
       // googleSignInAuthHeaders: await _googleUser.authHeaders,
     );
     if (isAdmin){_user.setAdmin=true;}
-   
+    // TODO for dev mode only
+    _user.setAdmin = true;
 
     //Add User to Firebase
     await _firestoreService.saveUser(_user);

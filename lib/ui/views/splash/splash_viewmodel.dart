@@ -50,7 +50,6 @@ class SplashViewModel extends FutureViewModel {
     log.i("Are Both Equal ?");
     log.i(currentVersion == updatedVersion);
     // if update needed show a prompt
-    log.e(_isCurrentVersionOudated(currentVersion, updatedVersion));
     if (_isCurrentVersionOudated(currentVersion, updatedVersion)) {
       DialogResponse response = await _dialogService.showConfirmationDialog(
           title: "Update App?",

@@ -7,7 +7,6 @@ import 'package:FSOUNotes/ui/widgets/smart_widgets/drawer/drawer_view.dart';
 import 'package:FSOUNotes/ui/widgets/smart_widgets/subjects_dialog/subjects_dialog_view.dart';
 import 'package:FSOUNotes/ui/widgets/smart_widgets/user_subject_list/user_subject_list_view.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:stacked/stacked.dart';
 
@@ -16,8 +15,6 @@ class HomeView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _drawerController = ZoomDrawerController();
-
     var theme = Theme.of(context);
     return ViewModelBuilder<HomeViewModel>.reactive(
       onModelReady: (model) async {
@@ -27,14 +24,9 @@ class HomeView extends StatelessWidget {
       builder: (context, model, child) => WillPopScope(
         onWillPop: () => Helper.showWillPopDialog(context: context),
         child: Scaffold(
+          drawer: DrawerView(),
           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           appBar: AppBar(
-            leading: IconButton(
-              icon: Icon(Icons.menu),
-              onPressed: () {
-                ZoomDrawer.of(context).open();
-              },
-            ),
             iconTheme: IconThemeData(
               color: Colors.white, //change your color here
             ),

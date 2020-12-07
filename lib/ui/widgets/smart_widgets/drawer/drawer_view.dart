@@ -110,13 +110,13 @@ class DrawerView extends StatelessWidget {
                           //       style: subtitle1,
                           //     ),
                           //     onTap: model.navigateToDonateScreen),
-                          // if (model.isAdmin)
-                          //   NavItem(
-                          //       Icons.equalizer,
-                          //       "Admin Panel",
-                          //       subtitle1,
-                          //       model.navigateToAdminUploadScreen,
-                          //       Document.Drawer),
+                          if (model.isAdmin)
+                            NavItem(
+                                Icons.equalizer,
+                                "Admin Panel",
+                                subtitle1,
+                                model.navigateToAdminUploadScreen,
+                                Document.Drawer),
                           ListTile(
                             leading: SizedBox(
                               height: 30,

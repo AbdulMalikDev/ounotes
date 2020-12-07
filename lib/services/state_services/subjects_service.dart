@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:FSOUNotes/app/locator.dart';
 import 'package:FSOUNotes/app/logger.dart';
 import 'package:FSOUNotes/misc/course_info.dart';
@@ -11,9 +10,7 @@ import 'package:flutter/services.dart';
 import 'package:injectable/injectable.dart';
 import 'package:logger/logger.dart';
 import 'package:observable_ish/list/list.dart';
-import 'package:observable_ish/observable_ish.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:stacked/stacked.dart';
 
 @lazySingleton
 class SubjectsService with ChangeNotifier {
@@ -112,7 +109,7 @@ class SubjectsService with ChangeNotifier {
         subjectObjects = allsubs
             .map((jsonSubject) => Subject.fromData(jsonSubject))
             .toList();
-       
+
         _allSubjects.value = subjectObjects;
       } else {
         //Get from Firebase
@@ -161,13 +158,17 @@ class SubjectsService with ChangeNotifier {
   }
 
   //* This was created for getting the subject by name
-  //* even if it is in userSubjects or allSubjects does not matter 
+  //* even if it is in userSubjects or allSubjects does not matter
   Subject getSubjectByName(String subjectName) {
     Subject subject = null;
     List<Subject> allSubs = this.allSubjects.value;
     List<Subject> userSubs = this.userSubjects.value;
-    subject = allSubs.firstWhere((subject) => subject.name == subjectName,orElse: ()=>null);
-    if(subject==null){subject = userSubs.firstWhere((subject) => subject.name == subjectName,orElse:()=>null);}
+    subject = allSubs.firstWhere((subject) => subject.name == subjectName,
+        orElse: () => null);
+    if (subject == null) {
+      subject = userSubs.firstWhere((subject) => subject.name == subjectName,
+          orElse: () => null);
+    }
     return subject;
   }
 }

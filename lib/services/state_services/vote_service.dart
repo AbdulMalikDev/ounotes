@@ -7,8 +7,10 @@ import 'package:injectable/injectable.dart';
 class VoteServie {
   String table = 'uservoted_subjects';
   List<Vote> userVotedNotes = [];
+  List<Vote> _recentlyAddedVotes = [];
 
   List<Vote> get userVotesList => userVotedNotes;
+  List<Vote> get votesBySub => _recentlyAddedVotes;
 
   //sqlite support boolean but in the form of integer 0-false , 1-true
   addVote(

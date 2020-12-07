@@ -9,6 +9,7 @@ class Constants {
   static const String links = "Links";
   static const String uploadLog = "Upload Log";
   static const String report = "Report";
+  static const String userStats = "user_stats";
   static const String none = 'none';
   static const String upvote = 'upvote';
   static const String downvote = 'downvote';

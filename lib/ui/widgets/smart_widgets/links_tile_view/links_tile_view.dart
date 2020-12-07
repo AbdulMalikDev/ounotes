@@ -47,20 +47,19 @@ class LinksTileView extends StatelessWidget {
                   backgroundColor: Theme.of(context).primaryColor,
                 ),
                 title: Row(
-                  // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    Container(
-                      child: Text(
-                        title,
-                        overflow: TextOverflow.clip,
-                        style: Theme.of(context)
-                            .textTheme
-                            .subtitle1
-                            .copyWith(fontSize: 16),
+                    Expanded(
+                      child: Container(
+                        child: Text(
+                          title,
+                          overflow: TextOverflow.clip,
+                          style: Theme.of(context)
+                              .textTheme
+                              .subtitle1
+                              .copyWith(fontSize: 15),
+                        ),
                       ),
-                    ),
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.02,
                     ),
                     PopupMenuButton(
                       onSelected: (Menu selectedValue) {
@@ -83,7 +82,7 @@ class LinksTileView extends StatelessWidget {
                   style: Theme.of(context)
                       .textTheme
                       .subtitle1
-                      .copyWith(fontSize: 15),
+                      .copyWith(fontSize: 12),
                 ),
                 children: <Widget>[
                   Divider(

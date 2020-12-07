@@ -41,34 +41,74 @@ class _QuestionPapersViewState extends State<QuestionPapersView>
                             ? MediaQuery.of(context).size.height * 0.68 //chota
                             : MediaQuery.of(context).size.height * 0.73, //bada
 
-
                     width: double.infinity,
                     child: model.isBusy
                         ? Center(
                             child: CircularProgressIndicator(),
                           )
-                        : ListView.builder(
-                            itemCount: model.questionPapers?.length,
-                            itemBuilder: (BuildContext context, int index) {
-                              if (model.questionPapers[index].GDriveLink ==
-                                  null) {
-                                return Container();
-                              }
-                              QuestionPaper questionPaper =
-                                  model.questionPapers[index];
-                              return InkWell(
-                                child: QuestionPaperTileView(
-                                  ctx: context,
-                                  note: questionPaper,
-                                  index: index,
-                                  downloadedQp: [],
+                        : model.questionPapers.length == 0
+                            ? Center(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: <Widget>[
+                                    Image.asset(
+                                      'assets/images/study5.jpg',
+                                      alignment: Alignment.center,
+                                      width: 300,
+                                      height: 300,
+                                    ),
+                                    Text(
+                                      "Question Papers are empty!",
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .headline6
+                                          .copyWith(
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .onSurface,
+                                              fontWeight: FontWeight.w300),
+                                    ),
+                                    SizedBox(
+                                      height: 15,
+                                    ),
+                                    Text(
+                                      "why don't you upload some?",
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .headline6
+                                          .copyWith(
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .onSurface,
+                                              fontWeight: FontWeight.w300),
+                                    ),
+                                  ],
                                 ),
-                                onTap: () {
-                                  model.openDoc(context, questionPaper);
+                              )
+                            : ListView.builder(
+                                itemCount: model.questionPapers?.length,
+                                itemBuilder: (BuildContext context, int index) {
+                                  if (model.questionPapers[index].GDriveLink ==
+                                      null) {
+                                    return Container();
+                                  }
+                                  QuestionPaper questionPaper =
+                                      model.questionPapers[index];
+                                  return InkWell(
+                                    child: QuestionPaperTileView(
+                                      ctx: context,
+                                      note: questionPaper,
+                                      index: index,
+                                      downloadedQp: [],
+                                    ),
+                                    onTap: () {
+                                      model.openDoc(context, questionPaper);
+                                    },
+                                  );
                                 },
-                              );
-                            },
-                          ),
+                              ),
                   )
                 ],
               ),

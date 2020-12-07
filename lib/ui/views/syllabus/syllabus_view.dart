@@ -49,25 +49,67 @@ class _SyllabusViewState extends State<SyllabusView>
                         ? Center(
                             child: CircularProgressIndicator(),
                           )
-                        : ListView.builder(
-                            itemCount: model.syllabus.length,
-                            itemBuilder: (BuildContext context, int index) {
-                              Syllabus syllabus = model.syllabus[index];
-                              if (model.syllabus[index].GDriveLink == null) {
-                                return Container();
-                              }
-                              return InkWell(
-                                  child: SyllabusTileView(
-                                    syllabus: syllabus,
-                                    index: index,
-                                    downloadedsyllabus:
-                                        model.getListOfSyllabusInDownloads(
-                                            widget.subjectName),
-                                  ),
-                                  onTap: () {
-                                    model.openDoc(context, syllabus);
-                                  });
-                            }),
+                        : model.syllabus.length == 0
+                            ? Center(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: <Widget>[
+                                    Image.asset(
+                                      'assets/images/study3.jpg',
+                                      alignment: Alignment.center,
+                                      width: 300,
+                                      height: 300,
+                                    ),
+                                    Text(
+                                      "Syllabus is empty!",
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .headline6
+                                          .copyWith(
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .onSurface,
+                                              fontWeight: FontWeight.w300),
+                                    ),
+                                    SizedBox(
+                                      height: 15,
+                                    ),
+                                    Text(
+                                      "why don't you upload some?",
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .headline6
+                                          .copyWith(
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .onSurface,
+                                              fontWeight: FontWeight.w300),
+                                    ),
+                                  ],
+                                ),
+                              )
+                            : ListView.builder(
+                                itemCount: model.syllabus.length,
+                                itemBuilder: (BuildContext context, int index) {
+                                  Syllabus syllabus = model.syllabus[index];
+                                  if (model.syllabus[index].GDriveLink ==
+                                      null) {
+                                    return Container();
+                                  }
+                                  return InkWell(
+                                      child: SyllabusTileView(
+                                        syllabus: syllabus,
+                                        index: index,
+                                        downloadedsyllabus:
+                                            model.getListOfSyllabusInDownloads(
+                                                widget.subjectName),
+                                      ),
+                                      onTap: () {
+                                        model.openDoc(context, syllabus);
+                                      });
+                                }),
                   )
                 ],
               ),
