@@ -47,7 +47,7 @@ class UserStatsViewModel extends FutureViewModel {
     "MVSR ": "MVSR",
     "Deccan College ": "DECCAN",
     "ISL Engineering College": "ISL",
-    "Methodist": "METHODIST",
+    "Methodist ": "METHODIST",
     "Stanley College ": "STANLEY",
     "NGIT": "NGIT",
     "University College of Engineering": "UNIVERSITY",
