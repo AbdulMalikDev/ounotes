@@ -199,6 +199,10 @@ class UploadViewModel extends BaseViewModel {
       case Document.None:
       case Document.Drawer:
         break;
+      case Document.UploadLog:
+        break;
+      case Document.Report:
+        break;
     }
     if (doc.path != Document.Links) {
       var result = await _cloudStorageService.uploadFile(note: doc, type: type);

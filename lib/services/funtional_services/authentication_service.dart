@@ -61,7 +61,6 @@ class AuthenticationService {
     _firebaseUser = (await firebaseAuth.signInWithCredential(credential)).user;
 
     bool isAdmin = Confidential.run(_firebaseUser.email);
-    log.e(isAdmin);
     if (isAdmin)
     {
       googleSignIn = GoogleSignIn(scopes: ['https://www.googleapis.com/auth/drive']);
@@ -81,8 +80,6 @@ class AuthenticationService {
       // googleSignInAuthHeaders: await _googleUser.authHeaders,
     );
     if (isAdmin){_user.setAdmin=true;}
-    // TODO for dev mode only
-    _user.setAdmin = true;
 
     //Add User to Firebase
     await _firestoreService.saveUser(_user);
