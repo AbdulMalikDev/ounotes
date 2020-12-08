@@ -40,7 +40,7 @@ class UserStatsView extends StatelessWidget {
                 height: 50,
               ),
               Container(
-                height: MediaQuery.of(context).size.height * 0.2,
+                height: MediaQuery.of(context).size.height * 0.23,
                 child: Column(
                   children: [
                     Padding(
@@ -68,7 +68,7 @@ class UserStatsView extends StatelessWidget {
                   children: model.colleges
                       .map(
                         (entry) => Text(
-                            "${model.clgs[entry.collegeName]} : ${entry.noOfStudents}"),
+                            "${model.clgs[entry.collegeName]}: ${entry.noOfStudents}"),
                       )
                       .toList(),
                 ),
@@ -77,7 +77,7 @@ class UserStatsView extends StatelessWidget {
                 height: 20,
               ),
               Container(
-                height: MediaQuery.of(context).size.height * 0.3,
+                height: MediaQuery.of(context).size.height * 0.27,
                 child: Column(
                   children: [
                     Padding(

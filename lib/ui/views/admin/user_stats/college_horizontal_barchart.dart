@@ -27,13 +27,13 @@ class CollegePieOutsideLabelChart extends StatelessWidget {
       List<College> br) {
     Map<String, String> clgs = {
       "Muffakham Jah College of Engineering and Technology": "MJCET",
-      "Osmania University's College of Technology": "Osmania",
+      "Osmania University's College of Technology": "OU",
       "CBIT": "CBIT",
       "Vasavi": "VASAVI",
       "MVSR ": "MVSR",
       "Deccan College ": "DECCAN",
       "ISL Engineering College": "ISL",
-      "Methodist": "METHODIST",
+      "Methodist ": "METHODIST",
       "Stanley College ": "STANLEY",
       "NGIT": "NGIT",
       "University College of Engineering": "UNIVERSITY",
