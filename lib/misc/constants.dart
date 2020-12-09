@@ -124,6 +124,8 @@ class Constants {
         break;
       case Document.None:
       case Document.Drawer:
+      case Document.UploadLog:
+      case Document.Report:
         return "";
         break;
     }
