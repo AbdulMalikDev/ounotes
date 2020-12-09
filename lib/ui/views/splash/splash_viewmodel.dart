@@ -2,6 +2,7 @@ import 'package:FSOUNotes/app/locator.dart';
 import 'package:FSOUNotes/app/logger.dart';
 import 'package:FSOUNotes/app/router.gr.dart';
 import 'package:FSOUNotes/services/funtional_services/analytics_service.dart';
+import 'package:FSOUNotes/services/funtional_services/app_info_service.dart';
 import 'package:FSOUNotes/services/funtional_services/authentication_service.dart';
 import 'package:FSOUNotes/services/funtional_services/remote_config_service.dart';
 import 'package:FSOUNotes/services/funtional_services/sharedpref_service.dart';
@@ -23,6 +24,7 @@ class SplashViewModel extends FutureViewModel {
   SharedPreferencesService _sharedPreferencesService =
       locator<SharedPreferencesService>();
   SubjectsService _subjectsService = locator<SubjectsService>();
+  AppInfoService _appInfoService = locator<AppInfoService>();
 
   handleStartUpLogic() async {
     var hasLoggedInUser = await _sharedPreferencesService.isUserLoggedIn();
@@ -39,7 +41,7 @@ class SplashViewModel extends FutureViewModel {
   }
 
   _checkForUpdatedVersionAndShowDialog() async {
-    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    PackageInfo packageInfo = await _appInfoService.getPackageInfo();
     String updatedVersion =
         _remoteConfigService.remoteConfig.getString('APP_VERSION');
     String version = packageInfo.version;

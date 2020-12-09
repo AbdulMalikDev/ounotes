@@ -7,10 +7,13 @@ import 'package:FSOUNotes/ui/widgets/dumb_widgets/nav_item.dart';
 import 'package:FSOUNotes/ui/widgets/smart_widgets/drawer/drawer_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:in_app_review/in_app_review.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:open_appstore/open_appstore.dart';
 import 'package:share/share.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:stacked/stacked.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:wiredash/wiredash.dart';
 
 class DrawerView extends StatelessWidget {
   const DrawerView({Key key}) : super(key: key);
@@ -47,6 +50,27 @@ class DrawerView extends StatelessWidget {
                               model.updateAppTheme(context);
                             },
                           ),
+                          NavItem(
+                              Icons.file_upload,
+                              "Upload",
+                              subtitle1,
+                              model.navigateToUserUploadScreen,
+                              Document.Drawer),
+                          // ListTile(
+                          //     leading: SizedBox(
+                          //       height: 30,
+                          //       width: 40,
+                          //       child: ClipRRect(
+                          //           child: Image.asset(
+                          //               "assets/images/donate-icon.png")
+                          //           //)
+                          //           ),
+                          //     ),
+                          //     title: Text(
+                          //       "Donate",
+                          //       style: subtitle1,
+                          //     ),
+                          //     onTap: model.navigateToDonateScreen),
                           ListTile(
                               leading: Icon(
                                 Custom.emo_thumbsup,
@@ -89,27 +113,34 @@ class DrawerView extends StatelessWidget {
                           //     subtitle1,
                           //     model.navigateToDownloadScreen,
                           //     Document.None),
-                          NavItem(
-                              Icons.file_upload,
-                              "Upload",
-                              subtitle1,
-                              model.navigateToUserUploadScreen,
-                              Document.Drawer),
-                          // ListTile(
-                          //     leading: SizedBox(
-                          //       height: 30,
-                          //       width: 40,
-                          //       child: ClipRRect(
-                          //           child: Image.asset(
-                          //               "assets/images/donate-icon.png")
-                          //           //)
-                          //           ),
-                          //     ),
-                          //     title: Text(
-                          //       "Donate",
-                          //       style: subtitle1,
-                          //     ),
-                          //     onTap: model.navigateToDonateScreen),
+                          ListTile(
+                            leading: Icon(
+                              MdiIcons.volumeHigh,
+                              size: 30,
+                              color: Theme.of(context).iconTheme.color,
+                            ),
+                            title: Shimmer.fromColors(
+                              baseColor: Colors.teal,
+                              highlightColor: Colors.yellow,
+                              child: Text(
+                                'Feedback',
+                                style: TextStyle(fontWeight:FontWeight.bold,fontFamily: "Montserrat",fontSize: 22,letterSpacing: 3,),
+                              ),
+                            ),
+                            onTap: () async {
+                              // model.dispatchEmail();
+                              await model.getPackageInfo();
+                              Wiredash.of(context).setBuildProperties(
+                                buildNumber: model.packageInfo.version,
+                                buildVersion: model.packageInfo.buildNumber,
+                              );
+                              Wiredash.of(context).setUserProperties(
+                                userEmail: await model.getUserEmail(),
+                                userId: await model.getUserId(),
+                              );
+                              Wiredash.of(context).show();
+                            },
+                          ),
                           if (model.isAdmin)
                             NavItem(
                                 Icons.equalizer,
@@ -225,19 +256,7 @@ class DrawerView extends StatelessWidget {
                                           box.size);
                             },
                           ),
-                          ListTile(
-                            leading: Icon(
-                              Icons.feedback,
-                              color: Theme.of(context).iconTheme.color,
-                            ),
-                            title: Text(
-                              'Feedback',
-                              style: subtitle1,
-                            ),
-                            onTap: () {
-                              model.dispatchEmail();
-                            },
-                          ),
+
                           NavItem(Icons.import_contacts, "About Us", subtitle1,
                               model.navigateToAboutUsScreen, Document.None),
                           SizedBox(

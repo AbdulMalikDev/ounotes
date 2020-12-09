@@ -4,10 +4,13 @@ import 'package:FSOUNotes/AppTheme/AppStateNotifier.dart';
 import 'package:FSOUNotes/app/locator.dart';
 import 'package:FSOUNotes/app/router.gr.dart';
 import 'package:FSOUNotes/enums/enums.dart';
+import 'package:FSOUNotes/models/user.dart';
 import 'package:FSOUNotes/services/funtional_services/analytics_service.dart';
+import 'package:FSOUNotes/services/funtional_services/app_info_service.dart';
 import 'package:FSOUNotes/services/funtional_services/authentication_service.dart';
 import 'package:FSOUNotes/services/funtional_services/email_service.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:package_info/package_info.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
@@ -16,8 +19,16 @@ class DrawerViewModel extends BaseViewModel {
   NavigationService _navigationService = locator<NavigationService>();
   AppStateNotifier _appStateNotifier = locator<AppStateNotifier>();
   AnalyticsService _analyticsService = locator<AnalyticsService>();
+  AppInfoService _appInfoService = locator<AppInfoService>();
   AuthenticationService _authenticationService =
       locator<AuthenticationService>();
+  
+  User user;
+  PackageInfo packageInfo;
+
+  getPackageInfo()async{
+    if(packageInfo == null){packageInfo = await _appInfoService.getPackageInfo();}
+  }
 
   bool get isAdmin => _authenticationService.user.isAdmin;
 
@@ -29,9 +40,6 @@ class DrawerViewModel extends BaseViewModel {
           "[if you are facing errors please attach Screen Shots or Screen Recordings]",
     );
   }
-
-  
-
 
   updateAppTheme(BuildContext context) async {
     bool boolVal = !AppStateNotifier.isDarkModeOn;
@@ -78,5 +86,16 @@ class DrawerViewModel extends BaseViewModel {
     _analyticsService.addTagInNotificationService(
         key: "TELEGRAM", value: "VISITED");
     _analyticsService.logEvent(name: "TELEGRAM_VISIT");
+  }
+
+  Future<String> getUserEmail() async => await _getUser().then((user) => user.email);
+  
+
+  Future<String> getUserId() async => await _getUser().then((user) => user.id);
+
+
+  Future<User> _getUser() async {
+    if (user == null)user = await _authenticationService.getUser();
+    return user;
   }
 }

@@ -6,6 +6,7 @@
 
 import 'package:FSOUNotes/services/funtional_services/admob_service.dart';
 import 'package:FSOUNotes/services/funtional_services/analytics_service.dart';
+import 'package:FSOUNotes/services/funtional_services/app_info_service.dart';
 import 'package:FSOUNotes/AppTheme/AppStateNotifier.dart';
 import 'package:FSOUNotes/services/funtional_services/authentication_service.dart';
 import 'package:FSOUNotes/services/funtional_services/cloud_storage_service.dart';
@@ -33,6 +34,7 @@ void $initGetIt(GetIt g, {String environment}) {
   final thirdPartyServicesModule = _$ThirdPartyServicesModule();
   g.registerLazySingleton<AdmobService>(() => AdmobService());
   g.registerLazySingleton<AnalyticsService>(() => AnalyticsService());
+  g.registerLazySingleton<AppInfoService>(() => AppInfoService());
   g.registerLazySingleton<AppStateNotifier>(() => AppStateNotifier());
   g.registerLazySingleton<AuthenticationService>(() => AuthenticationService());
   g.registerLazySingleton<CloudStorageService>(() => CloudStorageService());

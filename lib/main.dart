@@ -10,6 +10,7 @@ import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stacked/stacked.dart';
+import 'package:wiredash/wiredash.dart';
 
 import './app/locator.dart';
 import 'package:flutter/material.dart';
@@ -53,21 +54,28 @@ void main() async {
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application
+  RemoteConfigService _remoteConfigService = locator<RemoteConfigService>();
   final FirebaseAnalyticsObserver observer =
       FirebaseAnalyticsObserver(analytics: FirebaseAnalytics());
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<AppStateNotifier>.reactive(
-      builder: (context, model, child) => MaterialApp(
-        navigatorObservers: <NavigatorObserver>[observer],
-        title: 'OU Notes',
-        debugShowCheckedModeBanner: false,
-        theme: AppTheme.lightTheme,
-        darkTheme: AppTheme.darkTheme,
-        themeMode:
-            AppStateNotifier.isDarkModeOn ? ThemeMode.dark : ThemeMode.light,
-        onGenerateRoute: router.Router().onGenerateRoute,
+      builder: (context, model, child) => Wiredash(
+        projectId:
+            _remoteConfigService.remoteConfig.getString("WIREDASH_PROJECT_ID"),
+        secret: _remoteConfigService.remoteConfig.getString("WIREDASH_SECRET"),
         navigatorKey: locator<NavigationService>().navigatorKey,
+        child: MaterialApp(
+          navigatorObservers: <NavigatorObserver>[observer],
+          title: 'OU Notes',
+          debugShowCheckedModeBanner: false,
+          theme: AppTheme.lightTheme,
+          darkTheme: AppTheme.darkTheme,
+          themeMode:
+              AppStateNotifier.isDarkModeOn ? ThemeMode.dark : ThemeMode.light,
+          onGenerateRoute: router.Router().onGenerateRoute,
+          navigatorKey: locator<NavigationService>().navigatorKey,
+        ),
       ),
       viewModelBuilder: () => locator<AppStateNotifier>(),
     );
