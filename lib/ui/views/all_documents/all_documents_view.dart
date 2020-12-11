@@ -24,7 +24,7 @@ class _AllDocumentsViewState extends State<AllDocumentsView>
   Intro intro;
   List<String> uploadPromptInfo;
   _AllDocumentsViewState() {
-    if(OnboardingService.number_of_time_document_view_opened%10==0)
+    if(OnboardingService.getNumberOfTimesDocumentViewOpened() % 10 == 0)
     {
       uploadPromptInfo = OnboardingService.getUploadPrompt();
       print(uploadPromptInfo[0]);
@@ -41,7 +41,7 @@ class _AllDocumentsViewState extends State<AllDocumentsView>
         ),
       );
     }
-    OnboardingService.number_of_time_document_view_opened++;
+    OnboardingService.incrementNumberOfTimesDocumentViewOpened();
   }
 
   @override
@@ -213,7 +213,7 @@ class _AllDocumentsViewState extends State<AllDocumentsView>
     super.initState();
     _tabController = new TabController(vsync: this, length: 4);
     SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
-      intro.start(context);
+      intro?.start(context);
     });
   }
 

@@ -35,8 +35,6 @@ class LinksTileViewModel extends BaseViewModel {
   bool get isAdmin => _authenticationService.user.isAdmin;
 
   void reportNote({@required AbstractDocument doc}) async {
-    setBusy(true);
-    
     //Collect reason of reporting from user
     SheetResponse reportResponse = await _bottomSheetService.showCustomSheet(
     variant: BottomSheetType.floating,
@@ -46,15 +44,15 @@ class LinksTileViewModel extends BaseViewModel {
     mainButtonTitle: 'Report',
     secondaryButtonTitle: 'Go Back',
     );
-    log.i("Report BottomSheetResponse " + reportResponse.responseData);
     if(!reportResponse.confirmed){return;}
+    log.i("Report BottomSheetResponse " + reportResponse.responseData);
 
     //Generate report with appropriate data
     Report report = Report(doc.id, doc.subjectName, doc.type, doc.title, _authenticationService.user.email,reportReason: reportResponse.responseData);
 
     //Check whether user is banned
     User user = await _firestoreService.refreshUser();
-    if(!user.isUserAllowedToUpload){_userIsNotAllowedNotToReport(); return;}
+    if(!user.isUserAllowedToUpload){_userIsNotAllowedNotToReport();return;}
 
     //If user is reporting the same document 2nd time the result will be a String
     var result = await _reportsService.addReport(report);
@@ -72,8 +70,6 @@ class LinksTileViewModel extends BaseViewModel {
           textColor: Colors.white,
           fontSize: 16.0);
     }
-    
-    setBusy(false);
   }
 
   openLink(String url) async {

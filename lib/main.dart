@@ -9,7 +9,9 @@ import 'package:feature_discovery/feature_discovery.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
+import 'package:hive/hive.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stacked/stacked.dart';
 import 'package:wiredash/wiredash.dart';
@@ -27,6 +29,10 @@ void main() async {
   setupLocator();
   //Setting custom Bottom Sheet
   setUpBottomSheetUi();
+  //Setting up Hive DB
+  final appDir = await getApplicationDocumentsDirectory();
+  Hive.init(appDir.path);
+  await Hive.openBox("OUNOTES");
   RemoteConfigService _remoteConfigService = locator<RemoteConfigService>();
   CrashlyticsService _crashlyticsService = locator<CrashlyticsService>();
   await _remoteConfigService.init();
@@ -40,12 +46,12 @@ void main() async {
   Logger.level = Level.verbose;
   SharedPreferences prefs = await SharedPreferences.getInstance();
   AppStateNotifier.isDarkModeOn = prefs.getBool('isdarkmodeon') ?? false;
-  FlutterError.onError = (details, {bool forceReport = false}) {
-    _crashlyticsService.sentryClient.captureException(
-      exception: details.exception,
-      stackTrace: details.stack,
-    );
-  };
+  // FlutterError.onError = (details, {bool forceReport = false}) {
+  //   _crashlyticsService.sentryClient.captureException(
+  //     exception: details.exception,
+  //     stackTrace: details.stack,
+  //   );
+  // };
 runApp(MyApp());
   // runZonedGuarded(
   //   () => ,

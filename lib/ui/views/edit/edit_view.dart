@@ -32,9 +32,7 @@ class _EditViewState extends State<EditView> {
   final TextEditingController textFieldController1 = TextEditingController(text: "1");
   final TextEditingController textFieldController2 = TextEditingController(text: "2");
   final TextEditingController textFieldController3 = TextEditingController(text: "3");
-  final TextEditingController controllerOfSub = TextEditingController(text: "4");
-  final TextEditingController controllerOfYear = TextEditingController(text: "5");
-  final TextEditingController controllerOfYear2 = TextEditingController(text: "6");
+  final TextEditingController textFieldController4 = TextEditingController(text: "4");
   final _formKey = GlobalKey<FormState>();
 
   @override
@@ -43,6 +41,10 @@ class _EditViewState extends State<EditView> {
     textFieldController1.text = widget.title;
     if (widget.path == Document.Notes){
       textFieldController2.text = widget.note.author;
+      textFieldController3.text = widget.note.view.toString();
+      textFieldController4.text = widget.note.votes.toString();
+      print(widget.note.view.toString());
+      print(widget.note.votes.toString());
     }else if (widget.path == Document.QuestionPapers){
       textFieldController2.text = widget.note.branch;
     }else if(widget.path == Document.Syllabus){
@@ -187,6 +189,19 @@ class _EditViewState extends State<EditView> {
                                                           textFieldController:
                                                               textFieldController3
                                                       ),
+                                                    if (widget.textFieldsMap[
+                                                            "TextFieldHeading4"] !=
+                                                        null)
+                                                      TextFieldView(
+                                                          heading: widget
+                                                                  .textFieldsMap[
+                                                              "TextFieldHeading4"],
+                                                          labelText: widget
+                                                                  .textFieldsMap[
+                                                              "TextFieldHeadingLabel4"],
+                                                          textFieldController:
+                                                              textFieldController4
+                                                      ),
                                                   ],
                                                 ),
                                       
@@ -203,10 +218,9 @@ class _EditViewState extends State<EditView> {
                                             textFieldController1.text,
                                             textFieldController2.text,
                                             textFieldController3.text,
+                                            textFieldController4.text,
                                             widget.path,
-                                            widget.subjectName != null
-                                                ? widget.subjectName
-                                                : controllerOfSub.text,
+                                            widget.subjectName,
                                             context,
                                             widget.note,
                                           );
