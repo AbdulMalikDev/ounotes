@@ -107,7 +107,7 @@ class CloudStorageService {
 
     bool result1 = await _firestoreService.areUsersAllowed();
     bool result2 =
-        await _firestoreService.isUserAllowed(_authenticationService.user.id);
+        await _firestoreService.refreshUser().then((user) => user.isUserAllowedToUpload);
     if (!result1 || !result2) {
       return "BLOCKED";
     }

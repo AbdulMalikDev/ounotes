@@ -112,7 +112,6 @@ class _NotesViewState extends State<NotesView>
   _initState(NotesViewModel model, BuildContext context) async {
     model.fetchNotesAndVotes(widget.subjectName, context);
     try {
-      //TODO firebase admob id
       FirebaseAdMob.instance.initialize(appId: model.admobService.ADMOB_APP_ID);
       model.admobService.showNotesViewBanner();
       if (model.admobService.shouldAdBeShown()) {

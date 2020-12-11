@@ -69,6 +69,10 @@ class _ReportViewState extends State<ReportView>
                                           .copyWith(fontSize: 18),
                                     ),
                                     Text(""),
+                                    report.reportReasons == null
+                                    ? Container()
+                                    : Column(crossAxisAlignment: CrossAxisAlignment.start,children: report.reportReasons.map((text) => Text(text)).toList(),),
+                                    Text(""),
                                     Text(
                                       "Email of Reporter : " + report.email,
                                       style: theme.textTheme.subtitle1

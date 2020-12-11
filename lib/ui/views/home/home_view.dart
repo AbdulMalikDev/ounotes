@@ -1,13 +1,15 @@
 import 'package:FSOUNotes/enums/enums.dart';
 import 'package:FSOUNotes/misc/helper.dart';
+import 'package:FSOUNotes/services/funtional_services/onboarding_service.dart';
 import 'package:FSOUNotes/ui/views/home/home_viewmodel.dart';
 import 'package:FSOUNotes/ui/views/search/search_view.dart';
 import 'package:FSOUNotes/ui/widgets/dumb_widgets/no_subjects_overlay.dart';
 import 'package:FSOUNotes/ui/widgets/smart_widgets/drawer/drawer_view.dart';
 import 'package:FSOUNotes/ui/widgets/smart_widgets/subjects_dialog/subjects_dialog_view.dart';
 import 'package:FSOUNotes/ui/widgets/smart_widgets/user_subject_list/user_subject_list_view.dart';
+import 'package:feature_discovery/feature_discovery.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:pimp_my_button/pimp_my_button.dart';
 import 'package:stacked/stacked.dart';
 
 class HomeView extends StatelessWidget {
@@ -27,6 +29,25 @@ class HomeView extends StatelessWidget {
           drawer: DrawerView(),
           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           appBar: AppBar(
+            leading: Builder(builder: (BuildContext context) {
+              return DescribedFeatureOverlay(
+                featureId:
+                    OnboardingService.drawer_hamburger_icon_to_access_other_features, // Unique id that identifies this overlay.
+                tapTarget: const Icon(Icons
+                    .menu), // The widget that will be displayed as the tap target.
+                title: Text('Drawer'),
+                description:
+                    Text('Find cool new features in the drawer'),
+                backgroundColor: Theme.of(context).primaryColor,
+                targetColor: Colors.white,
+                textColor: Colors.white,
+                onComplete: () {Scaffold.of(context).openDrawer();return Future.value(true);},
+                child: IconButton(
+                  icon: Icon(Icons.menu),
+                  onPressed: () => Scaffold.of(context).openDrawer(),
+                ),
+              );
+            }),
             iconTheme: IconThemeData(
               color: Colors.white, //change your color here
             ),
@@ -59,17 +80,36 @@ class HomeView extends StatelessWidget {
           ),
           floatingActionButton: Padding(
             padding: const EdgeInsets.only(bottom: 20.0),
-            child: FloatingActionButton(
-              onPressed: () {
-                Fluttertoast.showToast(msg: 'Add Subjects');
-                showModalBottomSheet(
-                    context: context,
-                    isScrollControlled: true,
-                    backgroundColor: Colors.transparent,
-                    builder: (BuildContext context) => SubjectsDialogView());
-              },
-              child: const Icon(Icons.add),
-              backgroundColor: Theme.of(context).accentColor,
+            child: DescribedFeatureOverlay(
+              featureId: OnboardingService
+                  .floating_action_button_to_add_subjects, // Unique id that identifies this overlay.
+              tapTarget: const Icon(Icons
+                  .add), // The widget that will be displayed as the tap target.
+              title: Text('Add Your Subjects !'),
+              description: Text(
+                  'Please use \"+\" button to add subjects and swipe left or right to delete them'),
+              backgroundColor: Theme.of(context).primaryColor,
+              targetColor: Theme.of(context).accentColor,
+              textColor: Colors.white,
+              child: PimpedButton(
+                particle: DemoParticle(),
+                pimpedWidgetBuilder: (context, controller) {
+                  return FloatingActionButton(
+                    onPressed: () async {
+                      controller.forward(from: 0.4);
+                      await Future.delayed(Duration(milliseconds: 290));
+                      showModalBottomSheet(
+                          context: context,
+                          isScrollControlled: true,
+                          backgroundColor: Colors.transparent,
+                          builder: (BuildContext context) =>
+                              SubjectsDialogView());
+                    },
+                    child: const Icon(Icons.add),
+                    backgroundColor: Theme.of(context).accentColor,
+                  );
+                },
+              ),
             ),
           ),
         ),

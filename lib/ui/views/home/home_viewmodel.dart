@@ -6,10 +6,13 @@ import 'package:FSOUNotes/models/syllabus.dart';
 import 'package:FSOUNotes/services/funtional_services/admob_service.dart';
 import 'package:FSOUNotes/services/funtional_services/analytics_service.dart';
 import 'package:FSOUNotes/services/funtional_services/firestore_service.dart';
+import 'package:FSOUNotes/services/funtional_services/onboarding_service.dart';
 import 'package:FSOUNotes/services/funtional_services/sharedpref_service.dart';
 import 'package:FSOUNotes/services/state_services/subjects_service.dart';
+import 'package:feature_discovery/feature_discovery.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:stacked/stacked.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -101,49 +104,20 @@ class HomeViewModel extends BaseViewModel {
 
   showIntroDialog(BuildContext context) async {
     if (_subjectsService.userSubjects.value.length == 0) {
-      //If delay not added, error of build not completed may occur
-      await Future.delayed(Duration(seconds: 1));
-
-      await showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-            title: Row(
-              children: <Widget>[
-                Expanded(
-                  child: Text(
-                    "Welcome to OU Notes App",
-                    style: Theme.of(context)
-                        .textTheme
-                        .headline6
-                        .copyWith(fontSize: 18),
-                  ),
-                ),
-              ],
-            ),
-            content: Text(
-              "Please use \"+\" button to add subjects and swipe left or right to delete them",
-              style:
-                  Theme.of(context).textTheme.subtitle1.copyWith(fontSize: 18),
-            ),
-            actions: <Widget>[
-              FlatButton(
-                  child: Text(
-                    "Ok",
-                    style: Theme.of(context)
-                        .textTheme
-                        .subtitle2
-                        .copyWith(fontSize: 17),
-                  ),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                    showTelgramDialog(context);
-                  }),
-            ],
-          );
-        },
-      );
+      SchedulerBinding.instance.addPostFrameCallback((Duration duration) {
+        FeatureDiscovery.clearPreferences(context, <String>{ 
+          OnboardingService.floating_action_button_to_add_subjects, 
+          OnboardingService.drawer_hamburger_icon_to_access_other_features, 
+        });
+        FeatureDiscovery.discoverFeatures(
+          context,
+          const <String>{
+            // Feature ids for every feature that you want to showcase in order.
+            OnboardingService.floating_action_button_to_add_subjects,
+            OnboardingService.drawer_hamburger_icon_to_access_other_features,
+          },
+        );
+      });
     }
   }
 

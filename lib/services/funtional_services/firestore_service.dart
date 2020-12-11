@@ -282,7 +282,8 @@ class FirestoreService {
         "title": doc.title,
         "type": doc.type,
         "reports": FieldValue.increment(1),
-        "date" : DateTime.now(), 
+        "date" : DateTime.now(),
+        "reportReasons" : FieldValue.arrayUnion([report.reportReason]),
       });
       DocumentSnapshot docSnap =
           await _reportCollectionReference.document(doc.id).get();
@@ -291,7 +292,7 @@ class FirestoreService {
       } else {
         await _reportCollectionReference.document(doc.id).setData(data);
       }
-      _analyticsService.logEvent(name:"REPORT",parameters:report.toJson(),addInNotificationService: true);
+      _analyticsService.logEvent(name:"REPORT",parameters:{"reason":report.reportReason??""});
     } catch (e) {
       return _errorHandling(
           e, "While uploading report to Firebase , Error occurred");
@@ -344,14 +345,6 @@ class FirestoreService {
       return _errorHandling(
           e, "While Deleting document in Firebase , Error occurred");
     }
-  }
-
-  isUserAllowed(String id) async {
-    bool allowed = true;
-    DocumentSnapshot doc = await _usersCollectionReference.document(id).get();
-    allowed = doc.data["isUserAllowedToUpload"] ?? true;
-    log.w("User allowed to upload ? : $allowed");
-    return allowed;
   }
 
   //*used for loading all subjects to firebase [one-time] do not activate again
@@ -618,7 +611,7 @@ class FirestoreService {
     
     try {
       if (user!=null){
-
+        log.e(user.id);
         await _usersCollectionReference.document(user.id).setData(user.toJson());
         if(updateLocally){_sharedPreferencesService.saveUserLocally(user);}
 
@@ -713,6 +706,14 @@ class FirestoreService {
   Future<Map<String,dynamic>> getUserStats() async {
     DocumentSnapshot doc = await _usersCollectionReference.document(Constants.userStats).get();
     return doc.data;
+  }
+
+  Future<User> refreshUser() async {
+    User user = await _sharedPreferencesService.getUser();
+    DocumentSnapshot doc = await _usersCollectionReference.document(user.id).get();
+    User newUser = User.fromData(doc.data);
+    _sharedPreferencesService.saveUserLocally(newUser);
+    return newUser;
   }
 
 }

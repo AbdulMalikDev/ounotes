@@ -4,6 +4,8 @@ import 'package:FSOUNotes/AppTheme/AppStateNotifier.dart';
 import 'package:FSOUNotes/AppTheme/AppTheme.dart';
 import 'package:FSOUNotes/services/funtional_services/remote_config_service.dart';
 import 'package:FSOUNotes/services/funtional_services/crashlytics_service.dart';
+import 'package:FSOUNotes/ui/widgets/smart_widgets/bottom_sheet/bottom_sheet_ui_view.dart';
+import 'package:feature_discovery/feature_discovery.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
@@ -21,10 +23,14 @@ import 'package:sentry/sentry.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  //Dynamic Injection
   setupLocator();
+  //Setting custom Bottom Sheet
+  setUpBottomSheetUi();
   RemoteConfigService _remoteConfigService = locator<RemoteConfigService>();
   CrashlyticsService _crashlyticsService = locator<CrashlyticsService>();
   await _remoteConfigService.init();
+  //Sentry provides crash reporting
   _crashlyticsService.sentryClient = SentryClient(
       dsn: _remoteConfigService.remoteConfig.getString('SentryKey'));
   OneSignal.shared
@@ -40,16 +46,16 @@ void main() async {
       stackTrace: details.stack,
     );
   };
-
-  runZonedGuarded(
-    () => runApp(MyApp()),
-    (error, stackTrace) async {
-      await _crashlyticsService.sentryClient.captureException(
-        exception: error,
-        stackTrace: stackTrace,
-      );
-    },
-  );
+runApp(MyApp());
+  // runZonedGuarded(
+  //   () => ,
+  //   (error, stackTrace) async {
+  //     await _crashlyticsService.sentryClient.captureException(
+  //       exception: error,
+  //       stackTrace: stackTrace,
+  //     );
+  //   },
+  // );
 }
 
 class MyApp extends StatelessWidget {
@@ -60,21 +66,25 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<AppStateNotifier>.reactive(
-      builder: (context, model, child) => Wiredash(
-        projectId:
-            _remoteConfigService.remoteConfig.getString("WIREDASH_PROJECT_ID"),
-        secret: _remoteConfigService.remoteConfig.getString("WIREDASH_SECRET"),
-        navigatorKey: locator<NavigationService>().navigatorKey,
-        child: MaterialApp(
-          navigatorObservers: <NavigatorObserver>[observer],
-          title: 'OU Notes',
-          debugShowCheckedModeBanner: false,
-          theme: AppTheme.lightTheme,
-          darkTheme: AppTheme.darkTheme,
-          themeMode:
-              AppStateNotifier.isDarkModeOn ? ThemeMode.dark : ThemeMode.light,
-          onGenerateRoute: router.Router().onGenerateRoute,
+      builder: (context, model, child) => FeatureDiscovery(
+        child: Wiredash(
+          projectId: _remoteConfigService.remoteConfig
+              .getString("WIREDASH_PROJECT_ID"),
+          secret:
+              _remoteConfigService.remoteConfig.getString("WIREDASH_SECRET"),
           navigatorKey: locator<NavigationService>().navigatorKey,
+          child: MaterialApp(
+            navigatorObservers: <NavigatorObserver>[observer],
+            title: 'OU Notes',
+            debugShowCheckedModeBanner: false,
+            theme: AppTheme.lightTheme,
+            darkTheme: AppTheme.darkTheme,
+            themeMode: AppStateNotifier.isDarkModeOn
+                ? ThemeMode.dark
+                : ThemeMode.light,
+            onGenerateRoute: router.Router().onGenerateRoute,
+            navigatorKey: locator<NavigationService>().navigatorKey,
+          ),
         ),
       ),
       viewModelBuilder: () => locator<AppStateNotifier>(),

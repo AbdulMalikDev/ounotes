@@ -1,5 +1,4 @@
 import 'package:FSOUNotes/app/locator.dart';
-import 'package:FSOUNotes/app/logger.dart';
 import 'package:FSOUNotes/app/router.gr.dart';
 import 'package:FSOUNotes/enums/enums.dart';
 import 'package:FSOUNotes/misc/constants.dart';
@@ -19,6 +18,9 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
+import 'package:FSOUNotes/models/user.dart';
+import 'package:FSOUNotes/enums/bottom_sheet_type.dart';
+import 'package:FSOUNotes/app/logger.dart';
 
 class NotesTileViewModel extends BaseViewModel {
   final log = getLogger("BuildTileOfNotes");
@@ -33,8 +35,9 @@ class NotesTileViewModel extends BaseViewModel {
   DialogService _dialogService = locator<DialogService>();
   CloudStorageService _cloudStorageService = locator<CloudStorageService>();
   GoogleDriveService _googleDriveService = locator<GoogleDriveService>();
-
+  BottomSheetService _bottomSheetService = locator<BottomSheetService>();
   VoteServie _voteServie = locator<VoteServie>();
+
   bool _hasalreadyvoted = false;
   bool get hasalreadyvoted => _hasalreadyvoted;
   String _vote = Constants.none;
@@ -194,23 +197,37 @@ class NotesTileViewModel extends BaseViewModel {
 
   bool get isAdmin => _authenticationService.user.isAdmin;
 
-  void reportNote(
-      {String id,
-      String subjectName,
-      String type,
-      String title,
-      AbstractDocument doc}) async {
-    Report report =
-        Report(id, subjectName, type, title, _authenticationService.user.email);
-    var dialogResult = await _dialogService.showConfirmationDialog(
-        title: "Are You Sure?",
-        description:
-            "Are you sure you want to report this Document?\nUnnecessary reporting may result in a ban from the application!",
-        cancelTitle: "NO",
-        confirmationTitle: "YES");
-    if (!dialogResult.confirmed) {
-      return;
-    }
+  void reportNote
+  ({
+    String id,
+    String subjectName,
+    String type,
+    String title,
+    AbstractDocument doc
+  }) async {
+
+    setBusy(true);
+
+    //Collect reason of reporting from user
+    SheetResponse reportResponse = await _bottomSheetService.showCustomSheet(
+    variant: BottomSheetType.floating,
+    title: 'What\'s wrong with this ?',
+    description:
+        'Reason for reporting...',
+    mainButtonTitle: 'Report',
+    secondaryButtonTitle: 'Go Back',
+    );
+    log.i("Report BottomSheetResponse " + reportResponse.responseData);
+    if(!reportResponse.confirmed){return;}
+
+    //Generate report with appropriate data
+    Report report = Report(id, subjectName, type, title, _authenticationService.user.email,reportReason: reportResponse.responseData);
+
+    //Check whether user is banned
+    User user = await _firestoreService.refreshUser();
+    if(!user.isUserAllowedToUpload){_userIsNotAllowedNotToReport(); return;}
+
+    //If user is reporting the same document 2nd time the result will be a String
     var result = await _reportsService.addReport(report);
     if (result is String) {
       _dialogService.showDialog(
@@ -222,10 +239,11 @@ class NotesTileViewModel extends BaseViewModel {
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.CENTER,
           timeInSecForIosWeb: 1,
-          backgroundColor: Colors.red,
+          backgroundColor: Colors.teal,
           textColor: Colors.white,
           fontSize: 16.0);
     }
+    
     setBusy(false);
   }
 
@@ -283,5 +301,12 @@ class NotesTileViewModel extends BaseViewModel {
 
   navigateToEditView(Note note) {
     _navigationService.navigateTo(Routes.editViewRoute,arguments:EditViewArguments(path: Document.Notes,subjectName: note.subjectName,textFieldsMap: Constants.Notes,note: note,title:note.title));
+  }
+
+  void _userIsNotAllowedNotToReport() async {
+    await _bottomSheetService.showBottomSheet(
+      title: "Oops !",
+      description: "You have been banned by admins for uploading irrelevant content or reporting documents with no issue again and again. Use the feedback option in the drawer to contact the admins if you think this is a mistake",
+    );
   }
 }

@@ -211,9 +211,9 @@ class UploadViewModel extends BaseViewModel {
       log.w(result);
       if (result == "BLOCKED") {
         await _dialogService.showDialog(
-            title: "BLOCKED",
+            title: "BANNED",
             description:
-                "This action has been blocked by admins. If there is a problem , contact us by using the feedback option");
+                "You have been banned by admins for uploading irrelevant content or reporting documents with no issue again and again. Use the feedback option in the drawer to contact the admins if you think this is a mistake");
         setBusy(false);
         return;
       } else if (result == "File size more than 35mb") {

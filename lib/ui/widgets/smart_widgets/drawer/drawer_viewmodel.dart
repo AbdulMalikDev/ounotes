@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:FSOUNotes/AppTheme/AppStateNotifier.dart';
 import 'package:FSOUNotes/app/locator.dart';
+import 'package:FSOUNotes/app/logger.dart';
 import 'package:FSOUNotes/app/router.gr.dart';
 import 'package:FSOUNotes/enums/enums.dart';
 import 'package:FSOUNotes/models/user.dart';
@@ -9,16 +10,22 @@ import 'package:FSOUNotes/services/funtional_services/analytics_service.dart';
 import 'package:FSOUNotes/services/funtional_services/app_info_service.dart';
 import 'package:FSOUNotes/services/funtional_services/authentication_service.dart';
 import 'package:FSOUNotes/services/funtional_services/email_service.dart';
+import 'package:FSOUNotes/services/funtional_services/sharedpref_service.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:flutter_intro/flutter_intro.dart';
+import 'package:logger/logger.dart';
 import 'package:package_info/package_info.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
-
+Logger log = getLogger("DrawerViewModel");
 class DrawerViewModel extends BaseViewModel {
   NavigationService _navigationService = locator<NavigationService>();
   AppStateNotifier _appStateNotifier = locator<AppStateNotifier>();
   AnalyticsService _analyticsService = locator<AnalyticsService>();
+  SharedPreferencesService _sharedPreferencesService = locator<SharedPreferencesService>();
   AppInfoService _appInfoService = locator<AppInfoService>();
   AuthenticationService _authenticationService =
       locator<AuthenticationService>();
@@ -97,5 +104,20 @@ class DrawerViewModel extends BaseViewModel {
   Future<User> _getUser() async {
     if (user == null)user = await _authenticationService.getUser();
     return user;
+  }
+
+  showIntro(Intro intro,BuildContext context) async {
+
+    if(intro==null){log.e("intro is null");return;}
+
+    SchedulerBinding.instance.addPostFrameCallback((Duration duration) async {
+      bool shouldIntroBeShown = await _sharedPreferencesService.shouldIShowDrawerIntro();
+      if (shouldIntroBeShown){
+        if(Scaffold.of(context).isDrawerOpen){
+          Future.delayed(Duration(milliseconds: 240),()=>intro?.start(context));
+        }
+      }
+    });
+    
   }
 }

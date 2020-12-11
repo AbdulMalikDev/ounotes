@@ -1,11 +1,15 @@
+import 'dart:async';
+
 import 'package:FSOUNotes/AppTheme/AppStateNotifier.dart';
 import 'package:FSOUNotes/CustomIcons/custom_icons.dart';
 import 'package:FSOUNotes/enums/enums.dart';
+import 'package:FSOUNotes/services/funtional_services/onboarding_service.dart';
 import 'package:FSOUNotes/ui/shared/app_config.dart';
 import 'package:FSOUNotes/ui/widgets/dumb_widgets/drawer_header.dart';
 import 'package:FSOUNotes/ui/widgets/dumb_widgets/nav_item.dart';
 import 'package:FSOUNotes/ui/widgets/smart_widgets/drawer/drawer_viewmodel.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_intro/flutter_intro.dart';
 import 'package:in_app_review/in_app_review.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:open_appstore/open_appstore.dart';
@@ -15,16 +19,55 @@ import 'package:stacked/stacked.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:wiredash/wiredash.dart';
 
-class DrawerView extends StatelessWidget {
-  const DrawerView({Key key}) : super(key: key);
+class DrawerView extends StatefulWidget {
+  
 
+  @override
+  _DrawerViewState createState() => _DrawerViewState();
+}
+
+class _DrawerViewState extends State<DrawerView> {
+  Intro intro;
+  List<Map<String,String>> drawerPrompts;
+
+  _DrawerViewState() {
+    drawerPrompts = OnboardingService.drawerPrompts;
+    /// init Intro
+    intro = Intro(
+      stepCount: 2,
+      padding: EdgeInsets.zero,
+      /// use defaultTheme, or you can implement widgetBuilder function yourself
+      widgetBuilder: StepWidgetBuilder.useDefaultTheme(
+        texts: [
+          ...drawerPrompts[0].keys,
+          ...drawerPrompts[1].keys,
+        ],
+        buttonTextBuilder: (curr, total) {
+          return curr < total - 1 ? drawerPrompts[0].values.toList()[0] : drawerPrompts[1].values.toList()[0];
+        },
+      ),
+    );
+    intro.setStepConfig(
+      0,
+      padding: EdgeInsets.symmetric(
+        horizontal: -1,
+        vertical: 5,
+      ),
+    );
+  }
+  
+  @override
+  void dispose() {
+    intro?.dispose();
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     var subtitle1 =
         Theme.of(context).textTheme.subtitle1.copyWith(fontSize: 16);
 
     return ViewModelBuilder<DrawerViewModel>.reactive(
-        onModelReady: (model) {},
+        onModelReady: (model) async => await model.showIntro(intro,context),
         builder: (context, model, child) => Container(
               width: App(context).appScreenWidthWithOutSafeArea(0.78),
               child: Drawer(
@@ -72,6 +115,7 @@ class DrawerView extends StatelessWidget {
                           //     ),
                           //     onTap: model.navigateToDonateScreen),
                           ListTile(
+                              key: intro.keys[0],
                               leading: Icon(
                                 Custom.emo_thumbsup,
                                 color: AppStateNotifier.isDarkModeOn
@@ -114,6 +158,7 @@ class DrawerView extends StatelessWidget {
                           //     model.navigateToDownloadScreen,
                           //     Document.None),
                           ListTile(
+                            key: intro.keys[1],
                             leading: Icon(
                               MdiIcons.volumeHigh,
                               size: 30,

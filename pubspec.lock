@@ -288,6 +288,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.2.0-nullsafety.1"
+  feature_discovery:
+    dependency: "direct main"
+    description:
+      name: feature_discovery
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.12.1"
   ffi:
     dependency: transitive
     description:
@@ -475,6 +482,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.9.0"
+  flutter_intro:
+    dependency: "direct main"
+    description:
+      name: flutter_intro
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.7.0"
   flutter_keyboard_visibility:
     dependency: transitive
     description:
@@ -568,7 +582,7 @@ packages:
       name: get
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.14.1"
+    version: "3.22.2"
   get_it:
     dependency: "direct main"
     description:
@@ -933,6 +947,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.1.0"
+  pimp_my_button:
+    dependency: "direct main"
+    description:
+      name: pimp_my_button
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.0"
   platform:
     dependency: transitive
     description:
@@ -1182,7 +1203,7 @@ packages:
       name: stacked_services
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.4.4+1"
+    version: "0.6.0+1"
   stream_channel:
     dependency: transitive
     description:
@@ -1218,6 +1239,27 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.3.1"
+  syncfusion_flutter_core:
+    dependency: transitive
+    description:
+      name: syncfusion_flutter_core
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "18.3.53"
+  syncfusion_flutter_pdf:
+    dependency: transitive
+    description:
+      name: syncfusion_flutter_pdf
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "18.3.53-beta"
+  syncfusion_flutter_pdfviewer:
+    dependency: "direct main"
+    description:
+      name: syncfusion_flutter_pdfviewer
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "18.3.53-beta"
   synchronized:
     dependency: transitive
     description:

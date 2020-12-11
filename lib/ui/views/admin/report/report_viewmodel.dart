@@ -13,17 +13,20 @@ import 'package:FSOUNotes/services/funtional_services/firestore_service.dart';
 import 'package:FSOUNotes/services/funtional_services/google_drive_service.dart';
 import 'package:FSOUNotes/services/state_services/report_service.dart';
 import 'package:FSOUNotes/ui/views/notes/notes_viewmodel.dart';
+import 'package:FSOUNotes/models/user.dart';
 import 'package:FSOUNotes/ui/widgets/smart_widgets/notes_tile/notes_tile_viewmodel.dart';
 import 'package:logger/logger.dart';
+import 'package:FSOUNotes/services/funtional_services/sharedpref_service.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
+Logger log = getLogger("UploadLogViewModel");
 
 class ReportViewModel extends FutureViewModel {
   FirestoreService _firestoreService = locator<FirestoreService>();
   DialogService _dialogService = locator<DialogService>();
   AnalyticsService _analyticsService = locator<AnalyticsService>();
   NavigationService _navigationService = locator<NavigationService>();
-  Logger log = getLogger("UploadLogViewModel");
+  SharedPreferencesService _sharedPreferencesService = locator<SharedPreferencesService>();
 
   List<Report> _reports;
 
@@ -77,6 +80,9 @@ class ReportViewModel extends FutureViewModel {
       _analyticsService.sendNotification(id: report.reporter_id,message: message,title: title);
       report.setNotificationSent = true;
       _firestoreService.updateDocument(report, Document.Report);
+      User user = await _firestoreService.getUserById(report.reporter_id);
+      user.banUser = true;
+      _firestoreService.updateUserInFirebase(user,updateLocally: false);
     }
   }
 
@@ -139,13 +145,6 @@ class ReportViewModel extends FutureViewModel {
     }
 
   getNotificationStatus(Report report) {
-    print(report.notificationSent);
-    print(report.notificationSent);
-    print(report.notificationSent);
-    print(report.notificationSent);
-    print(report.notificationSent);
-    print(report.notificationSent);
-    print(report.notificationSent);
     return report.notificationSent??false ? Future.value("SENT") : Future.value("NOT SENT");
   }
 }

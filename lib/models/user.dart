@@ -67,7 +67,8 @@ class User{
 
     set setAdmin(bool value){this.isAdmin = value;}
 
-    set banUser(bool value){this.isUserAllowedToUpload = value;}
+    // "!value" because if we want to ban user (i.e send true) we need to set isUserAllowedToUpload to false
+    set banUser(bool value){this.isUserAllowedToUpload = !value;}
 
     set setIsUserAllowedToUpload(bool value){this.isUserAllowedToUpload = false;}
 

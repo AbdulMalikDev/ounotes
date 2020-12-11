@@ -19,6 +19,7 @@ class SharedPreferencesService {
 
   bool introDialog;
   bool telegramDialog;
+  bool drawerIntro;
   String modeOfView;
 
   Future<SharedPreferences> store() async {
@@ -162,6 +163,22 @@ class SharedPreferencesService {
       telegramDialog = true;
     }
     return telegramDialog;
+  }
+
+  Future<bool> shouldIShowDrawerIntro() async {
+    if (drawerIntro != null) {
+      if (drawerIntro == false) {
+        return drawerIntro;
+      }
+    }
+    SharedPreferences prefs = await store();
+    if (prefs.containsKey("drawerIntro")) {
+      drawerIntro = false;
+    } else {
+      await prefs.setBool("drawerIntro", true);
+      drawerIntro = true;
+    }
+    return drawerIntro;
   }
 
   Future getUser() async {

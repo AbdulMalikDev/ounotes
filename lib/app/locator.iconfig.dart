@@ -9,11 +9,11 @@ import 'package:FSOUNotes/services/funtional_services/analytics_service.dart';
 import 'package:FSOUNotes/services/funtional_services/app_info_service.dart';
 import 'package:FSOUNotes/AppTheme/AppStateNotifier.dart';
 import 'package:FSOUNotes/services/funtional_services/authentication_service.dart';
+import 'package:FSOUNotes/services/funtional_services/third_party_services_module.dart';
+import 'package:stacked_services/stacked_services.dart';
 import 'package:FSOUNotes/services/funtional_services/cloud_storage_service.dart';
 import 'package:FSOUNotes/services/funtional_services/crashlytics_service.dart';
 import 'package:FSOUNotes/services/funtional_services/db_service.dart';
-import 'package:FSOUNotes/services/funtional_services/third_party_services_module.dart';
-import 'package:stacked_services/stacked_services.dart';
 import 'package:FSOUNotes/services/state_services/download_service.dart';
 import 'package:FSOUNotes/utils/file_picker_service.dart';
 import 'package:FSOUNotes/services/funtional_services/firestore_service.dart';
@@ -37,6 +37,8 @@ void $initGetIt(GetIt g, {String environment}) {
   g.registerLazySingleton<AppInfoService>(() => AppInfoService());
   g.registerLazySingleton<AppStateNotifier>(() => AppStateNotifier());
   g.registerLazySingleton<AuthenticationService>(() => AuthenticationService());
+  g.registerLazySingleton<BottomSheetService>(
+      () => thirdPartyServicesModule.bottomSheetService);
   g.registerLazySingleton<CloudStorageService>(() => CloudStorageService());
   g.registerLazySingleton<CrashlyticsService>(() => CrashlyticsService());
   g.registerLazySingleton<DBService>(() => DBService());
@@ -64,6 +66,8 @@ void $initGetIt(GetIt g, {String environment}) {
 }
 
 class _$ThirdPartyServicesModule extends ThirdPartyServicesModule {
+  @override
+  BottomSheetService get bottomSheetService => BottomSheetService();
   @override
   DialogService get dialogService => DialogService();
   @override

@@ -149,8 +149,8 @@ class EditViewModel extends BaseViewModel{
           path: Document.Notes,
           title: text1,
           author: text2,
-          uploadDate: DateTime.now(),
-          view: 0,
+          uploadDate: note.uploadDate,
+          view: note.view,
           type: type,
           GDriveID: note.GDriveID,
           GDriveLink: note.GDriveLink,
@@ -161,7 +161,7 @@ class EditViewModel extends BaseViewModel{
           size: note.size,
           uploader_id: note.uploader_id,
           url: note.url,
-          votes: note.votes,
+          votes: note.votes, 
         );
         break;
       case Document.QuestionPapers:

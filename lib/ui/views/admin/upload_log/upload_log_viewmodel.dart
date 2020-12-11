@@ -21,6 +21,7 @@ import 'package:FSOUNotes/ui/widgets/smart_widgets/notes_tile/notes_tile_viewmod
 import 'package:logger/logger.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
+Logger log = getLogger("UploadLogViewModel");
 
 class UploadLogViewModel extends FutureViewModel{
  FirestoreService _firestoreService = locator<FirestoreService>();
@@ -28,7 +29,6 @@ class UploadLogViewModel extends FutureViewModel{
  AuthenticationService _authenticationService = locator<AuthenticationService>();
  AnalyticsService _analyticsService = locator<AnalyticsService>();
  SharedPreferencesService _sharedPreferencesService = locator<SharedPreferencesService>();
- Logger log = getLogger("UploadLogViewModel");
 
   List<UploadLog> _logs;
 

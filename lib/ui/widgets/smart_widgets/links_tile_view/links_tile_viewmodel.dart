@@ -4,7 +4,6 @@ import 'package:FSOUNotes/enums/enums.dart';
 import 'package:FSOUNotes/models/document.dart';
 import 'package:FSOUNotes/models/link.dart';
 import 'package:FSOUNotes/services/funtional_services/cloud_storage_service.dart';
-import 'package:googleapis/chat/v1.dart';
 import 'package:stacked/stacked.dart';
 import 'package:FSOUNotes/app/locator.dart';
 import 'package:FSOUNotes/models/report.dart';
@@ -16,6 +15,10 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:FSOUNotes/models/user.dart';
+import 'package:FSOUNotes/enums/bottom_sheet_type.dart';
+import 'package:FSOUNotes/app/logger.dart';
+final log = getLogger("LinksTileViewModel");
 
 class LinksTileViewModel extends BaseViewModel {
   FirestoreService _firestoreService = locator<FirestoreService>();
@@ -27,23 +30,33 @@ class LinksTileViewModel extends BaseViewModel {
   CloudStorageService _cloudStorageService = locator<CloudStorageService>();
   DialogService _dialogService = locator<DialogService>();
   NavigationService _navigationService = locator<NavigationService>();
+  BottomSheetService _bottomSheetService = locator<BottomSheetService>();
 
   bool get isAdmin => _authenticationService.user.isAdmin;
 
   void reportNote({@required AbstractDocument doc}) async {
     setBusy(true);
-    Report report = Report(doc.id, doc.subjectName, doc.type, doc.title,
-        _authenticationService.user.email);
-    var dialogResult = await _dialogService.showConfirmationDialog(
-        title: "Are You Sure?",
-        description:
-            "Are you sure you want to report this link?\nUnnecessary reporting may result in a ban from the application!",
-        cancelTitle: "NO",
-        confirmationTitle: "YES");
-    if (!dialogResult.confirmed) {
-      setBusy(false);
-      return;
-    }
+    
+    //Collect reason of reporting from user
+    SheetResponse reportResponse = await _bottomSheetService.showCustomSheet(
+    variant: BottomSheetType.floating,
+    title: 'What\'s wrong with this ?',
+    description:
+        'Reason for reporting...',
+    mainButtonTitle: 'Report',
+    secondaryButtonTitle: 'Go Back',
+    );
+    log.i("Report BottomSheetResponse " + reportResponse.responseData);
+    if(!reportResponse.confirmed){return;}
+
+    //Generate report with appropriate data
+    Report report = Report(doc.id, doc.subjectName, doc.type, doc.title, _authenticationService.user.email,reportReason: reportResponse.responseData);
+
+    //Check whether user is banned
+    User user = await _firestoreService.refreshUser();
+    if(!user.isUserAllowedToUpload){_userIsNotAllowedNotToReport(); return;}
+
+    //If user is reporting the same document 2nd time the result will be a String
     var result = await _reportsService.addReport(report);
     if (result is String) {
       _dialogService.showDialog(
@@ -55,10 +68,11 @@ class LinksTileViewModel extends BaseViewModel {
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.CENTER,
           timeInSecForIosWeb: 1,
-          backgroundColor: Colors.red,
+          backgroundColor: Colors.teal,
           textColor: Colors.white,
           fontSize: 16.0);
     }
+    
     setBusy(false);
   }
 
@@ -111,5 +125,12 @@ class LinksTileViewModel extends BaseViewModel {
 
   navigateToEditView(Link note) {
     _navigationService.navigateTo(Routes.editViewRoute,arguments:EditViewArguments(path: Document.Links,subjectName: note.subjectName,textFieldsMap: Constants.Links,note: note,title:note.title));
+  }
+
+  void _userIsNotAllowedNotToReport() async {
+    await _bottomSheetService.showBottomSheet(
+      title: "Oops !",
+      description: "You have been banned by admins for uploading irrelevant content or reporting documents with no issue again and again. Use the feedback option in the drawer to contact the admins if you think this is a mistake",
+    );
   }
 }
