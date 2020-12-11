@@ -4,7 +4,6 @@ import 'package:FSOUNotes/models/subject.dart';
 import 'package:FSOUNotes/ui/widgets/smart_widgets/FilterSubjects_view/filtersubjects_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
-
 class FilterSubjectsView extends StatelessWidget {
   final Document path;
   final List<Subject> data;
@@ -31,18 +30,6 @@ class FilterSubjectsView extends StatelessWidget {
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(16),
                         color: theme.colorScheme.background,
-                        boxShadow: AppStateNotifier.isDarkModeOn
-                            ? []
-                            : [
-                                BoxShadow(
-                                    offset: Offset(10, 10),
-                                    color: theme.cardTheme.shadowColor,
-                                    blurRadius: 25),
-                                BoxShadow(
-                                    offset: Offset(-10, -10),
-                                    color: theme.cardTheme.color,
-                                    blurRadius: 25)
-                              ],
                       ),
                       child: Center(
                         child: Container(

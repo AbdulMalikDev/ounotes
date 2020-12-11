@@ -36,7 +36,6 @@ dependencies:
   flutter_material_pickers: ^1.7.3
   fluttertoast: ^4.0.1
   font_awesome_flutter: ^8.8.1
-  kf_drawer: ^1.1.2
   lottie: ^0.4.1
   material_design_icons_flutter: ^4.0.5755
   shimmer: ^1.1.1

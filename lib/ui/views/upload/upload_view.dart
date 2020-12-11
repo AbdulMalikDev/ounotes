@@ -12,6 +12,7 @@ import 'package:stacked/stacked.dart';
 
 class UploadView extends StatefulWidget {
   final Map textFieldsMap;
+  //used to know whether user selected notes,syllabus,question paper or  links after opening upload selection view
   final Document path;
   final String subjectName;
   //used to know whether user opened uploadview from inside document view or from drawer
@@ -41,7 +42,12 @@ class _UploadViewState extends State<UploadView> {
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<UploadViewModel>.reactive(
-        onModelReady: (model) => model.initialise(widget.path),
+        onModelReady: (model) {
+          model.initialise(widget.path);
+          if (widget.subjectName != null) {
+            controllerOfSub.text = widget.subjectName;
+          }
+        },
         builder: (context, model, child) => Scaffold(
               body: Container(
                 child: GestureDetector(
@@ -126,109 +132,90 @@ class _UploadViewState extends State<UploadView> {
                                         ),
                                       ),
                                       SizedBox(height: 50.0),
-                                      widget.path2 != null
-                                          ? Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: <Widget>[
-                                                Text(
-                                                  "Enter Subject Name",
-                                                  style: Constants.kLabelStyle,
-                                                ),
-                                                SizedBox(height: 10.0),
-                                                Card(
-                                                  color: Colors.transparent,
-                                                  child: Container(
-                                                    decoration: Constants
-                                                        .kBoxDecorationStyle,
-                                                    height: 60,
-                                                    child: TypeAheadFormField(
-                                                      textFieldConfiguration:
-                                                          TextFieldConfiguration(
-                                                        controller:
-                                                            controllerOfSub,
-                                                        decoration:
-                                                            InputDecoration(
-                                                          border:
-                                                              InputBorder.none,
-                                                          contentPadding:
-                                                              EdgeInsets.only(
-                                                                  top: 15.0),
-                                                          prefixIcon: Icon(
-                                                            Icons
-                                                                .arrow_forward_ios,
-                                                            color: Colors.blue,
-                                                          ),
-                                                          // hintText:
-                                                          //     "Indian Constitution ...",
-                                                          // hintStyle:
-                                                          //     TextStyle(
-                                                          //   color: Colors
-                                                          //       .black,
-                                                          // ),
-                                                        ),
-                                                        style: TextStyle(
-                                                          color: Colors.black,
-                                                          letterSpacing: -0.03,
-                                                          fontFamily:
-                                                              'Montserrat',
-                                                        ),
-                                                      ),
-                                                      suggestionsCallback:
-                                                          (pattern) {
-                                                        return model
-                                                            .getSuggestions(
-                                                                pattern);
-                                                      },
-                                                      itemBuilder: (context,
-                                                          suggestion) {
-                                                        return ListTile(
-                                                          title: Text(
-                                                            suggestion,
-                                                            style: Theme.of(
-                                                                    context)
-                                                                .textTheme
-                                                                .subtitle1
-                                                                .copyWith(
-                                                                    fontSize:
-                                                                        15),
-                                                          ),
-                                                        );
-                                                      },
-                                                      transitionBuilder:
-                                                          (context,
-                                                              suggestionsBox,
-                                                              controller) {
-                                                        return suggestionsBox;
-                                                      },
-                                                      onSuggestionSelected:
-                                                          (suggestion) {
-                                                        this
-                                                            .controllerOfSub
-                                                            .text = suggestion;
-                                                      },
-                                                      validator: (value) {
-                                                        if (value.isEmpty) {
-                                                          return 'Please select a subjectname';
-                                                        } else if (value
-                                                                    .length <
-                                                                3 ||
-                                                            !model
-                                                                .getAllSubjectsList()
-                                                                .contains(
-                                                                    value))
-                                                          return "Please enter a valid subject name";
-                                                        return null;
-                                                      },
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          Text(
+                                            "Enter Subject Name",
+                                            style: Constants.kLabelStyle,
+                                          ),
+                                          SizedBox(height: 10.0),
+                                          Card(
+                                            color: Colors.transparent,
+                                            child: Container(
+                                              decoration:
+                                                  Constants.kBoxDecorationStyle,
+                                              height: 60,
+                                              child: TypeAheadFormField(
+                                                textFieldConfiguration:
+                                                    TextFieldConfiguration(
+                                                  controller: controllerOfSub,
+                                                  decoration: InputDecoration(
+                                                    border: InputBorder.none,
+                                                    contentPadding:
+                                                        EdgeInsets.only(
+                                                            top: 15.0),
+                                                    prefixIcon: Icon(
+                                                      Icons.arrow_forward_ios,
+                                                      color: Colors.blue,
                                                     ),
+                                                    hintText:
+                                                        "Indian Constitution ...",
+                                                    hintStyle:
+                                                        Constants.kLabelStyle,
+                                                  ),
+                                                  style: TextStyle(
+                                                    color: Colors.black,
+                                                    letterSpacing: -0.03,
+                                                    fontFamily: 'Montserrat',
                                                   ),
                                                 ),
-                                                SizedBox(
-                                                  height: 30,
-                                                ),
-                                              ],
-                                            )
-                                          : SizedBox(),
+                                                suggestionsCallback: (pattern) {
+                                                  return model
+                                                      .getSuggestions(pattern);
+                                                },
+                                                itemBuilder:
+                                                    (context, suggestion) {
+                                                  return ListTile(
+                                                    title: Text(
+                                                      suggestion,
+                                                      style: Theme.of(context)
+                                                          .textTheme
+                                                          .subtitle1
+                                                          .copyWith(
+                                                              fontSize: 15),
+                                                    ),
+                                                  );
+                                                },
+                                                transitionBuilder: (context,
+                                                    suggestionsBox,
+                                                    controller) {
+                                                  return suggestionsBox;
+                                                },
+                                                onSuggestionSelected:
+                                                    (suggestion) {
+                                                  this.controllerOfSub.text =
+                                                      suggestion;
+                                                },
+                                                validator: (value) {
+                                                  if (value.isEmpty) {
+                                                    return 'Please select a subjectname';
+                                                  } else if (value.length < 3 ||
+                                                      !model
+                                                          .getAllSubjectsList()
+                                                          .contains(value))
+                                                    return "Please enter a valid subject name";
+                                                  return null;
+                                                },
+                                              ),
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            height: 30,
+                                          ),
+                                        ],
+                                      ),
                                       widget.textFieldsMap == Constants.Syllabus
                                           ? Column(
                                               children: <Widget>[
@@ -456,125 +443,7 @@ class _UploadViewState extends State<UploadView> {
                                       SizedBox(
                                         height: 20,
                                       ),
-                                      Row(
-                                        children: <Widget>[
-                                          Container(
-                                            child: Checkbox(
-                                              value: model.ischecked,
-                                              onChanged: model.changeCheckMark,
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            width: 5,
-                                          ),
-                                          Column(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: <Widget>[
-                                              Row(
-                                                children: <Widget>[
-                                                  Text(
-                                                    'I agree to OU Notes ',
-                                                    style: TextStyle(
-                                                        color: Colors.white,
-                                                        fontSize: 15),
-                                                  ),
-                                                  Container(
-                                                    height: 20,
-                                                    child: FlatButton(
-                                                      onPressed: () {
-                                                        model
-                                                            .navigatetoPrivacyPolicy();
-                                                      },
-                                                      padding:
-                                                          EdgeInsets.all(0),
-                                                      child: Text(
-                                                        "Privacy policy",
-                                                        style: TextStyle(
-                                                            color: Colors.white,
-                                                            fontSize: 14,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .bold),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                              Row(
-                                                mainAxisSize: MainAxisSize.min,
-                                                children: <Widget>[
-                                                  Text(
-                                                    'and  ',
-                                                    style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontSize: 15,
-                                                    ),
-                                                  ),
-                                                  Container(
-                                                    height: 20,
-                                                    child: FlatButton(
-                                                      onPressed: () {
-                                                        model
-                                                            .navigateToTermsAndConditionView();
-                                                      },
-                                                      padding:
-                                                          EdgeInsets.all(0),
-                                                      child: Text(
-                                                        'Terms and condition',
-                                                        style: TextStyle(
-                                                            color: Colors.white,
-                                                            fontSize: 15,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .bold),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ],
-                                          )
-                                        ],
-                                      ),
-                                      SizedBox(
-                                        height: 10,
-                                      ),
-                                      // if (!widget.swipe)
-                                      SaveButtonView(
-                                        onTap: () async {
-                                          if (!_formKey.currentState
-                                              .validate()) {
-                                            // Invalid!
-                                            return;
-                                          }
-                                          if (!model.ischecked) {
-                                            Fluttertoast.showToast(
-                                                msg:
-                                                    "Please tick the box to Agree Terms and conditions ");
-                                            return;
-                                          }
-                                          //Here i have access to all TextFieldControllers therfore
-                                          //i can extract the text and perform my upload logic
-                                          model.typeofyear ==
-                                                  CourseInfo.yeartype[0]
-                                              ? model.setYear =
-                                                  controllerOfYear.text
-                                              : model.setYear =
-                                                  controllerOfYear.text +
-                                                      '-' +
-                                                      controllerOfYear2.text;
-                                          await model.handleUpload(
-                                            textFieldController1.text,
-                                            textFieldController2.text,
-                                            textFieldController3.text,
-                                            widget.path,
-                                            widget.subjectName != null
-                                                ? widget.subjectName
-                                                : controllerOfSub.text,
-                                            context,
-                                          );
-                                        },
-                                      ),
+                                      uploadButtonWidget(model)
                                     ],
                                   ),
                                 ),
@@ -586,6 +455,114 @@ class _UploadViewState extends State<UploadView> {
               ),
             ),
         viewModelBuilder: () => UploadViewModel());
+  }
+
+  Widget subjectEntry(UploadViewModel model) {}
+
+  Widget uploadButtonWidget(UploadViewModel model) {
+    return Column(children: [
+      Row(
+        children: <Widget>[
+          Container(
+            child: Checkbox(
+              value: model.ischecked,
+              onChanged: model.changeCheckMark,
+            ),
+          ),
+          SizedBox(
+            width: 5,
+          ),
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Row(
+                children: <Widget>[
+                  Text(
+                    'I agree to OU Notes ',
+                    style: TextStyle(color: Colors.white, fontSize: 15),
+                  ),
+                  Container(
+                    height: 20,
+                    child: FlatButton(
+                      onPressed: () {
+                        model.navigatetoPrivacyPolicy();
+                      },
+                      padding: EdgeInsets.all(0),
+                      child: Text(
+                        "Privacy policy",
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Text(
+                    'and  ',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 15,
+                    ),
+                  ),
+                  Container(
+                    height: 20,
+                    child: FlatButton(
+                      onPressed: () {
+                        model.navigateToTermsAndConditionView();
+                      },
+                      padding: EdgeInsets.all(0),
+                      child: Text(
+                        'Terms and condition',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          )
+        ],
+      ),
+      SizedBox(
+        height: 10,
+      ),
+      // if (!widget.swipe)
+      SaveButtonView(
+        onTap: () async {
+          if (!_formKey.currentState.validate()) {
+            // Invalid!
+            return;
+          }
+          if (!model.ischecked) {
+            Fluttertoast.showToast(
+                msg: "Please tick the box to Agree Terms and conditions ");
+            return;
+          }
+          //Here i have access to all TextFieldControllers therfore
+          //i can extract the text and perform my upload logic
+          model.typeofyear == CourseInfo.yeartype[0]
+              ? model.setYear = controllerOfYear.text
+              : model.setYear =
+                  controllerOfYear.text + '-' + controllerOfYear2.text;
+          await model.handleUpload(
+            textFieldController1.text,
+            textFieldController2.text,
+            textFieldController3.text,
+            widget.path,
+            controllerOfSub.text,
+            context,
+          );
+        },
+      ),
+    ]);
   }
 
   Widget buildYearWidget(typeofyear, dropdownofyear,

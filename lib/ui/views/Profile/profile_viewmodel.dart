@@ -1,5 +1,5 @@
 import 'dart:convert';
-
+import 'package:flutter/material.dart';
 import 'package:FSOUNotes/app/locator.dart';
 import 'package:FSOUNotes/app/router.gr.dart';
 import 'package:FSOUNotes/models/user.dart';
@@ -19,35 +19,116 @@ class ProfileViewModel extends BaseViewModel {
       locator<SharedPreferencesService>();
   User _user;
   User get user => _user;
+  String _userOption;
+
+  String get userOption => _userOption;
+
+  List<DropdownMenuItem<String>> _dropDownOfOpenPDF;
+  List<DropdownMenuItem<String>> get dropDownOfOpenPDF => _dropDownOfOpenPDF;
+
+  List<DropdownMenuItem<String>> buildAndGetDropDownMenuItems(List items) {
+    List<DropdownMenuItem<String>> i = List();
+    items.forEach((item) {
+      i.add(DropdownMenuItem(value: item, child: Text(item)));
+    });
+    return i;
+  }
+
+  void changedDropDownItemOfOpenPdfChoice(String newChoice) async {
+    _userOption = newChoice;
+    SharedPreferences prefs = await _sharedPreferencesService.store();
+    prefs.setString("openDocChoice", newChoice);
+    notifyListeners();
+  }
 
   setUser() async {
     setBusy(true);
     SharedPreferences prefs = await _sharedPreferencesService.store();
-    User user = User.fromData(json.decode(prefs.getString("current_user_is_logged_in")));
+    _userOption = prefs.getString("openDocChoice");
+    List<String> items = ["Open In App", "Open In Browser"];
+    _dropDownOfOpenPDF = buildAndGetDropDownMenuItems(items);
+    User user = User.fromData(
+        json.decode(prefs.getString("current_user_is_logged_in")));
     _user = user;
     setBusy(false);
     notifyListeners();
   }
 
-  handleSignOut() async {
-    DialogResponse dialogResult = await _dialogService.showConfirmationDialog(
-      title: "Change Profile Data",
-      description:
-          "In Order to change your data,you just need to sign-in again using your Gmail id",
-      cancelTitle: "GO BACK",
-      confirmationTitle: "PROCEED",
+  handleSignOut(BuildContext context) async {
+    // DialogResponse dialogResult = await _dialogService.showConfirmationDialog(
+    //   title: "Change Profile Data",
+    //   description:
+    //       "In Order to change your data,you just need to sign-in again using your Gmail id",
+    //   cancelTitle: "GO BACK",
+    //   confirmationTitle: "PROCEED",
+    // );
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          title: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Expanded(
+                child: Text(
+                  "Are you sure?",
+                  style: Theme.of(context)
+                      .textTheme
+                      .headline6
+                      .copyWith(fontSize: 20),
+                  overflow: TextOverflow.clip,
+                ),
+              ),
+            ],
+          ),
+          actions: <Widget>[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                FlatButton(
+                  child: Text(
+                    "GO BACK",
+                    style: Theme.of(context)
+                        .textTheme
+                        .subtitle1
+                        .copyWith(fontSize: 15),
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+                FlatButton(
+                  child: Text(
+                    "PROCEED",
+                    style: Theme.of(context)
+                        .textTheme
+                        .subtitle1
+                        .copyWith(fontSize: 15),
+                  ),
+                  onPressed: () async {
+                    Navigator.of(context).pop();
+                    setBusy(true);
+                    await _authenticationService.handleSignOut().then((value) {
+                      if (value) {
+                        _navigationService.navigateTo(Routes.introViewRoute);
+                      } else
+                        Fluttertoast.showToast(
+                            msg: "Sign Out failed ,please try again later");
+                    });
+                    setBusy(false);
+                    notifyListeners();
+                  },
+                ),
+              ],
+            ),
+          ],
+        );
+      },
     );
-    if (dialogResult.confirmed) {
-      setBusy(true);
-      await _authenticationService.handleSignOut().then((value) {
-        if (value) {
-          _navigationService.navigateTo(Routes.introViewRoute);
-        } else
-          Fluttertoast.showToast(
-              msg: "Sign Out failed ,please try again later");
-      });
-      setBusy(false);
-      notifyListeners();
-    }
+    // if (dialogResult.confirmed) {}
   }
 }

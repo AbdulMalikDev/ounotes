@@ -71,7 +71,7 @@ class UploadViewModel extends BaseViewModel {
   //   notifyListeners();
   // }
 
-  getSuggestions(String query) {
+   getSuggestions(String query) {
     List<String> subList = getAllSubjectsList();
     final List<String> suggestions = query.isEmpty
         ? []

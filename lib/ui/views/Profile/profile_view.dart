@@ -63,6 +63,43 @@ class ProfileView extends StatelessWidget {
                             'College', model.user?.college ?? "", context),
                       ]),
                   SizedBox(
+                    height: 20,
+                  ),
+                  Flexible(
+                    child: Row(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(50, 10, 10, 10),
+                          child: Text(
+                            "Open pdf in",
+                            style: Theme.of(context)
+                                .textTheme
+                                .subtitle1
+                                .copyWith(
+                                    fontSize: 20, color: Colors.deepOrange),
+                          ),
+                        ),
+                        Flexible(
+                          child: Container(
+                            child: DropdownButton(
+                              elevation: 15,
+                              value: model.userOption,
+                              items: model.dropDownOfOpenPDF,
+                              onChanged:
+                                  model.changedDropDownItemOfOpenPdfChoice,
+                              dropdownColor:
+                                  Theme.of(context).colorScheme.background,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .subtitle1
+                                  .copyWith(fontSize: 17),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(
                     height: 40,
                   ),
                   Container(
@@ -71,15 +108,17 @@ class ProfileView extends StatelessWidget {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(20),
                     ),
-                    child: FlatButton(
-                      child: Text(
-                        "CHANGE INFORMATION",
-                        style: TextStyle(color: Colors.white),
+                    child: FittedBox(
+                      child: FlatButton(
+                        child: Text(
+                          "Log out",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        color: Theme.of(context).primaryColor,
+                        onPressed: () {
+                          model.handleSignOut(context);
+                        },
                       ),
-                      color: Theme.of(context).primaryColor,
-                      onPressed: () {
-                        model.handleSignOut();
-                      },
                     ),
                   ),
                   SizedBox(height: 10),

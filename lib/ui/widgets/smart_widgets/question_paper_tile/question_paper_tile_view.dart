@@ -7,6 +7,7 @@ import 'package:share/share.dart';
 import 'package:stacked/stacked.dart';
 import 'package:flutter/material.dart';
 import 'package:FSOUNotes/models/download.dart';
+import 'package:FSOUNotes/misc/constants.dart';
 
 class QuestionPaperTileView extends StatelessWidget {
   final QuestionPaper note;
@@ -29,28 +30,21 @@ class QuestionPaperTileView extends StatelessWidget {
               widthFactor: 0.99,
               child: Container(
                 margin: EdgeInsets.symmetric(horizontal: 13, vertical: 10),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(16),
-                  color: theme.colorScheme.background,
-                  boxShadow: AppStateNotifier.isDarkModeOn
-                      ? []
-                      : [
-                          BoxShadow(
-                              offset: Offset(10, 10),
-                              color: theme.cardTheme.shadowColor,
-                              blurRadius: 25),
-                          BoxShadow(
-                              offset: Offset(-10, -10),
-                              color: theme.cardTheme.color,
-                              blurRadius: 25)
-                        ],
-                ),
+                decoration: AppStateNotifier.isDarkModeOn
+                    ? Constants.mdecoration.copyWith(
+                        color: Theme.of(context).colorScheme.background,
+                        boxShadow: [],
+                      )
+                    : Constants.mdecoration.copyWith(
+                        color: Theme.of(context).colorScheme.background,
+                      ),
                 child: model.isBusy
                     ? Container(
                         height: MediaQuery.of(context).size.height * 0.16,
                         child: Center(
                           child: CircularProgressIndicator(),
-                        ))
+                        ),
+                      )
                     : Column(
                         mainAxisSize: MainAxisSize.min,
                         children: <Widget>[
@@ -168,32 +162,35 @@ class QuestionPaperTileView extends StatelessWidget {
                             ],
                           ),
                           model.isAdmin
-                            ? 
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                Container(
-                                  child: RaisedButton(
-                                    child: Text("EDIT",
-                                        style: TextStyle(color: Colors.white)),
-                                    color: Colors.blue,
-                                    onPressed: () async {
-                                      await model.navigateToEditView(note);
-                                    },
-                                  ),
-                                ),
-                                Container(
-                                  child: RaisedButton(
-                                    child: Text("DELETE",
-                                        style: TextStyle(color: Colors.white)),
-                                    color: Colors.red,
-                                    onPressed: () async {
-                                      await model.delete(note);
-                                    },
-                                  ),
-                                ),
-                              ])
-                            : Container(),
+                              ? Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                      Container(
+                                        child: RaisedButton(
+                                          child: Text("EDIT",
+                                              style: TextStyle(
+                                                  color: Colors.white)),
+                                          color: Colors.blue,
+                                          onPressed: () async {
+                                            await model
+                                                .navigateToEditView(note);
+                                          },
+                                        ),
+                                      ),
+                                      Container(
+                                        child: RaisedButton(
+                                          child: Text("DELETE",
+                                              style: TextStyle(
+                                                  color: Colors.white)),
+                                          color: Colors.red,
+                                          onPressed: () async {
+                                            await model.delete(note);
+                                          },
+                                        ),
+                                      ),
+                                    ])
+                              : Container(),
                         ],
                       ),
               ),
