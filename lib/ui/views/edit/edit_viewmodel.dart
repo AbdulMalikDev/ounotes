@@ -130,7 +130,7 @@ class EditViewModel extends BaseViewModel{
     _navigationService.navigateTo(Routes.termsAndConditionView);
   }
 
-  Future handleUpdate(String text1, String text2, String text3, Document path,
+  Future handleUpdate(String text1, String text2, String text3,String text4, Document path,
     String subjectName, BuildContext context , document) async {
     //* For all 4 upload screens , there are different text fields and
     //* their value may be different while uploading , so i have used switch case to
@@ -150,7 +150,7 @@ class EditViewModel extends BaseViewModel{
           title: text1,
           author: text2,
           uploadDate: note.uploadDate,
-          view: note.view,
+          view: int.parse(text3),
           type: type,
           GDriveID: note.GDriveID,
           GDriveLink: note.GDriveLink,
@@ -161,7 +161,7 @@ class EditViewModel extends BaseViewModel{
           size: note.size,
           uploader_id: note.uploader_id,
           url: note.url,
-          votes: note.votes, 
+          votes: int.parse(text4), 
         );
         break;
       case Document.QuestionPapers:

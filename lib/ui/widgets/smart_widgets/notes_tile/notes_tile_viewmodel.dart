@@ -172,12 +172,15 @@ class NotesTileViewModel extends BaseViewModel {
 
   bool get isAdmin => _authenticationService.user.isAdmin;
 
-  void reportNote(
-      {String id,
-      String subjectName,
-      String type,
-      String title,
-      AbstractDocument doc}) async {
+  void reportNote
+  ({
+    String id,
+    String subjectName,
+    String type,
+    String title,
+    AbstractDocument doc
+  }) async {
+
     //Collect reason of reporting from user
     SheetResponse reportResponse = await _bottomSheetService.showCustomSheet(
       variant: BottomSheetType.floating,
@@ -186,10 +189,8 @@ class NotesTileViewModel extends BaseViewModel {
       mainButtonTitle: 'Report',
       secondaryButtonTitle: 'Go Back',
     );
+    if(!reportResponse.confirmed){setBusy(false);return;}
     log.i("Report BottomSheetResponse " + reportResponse.responseData);
-    if (!reportResponse.confirmed) {
-      return;
-    }
 
     //Generate report with appropriate data
     Report report = Report(
@@ -198,10 +199,7 @@ class NotesTileViewModel extends BaseViewModel {
 
     //Check whether user is banned
     User user = await _firestoreService.refreshUser();
-    if (!user.isUserAllowedToUpload) {
-      _userIsNotAllowedNotToReport();
-      return;
-    }
+    if(!user.isUserAllowedToUpload){_userIsNotAllowedNotToReport();setBusy(false);return;}
 
     //If user is reporting the same document 2nd time the result will be a String
     var result = await _reportsService.addReport(report);
@@ -274,13 +272,7 @@ class NotesTileViewModel extends BaseViewModel {
   }
 
   navigateToEditView(Note note) {
-    _navigationService.navigateTo(Routes.editViewRoute,
-        arguments: EditViewArguments(
-            path: Document.Notes,
-            subjectName: note.subjectName,
-            textFieldsMap: Constants.Notes,
-            note: note,
-            title: note.title));
+    _navigationService.navigateTo(Routes.editViewRoute,arguments:EditViewArguments(path: Document.Notes,subjectName: note.subjectName,textFieldsMap: Constants.EditNotes,note: note,title:note.title));
   }
 
   void _userIsNotAllowedNotToReport() async {

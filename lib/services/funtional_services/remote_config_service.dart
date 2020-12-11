@@ -14,7 +14,7 @@ class RemoteConfigService{
     if (_remoteConfig == null)
     {
       _remoteConfig = await RemoteConfig.instance;
-      await remoteConfig.fetch(expiration: const Duration(hours: 5));
+      await remoteConfig.fetch(expiration: const Duration(seconds: 1));
       await remoteConfig.activateFetched();
     }
   }

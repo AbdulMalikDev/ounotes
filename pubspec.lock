@@ -15,6 +15,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "7.0.0"
+  adcolony:
+    dependency: "direct main"
+    description:
+      name: adcolony
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.6"
   analyzer:
     dependency: transitive
     description:
@@ -639,6 +646,20 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.2.0"
+  hive:
+    dependency: "direct main"
+    description:
+      name: hive
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.4.4+1"
+  hive_flutter:
+    dependency: "direct main"
+    description:
+      name: hive_flutter
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.3.1"
   html:
     dependency: transitive
     description:

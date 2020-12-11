@@ -19,10 +19,10 @@ import 'package:FSOUNotes/services/state_services/links_service.dart';
 import 'package:FSOUNotes/services/state_services/notes_service.dart';
 import 'package:FSOUNotes/services/state_services/question_paper_service.dart';
 import 'package:FSOUNotes/services/state_services/syllabus_service.dart';
+import 'package:FSOUNotes/services/state_services/vote_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cuid/cuid.dart';
-import 'package:FSOUNotes/services/state_services/vote_service.dart';
-
+import 'package:FSOUNotes/ui/shared/strings.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
 import 'package:injectable/injectable.dart';
@@ -97,15 +97,12 @@ class FirestoreService {
   saveUser(User user) async {
     Map<String, dynamic> data = user.toJson();
     try {
-      await _usersCollectionReference.document(data["id"]).setData(data);
-      if (!user.isAdmin)
-        await _usersCollectionReference
-            .document(Constants.userStats)
-            .updateData({
-          user.college: FieldValue.increment(1),
-          user.semester: FieldValue.increment(1),
-          user.branch: FieldValue.increment(1),
-        });
+      await _usersCollectionReference.document(data["id"]).setData(data,merge: true);
+      if(!user.isAdmin)await _usersCollectionReference.document(Constants.userStats).updateData({
+        user.college : FieldValue.increment(1),
+        user.semester : FieldValue.increment(1),
+        user.branch : FieldValue.increment(1),
+      });
     } catch (e) {
       return _errorHandling(
           e, "While saving user to Firebase , Error occurred");
@@ -311,8 +308,8 @@ class FirestoreService {
       } else {
         await _reportCollectionReference.document(doc.id).setData(data);
       }
-      _analyticsService.logEvent(
-          name: "REPORT", parameters: {"reason": report.reportReason ?? ""});
+      _analyticsService.logEvent(name:"REPORT",parameters:{"reason":report.reportReason??""});
+      _analyticsService.sendNotification(isAdmin: true,message: Strings.admin_document_report_notification_message,title: Strings.admin_document_report_notification_title);
     } catch (e) {
       return _errorHandling(
           e, "While uploading report to Firebase , Error occurred");
@@ -520,6 +517,7 @@ class FirestoreService {
     };
     user.incrementUploads();
     updateUserInFirebase(user);
+    _analyticsService.sendNotification(isAdmin: true,message: Strings.admin_document_upload_notification_message,title: Strings.admin_document_upload_notification_title);
     return uploadLog;
   }
 
@@ -536,10 +534,8 @@ class FirestoreService {
       "email": _authenticationService.user.email,
       "size": 0,
     };
-    _analyticsService.logEvent(
-        name: "UPLOAD_LINK",
-        parameters: uploadLog,
-        addInNotificationService: true);
+    _analyticsService.logEvent(name:"UPLOAD_LINK" , parameters: uploadLog , addInNotificationService:true);
+    _analyticsService.sendNotification(isAdmin: true,message: Strings.admin_document_upload_notification_message,title: Strings.admin_document_upload_notification_title);
     return uploadLog;
   }
 
@@ -653,15 +649,10 @@ class FirestoreService {
     try {
       if (user != null) {
         log.e(user.id);
-        await _usersCollectionReference
-            .document(user.id)
-            .setData(user.toJson());
-        if (updateLocally) {
-          _sharedPreferencesService.saveUserLocally(user);
-        }
-      } else {
-        log.e("User is Null, not found in Local Storage");
-      }
+        await _usersCollectionReference.document(user.id).setData(user.toJson(),merge: true);
+        if(updateLocally){_sharedPreferencesService.saveUserLocally(user);}
+
+      }else{log.e("User is Null, not found in Local Storage");}
     } on Exception catch (e) {
       log.e(e.toString());
     }

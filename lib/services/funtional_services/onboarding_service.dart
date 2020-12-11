@@ -1,13 +1,18 @@
 import 'dart:math';
 
-class OnboardingService {
-  static const String floating_action_button_to_add_subjects =
-      "floating_action_button_to_add_subjects";
-  static const String drawer_hamburger_icon_to_access_other_features =
-      "drawer_hamburger_icon_to_access_other_features";
-  static const String feedback_tile_to_give_feedback =
-      "feedback_tile_to_give_feedback";
+import 'package:FSOUNotes/app/locator.dart';
+import 'package:FSOUNotes/services/funtional_services/sharedpref_service.dart';
+import 'package:hive/hive.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+class OnboardingService{
+  static const String floating_action_button_to_add_subjects = "floating_action_button_to_add_subjects";
+  static const String drawer_hamburger_icon_to_access_other_features = "drawer_hamburger_icon_to_access_other_features";
+  static const String feedback_tile_to_give_feedback = "feedback_tile_to_give_feedback";
   static const String rate_us_to_rate_app = "rate_us_to_rate_app";
+
+  static Box box = Hive.box('OUNOTES');
+  SharedPreferencesService _sharedPreferencesService = locator<SharedPreferencesService>();
 
   //Every 10 times upload prompt to be shown
   static int number_of_time_document_view_opened = 0;
@@ -43,5 +48,16 @@ class OnboardingService {
     Map<String, String> randomMap =
         uploadPrompts[rand.nextInt(uploadPrompts.length)];
     return randomMap.keys.toList() + randomMap.values.toList();
+  }
+
+  static int getNumberOfTimesDocumentViewOpened() {
+    int savedState = box.get("number_of_time_document_view_opened") ?? 0;
+    number_of_time_document_view_opened = savedState;
+    print(savedState.toString() + "savedState");
+    return savedState;
+  }
+  static void incrementNumberOfTimesDocumentViewOpened() {
+    box.put("number_of_time_document_view_opened", ++number_of_time_document_view_opened);
+    print(number_of_time_document_view_opened.toString() + "number_of_time_document_view_opened");
   }
 }

@@ -132,7 +132,90 @@ class _UploadViewState extends State<UploadView> {
                                         ),
                                       ),
                                       SizedBox(height: 50.0),
-                                      subjectEntry(model),
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          Text(
+                                            "Enter Subject Name",
+                                            style: Constants.kLabelStyle,
+                                          ),
+                                          SizedBox(height: 10.0),
+                                          Card(
+                                            color: Colors.transparent,
+                                            child: Container(
+                                              decoration:
+                                                  Constants.kBoxDecorationStyle,
+                                              height: 60,
+                                              child: TypeAheadFormField(
+                                                textFieldConfiguration:
+                                                    TextFieldConfiguration(
+                                                  controller: controllerOfSub,
+                                                  decoration: InputDecoration(
+                                                    border: InputBorder.none,
+                                                    contentPadding:
+                                                        EdgeInsets.only(
+                                                            top: 15.0),
+                                                    prefixIcon: Icon(
+                                                      Icons.arrow_forward_ios,
+                                                      color: Colors.blue,
+                                                    ),
+                                                    hintText:
+                                                        "Indian Constitution ...",
+                                                    hintStyle:
+                                                        Constants.kLabelStyle,
+                                                  ),
+                                                  style: TextStyle(
+                                                    color: Colors.black,
+                                                    letterSpacing: -0.03,
+                                                    fontFamily: 'Montserrat',
+                                                  ),
+                                                ),
+                                                suggestionsCallback: (pattern) {
+                                                  return model
+                                                      .getSuggestions(pattern);
+                                                },
+                                                itemBuilder:
+                                                    (context, suggestion) {
+                                                  return ListTile(
+                                                    title: Text(
+                                                      suggestion,
+                                                      style: Theme.of(context)
+                                                          .textTheme
+                                                          .subtitle1
+                                                          .copyWith(
+                                                              fontSize: 15),
+                                                    ),
+                                                  );
+                                                },
+                                                transitionBuilder: (context,
+                                                    suggestionsBox,
+                                                    controller) {
+                                                  return suggestionsBox;
+                                                },
+                                                onSuggestionSelected:
+                                                    (suggestion) {
+                                                  this.controllerOfSub.text =
+                                                      suggestion;
+                                                },
+                                                validator: (value) {
+                                                  if (value.isEmpty) {
+                                                    return 'Please select a subjectname';
+                                                  } else if (value.length < 3 ||
+                                                      !model
+                                                          .getAllSubjectsList()
+                                                          .contains(value))
+                                                    return "Please enter a valid subject name";
+                                                  return null;
+                                                },
+                                              ),
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            height: 30,
+                                          ),
+                                        ],
+                                      ),
                                       widget.textFieldsMap == Constants.Syllabus
                                           ? Column(
                                               children: <Widget>[
@@ -374,76 +457,7 @@ class _UploadViewState extends State<UploadView> {
         viewModelBuilder: () => UploadViewModel());
   }
 
-  Widget subjectEntry(UploadViewModel model) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Text(
-          "Enter Subject Name",
-          style: Constants.kLabelStyle,
-        ),
-        SizedBox(height: 10.0),
-        Card(
-          color: Colors.transparent,
-          child: Container(
-            decoration: Constants.kBoxDecorationStyle,
-            height: 60,
-            child: TypeAheadFormField(
-              textFieldConfiguration: TextFieldConfiguration(
-                controller: controllerOfSub,
-                decoration: InputDecoration(
-                  border: InputBorder.none,
-                  contentPadding: EdgeInsets.only(top: 15.0),
-                  prefixIcon: Icon(
-                    Icons.arrow_forward_ios,
-                    color: Colors.blue,
-                  ),
-                  hintText: "Indian Constitution ...",
-                  hintStyle: Constants.kLabelStyle,
-                ),
-                style: TextStyle(
-                  color: Colors.black,
-                  letterSpacing: -0.03,
-                  fontFamily: 'Montserrat',
-                ),
-              ),
-              suggestionsCallback: (pattern) {
-                return model.getSuggestions(pattern);
-              },
-              itemBuilder: (context, suggestion) {
-                return ListTile(
-                  title: Text(
-                    suggestion,
-                    style: Theme.of(context)
-                        .textTheme
-                        .subtitle1
-                        .copyWith(fontSize: 15),
-                  ),
-                );
-              },
-              transitionBuilder: (context, suggestionsBox, controller) {
-                return suggestionsBox;
-              },
-              onSuggestionSelected: (suggestion) {
-                this.controllerOfSub.text = suggestion;
-              },
-              validator: (value) {
-                if (value.isEmpty) {
-                  return 'Please select a subjectname';
-                } else if (value.length < 3 ||
-                    !model.getAllSubjectsList().contains(value))
-                  return "Please enter a valid subject name";
-                return null;
-              },
-            ),
-          ),
-        ),
-        SizedBox(
-          height: 30,
-        ),
-      ],
-    );
-  }
+  Widget subjectEntry(UploadViewModel model) {}
 
   Widget uploadButtonWidget(UploadViewModel model) {
     return Column(children: [

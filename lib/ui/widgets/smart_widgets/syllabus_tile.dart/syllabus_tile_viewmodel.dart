@@ -47,7 +47,6 @@ class SyllabusTileViewModel extends BaseViewModel{
   }
 
   void reportNote({@required AbstractDocument doc}) async{
-    setBusy(true);
     
     //Collect reason of reporting from user
     SheetResponse reportResponse = await _bottomSheetService.showCustomSheet(
@@ -58,15 +57,15 @@ class SyllabusTileViewModel extends BaseViewModel{
     mainButtonTitle: 'Report',
     secondaryButtonTitle: 'Go Back',
     );
+    if(!reportResponse.confirmed){setBusy(false);return;}
     log.i("Report BottomSheetResponse " + reportResponse.responseData);
-    if(!reportResponse.confirmed){return;}
 
     //Generate report with appropriate data
     Report report = Report(doc.id, doc.subjectName, doc.type, doc.title, _authenticationService.user.email,reportReason: reportResponse.responseData);
 
     //Check whether user is banned
     User user = await _firestoreService.refreshUser();
-    if(!user.isUserAllowedToUpload){_userIsNotAllowedNotToReport(); return;}
+    if(!user.isUserAllowedToUpload){_userIsNotAllowedNotToReport();setBusy(false); return;}
 
     //If user is reporting the same document 2nd time the result will be a String
     var result = await _reportsService.addReport(report);

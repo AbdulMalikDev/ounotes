@@ -48,6 +48,16 @@ class Constants {
     "TextFieldHeading3": null,
     "TextFieldHeadingLabel3": null,
   };
+  static Map EditNotes = {
+    "TextFieldHeading1": "Name",
+    "TextFieldHeadingLabel1": "Unit 1...",
+    "TextFieldHeading2": "Author",
+    "TextFieldHeadingLabel2": "Sameer...",
+    "TextFieldHeading3": "Views",
+    "TextFieldHeadingLabel3": "0",
+    "TextFieldHeading4": "Votes",
+    "TextFieldHeadingLabel4": "0",
+  };
   static Map Syllabus = {
     "TextFieldHeading1": "Semester",
     "TextFieldHeadingLabel1": "Any number between 1-8",
@@ -55,6 +65,8 @@ class Constants {
     "TextFieldHeadingLabel2": "CSE , ECE .....",
     "TextFieldHeading3": "Year",
     "TextFieldHeadingLabel3": "2020...",
+    "TextFieldHeading4": null,
+    "TextFieldHeadingLabel4": null,
   };
 
   static Map QuestionPaper = {
@@ -64,6 +76,8 @@ class Constants {
     "TextFieldHeadingLabel2": "CSE , ECE .....",
     "TextFieldHeading3": null,
     "TextFieldHeadingLabel3": null,
+    "TextFieldHeading4": null,
+    "TextFieldHeadingLabel4": null,
   };
 
   static Map Links = {
@@ -73,6 +87,8 @@ class Constants {
     "TextFieldHeadingLabel2": "...",
     "TextFieldHeading3": "URL",
     "TextFieldHeadingLabel3": "...",
+    "TextFieldHeading4": null,
+    "TextFieldHeadingLabel4": null,
   };
 
   static Map<int, String> semlist = {

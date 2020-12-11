@@ -59,6 +59,8 @@ class NotesViewModel extends BaseViewModel {
 
   List<Widget> get notesTiles => _notesTiles;
 
+  List<String> getzones() => [_remoteConfigService.remoteConfig.getString('ADCOLONY_ZONE_BANNER')];
+
   bool isloading = false;
   bool get loading => isloading;
 
