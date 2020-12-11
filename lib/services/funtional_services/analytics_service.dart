@@ -51,8 +51,11 @@ class AnalyticsService{
     OneSignal.shared.sendTag(key, value);
   }
 
-  sendNotification({String id , String title ,String message}) async {
+  sendNotification({String id , String title ,String message,bool isAdmin=false}) async {
+
     await _remoteConfigService.init();
+    if(isAdmin){id = _remoteConfigService.remoteConfig.getString('ADMIN_ID');}
+    
     if (id == null || id.length == 0){
       await _dialogService.showDialog(title: "NO ID",description: "NO ID");
       return;
@@ -60,7 +63,7 @@ class AnalyticsService{
 
 
     var url = "https://onesignal.com/api/v1/notifications";
-    var body = json.encode({'app_id':'${_remoteConfigService.remoteConfig.getString('ONESIGNAL_APP_ID')}', "contents": {"en": message} ,"headings": {"en": title} , "channel_for_external_user_ids": "push","include_external_user_ids": ["$id"]});
+    var body = json.encode({'app_id':'${_remoteConfigService.remoteConfig.getString('ONESIGNAL_APP_ID')}', "contents": {"en": message??"No Message"} ,"headings": {"en": title??"Test"} , "channel_for_external_user_ids": "push","include_external_user_ids": ["$id"]});
     http.Response response = await http.post(
         url,
         headers: {"Content-Type": "application/json","Authorization": "Basic ${_remoteConfigService.remoteConfig.getString('ONESIGNAL_API_KEY')}"},

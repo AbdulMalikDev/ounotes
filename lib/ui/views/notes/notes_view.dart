@@ -1,5 +1,7 @@
 import 'package:FSOUNotes/models/notes.dart';
 import 'package:FSOUNotes/ui/widgets/smart_widgets/notes_tile/notes_tile_view.dart';
+import 'package:adcolony/adcolony.dart';
+import 'package:adcolony/banner.dart';
 import 'package:firebase_admob/firebase_admob.dart';
 import 'package:flutter/material.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
@@ -19,6 +21,11 @@ class NotesView extends StatefulWidget {
 
 class _NotesViewState extends State<NotesView>
     with AutomaticKeepAliveClientMixin {
+  listener(AdColonyAdListener event) {
+    print(event);
+    if (event == AdColonyAdListener.onRequestFilled) AdColony.show();
+  }
+
   @override
   Widget build(BuildContext context) {
     super.build(context);
@@ -30,76 +37,91 @@ class _NotesViewState extends State<NotesView>
           model.navigateBack();
           return Future.value(false);
         },
-        child: ModalProgressHUD(
-          inAsyncCall: model.isloading ? true : false,
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Stack(
-                  children: <Widget>[
-                    Container(
-                      height: widget.path != null
-                          ? MediaQuery.of(context).size.height * 0.88
-                          : MediaQuery.of(context).size.height * 0.75,
-                      width: double.infinity,
-                      child: model.isBusy
-                          ? Center(
-                              child: CircularProgressIndicator(),
-                            )
-                          : model.notes.length == 0
-                              ? Center(
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: <Widget>[
-                                      Image.asset(
-                                        'assets/images/study1.jpg',
-                                        alignment: Alignment.center,
-                                        width: 300,
-                                        height: 300,
+        child: Column(
+          children: [
+            Expanded(
+              flex: 8,
+              child: ModalProgressHUD(
+                inAsyncCall: model.isloading,
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Stack(
+                        children: <Widget>[
+                          Container(
+                            height: widget.path != null
+                                ? MediaQuery.of(context).size.height * 0.88
+                                : MediaQuery.of(context).size.height * 0.75,
+                            width: double.infinity,
+                            child: model.isBusy
+                                ? Center(
+                                    child: CircularProgressIndicator(),
+                                  )
+                                : model.notes.length == 0
+                                    ? Center(
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: <Widget>[
+                                            Image.asset(
+                                              'assets/images/study1.jpg',
+                                              alignment: Alignment.center,
+                                              width: 300,
+                                              height: 300,
+                                            ),
+                                            Text(
+                                              "Notes are empty!",
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .headline6
+                                                  .copyWith(
+                                                      color: Theme.of(context)
+                                                          .colorScheme
+                                                          .onSurface,
+                                                      fontWeight:
+                                                          FontWeight.w300),
+                                            ),
+                                            SizedBox(
+                                              height: 15,
+                                            ),
+                                            Text(
+                                              "why don't you upload some?",
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .headline6
+                                                  .copyWith(
+                                                      color: Theme.of(context)
+                                                          .colorScheme
+                                                          .onSurface,
+                                                      fontWeight:
+                                                          FontWeight.w300),
+                                            ),
+                                          ],
+                                        ),
+                                      )
+                                    : ListView(
+                                        padding: EdgeInsets.only(bottom: 150),
+                                        children: model.notesTiles,
                                       ),
-                                      Text(
-                                        "Notes are empty!",
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .headline6
-                                            .copyWith(
-                                                color: Theme.of(context)
-                                                    .colorScheme
-                                                    .onSurface,
-                                                fontWeight: FontWeight.w300),
-                                      ),
-                                      SizedBox(
-                                        height: 15,
-                                      ),
-                                      Text(
-                                        "why don't you upload some?",
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .headline6
-                                            .copyWith(
-                                                color: Theme.of(context)
-                                                    .colorScheme
-                                                    .onSurface,
-                                                fontWeight: FontWeight.w300),
-                                      ),
-                                    ],
-                                  ),
-                                )
-                              : ListView(
-                                  padding: EdgeInsets.only(bottom: 150),
-                                  children: model.notesTiles,
-                                ),
-                    )
-                  ],
+                          )
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
-              ],
+              ),
             ),
-          ),
+            Flexible(
+              flex: 1,
+              child: BannerView((AdColonyAdListener event) => print(event),
+                  BannerSizes.banner, model.getzones()[0]),
+            )
+          ],
         ),
       ),
       viewModelBuilder: () => NotesViewModel(),
