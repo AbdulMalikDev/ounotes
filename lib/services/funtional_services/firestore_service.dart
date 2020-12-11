@@ -21,6 +21,8 @@ import 'package:FSOUNotes/services/state_services/question_paper_service.dart';
 import 'package:FSOUNotes/services/state_services/syllabus_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cuid/cuid.dart';
+import 'package:FSOUNotes/services/state_services/vote_service.dart';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
 import 'package:injectable/injectable.dart';
@@ -53,11 +55,11 @@ class FirestoreService {
   QuestionPaperService _questionPaperService = locator<QuestionPaperService>();
   SyllabusService _syllabusService = locator<SyllabusService>();
   LinksService _linksService = locator<LinksService>();
-  
+  VoteService _voteServie = locator<VoteService>();
 
   AnalyticsService _analyticsService = locator<AnalyticsService>();
-  SharedPreferencesService _sharedPreferencesService = locator<SharedPreferencesService>();
-  
+  SharedPreferencesService _sharedPreferencesService =
+      locator<SharedPreferencesService>();
 
   _getCollectionReferenceAccordingToType(Document path) {
     switch (path) {
@@ -96,11 +98,14 @@ class FirestoreService {
     Map<String, dynamic> data = user.toJson();
     try {
       await _usersCollectionReference.document(data["id"]).setData(data);
-      if(!user.isAdmin)await _usersCollectionReference.document(Constants.userStats).updateData({
-        user.college : FieldValue.increment(1),
-        user.semester : FieldValue.increment(1),
-        user.branch : FieldValue.increment(1),
-      });
+      if (!user.isAdmin)
+        await _usersCollectionReference
+            .document(Constants.userStats)
+            .updateData({
+          user.college: FieldValue.increment(1),
+          user.semester: FieldValue.increment(1),
+          user.branch: FieldValue.increment(1),
+        });
     } catch (e) {
       return _errorHandling(
           e, "While saving user to Firebase , Error occurred");
@@ -126,11 +131,18 @@ class FirestoreService {
     try {
       QuerySnapshot snapshot = await _notesCollectionReference
           .where('subjectName', isEqualTo: subjectName)
-          .orderBy('votes',descending: true)
+          .orderBy('votes', descending: true)
           .getDocuments();
-      List<Note> notes =
-          snapshot.documents.map((doc) => Note.fromData(doc.data,doc.documentID)).toList();
+      List<Note> notes = snapshot.documents
+          .map((doc) => Note.fromData(doc.data, doc.documentID))
+          .toList();
       _notesService.setNotes = notes;
+      Map<String, int> noOfVotes = {};
+      notes.forEach((note) {
+        noOfVotes[note.title] = note.votes;
+      });
+      _voteServie.setNumberOfVotes = noOfVotes;
+
       return notes;
     } catch (e) {
       return _errorHandling(
@@ -188,7 +200,9 @@ class FirestoreService {
 
   loadReportsFromFirebase() async {
     try {
-      QuerySnapshot snapshot = await _reportCollectionReference.orderBy("date",descending: true).getDocuments();
+      QuerySnapshot snapshot = await _reportCollectionReference
+          .orderBy("date", descending: true)
+          .getDocuments();
       List<Report> reports =
           snapshot.documents.map((doc) => Report.fromData(doc.data)).toList();
       return reports;
@@ -200,8 +214,9 @@ class FirestoreService {
 
   loadUploadLogFromFirebase() async {
     try {
-      QuerySnapshot snapshot =
-          await _uploadLogCollectionReference.orderBy("uploadedAt",descending: true).getDocuments();
+      QuerySnapshot snapshot = await _uploadLogCollectionReference
+          .orderBy("uploadedAt", descending: true)
+          .getDocuments();
       List<UploadLog> uploadLogs = snapshot.documents
           .map((doc) => UploadLog.fromData(doc.data))
           .toList();
@@ -215,7 +230,8 @@ class FirestoreService {
 
   Future saveNotes(AbstractDocument note) async {
     try {
-      AuthenticationService _authenticationService = locator<AuthenticationService>();
+      AuthenticationService _authenticationService =
+          locator<AuthenticationService>();
       User user = await _sharedPreferencesService.getUser();
       String id = newCuid();
       note.setId = id;
@@ -230,7 +246,7 @@ class FirestoreService {
       await ref.document(note.id).setData(note.toJson());
       await _uploadLogCollectionReference
           .document(note.id)
-          .setData(_createUploadLog(note,user));
+          .setData(_createUploadLog(note, user));
     } catch (e) {
       log.e("Document id : ${note.id}");
       log.e("Document Subject Name : ${note.subjectName}");
@@ -240,20 +256,22 @@ class FirestoreService {
     }
   }
 
-
   saveLink(Link doc) async {
     try {
-      AuthenticationService _authenticationService = locator<AuthenticationService>();
+      AuthenticationService _authenticationService =
+          locator<AuthenticationService>();
       User user = await _authenticationService.getUser();
       log.e("saving link");
       String id = newCuid();
       doc.setId = id;
       doc.setUploaderId = user.id;
       await _linksCollectionReference.document(doc.id).setData(doc.toJson());
-      await _linksCollectionReference.document("length").updateData({"len" : FieldValue.increment(1)});
+      await _linksCollectionReference
+          .document("length")
+          .updateData({"len": FieldValue.increment(1)});
       await _uploadLogCollectionReference
           .document(doc.id)
-          .setData(_linkUploadLog(doc,user));
+          .setData(_linkUploadLog(doc, user));
     } catch (e) {
       log.i("Url of link : ${doc.linkUrl}");
       log.i("title of link : ${doc.title}");
@@ -274,16 +292,17 @@ class FirestoreService {
   reportNote({Report report, AbstractDocument doc}) async {
     try {
       Map<String, dynamic> data = report.toJson();
-      AuthenticationService _authenticationService = locator<AuthenticationService>();
+      AuthenticationService _authenticationService =
+          locator<AuthenticationService>();
       User user = await _authenticationService.getUser();
       data.addAll({
-        "reporter_id":user.id,
+        "reporter_id": user.id,
         "id": doc.id,
         "title": doc.title,
         "type": doc.type,
         "reports": FieldValue.increment(1),
-        "date" : DateTime.now(),
-        "reportReasons" : FieldValue.arrayUnion([report.reportReason]),
+        "date": DateTime.now(),
+        "reportReasons": FieldValue.arrayUnion([report.reportReason]),
       });
       DocumentSnapshot docSnap =
           await _reportCollectionReference.document(doc.id).get();
@@ -292,7 +311,8 @@ class FirestoreService {
       } else {
         await _reportCollectionReference.document(doc.id).setData(data);
       }
-      _analyticsService.logEvent(name:"REPORT",parameters:{"reason":report.reportReason??""});
+      _analyticsService.logEvent(
+          name: "REPORT", parameters: {"reason": report.reportReason ?? ""});
     } catch (e) {
       return _errorHandling(
           e, "While uploading report to Firebase , Error occurred");
@@ -307,13 +327,17 @@ class FirestoreService {
     //Before rewriting whole application , there was no real system of ids
     //In an effort to be backward compatible we had to take care of both cases
     try {
-
       //Remove document from the user who uploaded this document and update his stats
-      if(doc.uploader_id!=null)
-      {
-        _usersCollectionReference.document(doc.uploader_id).updateData({"uploads":FieldValue.arrayRemove([doc.id])});
-        _usersCollectionReference.document(doc.uploader_id).updateData({"numOfAcceptedUploads":FieldValue.increment(-1)});
-        _usersCollectionReference.document(doc.uploader_id).updateData({"numOfUploads":FieldValue.increment(-1)});
+      if (doc.uploader_id != null) {
+        _usersCollectionReference.document(doc.uploader_id).updateData({
+          "uploads": FieldValue.arrayRemove([doc.id])
+        });
+        _usersCollectionReference
+            .document(doc.uploader_id)
+            .updateData({"numOfAcceptedUploads": FieldValue.increment(-1)});
+        _usersCollectionReference
+            .document(doc.uploader_id)
+            .updateData({"numOfUploads": FieldValue.increment(-1)});
       }
 
       if (doc.id != null) {
@@ -321,8 +345,10 @@ class FirestoreService {
         if (doc.id.length > 5) {
           await ref.document(doc.id).delete();
           await _uploadLogCollectionReference.document(doc.id).delete();
-          if (doc.path == Document.Links){
-            await _linksCollectionReference.document("length").updateData({"len" : FieldValue.increment(-1)});
+          if (doc.path == Document.Links) {
+            await _linksCollectionReference
+                .document("length")
+                .updateData({"len": FieldValue.increment(-1)});
           }
           DocumentSnapshot docSnap =
               await _reportCollectionReference.document(doc.id).get();
@@ -339,8 +365,6 @@ class FirestoreService {
           await doc.reference.delete();
         });
       }
-      
-    
     } catch (e) {
       return _errorHandling(
           e, "While Deleting document in Firebase , Error occurred");
@@ -373,8 +397,6 @@ class FirestoreService {
   //   subs.forEach((subject) {
 
   //     print(subject.name);
-
-
 
   //   });
   // }
@@ -437,7 +459,7 @@ class FirestoreService {
     }
   }
 
-  incrementView(String docId,int views) {
+  incrementView(String docId, int views) {
     CollectionReference ref = _notesCollectionReference;
     try {
       if (docId != null && docId.length > 5) {
@@ -445,7 +467,7 @@ class FirestoreService {
         // if (doc.id.length > 5) {
         ref.document(docId).updateData({"view": FieldValue.increment(views)});
         //}
-      } 
+      }
       // else {
       //   log.i("Document view being incremented in firebase");
       //   return _notesCollectionReference
@@ -482,30 +504,30 @@ class FirestoreService {
   //   }
   // }
 
-  Map<String, dynamic> _createUploadLog(AbstractDocument note,User user) {
+  Map<String, dynamic> _createUploadLog(AbstractDocument note, User user) {
     AuthenticationService _authenticationService =
         locator<AuthenticationService>();
-    Map<String,dynamic> uploadLog = {
-                                        "uploader_name":user.username,
-                                        "uploader_id":user.id,
-                                        "id": note.id,
-                                        "subjectName": note.subjectName,
-                                        "type": note.type,
-                                        "fileName": note.title,
-                                        "uploadedAt": DateTime.now(),
-                                        "email": _authenticationService.user.email,
-                                        "size": note.size,
-                                    };
+    Map<String, dynamic> uploadLog = {
+      "uploader_name": user.username,
+      "uploader_id": user.id,
+      "id": note.id,
+      "subjectName": note.subjectName,
+      "type": note.type,
+      "fileName": note.title,
+      "uploadedAt": DateTime.now(),
+      "email": _authenticationService.user.email,
+      "size": note.size,
+    };
     user.incrementUploads();
     updateUserInFirebase(user);
     return uploadLog;
   }
 
-  Map<String, dynamic> _linkUploadLog(Link note,User user) {
+  Map<String, dynamic> _linkUploadLog(Link note, User user) {
     AuthenticationService _authenticationService =
         locator<AuthenticationService>();
-    Map<String,dynamic> uploadLog =  {
-      "uploader_id":user.id,
+    Map<String, dynamic> uploadLog = {
+      "uploader_id": user.id,
       "id": note.id,
       "subjectName": note.subjectName,
       "type": Constants.links,
@@ -514,7 +536,10 @@ class FirestoreService {
       "email": _authenticationService.user.email,
       "size": 0,
     };
-    _analyticsService.logEvent(name:"UPLOAD_LINK" , parameters: uploadLog , addInNotificationService:true);
+    _analyticsService.logEvent(
+        name: "UPLOAD_LINK",
+        parameters: uploadLog,
+        addInNotificationService: true);
     return uploadLog;
   }
 
@@ -530,9 +555,12 @@ class FirestoreService {
 
   updateSubjectInFirebase(Map subject) async {
     try {
-      await Firestore.instance.collection("Subjects").document(subject["id"].toString()).setData(subject);
+      await Firestore.instance
+          .collection("Subjects")
+          .document(subject["id"].toString())
+          .setData(subject);
     } on Exception catch (e) {
-          log.e(e.toString());
+      log.e(e.toString());
     }
   }
 
@@ -543,8 +571,10 @@ class FirestoreService {
         log.w("Document being updated using ID");
         if (note.id.length > 5) {
           await ref.document(note.id).setData(note.toJson());
-          if (note.path == Document.Links){
-            await _linksCollectionReference.document("length").updateData({"len" : FieldValue.increment(-1)});
+          if (note.path == Document.Links) {
+            await _linksCollectionReference
+                .document("length")
+                .updateData({"len": FieldValue.increment(-1)});
           }
         }
       } else {
@@ -558,86 +588,107 @@ class FirestoreService {
       }
       // await Firestore.instance.collection("Notes").document(note["firebaseId"].toString()).setData(note);
     } on Exception catch (e) {
-          log.e(e.toString());
+      log.e(e.toString());
     }
   }
+
   updateQuestionPaperInFirebase(QuestionPaper note) async {
     log.e(note.id);
-    
+
     try {
-      await _questionPapersCollectionReference.document(note.id).setData(note.toJson());
+      await _questionPapersCollectionReference
+          .document(note.id)
+          .setData(note.toJson());
     } on Exception catch (e) {
-          log.e(e.toString());
+      log.e(e.toString());
     }
   }
+
   updateSyllabusInFirebase(Syllabus note) async {
     log.e(note.id);
-    
+
     try {
-      await _syllabusCollectionReference.document(note.id).setData(note.toJson());
+      await _syllabusCollectionReference
+          .document(note.id)
+          .setData(note.toJson());
     } on Exception catch (e) {
-          log.e(e.toString());
+      log.e(e.toString());
     }
   }
+
   updateLinkInFirebase(Link note) async {
     log.e(note.id);
-    
+
     try {
       await _linksCollectionReference.document(note.id).setData(note.toJson());
       log.e(note.toJson());
     } on Exception catch (e) {
-          log.e(e.toString());
+      log.e(e.toString());
     }
   }
+
   updateUploadLogInFirebase(UploadLog note) async {
     log.e(note.id);
-    
+
     try {
-      await _uploadLogCollectionReference.document(note.id).setData(note.toJson());
+      await _uploadLogCollectionReference
+          .document(note.id)
+          .setData(note.toJson());
     } on Exception catch (e) {
-          log.e(e.toString());
+      log.e(e.toString());
     }
   }
+
   updateReportInFirebase(Report note) async {
     log.e(note.id);
-    
+
     try {
       await _reportCollectionReference.document(note.id).setData(note.toJson());
     } on Exception catch (e) {
-          log.e(e.toString());
+      log.e(e.toString());
     }
   }
-  updateUserInFirebase(User user,{bool updateLocally = true}) async {
-    
-    try {
-      if (user!=null){
-        log.e(user.id);
-        await _usersCollectionReference.document(user.id).setData(user.toJson());
-        if(updateLocally){_sharedPreferencesService.saveUserLocally(user);}
 
-      }else{log.e("User is Null, not found in Local Storage");}
+  updateUserInFirebase(User user, {bool updateLocally = true}) async {
+    try {
+      if (user != null) {
+        log.e(user.id);
+        await _usersCollectionReference
+            .document(user.id)
+            .setData(user.toJson());
+        if (updateLocally) {
+          _sharedPreferencesService.saveUserLocally(user);
+        }
+      } else {
+        log.e("User is Null, not found in Local Storage");
+      }
     } on Exception catch (e) {
-          log.e(e.toString());
+      log.e(e.toString());
     }
   }
 
   Future<Note> getNoteById(String id) async {
     DocumentSnapshot doc = await _notesCollectionReference.document(id).get();
-    return Note.fromData(doc.data,doc.documentID);
+    return Note.fromData(doc.data, doc.documentID);
   }
 
   Future<Link> getLinkById(String id) async {
     DocumentSnapshot doc = await _linksCollectionReference.document(id).get();
     return Link.fromData(doc.data);
   }
+
   Future<QuestionPaper> getQuestionPaperById(String id) async {
-    DocumentSnapshot doc = await _questionPapersCollectionReference.document(id).get();
+    DocumentSnapshot doc =
+        await _questionPapersCollectionReference.document(id).get();
     return QuestionPaper.fromData(doc.data);
   }
+
   Future<Syllabus> getSyllabusById(String id) async {
-    DocumentSnapshot doc = await _syllabusCollectionReference.document(id).get();
+    DocumentSnapshot doc =
+        await _syllabusCollectionReference.document(id).get();
     return Syllabus.fromData(doc.data);
   }
+
   Future<User> getUserById(String id) async {
     DocumentSnapshot doc = await _usersCollectionReference.document(id).get();
     return User.fromData(doc.data);
@@ -647,9 +698,12 @@ class FirestoreService {
     await _linksCollectionReference.document(id).delete();
     await _uploadLogCollectionReference.document(id).delete();
     await _reportCollectionReference.document(id).delete();
-    await _linksCollectionReference.document("length").updateData({"len" : FieldValue.increment(-1)});
+    await _linksCollectionReference
+        .document("length")
+        .updateData({"len": FieldValue.increment(-1)});
     return null;
   }
+
   deleteNoteById(String id) async {
     await _notesCollectionReference.document(id).delete();
     await _uploadLogCollectionReference.document(id).delete();
@@ -657,9 +711,8 @@ class FirestoreService {
     return null;
   }
 
-  updateDocument(dynamic doc,Document document) async {
-
-    switch(document){
+  updateDocument(dynamic doc, Document document) async {
+    switch (document) {
       case Document.Notes:
         await this.updateNoteInFirebase(doc);
         break;
@@ -681,12 +734,10 @@ class FirestoreService {
       default:
         break;
     }
-
   }
 
-  getDocumentById(String id , Document document) async {
-
-    switch(document){
+  getDocumentById(String id, Document document) async {
+    switch (document) {
       case Document.Notes:
         return await this.getNoteById(id);
         break;
@@ -699,21 +750,21 @@ class FirestoreService {
       default:
         break;
     }
-
   }
 
   //Get User Stats
-  Future<Map<String,dynamic>> getUserStats() async {
-    DocumentSnapshot doc = await _usersCollectionReference.document(Constants.userStats).get();
+  Future<Map<String, dynamic>> getUserStats() async {
+    DocumentSnapshot doc =
+        await _usersCollectionReference.document(Constants.userStats).get();
     return doc.data;
   }
 
   Future<User> refreshUser() async {
     User user = await _sharedPreferencesService.getUser();
-    DocumentSnapshot doc = await _usersCollectionReference.document(user.id).get();
+    DocumentSnapshot doc =
+        await _usersCollectionReference.document(user.id).get();
     User newUser = User.fromData(doc.data);
     _sharedPreferencesService.saveUserLocally(newUser);
     return newUser;
   }
-
 }

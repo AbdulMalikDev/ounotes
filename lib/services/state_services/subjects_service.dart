@@ -28,7 +28,7 @@ class SubjectsService with ChangeNotifier {
     _userSubjects = users;
   }
 
-  ValueNotifier<List<Subject>> get userSubjects => _userSubjects;
+  get userSubjects => _userSubjects;
 
   ValueNotifier<List<Subject>> _allSubjects =
       new ValueNotifier(new List<Subject>());

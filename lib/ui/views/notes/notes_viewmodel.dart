@@ -14,6 +14,7 @@ import 'package:FSOUNotes/services/funtional_services/remote_config_service.dart
 import 'package:FSOUNotes/services/funtional_services/sharedpref_service.dart';
 import 'package:FSOUNotes/services/state_services/download_service.dart';
 import 'package:FSOUNotes/services/state_services/vote_service.dart';
+import 'package:FSOUNotes/enums/bottom_sheet_type.dart';
 import 'package:FSOUNotes/ui/widgets/smart_widgets/notes_tile/notes_tile_view.dart';
 import 'package:cuid/cuid.dart';
 import 'package:flutter/foundation.dart';
@@ -24,6 +25,7 @@ import 'package:logger/logger.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class NotesViewModel extends BaseViewModel {
   Logger log = getLogger("Notes view model");
@@ -39,7 +41,8 @@ class NotesViewModel extends BaseViewModel {
   SharedPreferencesService _sharedPreferencesService =
       locator<SharedPreferencesService>();
   DownloadService _downloadService = locator<DownloadService>();
-  VoteServie _voteServie = locator<VoteServie>();
+  VoteService _voteService = locator<VoteService>();
+  BottomSheetService _bottomSheetService = locator<BottomSheetService>();
 
   double _progress = 0;
   double get progress => _progress;
@@ -59,6 +62,8 @@ class NotesViewModel extends BaseViewModel {
   bool isloading = false;
   bool get loading => isloading;
 
+  ValueNotifier<List<Vote>> get userVotesBySub => _voteService.votesBySub;
+
   setLoading(bool val) {
     isloading = val;
     notifyListeners();
@@ -75,9 +80,9 @@ class NotesViewModel extends BaseViewModel {
               "You are facing an error in loading the notes. If you are facing this error more than once, please let us know by using the 'feedback' option in the app drawer.");
       return;
     }
-    await _voteServie.fetchAndSetVotes();
-    await _downloadService.fetchAndSetDownloads();
-    userVotedNotesList = _voteServie.userVotesList;
+    await _voteService.fetchAndSetVotesBySubject(subjectName);
+    // await _downloadService.fetchAndSetDownloads();
+    userVotedNotesList = _voteService.userVotesList;
 
     for (int i = 0; i < _notes.length; i++) {
       Note note = _notes[i];
@@ -90,19 +95,10 @@ class NotesViewModel extends BaseViewModel {
             ctx: context,
             note: note,
             index: i,
-            votes: getListOfVoteBySub(subjectName),
+            votes: _voteService.votesBySub.value,
             downloadedNotes: getListOfNotesInDownloads(subjectName),
-            //votes: v.getListOfVoteBySub(
-            //  notes[index].subjectName),
           ),
           onTap: () {
-            // model.onTap(
-            //   notesName: note.title,
-            //   subName: note.subjectName,
-            //   note: note,
-            //   //! This is used so that spelling is not messed up while uploading
-            //   type: Constants.notes,
-            // );
             incrementViewForAd();
             openDoc(context, note);
           },
@@ -125,16 +121,6 @@ class NotesViewModel extends BaseViewModel {
     return downloadsbysub;
   }
 
-  List<Vote> getListOfVoteBySub(String subname) {
-    List<Vote> votesbySub = [];
-    userVotedNotesList.forEach((vote) {
-      if (vote.subname.toLowerCase() == subname.toLowerCase()) {
-        votesbySub.add(vote);
-      }
-    });
-    return votesbySub;
-  }
-
   // String filePath;
   // Future<bool> checkNoteInDownloads(Note note) async {
   //   await _downloadService.fetchAndSetDownloads();
@@ -155,63 +141,112 @@ class NotesViewModel extends BaseViewModel {
   //   return false;
   // }
 
-  void openDoc(BuildContext context, Note note) {
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20)),
-              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-              title: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  Expanded(
-                    child: Text(
-                      "Where do you want to open the file?",
-                      style: Theme.of(context)
-                          .textTheme
-                          .headline6
-                          .copyWith(fontSize: 18),
-                      overflow: TextOverflow.clip,
-                    ),
-                  ),
-                ],
-              ),
-              actions: <Widget>[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    FlatButton(
-                        child: Text(
-                          "Open in App",
-                          style: Theme.of(context)
-                              .textTheme
-                              .subtitle1
-                              .copyWith(fontSize: 15),
-                        ),
-                        onPressed: () {
-                          _sharedPreferencesService.updateView(note.id);
-                          Navigator.pop(context);
-                          navigateToWebView(note);
-                        }),
-                    FlatButton(
-                        child: Text(
-                          "Open In Browser",
-                          style: Theme.of(context)
-                              .textTheme
-                              .subtitle1
-                              .copyWith(fontSize: 15),
-                        ),
-                        onPressed: () {
-                          _sharedPreferencesService.updateView(note.id);
-                          Helper.launchURL(note.GDriveLink);
-                          Navigator.pop(context);
-                        }),
-                  ],
-                ),
-              ]);
-        });
+  void openDoc(BuildContext context, Note note) async {
+    SharedPreferences prefs = await _sharedPreferencesService.store();
+    // prefs.remove("openDocChoice");
+    // print('yo');
+    // return;
+    if (prefs.containsKey("openDocChoice")) {
+      String button = prefs.getString("openDocChoice");
+      if (button == "Open In App") {
+        navigateToWebView(note);
+      } else {
+        _sharedPreferencesService.updateView(note.id);
+        Helper.launchURL(note.GDriveLink);
+      }
+      return;
+    }
+
+    SheetResponse response = await _bottomSheetService.showCustomSheet(
+      variant: BottomSheetType.floating2,
+      title: 'Where do you want to open the file?',
+      mainButtonTitle: 'Open In Browser',
+      secondaryButtonTitle: 'Open In App',
+    );
+    log.i("openDoc BottomSheetResponse ");
+    if (!response.confirmed) {
+      return;
+    }
+
+    if (response.responseData['checkBox']) {
+      prefs.setString(
+        "openDocChoice",
+        response.responseData['buttonText'],
+      );
+
+      SheetResponse response2 = await _bottomSheetService.showBottomSheet(
+        title: "Settings Saved !",
+        description:
+            "You can change this setting in the profile screen anytime.",
+      );
+
+      if (response2.confirmed) {
+        navigateToPDFScreen(response.responseData['buttonText'], note, context);
+        return;
+      }
+
+      // showDialog(
+      //   context: context,
+      //   builder: (BuildContext context) {
+      //     return AlertDialog(
+      //       shape: RoundedRectangleBorder(
+      //         borderRadius: BorderRadius.circular(20),
+      //       ),
+      //       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      //       title: Row(
+      //         mainAxisSize: MainAxisSize.min,
+      //         children: <Widget>[
+      //           Expanded(
+      //             child: Text(
+      //               "You can change this setting in the profile screen anytime!",
+      //               style: Theme.of(context)
+      //                   .textTheme
+      //                   .headline6
+      //                   .copyWith(fontSize: 16),
+      //               overflow: TextOverflow.clip,
+      //             ),
+      //           ),
+      //         ],
+      //       ),
+      //       actions: <Widget>[
+      //         Row(
+      //           mainAxisAlignment: MainAxisAlignment.center,
+      //           children: [
+      //             FlatButton(
+      //               child: Text(
+      //                 "Ok",
+      //                 style: Theme.of(context)
+      //                     .textTheme
+      //                     .subtitle1
+      //                     .copyWith(fontSize: 15),
+      //               ),
+      //               onPressed: () {
+      //                 Navigator.of(context).pop();
+      //                 navigateToPDFScreen(
+      //                     response.responseData['buttonText'], note, context);
+      //                 return;
+      //               },
+      //             ),
+      //           ],
+      //         ),
+      //       ],
+      //     );
+      //   },
+      // );
+    } else {
+      navigateToPDFScreen(response.responseData['buttonText'], note, context);
+    }
+
+    return;
+  }
+
+  navigateToPDFScreen(String buttonText, Note note, BuildContext context) {
+    if (buttonText == 'Open In App') {
+      navigateToWebView(note);
+    } else {
+      _sharedPreferencesService.updateView(note.id);
+      Helper.launchURL(note.GDriveLink);
+    }
   }
 
   void navigateToWebView(Note note) {

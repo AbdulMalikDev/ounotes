@@ -90,9 +90,15 @@ class _NotesViewState extends State<NotesView>
                                     ],
                                   ),
                                 )
-                              : ListView(
-                                  padding: EdgeInsets.only(bottom: 150),
-                                  children: model.notesTiles,
+                              : ValueListenableBuilder(
+                                  valueListenable: model.userVotesBySub,
+                                  builder: (BuildContext context, dynamic value,
+                                      Widget child) {
+                                    return ListView(
+                                      padding: EdgeInsets.only(bottom: 150),
+                                      children: model.notesTiles,
+                                    );
+                                  },
                                 ),
                     )
                   ],

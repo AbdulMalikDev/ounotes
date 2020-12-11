@@ -30,25 +30,15 @@ class SyllabusTileView extends StatelessWidget {
         builder: (context, model, child) => FractionallySizedBox(
               widthFactor: 0.99,
               child: Container(
-                // height: MediaQuery.of(context).size.height * 0.16,
-                // width: double.infinity,
                 margin: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(16),
-                  color: theme.colorScheme.background,
-                  boxShadow: AppStateNotifier.isDarkModeOn
-                      ? []
-                      : [
-                          BoxShadow(
-                              offset: Offset(10, 10),
-                              color: theme.cardTheme.shadowColor,
-                              blurRadius: 25),
-                          BoxShadow(
-                              offset: Offset(-10, -10),
-                              color: theme.cardTheme.color,
-                              blurRadius: 25)
-                        ],
-                ),
+                decoration: AppStateNotifier.isDarkModeOn
+                    ? Constants.mdecoration.copyWith(
+                        color: Theme.of(context).colorScheme.background,
+                        boxShadow: [],
+                      )
+                    : Constants.mdecoration.copyWith(
+                        color: Theme.of(context).colorScheme.background,
+                      ),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
@@ -176,10 +166,9 @@ class SyllabusTileView extends StatelessWidget {
                       ],
                     ),
                     model.isAdmin
-                            ? 
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
+                        ? Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
                                 Container(
                                   child: RaisedButton(
                                     child: Text("EDIT",
@@ -201,7 +190,7 @@ class SyllabusTileView extends StatelessWidget {
                                   ),
                                 ),
                               ])
-                            : Container(),
+                        : Container(),
                   ],
                 ),
               ),

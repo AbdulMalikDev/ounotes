@@ -35,20 +35,18 @@ class NotesTileViewModel extends BaseViewModel {
   DialogService _dialogService = locator<DialogService>();
   CloudStorageService _cloudStorageService = locator<CloudStorageService>();
   GoogleDriveService _googleDriveService = locator<GoogleDriveService>();
-  BottomSheetService _bottomSheetService = locator<BottomSheetService>();
-  VoteServie _voteServie = locator<VoteServie>();
+    BottomSheetService _bottomSheetService = locator<BottomSheetService>();
+  VoteService _voteService = locator<VoteService>();
 
   bool _hasalreadyvoted = false;
   bool get hasalreadyvoted => _hasalreadyvoted;
   String _vote = Constants.none;
   String get vote => _vote;
-  int _noofvotes = 0;
-  int get noofvotes => _noofvotes;
-
-  List<Vote> recentlyAddedVotes = [];
 
   bool _isnotedownloaded = false;
   bool get isnotedownloaded => _isnotedownloaded;
+
+  Map<String, int> get numberOfVotes => _voteService.numberOfVotes;
 
   handleVotes(String vote, String votedon, Note note) {
     //if the user has pressed on same vote again then make the vote to none and update it in db
@@ -56,12 +54,12 @@ class NotesTileViewModel extends BaseViewModel {
       _vote = Constants.none;
       if (votedon == Constants.upvote) {
         _firestoreService.decrementVotes(note, 1);
-        decrementvotes(1);
+        decrementvotes(note.title, 1);
       } else {
         _firestoreService.incrementVotes(note, 1);
-        incrementvotes(1);
+        incrementvotes(note.title, 1);
       }
-      _voteServie.removeVote(note.title);
+      _voteService.removeVote(note.title);
     } else {
       //if not then check if he upvoted or downvoted
       //if upvoted then increment the votes
@@ -73,10 +71,10 @@ class NotesTileViewModel extends BaseViewModel {
         //if vote was none then incementvote by once
         if (wasvotenone) {
           _firestoreService.incrementVotes(note, 1);
-          incrementvotes(1);
+          incrementvotes(note.title, 1);
         } else {
           _firestoreService.incrementVotes(note, 2);
-          incrementvotes(2);
+          incrementvotes(note.title, 2);
         }
         //if user has not already voted then add to db
         if (!hasalreadyvoted) {
@@ -91,10 +89,10 @@ class NotesTileViewModel extends BaseViewModel {
         _vote = Constants.downvote;
         if (wasvotenone) {
           _firestoreService.decrementVotes(note, 1);
-          decrementvotes(1);
+          decrementvotes(note.title, 1);
         } else {
           _firestoreService.decrementVotes(note, 2);
-          decrementvotes(2);
+          decrementvotes(note.title, 2);
         }
         if (!hasalreadyvoted) {
           addtoVotes(hasupvotes: false, hasdownvotes: true, note: note);
@@ -106,50 +104,31 @@ class NotesTileViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  incrementvotes(int val) {
-    _noofvotes += val;
+  incrementvotes(String noteName, int val) {
+    _voteService.numberOfVotes[noteName] += val;
     notifyListeners();
   }
 
-  decrementvotes(int val) {
-    _noofvotes -= val;
+  decrementvotes(String noteName, int val) {
+    _voteService.numberOfVotes[noteName] -= val;
     notifyListeners();
   }
 
   addtoVotes({bool hasupvotes, bool hasdownvotes, Note note}) {
-    _voteServie.addVote(
+    _voteService.addVote(
       noteName: note.title,
-      hasDownvotes: hasdownvotes,
-      hasUpvotes: hasupvotes,
+      downVote: hasdownvotes,
+      upVote: hasupvotes,
       subname: note.subjectName,
-    );
-    recentlyAddedVotes.add(
-      Vote(
-          notesName: note.title,
-          hasDownvoted: hasdownvotes,
-          hasUpvoted: hasupvotes,
-          subname: note.subjectName),
     );
   }
 
   updateVotes({bool hasupvotes, bool hasdownvotes, Note note}) {
-    _voteServie.updateVotes(
+    _voteService.updateVotes(
       noteName: note.title,
       hasDownvotes: hasdownvotes,
       hasUpvotes: hasupvotes,
       subname: note.subjectName,
-    );
-    for (int i = 0; i < recentlyAddedVotes.length; i++) {
-      if (recentlyAddedVotes[i].notesName == note.title) {
-        recentlyAddedVotes.removeAt(i);
-      }
-    }
-    recentlyAddedVotes.add(
-      Vote(
-          notesName: note.title,
-          hasDownvoted: hasdownvotes,
-          hasUpvoted: hasupvotes,
-          subname: note.subjectName),
     );
   }
 
@@ -171,15 +150,11 @@ class NotesTileViewModel extends BaseViewModel {
       List<Download> downloadedNotebySub,
       Note note}) {
     setBusy(true);
-    if (voteval != null) {
-      _noofvotes = voteval;
-    }
     for (int j = 0; j < downloadedNotebySub.length; j++) {
       if (downloadedNotebySub[j].filename == note.title) {
         _isnotedownloaded = true;
       }
     }
-    votesbySub = recentlyAddedVotes + votesbySub;
     for (int i = 0; i < votesbySub.length; i++) {
       if (note.title.toLowerCase() == votesbySub[i].notesName.toLowerCase()) {
         log.i("checking if user voted");
@@ -197,35 +172,36 @@ class NotesTileViewModel extends BaseViewModel {
 
   bool get isAdmin => _authenticationService.user.isAdmin;
 
-  void reportNote
-  ({
-    String id,
-    String subjectName,
-    String type,
-    String title,
-    AbstractDocument doc
-  }) async {
-
-    setBusy(true);
-
+  void reportNote(
+      {String id,
+      String subjectName,
+      String type,
+      String title,
+      AbstractDocument doc}) async {
     //Collect reason of reporting from user
     SheetResponse reportResponse = await _bottomSheetService.showCustomSheet(
-    variant: BottomSheetType.floating,
-    title: 'What\'s wrong with this ?',
-    description:
-        'Reason for reporting...',
-    mainButtonTitle: 'Report',
-    secondaryButtonTitle: 'Go Back',
+      variant: BottomSheetType.floating,
+      title: 'What\'s wrong with this ?',
+      description: 'Reason for reporting...',
+      mainButtonTitle: 'Report',
+      secondaryButtonTitle: 'Go Back',
     );
     log.i("Report BottomSheetResponse " + reportResponse.responseData);
-    if(!reportResponse.confirmed){return;}
+    if (!reportResponse.confirmed) {
+      return;
+    }
 
     //Generate report with appropriate data
-    Report report = Report(id, subjectName, type, title, _authenticationService.user.email,reportReason: reportResponse.responseData);
+    Report report = Report(
+        id, subjectName, type, title, _authenticationService.user.email,
+        reportReason: reportResponse.responseData);
 
     //Check whether user is banned
     User user = await _firestoreService.refreshUser();
-    if(!user.isUserAllowedToUpload){_userIsNotAllowedNotToReport(); return;}
+    if (!user.isUserAllowedToUpload) {
+      _userIsNotAllowedNotToReport();
+      return;
+    }
 
     //If user is reporting the same document 2nd time the result will be a String
     var result = await _reportsService.addReport(report);
@@ -243,8 +219,6 @@ class NotesTileViewModel extends BaseViewModel {
           textColor: Colors.white,
           fontSize: 16.0);
     }
-    
-    setBusy(false);
   }
 
   Future delete(AbstractDocument doc) async {
@@ -300,13 +274,20 @@ class NotesTileViewModel extends BaseViewModel {
   }
 
   navigateToEditView(Note note) {
-    _navigationService.navigateTo(Routes.editViewRoute,arguments:EditViewArguments(path: Document.Notes,subjectName: note.subjectName,textFieldsMap: Constants.Notes,note: note,title:note.title));
+    _navigationService.navigateTo(Routes.editViewRoute,
+        arguments: EditViewArguments(
+            path: Document.Notes,
+            subjectName: note.subjectName,
+            textFieldsMap: Constants.Notes,
+            note: note,
+            title: note.title));
   }
 
   void _userIsNotAllowedNotToReport() async {
     await _bottomSheetService.showBottomSheet(
       title: "Oops !",
-      description: "You have been banned by admins for uploading irrelevant content or reporting documents with no issue again and again. Use the feedback option in the drawer to contact the admins if you think this is a mistake",
+      description:
+          "You have been banned by admins for uploading irrelevant content or reporting documents with no issue again and again. Use the feedback option in the drawer to contact the admins if you think this is a mistake",
     );
   }
 }

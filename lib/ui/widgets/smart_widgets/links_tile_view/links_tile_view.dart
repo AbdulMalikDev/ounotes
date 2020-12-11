@@ -30,9 +30,7 @@ class LinksTileView extends StatelessWidget {
                 elevation: 5,
                 contentPadding:
                     const EdgeInsets.symmetric(horizontal: 12.0, vertical: 5),
-                baseColor: AppStateNotifier.isDarkModeOn
-                    ? Theme.of(context).colorScheme.background
-                    : Colors.grey[100],
+                baseColor:Theme.of(context).colorScheme.background,
                 expandedColor: AppStateNotifier.isDarkModeOn
                     ? Theme.of(context).colorScheme.background
                     : Colors.white,

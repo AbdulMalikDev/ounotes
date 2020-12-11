@@ -11,10 +11,99 @@ void setUpBottomSheetUi() {
 
   final builders = {
     BottomSheetType.floating: (context, sheetRequest, completer) =>
-        _FloatingBoxBottomSheet(request: sheetRequest, completer: completer)
+        _FloatingBoxBottomSheet(request: sheetRequest, completer: completer),
+    BottomSheetType.floating2: (context, sheetRequest, completer) =>
+        _FloatingBoxBottomSheet2(request: sheetRequest, completer: completer),
   };
 
   bottomSheetService.setCustomSheetBuilders(builders);
+}
+
+class _FloatingBoxBottomSheet2 extends StatelessWidget {
+  final SheetRequest request;
+  final Function(SheetResponse) completer;
+  _FloatingBoxBottomSheet2({
+    Key key,
+    this.request,
+    this.completer,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ViewModelBuilder<BottomSheetViewModel>.reactive(
+      builder: (context, model, child) => SingleChildScrollView(
+        child: Container(
+          margin: EdgeInsets.all(25),
+          padding: EdgeInsets.all(25),
+          decoration: BoxDecoration(
+            color: Theme.of(context).canvasColor,
+            borderRadius: BorderRadius.circular(15),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                request.title,
+                style: Theme.of(context).textTheme.headline5,
+              ),
+              SizedBox(height: 10),
+              CheckboxListTile(
+                title: Text("Remember My Choice"),
+                value: model.ischecked,
+                onChanged: (newValue) {
+                  model.changeCheckMark(newValue);
+                },
+                controlAffinity:
+                    ListTileControlAffinity.leading, //  <-- leading Checkbox
+              ),
+              SizedBox(height: 15),
+              Row(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  MaterialButton(
+                    onPressed: () => completer(
+                      SheetResponse(
+                        confirmed: true,
+                        responseData: {
+                          "checkBox": model.ischecked,
+                          "buttonText": request.secondaryButtonTitle,
+                        },
+                      ),
+                    ),
+                    child: Text(
+                      request.secondaryButtonTitle,
+                      style: TextStyle(
+                          color: Theme.of(context).primaryColor,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  FlatButton(
+                    onPressed: () => completer(
+                      SheetResponse(
+                        confirmed: true,
+                        responseData: {
+                          "checkBox": model.ischecked,
+                          "buttonText": request.mainButtonTitle,
+                        },
+                      ),
+                    ),
+                    child: Text(
+                      request.mainButtonTitle,
+                      style: TextStyle(
+                          color: Colors.white, fontWeight: FontWeight.bold),
+                    ),
+                    color: Theme.of(context).primaryColor,
+                  )
+                ],
+              )
+            ],
+          ),
+        ),
+      ),
+      viewModelBuilder: () => BottomSheetViewModel(),
+    );
+  }
 }
 
 class _FloatingBoxBottomSheet extends StatelessWidget {
@@ -35,7 +124,7 @@ class _FloatingBoxBottomSheet extends StatelessWidget {
           margin: EdgeInsets.all(25),
           padding: EdgeInsets.all(25),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: Theme.of(context).canvasColor,
             borderRadius: BorderRadius.circular(15),
           ),
           child: Column(
@@ -48,12 +137,11 @@ class _FloatingBoxBottomSheet extends StatelessWidget {
                   fontWeight: model.errorText == null
                       ? FontWeight.bold
                       : FontWeight.w300,
-                  color: Colors.grey[900],
                 ),
               ),
               SizedBox(height: 10),
               TextFieldView(
-                  heading: "heading",
+                  heading: "",
                   labelText: request.description,
                   textFieldController: textFieldController1),
               SizedBox(height: 15),

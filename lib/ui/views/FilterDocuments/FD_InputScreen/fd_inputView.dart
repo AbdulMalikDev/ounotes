@@ -52,22 +52,6 @@ class FDInputView extends StatelessWidget {
                   width: App(context).appWidth(1) - 40,
                   padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                   margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                  // decoration: BoxDecoration(
-                  //   borderRadius: BorderRadius.circular(16),
-                  //   color: theme.colorScheme.background,
-                  //   boxShadow: AppStateNotifier.isDarkModeOn
-                  //       ? []
-                  //       : [
-                  //           BoxShadow(
-                  //               offset: Offset(10, 10),
-                  //               color: theme.cardTheme.shadowColor,
-                  //               blurRadius: 25),
-                  //           BoxShadow(
-                  //               offset: Offset(-10, -10),
-                  //               color: theme.cardTheme.color,
-                  //               blurRadius: 25)
-                  //         ],
-                  // ),
                   decoration: Constants.mdecoration
                       .copyWith(color: theme.scaffoldBackgroundColor),
                   child: Column(
