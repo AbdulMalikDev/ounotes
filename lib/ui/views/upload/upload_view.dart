@@ -172,8 +172,8 @@ class _UploadViewState extends State<UploadView> {
                                                   ),
                                                 ),
                                                 suggestionsCallback: (pattern) {
-                                                  return model
-                                                      .getSuggestions(pattern);
+                                                  return model.getSuggestions(pattern) as List<String>;
+                                                  // return ["s"];
                                                 },
                                                 itemBuilder:
                                                     (context, suggestion) {
