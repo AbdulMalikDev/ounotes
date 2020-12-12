@@ -98,12 +98,9 @@ class _SelectionCardState extends State<SelectionCard> {
                       ),
                       Align(
                         alignment: Alignment.centerLeft,
-                        child: Padding(
-                          padding: const EdgeInsets.only(bottom:10.0),
-                          child: Icon(
-                            Icons.keyboard_arrow_down,
-                            color: Theme.of(context).primaryColor,
-                          ),
+                        child: Icon(
+                          Icons.keyboard_arrow_down,
+                          color: Theme.of(context).primaryColor,
                         ),
                       ),
                     ],

@@ -166,7 +166,7 @@ class NotesViewModel extends BaseViewModel {
       secondaryButtonTitle: 'Open In App',
     );
     log.i("openDoc BottomSheetResponse ");
-    if (!response.confirmed) {
+    if (!response.confirmed??false){
       return;
     }
 
