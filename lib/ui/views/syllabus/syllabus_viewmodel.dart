@@ -10,12 +10,13 @@ import 'package:logger/logger.dart';
 import 'package:stacked/stacked.dart';
 import 'package:FSOUNotes/app/locator.dart';
 import 'package:FSOUNotes/app/router.gr.dart';
-import 'package:FSOUNotes/models/question_paper.dart';
 import 'package:FSOUNotes/services/funtional_services/cloud_storage_service.dart';
 import 'package:FSOUNotes/services/funtional_services/firestore_service.dart';
-import 'package:stacked/stacked.dart';
 import 'package:flutter/material.dart';
 import 'package:FSOUNotes/misc/helper.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:FSOUNotes/services/funtional_services/sharedpref_service.dart';
+import 'package:FSOUNotes/enums/bottom_sheet_type.dart';
 
 
 import 'package:stacked_services/stacked_services.dart';
@@ -27,6 +28,10 @@ class SyllabusViewModel extends BaseViewModel {
   CloudStorageService _cloudStorageService = locator<CloudStorageService>();
   NavigationService _navigationService = locator<NavigationService>();
   DownloadService _downloadService = locator<DownloadService>();
+  SharedPreferencesService _sharedPreferencesService =
+      locator<SharedPreferencesService>();
+  BottomSheetService _bottomSheetService = locator<BottomSheetService>();
+
   List<Download> downloadedSyllabus = [];
   bool isloading = false;
   bool get loading => isloading;
@@ -77,64 +82,64 @@ class SyllabusViewModel extends BaseViewModel {
     });
     return downloadsbysub;
   }
+  
+    void openDoc(BuildContext context, Syllabus syllabus) async {
+    SharedPreferences prefs = await _sharedPreferencesService.store();
 
-  void openDoc(BuildContext context, Syllabus syllabus) {
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20)),
-              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-              title: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  Expanded(
-                    child: Text(
-                      "Where do you want to open the file?",
-                      style: Theme.of(context)
-                          .textTheme
-                          .headline6
-                          .copyWith(fontSize: 18),
-                      overflow: TextOverflow.clip,
-                    ),
-                  ),
-                ],
-              ),
-              actions: <Widget>[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    FlatButton(
-                        child: Text(
-                          "Open in App",
-                          style: Theme.of(context)
-                              .textTheme
-                              .subtitle1
-                              .copyWith(fontSize: 15),
-                        ),
-                        onPressed: () {
-                          Navigator.pop(context);
-                          navigateToWebView(syllabus);
-                        }),
-                    FlatButton(
-                        child: Text(
-                          "Open In Browser",
-                          style: Theme.of(context)
-                              .textTheme
-                              .subtitle1
-                              .copyWith(fontSize: 15),
-                        ),
-                        onPressed: () {
-                          Helper.launchURL(syllabus.GDriveLink);
-                          Navigator.pop(context);
-                        }),
-                  ],
-                ),
-              ]);
-        });
+    if (prefs.containsKey("openDocChoice")) {
+      String button = prefs.getString("openDocChoice");
+      if (button == "Open In App") {
+        navigateToWebView(syllabus);
+      } else {
+        _sharedPreferencesService.updateView(syllabus.id);
+        Helper.launchURL(syllabus.GDriveLink);
+      }
+      return;
+    }
+
+    SheetResponse response = await _bottomSheetService.showCustomSheet(
+      variant: BottomSheetType.floating2,
+      title: 'Where do you want to open the file?',
+      mainButtonTitle: 'Open In Browser',
+      secondaryButtonTitle: 'Open In App',
+    );
+    log.i("openDoc BottomSheetResponse ");
+    if (!response.confirmed) {
+      return;
+    }
+
+    if (response.responseData['checkBox']) {
+      prefs.setString(
+        "openDocChoice",
+        response.responseData['buttonText'],
+      );
+
+      SheetResponse response2 = await _bottomSheetService.showBottomSheet(
+        title: "Settings Saved !",
+        description:
+            "You can change this setting in the profile screen anytime.",
+      );
+      if (response2.confirmed) {
+        navigateToPDFScreen(
+            response.responseData['buttonText'], syllabus, context);
+        return;
+      }
+    } else {
+      navigateToPDFScreen(
+          response.responseData['buttonText'], syllabus, context);
+    }
+    return;
   }
 
+  navigateToPDFScreen(String buttonText, Syllabus syllabus, BuildContext context) {
+    if (buttonText == 'Open In App') {
+      navigateToWebView(syllabus);
+    } else {
+      _sharedPreferencesService.updateView(syllabus.id);
+      Helper.launchURL(syllabus.GDriveLink);
+    }
+  }
+  
   void navigateToWebView(Syllabus syllabus) {
     _navigationService.navigateTo(Routes.webViewWidgetRoute,
         arguments: WebViewWidgetArguments(syllabus: syllabus));

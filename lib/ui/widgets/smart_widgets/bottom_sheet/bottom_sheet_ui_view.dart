@@ -61,39 +61,46 @@ class _FloatingBoxBottomSheet2 extends StatelessWidget {
                 mainAxisSize: MainAxisSize.max,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  MaterialButton(
-                    onPressed: () => completer(
-                      SheetResponse(
-                        confirmed: true,
-                        responseData: {
-                          "checkBox": model.ischecked,
-                          "buttonText": request.secondaryButtonTitle,
-                        },
+                  Expanded(
+                    child: MaterialButton(
+                      onPressed: () => completer(
+                        SheetResponse(
+                          confirmed: true,
+                          responseData: {
+                            "checkBox": model.ischecked,
+                            "buttonText": request.secondaryButtonTitle,
+                          },
+                        ),
                       ),
-                    ),
-                    child: Text(
-                      request.secondaryButtonTitle,
-                      style: TextStyle(
-                          color: Theme.of(context).primaryColor,
-                          fontWeight: FontWeight.bold),
+                      child: Text(
+                        request.secondaryButtonTitle,
+                        style: TextStyle(
+                            color: Theme.of(context).primaryColor,
+                            fontWeight: FontWeight.bold),
+                      ),
                     ),
                   ),
-                  FlatButton(
-                    onPressed: () => completer(
-                      SheetResponse(
-                        confirmed: true,
-                        responseData: {
-                          "checkBox": model.ischecked,
-                          "buttonText": request.mainButtonTitle,
-                        },
+                  SizedBox(
+                    width: 30,
+                  ),
+                  Expanded(
+                    child: FlatButton(
+                      onPressed: () => completer(
+                        SheetResponse(
+                          confirmed: true,
+                          responseData: {
+                            "checkBox": model.ischecked,
+                            "buttonText": request.mainButtonTitle,
+                          },
+                        ),
                       ),
+                      child: Text(
+                        request.mainButtonTitle,
+                        style: TextStyle(
+                            color: Colors.white, fontWeight: FontWeight.bold),
+                      ),
+                      color: Theme.of(context).primaryColor,
                     ),
-                    child: Text(
-                      request.mainButtonTitle,
-                      style: TextStyle(
-                          color: Colors.white, fontWeight: FontWeight.bold),
-                    ),
-                    color: Theme.of(context).primaryColor,
                   )
                 ],
               )

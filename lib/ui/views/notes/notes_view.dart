@@ -116,13 +116,15 @@ class _NotesViewState extends State<NotesView>
                                           },
                                         ),
                             ),
-                            Flexible(
-                              flex: 1,
+                            Positioned(
+                              bottom: 15,
+                              right: 10,
+                              left: 10,
                               child: BannerView(
                                   (AdColonyAdListener event) => print(event),
                                   BannerSizes.banner,
                                   model.getzones()[0]),
-                            )
+                            ),
                           ],
                         ),
                       ],
