@@ -24,6 +24,7 @@ class ProfileView extends StatelessWidget {
               iconTheme: IconThemeData(color: Colors.white),
             ),
             body: ListView(
+              shrinkWrap: true,
               children: [
                 Container(
                   height: App(context).appHeight(0.2),
@@ -75,22 +76,18 @@ class ProfileView extends StatelessWidget {
                             .copyWith(fontSize: 20, color: Colors.deepOrange),
                       ),
                     ),
-                    Expanded(
-                      child: Container(
-                        child: DropdownButton(
-                          isExpanded: true,
-                          elevation: 15,
-                          value: model.userOption,
-                          items: model.dropDownOfOpenPDF,
-                          onChanged: model.changedDropDownItemOfOpenPdfChoice,
-                          dropdownColor:
-                              Theme.of(context).colorScheme.background,
-                          style: Theme.of(context)
-                              .textTheme
-                              .subtitle1
-                              .copyWith(fontSize: 17),
-                          
-                        ),
+                    Container(
+                      child: DropdownButton(
+                        isExpanded: true,
+                        elevation: 15,
+                        value: model.userOption,
+                        items: model.dropDownOfOpenPDF,
+                        onChanged: model.changedDropDownItemOfOpenPdfChoice,
+                        dropdownColor: Theme.of(context).colorScheme.background,
+                        style: Theme.of(context)
+                            .textTheme
+                            .subtitle1
+                            .copyWith(fontSize: 17),
                       ),
                     ),
                   ],

@@ -40,6 +40,7 @@ class _FloatingBoxBottomSheet2 extends StatelessWidget {
             borderRadius: BorderRadius.circular(15),
           ),
           child: Column(
+            // crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
@@ -48,6 +49,7 @@ class _FloatingBoxBottomSheet2 extends StatelessWidget {
               ),
               SizedBox(height: 10),
               CheckboxListTile(
+
                 title: Text("Remember My Choice"),
                 value: model.ischecked,
                 onChanged: (newValue) {
@@ -57,11 +59,17 @@ class _FloatingBoxBottomSheet2 extends StatelessWidget {
                     ListTileControlAffinity.leading, //  <-- leading Checkbox
               ),
               SizedBox(height: 15),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal:3.0),
+                child: Text(request.description),
+              ),
+              SizedBox(height: 15),
               Row(
                 mainAxisSize: MainAxisSize.max,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Expanded(
+                    flex:2,
                     child: MaterialButton(
                       onPressed: () => completer(
                         SheetResponse(
@@ -72,11 +80,13 @@ class _FloatingBoxBottomSheet2 extends StatelessWidget {
                           },
                         ),
                       ),
-                      child: Text(
-                        request.secondaryButtonTitle,
-                        style: TextStyle(
-                            color: Theme.of(context).primaryColor,
-                            fontWeight: FontWeight.bold),
+                      child: FittedBox(
+                                              child: Text(
+                          request.secondaryButtonTitle,
+                          style: TextStyle(
+                              color: Theme.of(context).primaryColor,
+                              fontWeight: FontWeight.bold),
+                        ),
                       ),
                     ),
                   ),
@@ -84,6 +94,7 @@ class _FloatingBoxBottomSheet2 extends StatelessWidget {
                     width: 30,
                   ),
                   Expanded(
+                    flex:3,
                     child: FlatButton(
                       onPressed: () => completer(
                         SheetResponse(
@@ -94,16 +105,19 @@ class _FloatingBoxBottomSheet2 extends StatelessWidget {
                           },
                         ),
                       ),
-                      child: Text(
-                        request.mainButtonTitle,
-                        style: TextStyle(
-                            color: Colors.white, fontWeight: FontWeight.bold),
+                      child: FittedBox(
+                                              child: Text(
+                          request.mainButtonTitle,
+                          style: TextStyle(
+                              color: Colors.white, fontWeight: FontWeight.bold),
+                        ),
                       ),
                       color: Theme.of(context).primaryColor,
                     ),
-                  )
+                  ),
                 ],
-              )
+              ),
+              
             ],
           ),
         ),

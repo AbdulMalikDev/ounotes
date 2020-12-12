@@ -1,6 +1,8 @@
 
 import 'package:FSOUNotes/app/locator.dart';
 import 'package:FSOUNotes/services/funtional_services/remote_config_service.dart';
+import 'package:FSOUNotes/services/funtional_services/onboarding_service.dart';
+import 'package:adcolony/adcolony.dart';
 import 'package:flutter/material.dart';
 import 'package:injectable/injectable.dart';
 import 'package:firebase_admob/firebase_admob.dart';
@@ -30,7 +32,15 @@ class AdmobService{
        _NumberOfTimeNotesOpened=0;
       }
       _NumberOfTimeNotesOpened++;
+      OnboardingService.box.put("_NumberOfTimeNotesOpened", _NumberOfTimeNotesOpened);
       print(_NumberOfTimeNotesOpened);
+  }
+
+  getNumberOfTimeNotesOpened(){
+    int savedState = OnboardingService.box.get("_NumberOfTimeNotesOpened") ?? 1;
+    _NumberOfTimeNotesOpened = savedState;
+    print(savedState.toString() + "savedState");
+    return savedState;
   }
 
   bool shouldAdBeShown() {
@@ -39,12 +49,12 @@ class AdmobService{
       if(_NumberOfTimeNotesOpened==null){_NumberOfTimeNotesOpened=0;}
       if(_NumberOfAdsShown==null){_NumberOfAdsShown=0;}
       
-      bool ad =_NumberOfTimeNotesOpened % 5 == 0;
+      bool ad =getNumberOfTimeNotesOpened() % 7 == 0;
       
       if (ad){
         
         if(_NumberOfTimeNotesOpened==null){_NumberOfTimeNotesOpened=0;}
-        _NumberOfTimeNotesOpened++;
+        incrementNumberOfTimeNotesOpened();
         _NumberOfAdsShown++;
       }
       return ad ?? false;
@@ -71,11 +81,18 @@ class AdmobService{
       ..show(anchorType: AnchorType.bottom);
   }
 
+  listener(AdColonyAdListener event) {
+    print(event);
+    if (event == AdColonyAdListener.onRequestFilled) AdColony.show();
+  }
   showNotesViewInterstitialAd(){
-    if(notes_view_interstitial_ad == null ){notes_view_interstitial_ad = this.getNotesViewInterstitialAd();}
-    notes_view_interstitial_ad
-      ..load()
-      ..show();
+    final zones = [_remote.remoteConfig.getString('ADCOLONY_ZONE_INTERSTITIAL')];
+    AdColony.request(zones[0], listener);
+    // if(notes_view_interstitial_ad == null ){notes_view_interstitial_ad = this.getNotesViewInterstitialAd();}
+    // notes_view_interstitial_ad
+    //   ..load()
+    //   ..show();
+
   }
 
   hideNotesViewBanner() async {

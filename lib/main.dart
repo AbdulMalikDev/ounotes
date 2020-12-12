@@ -39,7 +39,10 @@ void main() async {
   CrashlyticsService _crashlyticsService = locator<CrashlyticsService>();
   await _remoteConfigService.init();
   //Ads
-  final zones = [_remoteConfigService.remoteConfig.getString('ADCOLONY_ZONE_BANNER')];
+  final zones = [
+    _remoteConfigService.remoteConfig.getString('ADCOLONY_ZONE_BANNER'),
+    _remoteConfigService.remoteConfig.getString('ADCOLONY_ZONE_INTERSTITIAL')
+  ];
   AdColony.init(AdColonyOptions(_remoteConfigService.remoteConfig.getString('ADCOLONY_APP_ID'),'0', zones));
   //Sentry provides crash reporting
   _crashlyticsService.sentryClient = SentryClient(
