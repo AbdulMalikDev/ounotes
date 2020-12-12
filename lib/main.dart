@@ -38,11 +38,9 @@ void main() async {
   RemoteConfigService _remoteConfigService = locator<RemoteConfigService>();
   CrashlyticsService _crashlyticsService = locator<CrashlyticsService>();
   await _remoteConfigService.init();
-  //ads
+  //Ads
   final zones = [_remoteConfigService.remoteConfig.getString('ADCOLONY_ZONE_BANNER')];
   AdColony.init(AdColonyOptions(_remoteConfigService.remoteConfig.getString('ADCOLONY_APP_ID'),'0', zones));
-  log.e(_remoteConfigService.remoteConfig.getString('ADCOLONY_ZONE_BANNER'));
-  log.e(_remoteConfigService.remoteConfig.getString('ADCOLONY_APP_ID'));
   //Sentry provides crash reporting
   _crashlyticsService.sentryClient = SentryClient(
       dsn: _remoteConfigService.remoteConfig.getString('SentryKey'));
@@ -56,13 +54,13 @@ void main() async {
   Logger.level = Level.verbose;
   SharedPreferences prefs = await SharedPreferences.getInstance();
   AppStateNotifier.isDarkModeOn = prefs.getBool('isdarkmodeon') ?? false;
-  // FlutterError.onError = (details, {bool forceReport = false}) {
-  //   _crashlyticsService.sentryClient.captureException(
-  //     exception: details.exception,
-  //     stackTrace: details.stack,
-  //   );
-  // };
-
+  FlutterError.onError = (details, {bool forceReport = false}) {
+    _crashlyticsService.sentryClient.captureException(
+      exception: details.exception,
+      stackTrace: details.stack,
+    );
+  };
+// runApp(MyApp());
   runZonedGuarded(
     () => runApp(MyApp()),
     (error, stackTrace) async {

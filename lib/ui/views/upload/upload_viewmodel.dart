@@ -8,6 +8,7 @@ import 'package:FSOUNotes/models/document.dart';
 import 'package:FSOUNotes/models/link.dart';
 import 'package:FSOUNotes/models/notes.dart';
 import 'package:FSOUNotes/models/question_paper.dart';
+import 'package:FSOUNotes/models/subject.dart';
 import 'package:FSOUNotes/models/syllabus.dart';
 import 'package:FSOUNotes/services/funtional_services/cloud_storage_service.dart';
 import 'package:FSOUNotes/services/funtional_services/firestore_service.dart';
@@ -73,6 +74,7 @@ class UploadViewModel extends BaseViewModel {
 
   List<String> getSuggestions(String query) {
     List<String> subList = getAllSubjectsList();
+    log.e(subList);
     final List<String> suggestions = query.isEmpty
         ? []
         : subList

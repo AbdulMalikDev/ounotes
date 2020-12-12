@@ -132,6 +132,11 @@ class _NotesViewState extends State<NotesView>
                   ),
                 ),
               ),
+              Flexible(
+                flex: 1,
+                child: BannerView((AdColonyAdListener event) => print(event),
+                    BannerSizes.banner, model.getzones()[0]),
+              )
             ],
           )),
       viewModelBuilder: () => NotesViewModel(),
@@ -144,11 +149,11 @@ class _NotesViewState extends State<NotesView>
   _initState(NotesViewModel model, BuildContext context) async {
     model.fetchNotesAndVotes(widget.subjectName, context);
     try {
-      FirebaseAdMob.instance.initialize(appId: model.admobService.ADMOB_APP_ID);
-      model.admobService.showNotesViewBanner();
-      if (model.admobService.shouldAdBeShown()) {
-        model.admobService.showNotesViewInterstitialAd();
-      }
+      // FirebaseAdMob.instance.initialize(appId: model.admobService.ADMOB_APP_ID);
+      // model.admobService.showNotesViewBanner();
+      // if (model.admobService.shouldAdBeShown()) {
+      //   model.admobService.showNotesViewInterstitialAd();
+      // }
     } on Exception catch (e) {
       print(e.toString());
     }
