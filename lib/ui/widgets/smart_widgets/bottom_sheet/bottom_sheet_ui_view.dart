@@ -61,7 +61,7 @@ class _FloatingBoxBottomSheet2 extends StatelessWidget {
                 mainAxisSize: MainAxisSize.max,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Expanded(
+                  Flexible(
                     child: MaterialButton(
                       onPressed: () => completer(
                         SheetResponse(
@@ -80,10 +80,7 @@ class _FloatingBoxBottomSheet2 extends StatelessWidget {
                       ),
                     ),
                   ),
-                  SizedBox(
-                    width: 30,
-                  ),
-                  Expanded(
+                  Center(
                     child: FlatButton(
                       onPressed: () => completer(
                         SheetResponse(
@@ -94,14 +91,16 @@ class _FloatingBoxBottomSheet2 extends StatelessWidget {
                           },
                         ),
                       ),
-                      child: Text(
-                        request.mainButtonTitle,
-                        style: TextStyle(
-                            color: Colors.white, fontWeight: FontWeight.bold),
+                      child: Center(
+                        child: Text(
+                          request.mainButtonTitle,
+                          style: TextStyle(
+                              color: Colors.white, fontWeight: FontWeight.bold),
+                        ),
                       ),
                       color: Theme.of(context).primaryColor,
                     ),
-                  )
+                  ),
                 ],
               )
             ],
