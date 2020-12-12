@@ -186,55 +186,6 @@ class NotesViewModel extends BaseViewModel {
         navigateToPDFScreen(response.responseData['buttonText'], note, context);
         return;
       }
-
-      // showDialog(
-      //   context: context,
-      //   builder: (BuildContext context) {
-      //     return AlertDialog(
-      //       shape: RoundedRectangleBorder(
-      //         borderRadius: BorderRadius.circular(20),
-      //       ),
-      //       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      //       title: Row(
-      //         mainAxisSize: MainAxisSize.min,
-      //         children: <Widget>[
-      //           Expanded(
-      //             child: Text(
-      //               "You can change this setting in the profile screen anytime!",
-      //               style: Theme.of(context)
-      //                   .textTheme
-      //                   .headline6
-      //                   .copyWith(fontSize: 16),
-      //               overflow: TextOverflow.clip,
-      //             ),
-      //           ),
-      //         ],
-      //       ),
-      //       actions: <Widget>[
-      //         Row(
-      //           mainAxisAlignment: MainAxisAlignment.center,
-      //           children: [
-      //             FlatButton(
-      //               child: Text(
-      //                 "Ok",
-      //                 style: Theme.of(context)
-      //                     .textTheme
-      //                     .subtitle1
-      //                     .copyWith(fontSize: 15),
-      //               ),
-      //               onPressed: () {
-      //                 Navigator.of(context).pop();
-      //                 navigateToPDFScreen(
-      //                     response.responseData['buttonText'], note, context);
-      //                 return;
-      //               },
-      //             ),
-      //           ],
-      //         ),
-      //       ],
-      //     );
-      //   },
-      // );
     } else {
       navigateToPDFScreen(response.responseData['buttonText'], note, context);
     }

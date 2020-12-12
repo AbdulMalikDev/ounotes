@@ -13,6 +13,9 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:logger/logger.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:FSOUNotes/services/funtional_services/sharedpref_service.dart';
+import 'package:FSOUNotes/enums/bottom_sheet_type.dart';
 
 class QuestionPapersViewModel extends BaseViewModel {
   Logger log = getLogger("QuestionPapersViewModel");
@@ -22,6 +25,10 @@ class QuestionPapersViewModel extends BaseViewModel {
   NavigationService _navigationService = locator<NavigationService>();
   DownloadService _downloadService = locator<DownloadService>();
   DialogService _dialogService = locator<DialogService>();
+  SharedPreferencesService _sharedPreferencesService =
+      locator<SharedPreferencesService>();
+  BottomSheetService _bottomSheetService = locator<BottomSheetService>();
+
   List<Download> downloadedQp = [];
   bool isloading = false;
   bool get loading => isloading;
@@ -46,7 +53,8 @@ class QuestionPapersViewModel extends BaseViewModel {
         await _firestoreService.loadQuestionPapersFromFirebase(subjectName);
     if (result is String) {
       _dialogService.showDialog(
-          title: "Error", description: "Error in loading documents " + "$result");
+          title: "Error",
+          description: "Error in loading documents " + "$result");
       setBusy(false);
     } else {
       _questionPapers = result;
@@ -91,66 +99,66 @@ class QuestionPapersViewModel extends BaseViewModel {
     return false;
   }
 
-  void openDoc(BuildContext context, QuestionPaper questionPaper) {
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20)),
-              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-              title: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  Expanded(
-                    child: Text(
-                      "Where do you want to open the file?",
-                      style: Theme.of(context)
-                          .textTheme
-                          .headline6
-                          .copyWith(fontSize: 18),
-                      overflow: TextOverflow.clip,
-                    ),
-                  ),
-                ],
-              ),
-              actions: <Widget>[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    FlatButton(
-                        child: Text(
-                          "Open in App",
-                          style: Theme.of(context)
-                              .textTheme
-                              .subtitle1
-                              .copyWith(fontSize: 15),
-                        ),
-                        onPressed: () {
-                          Navigator.pop(context);
-                          navigateToWebView(questionPaper);
-                        }),
-                    FlatButton(
-                        child: Text(
-                          "Open In Browser",
-                          style: Theme.of(context)
-                              .textTheme
-                              .subtitle1
-                              .copyWith(fontSize: 15),
-                        ),
-                        onPressed: () {
-                          Helper.launchURL(questionPaper.GDriveLink);
-                          Navigator.pop(context);
-                        }),
-                  ],
-                ),
-              ]);
-        });
+  void openDoc(BuildContext context, QuestionPaper questionPaper) async {
+    SharedPreferences prefs = await _sharedPreferencesService.store();
+
+    if (prefs.containsKey("openDocChoice")) {
+      String button = prefs.getString("openDocChoice");
+      if (button == "Open In App") {
+        navigateToWebView(questionPaper);
+      } else {
+        _sharedPreferencesService.updateView(questionPaper.id);
+        Helper.launchURL(questionPaper.GDriveLink);
+      }
+      return;
+    }
+
+    SheetResponse response = await _bottomSheetService.showCustomSheet(
+      variant: BottomSheetType.floating2,
+      title: 'Where do you want to open the file?',
+      mainButtonTitle: 'Open In Browser',
+      secondaryButtonTitle: 'Open In App',
+    );
+    log.i("openDoc BottomSheetResponse ");
+    if (!response.confirmed) {
+      return;
+    }
+
+    if (response.responseData['checkBox']) {
+      prefs.setString(
+        "openDocChoice",
+        response.responseData['buttonText'],
+      );
+
+      SheetResponse response2 = await _bottomSheetService.showBottomSheet(
+        title: "Settings Saved !",
+        description:
+            "You can change this setting in the profile screen anytime.",
+      );
+      if (response2.confirmed) {
+        navigateToPDFScreen(
+            response.responseData['buttonText'], questionPaper, context);
+        return;
+      }
+    } else {
+      navigateToPDFScreen(
+          response.responseData['buttonText'], questionPaper, context);
+    }
+    return;
+  }
+
+  navigateToPDFScreen(String buttonText, QuestionPaper questionPaper, BuildContext context) {
+    if (buttonText == 'Open In App') {
+      navigateToWebView(questionPaper);
+    } else {
+      _sharedPreferencesService.updateView(questionPaper.id);
+      Helper.launchURL(questionPaper.GDriveLink);
+    }
   }
 
   void navigateToWebView(QuestionPaper questionPaper) {
     _navigationService.navigateTo(Routes.webViewWidgetRoute,
-        arguments: WebViewWidgetArguments(questionPaper:questionPaper));
+        arguments: WebViewWidgetArguments(questionPaper: questionPaper));
   }
 
   void onTap({

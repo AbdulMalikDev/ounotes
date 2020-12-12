@@ -19,113 +19,106 @@ class ProfileView extends StatelessWidget {
           opacity: 0.5,
           progressIndicator: circularProgress(),
           child: Scaffold(
-              appBar: AppBar(
-                title: Text("My Profile"),
-                iconTheme: IconThemeData(color: Colors.white),
-              ),
-              body: ListView(
-                children: [
-                  Container(
-                    height: App(context).appHeight(0.2),
-                    child: Column(
-                      children: <Widget>[
-                        SizedBox(
-                          height: 10,
+            appBar: AppBar(
+              title: Text("My Profile"),
+              iconTheme: IconThemeData(color: Colors.white),
+            ),
+            body: ListView(
+              children: [
+                Container(
+                  height: App(context).appHeight(0.2),
+                  child: Column(
+                    children: <Widget>[
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Container(
+                        height:
+                            App(context).appScreenHeightWithOutSafeArea(0.12),
+                        width: App(context).appScreenWidthWithOutSafeArea(0.32),
+                        child: Image.asset(
+                          "assets/images/apnaicon.png",
+                          fit: BoxFit.contain,
                         ),
-                        Container(
-                          height:
-                              App(context).appScreenHeightWithOutSafeArea(0.12),
-                          width:
-                              App(context).appScreenWidthWithOutSafeArea(0.32),
-                          child: Image.asset(
-                            "assets/images/apnaicon.png",
-                            fit: BoxFit.contain,
-                          ),
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Text(model.user?.username ?? '',
-                            style: Theme.of(context).textTheme.headline6),
-                      ],
-                    ),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Text(model.user?.username ?? '',
+                          style: Theme.of(context).textTheme.headline6),
+                    ],
                   ),
-                  Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        buildTile("Email", model.user?.email ?? "", context),
-                        buildTile(
-                            "Semester", model.user?.semester ?? " ", context),
-                        buildTile("Branch", model.user?.branch ?? " ", context),
-                        buildTile(
-                            'College', model.user?.college ?? "", context),
-                      ]),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Flexible(
-                    child: Row(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(50, 10, 10, 10),
-                          child: Text(
-                            "Open pdf in",
-                            style: Theme.of(context)
-                                .textTheme
-                                .subtitle1
-                                .copyWith(
-                                    fontSize: 20, color: Colors.deepOrange),
-                          ),
-                        ),
-                        Flexible(
-                          child: Container(
-                            child: DropdownButton(
-                              elevation: 15,
-                              value: model.userOption,
-                              items: model.dropDownOfOpenPDF,
-                              onChanged:
-                                  model.changedDropDownItemOfOpenPdfChoice,
-                              dropdownColor:
-                                  Theme.of(context).colorScheme.background,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .subtitle1
-                                  .copyWith(fontSize: 17),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(
-                    height: 40,
-                  ),
-                  Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 60),
-                    height: MediaQuery.of(context).size.height * 0.06,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: FittedBox(
-                      child: FlatButton(
-                        child: Text(
-                          "Log out",
-                          style: TextStyle(color: Colors.white),
-                        ),
-                        color: Theme.of(context).primaryColor,
-                        onPressed: () {
-                          model.handleSignOut(context);
-                        },
+                ),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    buildTile("Email", model.user?.email ?? "", context),
+                    buildTile("Semester", model.user?.semester ?? " ", context),
+                    buildTile("Branch", model.user?.branch ?? " ", context),
+                    buildTile('College', model.user?.college ?? "", context),
+                  ],
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(30, 10, 10, 10),
+                      child: Text(
+                        "Open pdf in",
+                        style: Theme.of(context)
+                            .textTheme
+                            .subtitle1
+                            .copyWith(fontSize: 20, color: Colors.deepOrange),
                       ),
                     ),
+                    Expanded(
+                      child: Container(
+                        child: DropdownButton(
+                          isExpanded: true,
+                          elevation: 15,
+                          value: model.userOption,
+                          items: model.dropDownOfOpenPDF,
+                          onChanged: model.changedDropDownItemOfOpenPdfChoice,
+                          dropdownColor:
+                              Theme.of(context).colorScheme.background,
+                          style: Theme.of(context)
+                              .textTheme
+                              .subtitle1
+                              .copyWith(fontSize: 17),
+                          
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 30,
+                ),
+                Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 60),
+                  height: MediaQuery.of(context).size.height * 0.06,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
                   ),
-                  SizedBox(height: 10),
-                ],
-              )),
-
-          // ),
+                  child: FlatButton(
+                    child: Text(
+                      "Log out",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    color: Theme.of(context).primaryColor,
+                    onPressed: () {
+                      model.handleSignOut(context);
+                    },
+                  ),
+                ),
+                SizedBox(height: 10),
+              ],
+            ),
+          ),
         );
       },
       viewModelBuilder: () => ProfileViewModel(),

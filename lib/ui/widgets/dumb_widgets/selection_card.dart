@@ -30,7 +30,7 @@ class _SelectionCardState extends State<SelectionCard> {
       decoration: Constants.kBoxDecorationStyle.copyWith(
         color: Theme.of(context).canvasColor,
       ),
-      height: App(context).appHeight(0.14),
+      height: App(context).appHeight(0.142),
       width: double.infinity,
       margin: const EdgeInsets.symmetric(vertical: 10),
       child: Container(
@@ -42,7 +42,7 @@ class _SelectionCardState extends State<SelectionCard> {
               Padding(
                 padding: const EdgeInsets.only(
                   top: 12,
-                  bottom: 8,
+                  bottom: 5,
                 ),
                 child: Text(
                   widget.title,
@@ -98,9 +98,12 @@ class _SelectionCardState extends State<SelectionCard> {
                       ),
                       Align(
                         alignment: Alignment.centerLeft,
-                        child: Icon(
-                          Icons.keyboard_arrow_down,
-                          color: Theme.of(context).primaryColor,
+                        child: Padding(
+                          padding: const EdgeInsets.only(bottom:10.0),
+                          child: Icon(
+                            Icons.keyboard_arrow_down,
+                            color: Theme.of(context).primaryColor,
+                          ),
                         ),
                       ),
                     ],

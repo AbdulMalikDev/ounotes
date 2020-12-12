@@ -108,7 +108,7 @@ class _UploadViewState extends State<UploadView> {
                               ],
                             ))
                           : Form(
-                              key: _formKey,
+                              key:this._formKey,
                               child: Container(
                                 height: double.infinity,
                                 child: SingleChildScrollView(
@@ -198,6 +198,15 @@ class _UploadViewState extends State<UploadView> {
                                                   this.controllerOfSub.text =
                                                       suggestion;
                                                 },
+                                                errorBuilder:
+                                                    (BuildContext context,
+                                                            Object error) =>
+                                                        Text(
+                                                  '$error',
+                                                  style: TextStyle(
+                                                      color: Theme.of(context)
+                                                          .errorColor),
+                                                ),
                                                 validator: (value) {
                                                   if (value.isEmpty) {
                                                     return 'Please select a subjectname';

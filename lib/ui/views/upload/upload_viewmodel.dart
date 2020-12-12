@@ -72,28 +72,24 @@ class UploadViewModel extends BaseViewModel {
   //   notifyListeners();
   // }
 
-   List getSuggestions(String query) {
-     log.e("alsdkjflsjflsdjfsldkf");
-     log.e(getAllSubjectsList());
+  List<String> getSuggestions(String query) {
     List<String> subList = getAllSubjectsList();
     log.e(subList);
     final List<String> suggestions = query.isEmpty
         ? []
         : subList
             .where((sub) => sub.toLowerCase().startsWith(query.toLowerCase()))
-            .toList();
-    log.e(suggestions);
+            .toList().cast<String>();
     return suggestions;
   }
 
   List<String> getAllSubjectsList() {
-    List<Subject> userSubjects = _subjectsService.userSubjects.value; 
-    List<String> userSub = userSubjects.map<String>((sub) => sub.name ?? "").toList();
-    List<Subject> allSubjects = _subjectsService.allSubjects.value; 
-    List<String> allSub = allSubjects.map<String>((sub) => sub.name).toList();
+    List<String> userSub =
+        _subjectsService.userSubjects.value.map((sub) => sub.name).toList().cast<String>();
+    List<String> allSub =
+        _subjectsService.allSubjects.value.map((sub) => sub.name).toList().cast<String>();
     List<String> subList = userSub + allSub;
-    log.e(subList);
-    subList = subList.toSet().toList();
+    subList = subList.toSet().toList().cast<String>();
     return subList;
   }
 

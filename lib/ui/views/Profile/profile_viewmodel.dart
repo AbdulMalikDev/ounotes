@@ -37,15 +37,30 @@ class ProfileViewModel extends BaseViewModel {
   void changedDropDownItemOfOpenPdfChoice(String newChoice) async {
     _userOption = newChoice;
     SharedPreferences prefs = await _sharedPreferencesService.store();
-    prefs.setString("openDocChoice", newChoice);
+    if (newChoice == "Ask me before opening pdf") {
+      if (prefs.containsKey("openDocChoice")){
+        prefs.remove("openDocChoice");
+      }
+    } else {
+      prefs.setString("openDocChoice", newChoice);
+    }
+    Fluttertoast.showToast(msg: "Settings Saved !");
     notifyListeners();
   }
 
   setUser() async {
     setBusy(true);
     SharedPreferences prefs = await _sharedPreferencesService.store();
-    _userOption = prefs.getString("openDocChoice");
-    List<String> items = ["Open In App", "Open In Browser"];
+    if (prefs.containsKey("openDocChoice")) {
+      _userOption = prefs.getString("openDocChoice");
+    } else {
+      _userOption = "Ask me before opening pdf";
+    }
+    List<String> items = [
+      "Open In App",
+      "Open In Browser",
+      "Ask me before opening pdf"
+    ];
     _dropDownOfOpenPDF = buildAndGetDropDownMenuItems(items);
     User user = User.fromData(
         json.decode(prefs.getString("current_user_is_logged_in")));
