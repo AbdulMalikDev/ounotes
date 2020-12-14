@@ -57,22 +57,23 @@ void main() async {
   Logger.level = Level.verbose;
   SharedPreferences prefs = await SharedPreferences.getInstance();
   AppStateNotifier.isDarkModeOn = prefs.getBool('isdarkmodeon') ?? false;
-  FlutterError.onError = (details, {bool forceReport = false}) {
-    _crashlyticsService.sentryClient.captureException(
-      exception: details.exception,
-      stackTrace: details.stack,
-    );
-  };
-// runApp(MyApp());
-  runZonedGuarded(
-    () => runApp(MyApp()),
-    (error, stackTrace) async {
-      await _crashlyticsService.sentryClient.captureException(
-        exception: error,
-        stackTrace: stackTrace,
-      );
-    },
-  );
+  //TODO DevChecklist - Uncomment for error handling
+  // FlutterError.onError = (details, {bool forceReport = false}) {
+  //   _crashlyticsService.sentryClient.captureException(
+  //     exception: details.exception,
+  //     stackTrace: details.stack,
+  //   );
+  // };
+runApp(MyApp());
+  // runZonedGuarded(
+  //   () => runApp(MyApp()),
+  //   (error, stackTrace) async {
+  //     await _crashlyticsService.sentryClient.captureException(
+  //       exception: error,
+  //       stackTrace: stackTrace,
+  //     );
+  //   },
+  // );
 }
 
 class MyApp extends StatelessWidget {

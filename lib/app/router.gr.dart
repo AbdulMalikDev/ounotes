@@ -115,7 +115,10 @@ class Router extends RouterBase {
         }
         final typedArgs = args as HomeViewArguments ?? HomeViewArguments();
         return MaterialPageRoute<dynamic>(
-          builder: (context) => HomeView(key: typedArgs.key),
+          builder: (context) => HomeView(
+              key: typedArgs.key,
+              shouldShowUpdateDialog: typedArgs.shouldShowUpdateDialog,
+              versionDetails: typedArgs.versionDetails),
           settings: settings,
         );
       case Routes.allDocumentsViewRoute:
@@ -350,7 +353,10 @@ class IntroViewArguments {
 //HomeView arguments holder class
 class HomeViewArguments {
   final Key key;
-  HomeViewArguments({this.key});
+  final bool shouldShowUpdateDialog;
+  final Map<String, dynamic> versionDetails;
+  HomeViewArguments(
+      {this.key, this.shouldShowUpdateDialog, this.versionDetails});
 }
 
 //AllDocumentsView arguments holder class

@@ -1,4 +1,7 @@
+import 'dart:math';
+
 import 'package:FSOUNotes/app/locator.dart';
+import 'package:FSOUNotes/enums/bottom_sheet_type.dart';
 import 'package:FSOUNotes/models/notes.dart';
 import 'package:FSOUNotes/models/question_paper.dart';
 import 'package:FSOUNotes/models/subject.dart';
@@ -13,7 +16,9 @@ import 'package:feature_discovery/feature_discovery.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:open_appstore/open_appstore.dart';
 import 'package:stacked/stacked.dart';
+import 'package:stacked_services/stacked_services.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class HomeViewModel extends BaseViewModel {
@@ -21,6 +26,7 @@ class HomeViewModel extends BaseViewModel {
   FirestoreService _firestoreService = locator<FirestoreService>();
   AdmobService _admobService = locator<AdmobService>();
   SubjectsService _subjectsService = locator<SubjectsService>();
+  BottomSheetService _bottomSheetService = locator<BottomSheetService>();
   ValueNotifier<List<Subject>> get userSubjects =>
       _subjectsService.userSubjects;
   ValueNotifier<List<Subject>> get allSubjects => _subjectsService.allSubjects;
@@ -105,10 +111,11 @@ class HomeViewModel extends BaseViewModel {
   showIntroDialog(BuildContext context) async {
     if (_subjectsService.userSubjects.value.length == 0) {
       SchedulerBinding.instance.addPostFrameCallback((Duration duration) {
-        FeatureDiscovery.clearPreferences(context, <String>{ 
-          OnboardingService.floating_action_button_to_add_subjects, 
-          OnboardingService.drawer_hamburger_icon_to_access_other_features, 
-        });
+        //TODO DevChecklist - Dev feature to test intro, do not forget to remove
+        // FeatureDiscovery.clearPreferences(context, <String>{ 
+        //   OnboardingService.floating_action_button_to_add_subjects, 
+        //   OnboardingService.drawer_hamburger_icon_to_access_other_features, 
+        // });
         FeatureDiscovery.discoverFeatures(
           context,
           const <String>{
@@ -159,5 +166,35 @@ class HomeViewModel extends BaseViewModel {
   getSyllabusFromFirebase(Subject subject) async {
     var notes = await _firestoreService.loadSyllabusFromFirebase(subject.name);
     return notes;
+  }
+
+  void updateDialog(bool shouldShowUpdateDialog,Map<String,dynamic> versionDetails) {
+    SchedulerBinding.instance.addPostFrameCallback((timeStamp) async {
+        if (shouldShowUpdateDialog || true) {
+          String updatedVersion = versionDetails["updatedVersion"];
+          String currentVersion = versionDetails["currentVersion"];
+          String warning = "If you don't see the update option, please wait a day or two for the update to roll-out";
+          //To show this warning only sometimes, using a random bool
+          Random random = new Random();
+          bool shouldShowWarning = random.nextBool();
+          SheetResponse response = await _bottomSheetService.showCustomSheet(
+            variant: BottomSheetType.confirm,
+            title: "Update App? ✨",
+            description:
+                "A new version of OU Notes is available. Update the app to avoid crashes and access new features !!",
+            mainButtonTitle: 'UPDATE',
+            secondaryButtonTitle: 'NOT NOW',
+            barrierDismissible: false,
+            customData: [updatedVersion,currentVersion,shouldShowWarning ? warning : ""],
+          );
+          //BottomSheet closed by tapping elsewhere on the screen
+          if(response == null)return;
+          //Confirm action
+          if (response.confirmed) {
+            OpenAppstore.launch(
+                androidAppId: 'com.notes.ounotes', iOSAppId: 'com.notes.ounotes');
+          }
+        }
+    });
   }
 }

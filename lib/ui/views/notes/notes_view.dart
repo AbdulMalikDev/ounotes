@@ -141,7 +141,6 @@ class _NotesViewState extends State<NotesView>
       // model.admobService.showNotesViewBanner();
       if (model.admobService.shouldAdBeShown()) {
         model.admobService.showNotesViewInterstitialAd();
-        print("AD CALLED!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
       }
     } on Exception catch (e) {
       print(e.toString());

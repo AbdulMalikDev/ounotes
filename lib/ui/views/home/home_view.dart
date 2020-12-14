@@ -13,14 +13,17 @@ import 'package:pimp_my_button/pimp_my_button.dart';
 import 'package:stacked/stacked.dart';
 
 class HomeView extends StatelessWidget {
-  const HomeView({Key key}) : super(key: key);
+  final bool shouldShowUpdateDialog;
+  final Map<String,dynamic> versionDetails;
+  const HomeView({Key key,this.shouldShowUpdateDialog,this.versionDetails}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
     return ViewModelBuilder<HomeViewModel>.reactive(
       onModelReady: (model) async {
-        await model.admobService.hideNotesViewBanner();
+        // await model.admobService.hideNotesViewBanner();
+        model.updateDialog(shouldShowUpdateDialog,versionDetails);
         model.showIntroDialog(context);
       },
       builder: (context, model, child) => WillPopScope(
