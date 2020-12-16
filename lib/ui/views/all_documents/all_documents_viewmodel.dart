@@ -3,6 +3,7 @@ import 'package:FSOUNotes/app/router.gr.dart';
 import 'package:FSOUNotes/services/funtional_services/sharedpref_service.dart';
 import 'package:FSOUNotes/utils/permission_handler.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:connectivity_wrapper/connectivity_wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
@@ -72,6 +73,10 @@ class AllDocumentsViewModel extends BaseViewModel {
       //                 }),
       //           ]);
       //     });
+    }
+    bool isUserOnline = await ConnectivityWrapper.instance.isConnected;
+    if (!isUserOnline){
+      _bottomSheetService.showBottomSheet(title: "Oops !",description: "Looks like you're offline ! please connect to the internet to access latest the documents.");
     }
  }
 }

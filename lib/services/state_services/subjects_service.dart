@@ -24,16 +24,15 @@ class SubjectsService with ChangeNotifier {
   ValueNotifier<List<Subject>> _userSubjects =
       new ValueNotifier(new List<Subject>());
 
+  ValueNotifier<List<Subject>> _allSubjects =
+      new ValueNotifier(new List<Subject>());
+
   void setUserSubjects(users) {
     _userSubjects = users;
   }
 
-  get userSubjects => _userSubjects;
-
-  ValueNotifier<List<Subject>> _allSubjects =
-      new ValueNotifier(new List<Subject>());
-
-  ValueNotifier<List<Subject>> get allSubjects => _allSubjects;
+  ValueNotifier<List<Subject>> get userSubjects => _userSubjects;
+  ValueNotifier<List<Subject>> get allSubjects  => _allSubjects;
 
   Future<dynamic> addUserSubject(Subject subject) async {
     if (_userSubjects.value.firstWhere(
@@ -170,5 +169,46 @@ class SubjectsService with ChangeNotifier {
           orElse: () => null);
     }
     return subject;
+  }
+
+  //* Returns all subjects with match atleast one word with any other subject.
+  //? Test Input : Database Management Systems
+  List<Subject> getSimilarSubjects(String query){
+    List<String> queryWords = query.split(" "); //? [Database, Management, Systems]
+    List<Subject> matchingSubjects = [];
+    List<Subject> allSubjects = this.userSubjects.value + this.allSubjects.value;
+    allSubjects.forEach((subject) {
+        
+        //Skip iteration if same subject
+        if(subject.name == query)return; 
+        List<String> subjectWords = subject.name.split(" ");//? [Database, Systems]
+        subjectWords.forEach((subjectWord) {
+          queryWords.forEach((queryWord) {
+            String longWord  = subjectWord.length >= queryWord.length ? subjectWord : queryWord;
+            String shortWord = subjectWord.length < queryWord.length ? subjectWord : queryWord;
+            if(longWord.contains(shortWord)){
+              bool isSimilar = _isSimilar(longWord,shortWord);
+              if(isSimilar && !matchingSubjects.contains(subject)){
+                matchingSubjects.add(subject);
+              }
+            }
+          });
+        });
+    });
+    return matchingSubjects.reversed.toList();
+  }
+
+  bool _isSimilar(String longWord, String shortWord) {
+    int sameLetters = 0;
+    int totalLetters = shortWord.length;
+    longWord.split("").asMap().forEach((index,longWordChar) { 
+      if(index >= shortWord.length)return;
+      if(longWordChar == shortWord[index])sameLetters++;
+    });
+
+    double percentage = sameLetters/totalLetters * 100;
+    int percentageMatchingSet = 70;
+
+    return percentage >= percentageMatchingSet;
   }
 }

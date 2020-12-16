@@ -170,7 +170,7 @@ class HomeViewModel extends BaseViewModel {
 
   void updateDialog(bool shouldShowUpdateDialog,Map<String,dynamic> versionDetails) {
     SchedulerBinding.instance.addPostFrameCallback((timeStamp) async {
-        if (shouldShowUpdateDialog || true) {
+        if (shouldShowUpdateDialog) {
           String updatedVersion = versionDetails["updatedVersion"];
           String currentVersion = versionDetails["currentVersion"];
           String warning = "If you don't see the update option, please wait a day or two for the update to roll-out";

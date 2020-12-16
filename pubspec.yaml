@@ -64,6 +64,7 @@ dependencies:
   share: ^0.6.4+3
   feature_discovery: ^0.12.1
   syncfusion_flutter_pdfviewer: ^18.3.53-beta
+  connectivity_wrapper: ^1.0.4
 
   # Architecture related packages
   flutter_hooks: null
