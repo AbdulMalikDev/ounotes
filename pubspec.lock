@@ -281,6 +281,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.6"
+  disable_screenshots:
+    dependency: "direct main"
+    description:
+      name: disable_screenshots
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.0"
   dynamic_text_highlighting:
     dependency: "direct main"
     description:

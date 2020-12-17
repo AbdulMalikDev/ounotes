@@ -51,7 +51,6 @@ dependencies:
   flutter_secure_storage: ^3.3.1+1
   flutter_typeahead: ^1.8.1
   flutter_webview_plugin: ^0.3.11
-  flutter_windowmanager: ^0.0.2
   image_picker: ^0.6.7+2
   in_app_review: ^1.0.3
   intl: ^0.16.1
@@ -65,6 +64,8 @@ dependencies:
   feature_discovery: ^0.12.1
   syncfusion_flutter_pdfviewer: ^18.3.53-beta
   connectivity_wrapper: ^1.0.4
+  flutter_windowmanager: ^0.0.2
+  disable_screenshots: ^0.1.0
 
   # Architecture related packages
   flutter_hooks: null

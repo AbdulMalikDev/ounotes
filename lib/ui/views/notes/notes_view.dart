@@ -55,57 +55,64 @@ class _NotesViewState extends State<NotesView>
                           child: CircularProgressIndicator(),
                         )
                       : model.notes.length == 0
-                          ? Center(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisSize: MainAxisSize.min,
-                                children: <Widget>[
-                                  Image.asset(
-                                    'assets/images/study1.jpg',
-                                    alignment: Alignment.center,
-                                    width: 300,
-                                    height: 300,
-                                  ),
-                                  Text(
-                                    "Notes are empty!",
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .headline6
-                                        .copyWith(
-                                            color: Theme.of(context)
-                                                .colorScheme
-                                                .onSurface,
-                                            fontWeight: FontWeight.w300),
-                                  ),
-                                  SizedBox(
-                                    height: 15,
-                                  ),
-                                  Text(
-                                    "why don't you upload some?",
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .headline6
-                                        .copyWith(
-                                            color: Theme.of(context)
-                                                .colorScheme
-                                                .onSurface,
-                                            fontWeight: FontWeight.w300),
-                                  ),
-                                ],
-                              ),
-                            )
+                          ? SingleChildScrollView(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              // crossAxisAlignment: CrossAxisAlignment.s,
+                              // mainAxisSize: MainAxisSize.min,
+                              children: <Widget>[
+                                SimilarSubjectTile(
+                                  similarSubjects: model.getSimilarSubjects(
+                                      widget.subjectName),
+                                ),
+                                Image.asset(
+                                  'assets/images/study1.jpg',
+                                  alignment: Alignment.center,
+                                  width: 300,
+                                  height: 300,
+                                ),
+                                Text(
+                                  "Notes are empty!",
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .headline6
+                                      .copyWith(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onSurface,
+                                          fontWeight: FontWeight.w300),
+                                ),
+                                SizedBox(
+                                  height: 15,
+                                ),
+                                Text(
+                                  "why don't you upload some?",
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .headline6
+                                      .copyWith(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onSurface,
+                                          fontWeight: FontWeight.w300),
+                                ),
+                              ],
+                            ),
+                          )
                           : ValueListenableBuilder(
                               valueListenable: model.userVotesBySub,
                               builder: (BuildContext context, dynamic value,
                                   Widget child) {
                                 return ListView(
                                   padding: EdgeInsets.only(bottom: 150),
-                                  children: model.notesTiles
-                                  + 
-                                  [
-                                    SimilarSubjectTile(similarSubjects: model.getSimilarSubjects(widget.subjectName),),
-                                  ],
+                                  children: model.notesTiles +
+                                      [
+                                        SimilarSubjectTile(
+                                          similarSubjects:
+                                              model.getSimilarSubjects(
+                                                  widget.subjectName),
+                                        ),
+                                      ],
                                 );
                               },
                             ),

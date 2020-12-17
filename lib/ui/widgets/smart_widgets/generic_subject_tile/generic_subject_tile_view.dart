@@ -17,7 +17,7 @@ class GenericSubjectTileView extends StatelessWidget {
     return ViewModelBuilder<GenericSubjectTileViewModel>.reactive(
       builder: (context, model, child) => 
       similarSubjects.length==0
-      ?Container() 
+      ?Center(child: Text("No Similar Subjects !"),)
       :Column(
         children: List.generate(
           similarSubjects.length,
