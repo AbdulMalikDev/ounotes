@@ -72,6 +72,7 @@ class NotesTileView extends StatelessWidget {
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
+                       
                         FittedBox(
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.center,
