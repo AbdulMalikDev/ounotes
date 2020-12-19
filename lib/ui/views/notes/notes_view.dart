@@ -1,4 +1,5 @@
 import 'package:FSOUNotes/models/notes.dart';
+import 'package:FSOUNotes/ui/widgets/dumb_widgets/similar_subjects_tile.dart';
 import 'package:FSOUNotes/ui/widgets/smart_widgets/notes_tile/notes_tile_view.dart';
 import 'package:adcolony/adcolony.dart';
 import 'package:adcolony/banner.dart';
@@ -30,115 +31,97 @@ class _NotesViewState extends State<NotesView>
   Widget build(BuildContext context) {
     super.build(context);
     return ViewModelBuilder<NotesViewModel>.reactive(
-      onModelReady: (model) => _initState(model, context),
+      onModelReady: (model) => _initState(model, context, listener),
       builder: (context, model, child) => WillPopScope(
-          onWillPop: () {
-            model.admobService.hideNotesViewBanner();
-            model.navigateBack();
-            return Future.value(false);
-          },
-          child: Column(
-            children: [
-              Expanded(
-                flex: 8,
-                child: ModalProgressHUD(
-                  inAsyncCall: model.isloading,
-                  child: SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Stack(
-                          children: <Widget>[
-                            Container(
-                              height: widget.path != null
-                                  ? MediaQuery.of(context).size.height * 0.88
-                                  : MediaQuery.of(context).size.height * 0.75,
-                              width: double.infinity,
-                              child: model.isBusy
-                                  ? Center(
-                                      child: CircularProgressIndicator(),
-                                    )
-                                  : model.notes.length == 0
-                                      ? Center(
-                                          child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: <Widget>[
-                                              Image.asset(
-                                                'assets/images/study1.jpg',
-                                                alignment: Alignment.center,
-                                                width: 300,
-                                                height: 300,
-                                              ),
-                                              Text(
-                                                "Notes are empty!",
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .headline6
-                                                    .copyWith(
-                                                        color: Theme.of(context)
-                                                            .colorScheme
-                                                            .onSurface,
-                                                        fontWeight:
-                                                            FontWeight.w300),
-                                              ),
-                                              SizedBox(
-                                                height: 15,
-                                              ),
-                                              Text(
-                                                "why don't you upload some?",
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .headline6
-                                                    .copyWith(
-                                                        color: Theme.of(context)
-                                                            .colorScheme
-                                                            .onSurface,
-                                                        fontWeight:
-                                                            FontWeight.w300),
-                                              ),
-                                            ],
-                                          ),
-                                        )
-                                      : ValueListenableBuilder(
-                                          valueListenable: model.userVotesBySub,
-                                          builder: (BuildContext context,
-                                              dynamic value, Widget child) {
-                                            return ListView(
-                                              padding:
-                                                  EdgeInsets.only(bottom: 150),
-                                              children: model.notesTiles,
-                                            );
-                                          },
+        onWillPop: () {
+          model.admobService.hideNotesViewBanner();
+          model.navigateBack();
+          return Future.value(false);
+        },
+        child: ModalProgressHUD(
+          inAsyncCall: model.isloading,
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Container(
+                  height: widget.path != null
+                      ? MediaQuery.of(context).size.height * 0.88
+                      : MediaQuery.of(context).size.height * 0.75,
+                  width: double.infinity,
+                  child: model.isBusy
+                      ? Center(
+                          child: CircularProgressIndicator(),
+                        )
+                      : model.notes.length == 0
+                          ? SingleChildScrollView(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              // crossAxisAlignment: CrossAxisAlignment.s,
+                              // mainAxisSize: MainAxisSize.min,
+                              children: <Widget>[
+                                SimilarSubjectTile(
+                                  similarSubjects: model.getSimilarSubjects(
+                                      widget.subjectName),
+                                ),
+                                Image.asset(
+                                  'assets/images/study1.jpg',
+                                  alignment: Alignment.center,
+                                  width: 300,
+                                  height: 300,
+                                ),
+                                Text(
+                                  "Notes are empty!",
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .headline6
+                                      .copyWith(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onSurface,
+                                          fontWeight: FontWeight.w300),
+                                ),
+                                SizedBox(
+                                  height: 15,
+                                ),
+                                Text(
+                                  "why don't you upload some?",
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .headline6
+                                      .copyWith(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onSurface,
+                                          fontWeight: FontWeight.w300),
+                                ),
+                              ],
+                            ),
+                          )
+                          : ValueListenableBuilder(
+                              valueListenable: model.userVotesBySub,
+                              builder: (BuildContext context, dynamic value,
+                                  Widget child) {
+                                return ListView(
+                                  padding: EdgeInsets.only(bottom: 150),
+                                  children: model.notesTiles +
+                                      [
+                                        SimilarSubjectTile(
+                                          similarSubjects:
+                                              model.getSimilarSubjects(
+                                                  widget.subjectName),
                                         ),
+                                      ],
+                                );
+                              },
                             ),
-                            Positioned(
-                              bottom: 15,
-                              right: 10,
-                              left: 10,
-                              child: BannerView(
-                                  (AdColonyAdListener event) => print(event),
-                                  BannerSizes.banner,
-                                  model.getzones()[0]),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
                 ),
-              ),
-              Flexible(
-                flex: 1,
-                child: BannerView((AdColonyAdListener event) => print(event),
-                    BannerSizes.banner, model.getzones()[0]),
-              )
-            ],
-          )),
+              ],
+            ),
+          ),
+        ),
+      ),
       viewModelBuilder: () => NotesViewModel(),
     );
   }
@@ -146,14 +129,14 @@ class _NotesViewState extends State<NotesView>
   @override
   bool get wantKeepAlive => true;
 
-  _initState(NotesViewModel model, BuildContext context) async {
+  _initState(NotesViewModel model, BuildContext context, var func) async {
     model.fetchNotesAndVotes(widget.subjectName, context);
     try {
       // FirebaseAdMob.instance.initialize(appId: model.admobService.ADMOB_APP_ID);
       // model.admobService.showNotesViewBanner();
-      // if (model.admobService.shouldAdBeShown()) {
-      //   model.admobService.showNotesViewInterstitialAd();
-      // }
+      if (model.admobService.shouldAdBeShown()) {
+        model.admobService.showNotesViewInterstitialAd();
+      }
     } on Exception catch (e) {
       print(e.toString());
     }

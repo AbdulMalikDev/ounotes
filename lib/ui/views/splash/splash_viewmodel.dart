@@ -1,6 +1,8 @@
 import 'package:FSOUNotes/app/locator.dart';
 import 'package:FSOUNotes/app/logger.dart';
 import 'package:FSOUNotes/app/router.gr.dart';
+import 'package:FSOUNotes/app/router.dart';
+import 'package:FSOUNotes/enums/bottom_sheet_type.dart';
 import 'package:FSOUNotes/services/funtional_services/analytics_service.dart';
 import 'package:FSOUNotes/services/funtional_services/app_info_service.dart';
 import 'package:FSOUNotes/services/funtional_services/authentication_service.dart';
@@ -18,7 +20,7 @@ Logger log = getLogger("SplashViewModel");
 class SplashViewModel extends FutureViewModel {
   AuthenticationService _authenticationService =
       locator<AuthenticationService>();
-  DialogService _dialogService = locator<DialogService>();
+  BottomSheetService _bottomSheetService = locator<BottomSheetService>();
   RemoteConfigService _remoteConfigService = locator<RemoteConfigService>();
   NavigationService _navigationService = locator<NavigationService>();
   SharedPreferencesService _sharedPreferencesService =
@@ -30,11 +32,11 @@ class SplashViewModel extends FutureViewModel {
     var hasLoggedInUser = await _sharedPreferencesService.isUserLoggedIn();
 
     //Check if user has outdated version
-    await _checkForUpdatedVersionAndShowDialog();
+    Map<String,dynamic> result = await _checkForUpdatedVersionAndShowDialog();
 
     if (hasLoggedInUser) {
       await _subjectsService.loadSubjects();
-      _navigationService.replaceWith(Routes.homeViewRoute);
+      _navigationService.replaceWith(Routes.homeViewRoute,arguments:HomeViewArguments(shouldShowUpdateDialog: result["doesUserNeedUpdate"],versionDetails: result));
     } else {
       _navigationService.replaceWith(Routes.introViewRoute);
     }
@@ -48,20 +50,15 @@ class SplashViewModel extends FutureViewModel {
     String buildNumber = packageInfo.buildNumber;
     String currentVersion = "$version $buildNumber";
     log.i("Updated Version :" + updatedVersion);
-    log.i("Current Version :" + "$version $buildNumber");
+    log.i("Current Version :" + currentVersion);
     log.i("Are Both Equal ?");
     log.i(currentVersion == updatedVersion);
-    // if update needed show a prompt
-    if (_isCurrentVersionOudated(currentVersion, updatedVersion)) {
-      DialogResponse response = await _dialogService.showConfirmationDialog(
-          title: "Update App?",
-          description:
-              "A new version of OU Notes is available. Please update the app to avoid crashes and access new features");
-      if (response.confirmed) {
-        OpenAppstore.launch(
-            androidAppId: 'com.notes.ounotes', iOSAppId: 'com.notes.ounotes');
-      }
-    }
+    bool doesUserNeedUpdate = _isCurrentVersionOudated(currentVersion, updatedVersion); 
+    return {
+      "doesUserNeedUpdate" : doesUserNeedUpdate,
+      "currentVersion" : currentVersion,
+      "updatedVersion" : updatedVersion,
+    };
   }
 
   bool _isCurrentVersionOudated(

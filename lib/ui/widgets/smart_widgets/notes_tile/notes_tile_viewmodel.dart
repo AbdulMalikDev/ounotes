@@ -12,6 +12,7 @@ import 'package:FSOUNotes/services/funtional_services/cloud_storage_service.dart
 import 'package:FSOUNotes/services/funtional_services/firestore_service.dart';
 import 'package:FSOUNotes/services/funtional_services/google_drive_service.dart';
 import 'package:FSOUNotes/services/funtional_services/sharedpref_service.dart';
+import 'package:FSOUNotes/services/funtional_services/admob_service.dart';
 import 'package:FSOUNotes/services/state_services/report_service.dart';
 import 'package:FSOUNotes/services/state_services/vote_service.dart';
 import 'package:flutter/material.dart';
@@ -27,6 +28,7 @@ class NotesTileViewModel extends BaseViewModel {
 
   FirestoreService _firestoreService = locator<FirestoreService>();
   NavigationService _navigationService = locator<NavigationService>();
+  AdmobService _admobService = locator<AdmobService>();
   AuthenticationService _authenticationService =
       locator<AuthenticationService>();
   SharedPreferencesService _sharedPreferencesService =
@@ -45,6 +47,7 @@ class NotesTileViewModel extends BaseViewModel {
 
   bool _isnotedownloaded = false;
   bool get isnotedownloaded => _isnotedownloaded;
+  AdmobService get admobService => _admobService;
 
   Map<String, int> get numberOfVotes => _voteService.numberOfVotes;
 
@@ -281,5 +284,11 @@ class NotesTileViewModel extends BaseViewModel {
       description:
           "You have been banned by admins for uploading irrelevant content or reporting documents with no issue again and again. Use the feedback option in the drawer to contact the admins if you think this is a mistake",
     );
+  }
+  void incrementViewForAd() {
+    this.admobService.incrementNumberOfTimeNotesOpened();
+    if (this.admobService.shouldAdBeShown()) {
+      this.admobService.showNotesViewInterstitialAd();
+    }
   }
 }

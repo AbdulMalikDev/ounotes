@@ -7,12 +7,14 @@ import 'package:FSOUNotes/misc/helper.dart';
 import 'package:FSOUNotes/models/document.dart';
 import 'package:FSOUNotes/models/download.dart';
 import 'package:FSOUNotes/models/notes.dart';
+import 'package:FSOUNotes/models/subject.dart';
 import 'package:FSOUNotes/models/vote.dart';
 import 'package:FSOUNotes/services/funtional_services/admob_service.dart';
 import 'package:FSOUNotes/services/funtional_services/firestore_service.dart';
 import 'package:FSOUNotes/services/funtional_services/remote_config_service.dart';
 import 'package:FSOUNotes/services/funtional_services/sharedpref_service.dart';
 import 'package:FSOUNotes/services/state_services/download_service.dart';
+import 'package:FSOUNotes/services/state_services/subjects_service.dart';
 import 'package:FSOUNotes/services/state_services/vote_service.dart';
 import 'package:FSOUNotes/enums/bottom_sheet_type.dart';
 import 'package:FSOUNotes/ui/widgets/smart_widgets/notes_tile/notes_tile_view.dart';
@@ -29,12 +31,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class NotesViewModel extends BaseViewModel {
   Logger log = getLogger("Notes view model");
-  FirestoreService _firestoreService = locator<FirestoreService>();
   String table = 'uservoted_subjects';
   List<Vote> userVotedNotesList = [];
   List<Download> downloadedNotes = [];
   var _notes;
 
+  FirestoreService _firestoreService = locator<FirestoreService>();
   AdmobService _admobService = locator<AdmobService>();
   RemoteConfigService _remoteConfigService = locator<RemoteConfigService>();
   NavigationService _navigationService = locator<NavigationService>();
@@ -42,6 +44,7 @@ class NotesViewModel extends BaseViewModel {
       locator<SharedPreferencesService>();
   DownloadService _downloadService = locator<DownloadService>();
   VoteService _voteService = locator<VoteService>();
+  SubjectsService _subjectsService = locator<SubjectsService>();
   BottomSheetService _bottomSheetService = locator<BottomSheetService>();
 
   double _progress = 0;
@@ -162,6 +165,7 @@ class NotesViewModel extends BaseViewModel {
     SheetResponse response = await _bottomSheetService.showCustomSheet(
       variant: BottomSheetType.floating2,
       title: 'Where do you want to open the file?',
+      description: "Tip : Open Notes in Google Drive app to avoid loading issues. ' Open in Browser > Google Drive Icon ' ",
       mainButtonTitle: 'Open In Browser',
       secondaryButtonTitle: 'Open In App',
     );
@@ -301,5 +305,9 @@ class NotesViewModel extends BaseViewModel {
     if (this.admobService.shouldAdBeShown()) {
       this.admobService.showNotesViewInterstitialAd();
     }
+  }
+
+  List<Subject> getSimilarSubjects(String subjectName) {
+    return _subjectsService.getSimilarSubjects(subjectName);
   }
 }

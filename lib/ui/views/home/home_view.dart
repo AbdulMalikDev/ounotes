@@ -12,14 +12,17 @@ import 'package:pimp_my_button/pimp_my_button.dart';
 import 'package:stacked/stacked.dart';
 
 class HomeView extends StatelessWidget {
-  const HomeView({Key key}) : super(key: key);
+  final bool shouldShowUpdateDialog;
+  final Map<String,dynamic> versionDetails;
+  const HomeView({Key key,this.shouldShowUpdateDialog,this.versionDetails}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
     return ViewModelBuilder<HomeViewModel>.reactive(
       onModelReady: (model) async {
-        await model.admobService.hideNotesViewBanner();
+        // await model.admobService.hideNotesViewBanner();
+        model.updateDialog(shouldShowUpdateDialog,versionDetails);
         model.showIntroDialog(context);
       },
       builder: (context, model, child) => Scaffold(
@@ -37,13 +40,25 @@ class HomeView extends StatelessWidget {
               backgroundColor: Theme.of(context).primaryColor,
               targetColor: Colors.white,
               textColor: Colors.white,
-              onComplete: () {
-                Scaffold.of(context).openDrawer();
-                return Future.value(true);
-              },
-              child: IconButton(
-                icon: Icon(Icons.menu),
-                onPressed: () => Scaffold.of(context).openDrawer(),
+              child: PimpedButton(
+                particle: DemoParticle(),
+                pimpedWidgetBuilder: (context, controller) {
+                  return FloatingActionButton(
+                    onPressed: () async {
+                      //
+                      controller.forward(from: 0.4);
+                      await Future.delayed(Duration(milliseconds: 290));
+                      showModalBottomSheet(
+                          context: context,
+                          isScrollControlled: true,
+                          backgroundColor: Colors.transparent,
+                          builder: (BuildContext context) =>
+                              SubjectsDialogView());
+                    },
+                    child: const Icon(Icons.add),
+                    backgroundColor: Theme.of(context).accentColor,
+                  );
+                },
               ),
             );
           }),

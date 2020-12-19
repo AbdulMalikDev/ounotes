@@ -58,6 +58,5 @@ class OnboardingService{
   }
   static void incrementNumberOfTimesDocumentViewOpened() {
     box.put("number_of_time_document_view_opened", ++number_of_time_document_view_opened);
-    print(number_of_time_document_view_opened.toString() + "number_of_time_document_view_opened");
   }
 }

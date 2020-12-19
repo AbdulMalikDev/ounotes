@@ -10,6 +10,7 @@ import 'package:feature_discovery/feature_discovery.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
+import 'package:flutter/services.dart';
 import 'package:hive/hive.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:path_provider/path_provider.dart';
@@ -24,6 +25,7 @@ import 'package:stacked_services/stacked_services.dart';
 import 'app/logger.dart';
 import 'app/router.gr.dart' as router;
 import 'package:sentry/sentry.dart';
+
 Logger log = getLogger("main");
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -39,12 +41,19 @@ void main() async {
   CrashlyticsService _crashlyticsService = locator<CrashlyticsService>();
   await _remoteConfigService.init();
   //Ads
-  final zones = [_remoteConfigService.remoteConfig.getString('ADCOLONY_ZONE_BANNER')];
-  AdColony.init(AdColonyOptions(_remoteConfigService.remoteConfig.getString('ADCOLONY_APP_ID'),'0', zones));
+  final zones = [
+    _remoteConfigService.remoteConfig.getString('ADCOLONY_ZONE_BANNER'),
+    _remoteConfigService.remoteConfig.getString('ADCOLONY_ZONE_INTERSTITIAL')
+  ];
+  AdColony.init(AdColonyOptions(
+      _remoteConfigService.remoteConfig.getString('ADCOLONY_APP_ID'),
+      '0',
+      zones));
   //Sentry provides crash reporting
   _crashlyticsService.sentryClient = SentryClient(
       dsn: _remoteConfigService.remoteConfig.getString('SentryKey'));
-  OneSignal.shared.setNotificationOpenedHandler((OSNotificationOpenedResult result) {
+  OneSignal.shared
+      .setNotificationOpenedHandler((OSNotificationOpenedResult result) {
     print("notification received");
   });
   OneSignal.shared
@@ -54,32 +63,37 @@ void main() async {
   Logger.level = Level.verbose;
   SharedPreferences prefs = await SharedPreferences.getInstance();
   AppStateNotifier.isDarkModeOn = prefs.getBool('isdarkmodeon') ?? false;
-  FlutterError.onError = (details, {bool forceReport = false}) {
-    _crashlyticsService.sentryClient.captureException(
-      exception: details.exception,
-      stackTrace: details.stack,
-    );
-  };
-// runApp(MyApp());
-  runZonedGuarded(
-    () => runApp(MyApp()),
-    (error, stackTrace) async {
-      await _crashlyticsService.sentryClient.captureException(
-        exception: error,
-        stackTrace: stackTrace,
-      );
-    },
-  );
+  //TODO DevChecklist - Uncomment for error handling
+  // FlutterError.onError = (details, {bool forceReport = false}) {
+  //   _crashlyticsService.sentryClient.captureException(
+  //     exception: details.exception,
+  //     stackTrace: details.stack,
+  //   );
+  // };
+  runApp(MyApp());
+  // runZonedGuarded(
+  //   () => runApp(MyApp()),
+  //   (error, stackTrace) async {
+  //     await _crashlyticsService.sentryClient.captureException(
+  //       exception: error,
+  //       stackTrace: stackTrace,
+  //     );
+  //   },
+  // );
 }
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application
-  final RemoteConfigService _remoteConfigService = locator<RemoteConfigService>();
+  final RemoteConfigService _remoteConfigService =
+      locator<RemoteConfigService>();
   final FirebaseAnalyticsObserver observer =
       FirebaseAnalyticsObserver(analytics: FirebaseAnalytics());
   @override
   Widget build(BuildContext context) {
-  
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
     return ViewModelBuilder<AppStateNotifier>.reactive(
       builder: (context, model, child) => FeatureDiscovery(
         child: Wiredash(
@@ -105,7 +119,6 @@ class MyApp extends StatelessWidget {
       viewModelBuilder: () => locator<AppStateNotifier>(),
     );
   }
-  
 }
 
 // OneSignal.shared.setNotificationOpenedHandler((OSNotificationOpenedResult result) {
