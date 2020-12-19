@@ -1,7 +1,9 @@
 import 'dart:async';
+import 'package:FSOUNotes/app/locator.dart';
 import 'package:FSOUNotes/models/notes.dart';
 import 'package:FSOUNotes/models/question_paper.dart';
 import 'package:FSOUNotes/models/syllabus.dart';
+import 'package:FSOUNotes/services/funtional_services/authentication_service.dart';
 import 'package:FSOUNotes/ui/views/web_view/web_view_viewModel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
@@ -152,6 +154,9 @@ class _WebViewWidgetState extends State<WebViewWidget> {
   }
 
   void _screenshotDisable(bool isDisable) async {
+    AuthenticationService _Auth = locator<AuthenticationService>();
+    bool isAdmin = await _Auth.getUser().then((value) => value.isAdmin);
+    if(isAdmin){return;}
     if(isDisable)
     {
       await FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE); 

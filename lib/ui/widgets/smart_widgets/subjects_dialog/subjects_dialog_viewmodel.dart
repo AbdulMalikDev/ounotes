@@ -52,15 +52,13 @@ class SubjectsDialogViewModel extends BaseViewModel {
             sub.branch.contains(branch) &&
             sub.semester.contains(int.parse(semester[semester.length - 1])))
         .toList();
-    // print(branch);
-    // print(semester[semester.length-1]);
-    // print(filteredSubjects.length);
-    // print(allSubjects.length);
+
     for (int i = 0; i < filteredSubjects.length; i++) {
       allSubjects.remove(filteredSubjects[i]);
       filteredSubjects[i].userSubject = true;
       allSubjects.insert(i, filteredSubjects[i]);
     }
+
     //remove subject with same name
     for (int i = 0; i < allSubjects.length; i++) {
       for (int j = 0; j < allSubjects.length; j++) {
@@ -71,6 +69,7 @@ class SubjectsDialogViewModel extends BaseViewModel {
         }
       }
     }
+    
     notifyListeners();
     return allSubjects;
   }

@@ -13,7 +13,8 @@ import 'notes_viewmodel.dart';
 class NotesView extends StatefulWidget {
   final String subjectName;
   final String path;
-  const NotesView({@required this.subjectName, this.path, Key key})
+  final String newDocIDUploaded;
+  const NotesView({@required this.subjectName, this.path, this.newDocIDUploaded, Key key})
       : super(key: key);
 
   @override
@@ -31,7 +32,7 @@ class _NotesViewState extends State<NotesView>
   Widget build(BuildContext context) {
     super.build(context);
     return ViewModelBuilder<NotesViewModel>.reactive(
-      onModelReady: (model) => _initState(model, context, listener),
+      onModelReady: (model) {_initState(model, context, listener);model.newDocIDUploaded = widget.newDocIDUploaded;},
       builder: (context, model, child) => WillPopScope(
         onWillPop: () {
           model.admobService.hideNotesViewBanner();

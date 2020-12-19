@@ -1,16 +1,22 @@
 import 'package:FSOUNotes/app/locator.dart';
 import 'package:FSOUNotes/app/logger.dart';
+import 'package:FSOUNotes/enums/bottom_sheet_type.dart';
 import 'package:FSOUNotes/enums/confidential.dart';
 import 'package:FSOUNotes/models/user.dart';
 import 'package:FSOUNotes/services/funtional_services/analytics_service.dart';
 import 'package:FSOUNotes/services/funtional_services/firestore_service.dart';
+import 'package:FSOUNotes/services/funtional_services/onboarding_service.dart';
+import 'package:FSOUNotes/services/funtional_services/push_notification_service.dart';
 import 'package:FSOUNotes/services/funtional_services/sharedpref_service.dart';
+import 'package:FSOUNotes/ui/shared/strings.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:injectable/injectable.dart';
 import 'package:logger/logger.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
+import 'package:stacked_services/stacked_services.dart';
+import 'package:FSOUNotes/misc/course_info.dart';
 
 @lazySingleton
 class AuthenticationService {
@@ -19,6 +25,8 @@ class AuthenticationService {
 
   FirestoreService _firestoreService = locator<FirestoreService>();
   AnalyticsService _analyticsService = locator<AnalyticsService>();
+  PushNotificationService _pushNotificationService = locator<PushNotificationService>();
+  BottomSheetService _bottomSheetService = locator<BottomSheetService>();
   // OneSignal _oneSignal;
 
   final CollectionReference _usersCollectionReference = Firestore.instance.collection("users");
@@ -47,7 +55,7 @@ class AuthenticationService {
   }) async {
    
     _googleUser = await googleSignIn.signIn().catchError((e){
-      log.e("ERROR AUTHENTICATING : ${e.toString()}");
+      _handleAuthError(e);
       return null;
     });
     if(_googleUser == null){return false;}
@@ -67,6 +75,9 @@ class AuthenticationService {
       googleSignIn.signInSilently().whenComplete(() => () {});
     }
 
+    //Get FCM Token
+    String fcmToken = await _pushNotificationService.fcm.getToken();
+
     _user = new User(
       email: _firebaseUser.email,
       branch: branch,
@@ -77,6 +88,7 @@ class AuthenticationService {
       isAuth: true,
       photoUrl: _firebaseUser.photoUrl,
       username: _firebaseUser.displayName,
+      fcmToken: fcmToken,
       // googleSignInAuthHeaders: await _googleUser.authHeaders,
     );
     if (isAdmin){_user.setAdmin=true;}
@@ -89,7 +101,7 @@ class AuthenticationService {
     await _sharedPreferencesService.saveUserLocally(_user);
 
     // Add this event Analytics
-    _addEventInfo(_user);
+    await _addEventInfo(_user);
 
     if(_firebaseUser!=null){
       return true;
@@ -100,29 +112,35 @@ class AuthenticationService {
   }
     
   Future<bool> handleSignOut() async {
-    FirebaseUser user = await FirebaseAuth.instance.currentUser();
-    if (user != null) {
-      await FirebaseAuth.instance.signOut();
-      await googleSignIn.disconnect();
-      await googleSignIn.signOut().catchError((e) {
-        return false;
-      });
+    try{
+      FirebaseUser user = await FirebaseAuth.instance.currentUser();
+      if (user != null) {
+        await FirebaseAuth.instance.signOut();
+        await googleSignIn.disconnect();
+        await googleSignIn.signOut().catchError((e) {
+          return false;
+        });
+      }
+      SharedPreferencesService _sharedPreferencesService = locator<SharedPreferencesService>();
+      User userr=User(isAuth: false);
+      await _sharedPreferencesService.saveUserLocally(userr);
+      //Store in state
+      _user = userr;
+      return true;
+    }catch(e){
+      log.e("Something went wrong while logging out ${e.toString()}");
     }
-    SharedPreferencesService _sharedPreferencesService = locator<SharedPreferencesService>();
-    User userr=User(isAuth: false);
-    await _sharedPreferencesService.saveUserLocally(userr);
-    //Store in state
-    _user = userr;
-    return true;
   }
   
   // *For Admins
   refreshSignInCredentials() async {
-      googleSignIn = GoogleSignIn(scopes: ['https://www.googleapis.com/auth/drive.file',
-    'https://www.googleapis.com/auth/drive',
-    'https://www.googleapis.com/auth/drive.file',
-    'https://www.googleapis.com/auth/drive.metadata'
-  ]);
+      googleSignIn = GoogleSignIn(
+      scopes: [
+      'https://www.googleapis.com/auth/drive.file',
+      'https://www.googleapis.com/auth/drive',
+      'https://www.googleapis.com/auth/drive.file',
+      'https://www.googleapis.com/auth/drive.metadata'
+      ]);
       GoogleSignInAccount ga = await googleSignIn.signIn().whenComplete(() => () {});
       return ga.authHeaders;
   }
@@ -155,8 +173,8 @@ class AuthenticationService {
     }
   }
   
-  void _addEventInfo(User user) {
-    _analyticsService.logEvent(name:"LogIn",parameters:_user.toJson());
+  _addEventInfo(User user) async {
+    //User Property in firebase
     String college = _user.college;
     if(college.length > 34){
       college = college.substring(0,34);
@@ -164,7 +182,31 @@ class AuthenticationService {
     _analyticsService.setUserProperty(name: 'college', value: college);
     _analyticsService.setUserProperty(name: 'branch', value: _user.branch);
     _analyticsService.setUserProperty(name: 'semester', value: _user.semester);
-    Map<String, dynamic> tags = {
+    _analyticsService.setUserProperty(name: 'email', value: _user.email);
+    _analyticsService.setUserProperty(name: 'username', value: _user.username);
+    _analyticsService.analytics.setUserId(_user.id);
+    bool shouldSubscribe = await _askForPermissionToSubscribeToFcmTopic();
+    if(shouldSubscribe ?? false)
+    {
+      //*Present fcm topics user wants to subscribe
+      var user_semester  = CourseInfo.semesterToNumber[_user.semester];
+      var user_branch    = _user.branch;
+      var user_college   = CourseInfo.collegeToShortFrom[_user.college];
+      _pushNotificationService.fcm.subscribeToTopic(user_semester);
+      _pushNotificationService.fcm.subscribeToTopic(user_branch);
+      _pushNotificationService.fcm.subscribeToTopic(user_college);
+      //Check for previously subscribed fcm topics and unsubscribe user from them
+      //* Past fcm topics user had subscribed
+      var fcm_semester  = OnboardingService.box.get("fcm_semester");
+      var fcm_branch    = OnboardingService.box.get("fcm_branch");
+      var fcm_college   = OnboardingService.box.get("fcm_college");
+      _pushNotificationService.handleFcmTopicUnSubscription(fcm_semester,fcm_branch,fcm_college,user_semester,user_branch,user_college);
+      //Save these locally to ensure that topics subscribed can be tracked and unsubscribed later
+      OnboardingService.box.put("fcm_semester", user_semester);
+      OnboardingService.box.put("fcm_branch"  , user_branch  );
+      OnboardingService.box.put("fcm_college" , user_college );
+    }
+    Map<String, dynamic> tags = { 
       "college" : _user.college,
       "branch" : _user.branch,
       "semester" : _user.semester,
@@ -174,7 +216,28 @@ class AuthenticationService {
     OneSignal.shared.sendTags(tags);
     OneSignal.shared.setEmail(email:_user.email);
     OneSignal.shared.setExternalUserId(_user.id);
-    OneSignal.shared.setLocationShared(true);
+  }
+
+
+  void _handleAuthError(var e) {
+    log.e("ERROR AUTHENTICATING : ${e.toString()}");
+    _bottomSheetService.showBottomSheet(title: "Oops !",description: "We've had trouble logging in, please try again or share a screenshot with us at ounotesplatform@gmail.com to solve this issue. ${e.toString()}");
+  }
+
+  Future<bool> _askForPermissionToSubscribeToFcmTopic() async {
+    bool didUserAnswer = false;
+    SheetResponse response;
+    while(!didUserAnswer){
+      response = await _bottomSheetService.showCustomSheet(
+        variant:BottomSheetType.filledStacks,
+        title: Strings.fcm_token_permission_title,
+        description: Strings.fcm_token_permission_description,
+        secondaryButtonTitle: Strings.fcm_token_permission_secondary_button,
+        mainButtonTitle: Strings.fcm_token_permission_main_button
+      );
+      didUserAnswer = response != null;
+    }
+    return response?.confirmed;
   }
 
   

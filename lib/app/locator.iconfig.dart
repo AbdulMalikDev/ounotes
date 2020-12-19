@@ -21,6 +21,7 @@ import 'package:FSOUNotes/services/funtional_services/google_drive_service.dart'
 import 'package:FSOUNotes/services/state_services/links_service.dart';
 import 'package:FSOUNotes/services/state_services/notes_service.dart';
 import 'package:FSOUNotes/utils/permission_handler.dart';
+import 'package:FSOUNotes/services/funtional_services/push_notification_service.dart';
 import 'package:FSOUNotes/services/state_services/question_paper_service.dart';
 import 'package:FSOUNotes/services/funtional_services/remote_config_service.dart';
 import 'package:FSOUNotes/services/state_services/report_service.dart';
@@ -53,6 +54,8 @@ void $initGetIt(GetIt g, {String environment}) {
       () => thirdPartyServicesModule.navigationService);
   g.registerLazySingleton<NotesService>(() => NotesService());
   g.registerLazySingleton<PermissionHandler>(() => PermissionHandler());
+  g.registerLazySingleton<PushNotificationService>(
+      () => PushNotificationService());
   g.registerLazySingleton<QuestionPaperService>(() => QuestionPaperService());
   g.registerLazySingleton<RemoteConfigService>(() => RemoteConfigService());
   g.registerLazySingleton<ReportsService>(() => ReportsService());

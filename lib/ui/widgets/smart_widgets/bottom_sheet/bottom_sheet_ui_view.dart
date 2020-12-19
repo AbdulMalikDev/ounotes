@@ -16,6 +16,8 @@ void setUpBottomSheetUi() {
         _FloatingBoxBottomSheet2(request: sheetRequest, completer: completer),
     BottomSheetType.confirm: (context, sheetRequest, completer) =>
         _FloatingBoxConfirmBottomSheet(request: sheetRequest, completer: completer),
+    BottomSheetType.filledStacks: (context, sheetRequest, completer) =>
+        _FilledStacksFloatingBoxBottomSheet(request: sheetRequest, completer: completer),
   };
 
   bottomSheetService.setCustomSheetBuilders(builders);
@@ -269,6 +271,75 @@ class _FloatingBoxConfirmBottomSheet extends StatelessWidget {
                 child: Text(
                   request.mainButtonTitle,
                   style: TextStyle(color: Colors.white),
+                ),
+                color: Theme.of(context).primaryColor,
+              )
+            ],
+          )
+        ],
+      ),
+    );
+  }
+}
+
+class _FilledStacksFloatingBoxBottomSheet extends StatelessWidget {
+  final SheetRequest request;
+  final Function(SheetResponse) completer;
+  const _FilledStacksFloatingBoxBottomSheet({
+    Key key,
+    this.request,
+    this.completer,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.all(25),
+      padding: EdgeInsets.all(25),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(15),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          SizedBox(height: 10),
+          Padding(
+            padding: const EdgeInsets.only(left:13.0),
+            child: Text(
+              request.title,
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Colors.grey[900],
+              ),
+            ),
+          ),
+          SizedBox(height: 25),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal:15.0),
+            child: Text(
+              request.description,
+              style: TextStyle(color: Colors.grey,fontSize: 19),
+            ),
+          ),
+          SizedBox(height: 30),
+          Row(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              MaterialButton(
+                onPressed: () => completer(SheetResponse(confirmed: false)),
+                child: Text(
+                  request.secondaryButtonTitle,
+                  style: TextStyle(color: Theme.of(context).primaryColor),
+                ),
+              ),
+              FlatButton(
+                onPressed: () => completer(SheetResponse(confirmed: true)),
+                child: Text(
+                  request.mainButtonTitle,
+                  style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),
                 ),
                 color: Theme.of(context).primaryColor,
               )

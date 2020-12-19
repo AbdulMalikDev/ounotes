@@ -53,11 +53,11 @@ class Note extends AbstractDocument {
     view = data['view'];
     url = data['url'];
     uploadDate = _parseUploadDate(data["uploadDate"]);
-    id = data['id'].toString() ?? "";
+    id = data['id']?.toString() ?? "";
     isDownloaded = data['isDownloaded'] ?? false;
     path = Document.Notes;
     type = Constants.notes;
-    votes = data["votes"]??0;
+    votes = data["votes"] ?? 0;
     size = data['size'];
     uploader_id = data['uploader_id'];
     GDriveLink = data['GDriveLink'] ?? null;

@@ -128,7 +128,7 @@ class ProfileViewModel extends BaseViewModel {
                     Navigator.of(context).pop();
                     setBusy(true);
                     await _authenticationService.handleSignOut().then((value) {
-                      if (value) {
+                      if (value ?? true) {
                         _navigationService.navigateTo(Routes.introViewRoute);
                       } else
                         Fluttertoast.showToast(

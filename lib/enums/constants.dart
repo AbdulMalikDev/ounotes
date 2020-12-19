@@ -15,6 +15,10 @@ class Constants {
   static const String downvote = 'downvote';
   static const String openInBrowser = 'openInBrowser';
   static const String openInApp = 'openInApp';
+
+  //Notification Events [ Make sure Cloud Functions file has same constants ]
+  static const String notificationEventNotesUpload = "notificationEventNotesUpload"; 
+
   static TextStyle kHintTextStyle = TextStyle(
     color: Colors.white54,
     fontFamily: 'OpenSans',
