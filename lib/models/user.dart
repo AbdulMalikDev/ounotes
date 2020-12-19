@@ -27,7 +27,10 @@ class User{
   int numOfUploads;
   int numOfAcceptedUploads;
 
-  User({this.username, this.email, this.createdAt, this.semester, this.branch, this.college,this.isAuth,this.id,this.photoUrl,this.isUserAllowedToUpload,this.googleSignInAuthHeaders});
+  // FCM token
+  String fcmToken;
+
+  User({this.username, this.email, this.createdAt, this.semester, this.branch, this.college,this.isAuth,this.id,this.photoUrl,this.isUserAllowedToUpload,this.googleSignInAuthHeaders,this.fcmToken});
 
   User.fromData(Map<String,dynamic> data)
   : username                  = data['Username'],
@@ -38,6 +41,7 @@ class User{
     college                   = data['College'],
     isAuth                    = data['isAuth'] ?? false,
     id                        = data['id'],
+    fcmToken                  = data['fcmToken'],
     photoUrl                  = data['photoUrl'],
     isAdmin                   = data['isAdmin'] ?? false,
     uploads                   = data["uploads"],
@@ -57,10 +61,11 @@ class User{
       "isAuth"                 : isAuth ?? false,
       "id"                     : id,
       "photoUrl"               : photoUrl,
+      "fcmToken"               : fcmToken,
       "isAdmin"                : isAdmin ?? false,
-      "uploads"                : uploads,
-      "numOfUploads"           : numOfUploads,
-      "numOfAcceptedUploads"   : numOfAcceptedUploads,
+      if(uploads!=null)"uploads"                : uploads,
+      if(numOfUploads!=null)"numOfUploads"           : numOfUploads,
+      if(numOfAcceptedUploads!=null)"numOfAcceptedUploads"   : numOfAcceptedUploads,
       "isUserAllowedToUpload"  : isUserAllowedToUpload ?? true,
     };
   }

@@ -40,22 +40,10 @@ void main() async {
   RemoteConfigService _remoteConfigService = locator<RemoteConfigService>();
   CrashlyticsService _crashlyticsService = locator<CrashlyticsService>();
   await _remoteConfigService.init();
-  //Ads
-  final zones = [
-    _remoteConfigService.remoteConfig.getString('ADCOLONY_ZONE_BANNER'),
-    _remoteConfigService.remoteConfig.getString('ADCOLONY_ZONE_INTERSTITIAL')
-  ];
-  AdColony.init(AdColonyOptions(
-      _remoteConfigService.remoteConfig.getString('ADCOLONY_APP_ID'),
-      '0',
-      zones));
   //Sentry provides crash reporting
   _crashlyticsService.sentryClient = SentryClient(
       dsn: _remoteConfigService.remoteConfig.getString('SentryKey'));
-  OneSignal.shared
-      .setNotificationOpenedHandler((OSNotificationOpenedResult result) {
-    print("notification received");
-  });
+  OneSignal.shared.setNotificationOpenedHandler((OSNotificationOpenedResult result) {});
   OneSignal.shared
       .init(_remoteConfigService.remoteConfig.getString('ONESIGNAL_KEY'));
   OneSignal.shared

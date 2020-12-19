@@ -128,7 +128,9 @@ class Router extends RouterBase {
         final typedArgs = args as AllDocumentsViewArguments;
         return MaterialPageRoute<dynamic>(
           builder: (context) => AllDocumentsView(
-              subjectName: typedArgs.subjectName, path: typedArgs.path),
+              subjectName: typedArgs.subjectName,
+              path: typedArgs.path,
+              newDocIDUploaded: typedArgs.newDocIDUploaded),
           settings: settings,
         );
       case Routes.pdfScreenRoute:
@@ -150,6 +152,7 @@ class Router extends RouterBase {
           builder: (context) => NotesView(
               subjectName: typedArgs.subjectName,
               path: typedArgs.path,
+              newDocIDUploaded: typedArgs.newDocIDUploaded,
               key: typedArgs.key),
           settings: settings,
         );
@@ -363,7 +366,9 @@ class HomeViewArguments {
 class AllDocumentsViewArguments {
   final String subjectName;
   final String path;
-  AllDocumentsViewArguments({@required this.subjectName, this.path});
+  final String newDocIDUploaded;
+  AllDocumentsViewArguments(
+      {@required this.subjectName, this.path, this.newDocIDUploaded});
 }
 
 //PDFScreen arguments holder class
@@ -377,8 +382,10 @@ class PDFScreenArguments {
 class NotesViewArguments {
   final String subjectName;
   final String path;
+  final String newDocIDUploaded;
   final Key key;
-  NotesViewArguments({@required this.subjectName, this.path, this.key});
+  NotesViewArguments(
+      {@required this.subjectName, this.path, this.newDocIDUploaded, this.key});
 }
 
 //QuestionPapersView arguments holder class

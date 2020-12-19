@@ -218,8 +218,8 @@ class SubjectsService with ChangeNotifier {
     List<String> queryWords = (query.split(" ") + query.split("-"));
     //? Remove duplicate words
     queryWords.toSet().toList();
-    //? Remove words with less than 3 letters like "OF" , "I" etc.
-    queryWords.removeWhere((queryWord) => queryWord.length < 3);
+    //? Remove words with less than 3 letters like "OF" , "I" , "AND" etc.
+    queryWords.removeWhere((queryWord) => queryWord.length <= 3);
     return queryWords;
   }
 }

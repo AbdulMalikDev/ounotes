@@ -6,6 +6,7 @@ import 'package:FSOUNotes/enums/bottom_sheet_type.dart';
 import 'package:FSOUNotes/services/funtional_services/analytics_service.dart';
 import 'package:FSOUNotes/services/funtional_services/app_info_service.dart';
 import 'package:FSOUNotes/services/funtional_services/authentication_service.dart';
+import 'package:FSOUNotes/services/funtional_services/push_notification_service.dart';
 import 'package:FSOUNotes/services/funtional_services/remote_config_service.dart';
 import 'package:FSOUNotes/services/funtional_services/sharedpref_service.dart';
 import 'package:FSOUNotes/services/state_services/subjects_service.dart';
@@ -27,8 +28,10 @@ class SplashViewModel extends FutureViewModel {
       locator<SharedPreferencesService>();
   SubjectsService _subjectsService = locator<SubjectsService>();
   AppInfoService _appInfoService = locator<AppInfoService>();
+  PushNotificationService _notificationService = locator<PushNotificationService>();
 
   handleStartUpLogic() async {
+    await _notificationService.initialise();
     var hasLoggedInUser = await _sharedPreferencesService.isUserLoggedIn();
 
     //Check if user has outdated version

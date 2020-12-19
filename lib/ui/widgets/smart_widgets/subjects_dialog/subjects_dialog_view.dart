@@ -130,7 +130,7 @@ class _SubjectsDialogViewState extends State<SubjectsDialogView> {
                                   if (!(searchKeyWord.trim() == "" ||
                                       subject.name
                                           .toLowerCase()
-                                          .startsWith(searchKeyWord)))
+                                          .contains(searchKeyWord)))
                                     return Container();
                                   return GestureDetector(
                                     onTap: () {
@@ -144,8 +144,6 @@ class _SubjectsDialogViewState extends State<SubjectsDialogView> {
                                               .appScreenWidthWithOutSafeArea(
                                                   1) -
                                           40,
-                                      //padding:EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                                      //margin:EdgeInsets.symmetric(horizontal: 10, vertical: 11),
                                       alignment: Alignment.center,
                                       child: ListTile(
                                         leading: IconButton(

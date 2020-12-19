@@ -25,6 +25,7 @@ import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:logger/logger.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -48,6 +49,8 @@ class NotesViewModel extends BaseViewModel {
   BottomSheetService _bottomSheetService = locator<BottomSheetService>();
 
   double _progress = 0;
+
+  String newDocIDUploaded;
   double get progress => _progress;
   String _notetitle = '';
   String get notetitle => _notetitle;
@@ -61,8 +64,6 @@ class NotesViewModel extends BaseViewModel {
   List<Widget> _notesTiles = [];
 
   List<Widget> get notesTiles => _notesTiles;
-
-  List<String> getzones() => [_remoteConfigService.remoteConfig.getString('ADCOLONY_ZONE_BANNER')];
 
   bool isloading = false;
   bool get loading => isloading;
@@ -94,21 +95,12 @@ class NotesViewModel extends BaseViewModel {
       if (notes[i].GDriveLink == null) {
         continue;
       }
-      _notesTiles.add(
-        InkWell(
-          child: NotesTileView(
-            ctx: context,
-            note: note,
-            index: i,
-            votes: _voteService.votesBySub.value,
-            downloadedNotes: getListOfNotesInDownloads(subjectName),
-          ),
-          onTap: () {
-            incrementViewForAd();
-            openDoc(context, note);
-          },
-        ),
-      );
+      //To show document highlighted in notification
+      if(newDocIDUploaded!=null && newDocIDUploaded==note.id){
+        _notesTiles.insert(0,_addInkWellWidget(context,note,i,notification:true),);
+      }else{
+        _notesTiles.add(_addInkWellWidget(context,note,i),);
+      }
     }
     setBusy(false);
     notifyListeners();
@@ -309,5 +301,22 @@ class NotesViewModel extends BaseViewModel {
 
   List<Subject> getSimilarSubjects(String subjectName) {
     return _subjectsService.getSimilarSubjects(subjectName);
+  }
+
+  Widget _addInkWellWidget(BuildContext context,Note note,int i,{bool notification=false}) {
+    return InkWell(
+      child: NotesTileView(
+          ctx: context,
+          note: note,
+          index: i,
+          votes: _voteService.votesBySub.value,
+          downloadedNotes: getListOfNotesInDownloads(note.subjectName),
+          notification:notification,
+        ),
+      onTap: () {
+        incrementViewForAd();
+        openDoc(context, note);
+      },
+    );
   }
 }

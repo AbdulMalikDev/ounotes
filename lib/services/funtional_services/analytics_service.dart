@@ -44,6 +44,9 @@ class AnalyticsService{
   }
 
   void setUserProperty({String name, String value}) {
+    //To comply with firebase character limit
+    if((name?.length ?? 0) > 23){name = name.substring(0,22);}
+    if((value?.length ?? 0) > 35){value = value.substring(0,34);}
     analytics.setUserProperty(name: name, value: value);
   }
 

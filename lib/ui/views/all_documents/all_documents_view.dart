@@ -13,7 +13,8 @@ import 'package:stacked/stacked.dart';
 class AllDocumentsView extends StatefulWidget {
   final String subjectName;
   final String path;
-  AllDocumentsView({@required this.subjectName, this.path});
+  final String newDocIDUploaded;
+  AllDocumentsView({@required this.subjectName, this.path,this.newDocIDUploaded});
   @override
   _AllDocumentsViewState createState() => _AllDocumentsViewState();
 }
@@ -190,6 +191,7 @@ class _AllDocumentsViewState extends State<AllDocumentsView>
                           children: [
                             NotesView(
                               subjectName: widget.subjectName,
+                              newDocIDUploaded: widget.newDocIDUploaded,
                             ),
                             QuestionPapersView(
                               subjectName: widget.subjectName,

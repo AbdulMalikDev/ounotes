@@ -34,6 +34,8 @@ class CourseInfo {
     'PE',
   ];
 
+  // DO NOT CHANGE THESE NAMES ( NOT EVEN SPACE )
+  // USER ANALYTICS DOC IN FIREBASE USES THESE NAMES
   static List<String> colleges = [
     "Muffakham Jah College of Engineering and Technology",
     "Osmania University's College of Technology",
@@ -52,10 +54,40 @@ class CourseInfo {
     "Other"
   ];
 
+  //Used for FCM topics
+  static Map<String,String> collegeToShortFrom = {
+    "Muffakham Jah College of Engineering and Technology" : "MJCET",
+    "Osmania University's College of Technology"          : "OUCT",
+    "CBIT"                                                : "CBIT",
+    "Vasavi"                                              : "VASAVI",
+    "MVSR "                                               : " MVSR",
+    "Deccan College "                                     : "DCET",
+    "ISL Engineering College"                             : "ISL",
+    "Methodist "                                          : "METHODIST",
+    "Stanley College "                                    : "STANLEY",
+    "NGIT"                                                : "NGIT",
+    "University College of Engineering"                   : "UCOE",
+    "Matrusri Engineering College"                        : "MEC",
+    "Swathi Institute of Technology & Science"            : "SITS",
+    "JNTU Affiliated Colleges"                            : "JNTU",
+    "Other"                                               : "OTHER",
+  };
+
   static List<String> yeartype = [
     "Single year",
     "Range",
   ];
+
+  static Map<String,String> semesterToNumber = {
+    "Semester 1":"1",
+    "Semester 2":"2",
+    "Semester 3":"3",
+    "Semester 4":"4",
+    "Semester 5":"5",
+    "Semester 6":"6",
+    "Semester 7":"7",
+    "Semester 8":"8",
+  };
 
   static List<Subject> aallsubjects = [
 
