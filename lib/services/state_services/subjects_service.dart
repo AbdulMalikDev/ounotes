@@ -173,6 +173,7 @@ class SubjectsService with ChangeNotifier {
 
   //* Returns all subjects with match atleast one word with any other subject.
   //? Test Input : Database Management Systems
+  //test ajldkja;lksdjf;lskjf;al;jsalkdfj;alskdjf;alskdjf
   List<Subject> getSimilarSubjects(String query){
     List<String> queryWords = _sanitizeAndSplitQuery(query);
     List<Subject> matchingSubjects = [];
