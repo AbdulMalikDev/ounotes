@@ -21,8 +21,7 @@ class NotesView extends StatefulWidget {
   _NotesViewState createState() => _NotesViewState();
 }
 
-class _NotesViewState extends State<NotesView>
-    with AutomaticKeepAliveClientMixin {
+class _NotesViewState extends State<NotesView>{
   listener(AdColonyAdListener event) {
     print(event);
     if (event == AdColonyAdListener.onRequestFilled) AdColony.show();
@@ -30,7 +29,7 @@ class _NotesViewState extends State<NotesView>
 
   @override
   Widget build(BuildContext context) {
-    super.build(context);
+    // super.build(context);
     return ViewModelBuilder<NotesViewModel>.reactive(
       onModelReady: (model) {_initState(model, context, listener);model.newDocIDUploaded = widget.newDocIDUploaded;},
       builder: (context, model, child) => WillPopScope(
@@ -126,9 +125,6 @@ class _NotesViewState extends State<NotesView>
       viewModelBuilder: () => NotesViewModel(),
     );
   }
-
-  @override
-  bool get wantKeepAlive => true;
 
   _initState(NotesViewModel model, BuildContext context, var func) async {
     model.fetchNotesAndVotes(widget.subjectName, context);
