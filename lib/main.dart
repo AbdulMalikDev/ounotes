@@ -10,6 +10,7 @@ import 'package:feature_discovery/feature_discovery.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
+import 'package:flutter/services.dart';
 import 'package:hive/hive.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:path_provider/path_provider.dart';
@@ -24,6 +25,7 @@ import 'package:stacked_services/stacked_services.dart';
 import 'app/logger.dart';
 import 'app/router.gr.dart' as router;
 import 'package:sentry/sentry.dart';
+
 Logger log = getLogger("main");
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -56,7 +58,7 @@ void main() async {
   //     stackTrace: details.stack,
   //   );
   // };
-runApp(MyApp());
+  runApp(MyApp());
   // runZonedGuarded(
   //   () => runApp(MyApp()),
   //   (error, stackTrace) async {
@@ -70,12 +72,16 @@ runApp(MyApp());
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application
-  RemoteConfigService _remoteConfigService = locator<RemoteConfigService>();
+  final RemoteConfigService _remoteConfigService =
+      locator<RemoteConfigService>();
   final FirebaseAnalyticsObserver observer =
       FirebaseAnalyticsObserver(analytics: FirebaseAnalytics());
   @override
   Widget build(BuildContext context) {
-  
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
     return ViewModelBuilder<AppStateNotifier>.reactive(
       builder: (context, model, child) => FeatureDiscovery(
         child: Wiredash(
@@ -101,7 +107,6 @@ class MyApp extends StatelessWidget {
       viewModelBuilder: () => locator<AppStateNotifier>(),
     );
   }
-  
 }
 
 // OneSignal.shared.setNotificationOpenedHandler((OSNotificationOpenedResult result) {

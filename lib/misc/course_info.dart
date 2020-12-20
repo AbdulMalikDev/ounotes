@@ -90,6 +90,7 @@ class CourseInfo {
   };
 
   static List<Subject> aallsubjects = [
+
     //1ST  SEM
     Subject(1, "ENVIRONMENTAL SCIENCE", [1], ['CSE', 'CIVIL', 'EEE', 'EIE']),
     Subject(2, "ESSENCE OF INDIAN TRADITIONAL KNOWLEDGE", [1],

@@ -29,6 +29,7 @@ import 'package:shimmer/shimmer.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
 
 class NotesViewModel extends BaseViewModel {
   Logger log = getLogger("Notes view model");
@@ -61,6 +62,7 @@ class NotesViewModel extends BaseViewModel {
   RemoteConfigService get remoteConfig => _remoteConfigService;
   String get ADMOB_AD_BANNER_ID => _admobService.ADMOB_AD_BANNER_ID;
   String get ADMOB_APP_ID => _admobService.ADMOB_APP_ID;
+
   List<Widget> _notesTiles = [];
 
   List<Widget> get notesTiles => _notesTiles;
@@ -89,17 +91,55 @@ class NotesViewModel extends BaseViewModel {
     await _voteService.fetchAndSetVotesBySubject(subjectName);
     // await _downloadService.fetchAndSetDownloads();
     userVotedNotesList = _voteService.userVotesList;
+    SharedPreferences prefs = await _sharedPreferencesService.store();
+    Map<String, dynamic> pinnedNotes = {};
+    Map<String, dynamic> subjectPinnedNote = {};
+
+    if (prefs.containsKey("pinnedNotes")) {
+      var data = prefs.getString("pinnedNotes");
+      //Get pinned notesList from the local storage
+      pinnedNotes = jsonDecode(data);
+      //if pinned subject is already present
+      print(pinnedNotes);
+      if (pinnedNotes[subjectName] != null) {
+        subjectPinnedNote = pinnedNotes[subjectName];
+      }
+    }
+
+    //add pinned notes in correct position
+    for (int i = 0; i < _notes.length; i++) {
+      Note note = _notes[i];
+      if (subjectPinnedNote[_notes[i].id] != null) {
+        //remove note and insert it in correct position
+        _notes.remove((note) => note.id == _notes[i].id);
+        _notes.insert(subjectPinnedNote[_notes[i].id], note);
+      }
+    }
+
+    print(subjectPinnedNote);
+    print(pinnedNotes);
+
+    _notesTiles = [];
 
     for (int i = 0; i < _notes.length; i++) {
       Note note = _notes[i];
-      if (notes[i].GDriveLink == null) {
+      if (_notes[i].GDriveLink == null) {
         continue;
       }
       //To show document highlighted in notification
-      if(newDocIDUploaded!=null && newDocIDUploaded==note.id){
-        _notesTiles.insert(0,_addInkWellWidget(context,note,i,notification:true),);
-      }else{
-        _notesTiles.add(_addInkWellWidget(context,note,i),);
+      if (newDocIDUploaded != null && newDocIDUploaded == note.id) {
+        _notesTiles.insert(
+          0,
+          _addInkWellWidget(context, note, i, notification: true),
+        );
+      } else if (subjectPinnedNote[_notes[i].id] != null) {
+        _notesTiles.add(
+          _addInkWellWidget(context, note, i, ispinnedNote: true),
+        );
+      } else {
+        _notesTiles.add(
+          _addInkWellWidget(context, note, i, ispinnedNote: false),
+        );
       }
     }
     setBusy(false);
@@ -107,14 +147,14 @@ class NotesViewModel extends BaseViewModel {
   }
 
   getListOfNotesInDownloads(String subName) {
-    List<Download> allDownloads = _downloadService.downloadlist;
+    // List<Download> allDownloads = _downloadService.downloadlist;
     List<Download> downloadsbysub = [];
-    allDownloads.forEach((download) {
-      if (download.type == Constants.notes &&
-          download.subjectName.toLowerCase() == subName.toLowerCase()) {
-        downloadsbysub.add(download);
-      }
-    });
+    // allDownloads.forEach((download) {
+    //   if (download.type == Constants.notes &&
+    //       download.subjectName.toLowerCase() == subName.toLowerCase()) {
+    //     downloadsbysub.add(download);
+    //   }
+    // });
     return downloadsbysub;
   }
 
@@ -138,11 +178,102 @@ class NotesViewModel extends BaseViewModel {
   //   return false;
   // }
 
+  updateNotesList(BuildContext context, String subName, String noteId,
+      bool isNotePinned) async {
+    setBusy(true);
+    SharedPreferences prefs = await _sharedPreferencesService.store();
+    Map<String, dynamic> pinnedNotes = {};
+    Map<String, dynamic> subjectPinnedNote = {};
+
+    if (prefs.containsKey("pinnedNotes")) {
+      print("pinnedNotes found in local storage");
+      var data = prefs.getString("pinnedNotes");
+      //Get pinned notesList from the local storage
+      pinnedNotes = jsonDecode(data);
+      print(pinnedNotes.toString());
+      //if pinned subject is already present
+      if (pinnedNotes[subName] != null) {
+        subjectPinnedNote = pinnedNotes[subName];
+        print(subjectPinnedNote);
+        //if a new note is pinned then add it to the pinned notes list
+        if (isNotePinned) {
+          //increment all the pinned notes present in the list
+          subjectPinnedNote.forEach((key, value) {
+            subjectPinnedNote[key]++;
+          });
+          //add the current pinned note in the list
+          subjectPinnedNote[noteId] = 0;
+        }
+        //if the pinned notes is unpinned then remove it from the pinned notes
+        else {
+          //decrement the index of all the pinned notes after the given noteId by 1
+          bool isNoteIdReached = false;
+          for (var key in subjectPinnedNote.keys) {
+            if (key == noteId) {
+              isNoteIdReached = true;
+              continue;
+            } else if (!isNoteIdReached) {
+              continue;
+            } else {
+              subjectPinnedNote[key]--;
+            }
+          }
+          subjectPinnedNote.remove(noteId);
+        }
+      } else {
+        //add subject to pinned notes
+        pinnedNotes[subName] = {noteId: 0};
+        subjectPinnedNote[noteId] = 0;
+      }
+    } else {
+      //add subject to pinned notes
+      pinnedNotes[subName] = {noteId: 0};
+      subjectPinnedNote[noteId] = 0;
+    }
+
+    print('subjectpinned notes' + subjectPinnedNote.toString());
+
+    prefs.setString("pinnedNotes", jsonEncode(pinnedNotes));
+
+    //add pinned notes in correct position
+    for (int i = 0; i < _notes.length; i++) {
+      Note note = _notes[i];
+      if (subjectPinnedNote[note.id] != null) {
+        print('note id : ${note.id}');
+        //remove note and insert it in correct position
+        List<Note> notes = _notes;
+        notes.remove((note) => note.id == _notes[i].id);
+        notes.insert(subjectPinnedNote[_notes[i].id], note);
+        _notes = notes;
+      }
+    }
+
+    _notesTiles = [];
+
+    for (int i = 0; i < _notes.length; i++) {
+      Note note = _notes[i];
+      if (_notes[i].GDriveLink == null) {
+        continue;
+      }
+      if (subjectPinnedNote[_notes[i].id] != null) {
+        _notesTiles.add(
+          _addInkWellWidget(context, note, i, ispinnedNote: true),
+        );
+      } else {
+        _notesTiles.add(
+          _addInkWellWidget(context, note, i, ispinnedNote: false),
+        );
+      }
+    }
+    print(_notesTiles);
+    setBusy(false);
+    print(
+        'set busy set to false and calling notify listeners function to rebuild the screen');
+    notifyListeners();
+  }
+
   void openDoc(BuildContext context, Note note) async {
     SharedPreferences prefs = await _sharedPreferencesService.store();
-    // prefs.remove("openDocChoice");
-    // print('yo');
-    // return;
     if (prefs.containsKey("openDocChoice")) {
       String button = prefs.getString("openDocChoice");
       if (button == "Open In App") {
@@ -157,12 +288,13 @@ class NotesViewModel extends BaseViewModel {
     SheetResponse response = await _bottomSheetService.showCustomSheet(
       variant: BottomSheetType.floating2,
       title: 'Where do you want to open the file?',
-      description: "Tip : Open Notes in Google Drive app to avoid loading issues. ' Open in Browser > Google Drive Icon ' ",
+      description:
+          "Tip : Open Notes in Google Drive app to avoid loading issues. ' Open in Browser > Google Drive Icon ' ",
       mainButtonTitle: 'Open In Browser',
       secondaryButtonTitle: 'Open In App',
     );
     log.i("openDoc BottomSheetResponse ");
-    if (!response.confirmed??false){
+    if (!response.confirmed ?? false) {
       return;
     }
 
@@ -203,33 +335,49 @@ class NotesViewModel extends BaseViewModel {
         arguments: WebViewWidgetArguments(note: note));
   }
 
-  //download doc on tap
-  void onTap({
-    String notesName,
-    String subName,
-    String type,
-  }) async {
-    _progress = 0;
-    notifyListeners();
-    setLoading(true);
-    File file = await downloadFile(
-      notesName: notesName,
-      subName: subName,
-      type: type,
-    );
-    String PDFpath = file.path;
-    log.e(file.path);
-    if (PDFpath == 'error') {
-      await Fluttertoast.showToast(
-          msg:
-              'An error has occurred while downloading document...Please Verify your internet connection.');
-      setLoading(false);
-      return;
+  void navigateBack() {
+    _navigationService.popRepeated(1);
+  }
+
+  @override
+  void dispose() {
+    this.admobService.hideNotesViewBanner();
+    this.admobService.hideNotesViewInterstitialAd();
+    super.dispose();
+  }
+
+  void incrementViewForAd() {
+    this.admobService.incrementNumberOfTimeNotesOpened();
+    if (this.admobService.shouldAdBeShown()) {
+      this.admobService.showNotesViewInterstitialAd();
     }
-    // _firestoreService.incrementView(note);
-    setLoading(false);
-    _navigationService.navigateTo(Routes.pdfScreenRoute,
-        arguments: PDFScreenArguments(pathPDF: PDFpath, title: notesName));
+  }
+
+  List<Subject> getSimilarSubjects(String subjectName) {
+    return _subjectsService.getSimilarSubjects(subjectName);
+  }
+
+  Widget _addInkWellWidget(BuildContext context, Note note, int i,
+      {bool notification = false, bool ispinnedNote = false}) {
+    return InkWell(
+      child: NotesTileView(
+        ctx: context,
+        note: note,
+        index: i,
+        votes: _voteService.votesBySub.value,
+        downloadedNotes: getListOfNotesInDownloads(note.subjectName),
+        notification: notification,
+        updateNotesList: (subName, noteId, isNotePinned) {
+          print("calling update Function");
+          updateNotesList(context, subName, noteId, isNotePinned);
+        },
+        isNotePinned: false,
+      ),
+      onTap: () {
+        incrementViewForAd();
+        openDoc(context, note);
+      },
+    );
   }
 
   @override
@@ -281,42 +429,32 @@ class NotesViewModel extends BaseViewModel {
     }
   }
 
-  void navigateBack() {
-    _navigationService.popRepeated(1);
-  }
-
-  @override
-  void dispose() {
-    this.admobService.hideNotesViewBanner();
-    this.admobService.hideNotesViewInterstitialAd();
-    super.dispose();
-  }
-
-  void incrementViewForAd() {
-    this.admobService.incrementNumberOfTimeNotesOpened();
-    if (this.admobService.shouldAdBeShown()) {
-      this.admobService.showNotesViewInterstitialAd();
-    }
-  }
-
-  List<Subject> getSimilarSubjects(String subjectName) {
-    return _subjectsService.getSimilarSubjects(subjectName);
-  }
-
-  Widget _addInkWellWidget(BuildContext context,Note note,int i,{bool notification=false}) {
-    return InkWell(
-      child: NotesTileView(
-          ctx: context,
-          note: note,
-          index: i,
-          votes: _voteService.votesBySub.value,
-          downloadedNotes: getListOfNotesInDownloads(note.subjectName),
-          notification:notification,
-        ),
-      onTap: () {
-        incrementViewForAd();
-        openDoc(context, note);
-      },
+  //download doc on tap
+  void onTap({
+    String notesName,
+    String subName,
+    String type,
+  }) async {
+    _progress = 0;
+    notifyListeners();
+    setLoading(true);
+    File file = await downloadFile(
+      notesName: notesName,
+      subName: subName,
+      type: type,
     );
+    String PDFpath = file.path;
+    log.e(file.path);
+    if (PDFpath == 'error') {
+      await Fluttertoast.showToast(
+          msg:
+              'An error has occurred while downloading document...Please Verify your internet connection.');
+      setLoading(false);
+      return;
+    }
+    // _firestoreService.incrementView(note);
+    setLoading(false);
+    _navigationService.navigateTo(Routes.pdfScreenRoute,
+        arguments: PDFScreenArguments(pathPDF: PDFpath, title: notesName));
   }
 }

@@ -37,10 +37,11 @@ class NotesTileViewModel extends BaseViewModel {
   DialogService _dialogService = locator<DialogService>();
   CloudStorageService _cloudStorageService = locator<CloudStorageService>();
   GoogleDriveService _googleDriveService = locator<GoogleDriveService>();
-    BottomSheetService _bottomSheetService = locator<BottomSheetService>();
+  BottomSheetService _bottomSheetService = locator<BottomSheetService>();
   VoteService _voteService = locator<VoteService>();
 
   bool _hasalreadyvoted = false;
+
   bool get hasalreadyvoted => _hasalreadyvoted;
   String _vote = Constants.none;
   String get vote => _vote;
@@ -50,6 +51,13 @@ class NotesTileViewModel extends BaseViewModel {
   AdmobService get admobService => _admobService;
 
   Map<String, int> get numberOfVotes => _voteService.numberOfVotes;
+
+
+  //function to pin notes
+  pinNotes(Function updateNotes) async {
+    //simply update the notes list
+    updateVotes();
+  }
 
   handleVotes(String vote, String votedon, Note note) {
     //if the user has pressed on same vote again then make the vote to none and update it in db
@@ -175,15 +183,12 @@ class NotesTileViewModel extends BaseViewModel {
 
   bool get isAdmin => _authenticationService.user.isAdmin;
 
-  void reportNote
-  ({
-    String id,
-    String subjectName,
-    String type,
-    String title,
-    AbstractDocument doc
-  }) async {
-
+  void reportNote(
+      {String id,
+      String subjectName,
+      String type,
+      String title,
+      AbstractDocument doc}) async {
     //Collect reason of reporting from user
     SheetResponse reportResponse = await _bottomSheetService.showCustomSheet(
       variant: BottomSheetType.floating,
@@ -192,7 +197,10 @@ class NotesTileViewModel extends BaseViewModel {
       mainButtonTitle: 'Report',
       secondaryButtonTitle: 'Go Back',
     );
-    if(!reportResponse.confirmed){setBusy(false);return;}
+    if (!reportResponse.confirmed) {
+      setBusy(false);
+      return;
+    }
     log.i("Report BottomSheetResponse " + reportResponse.responseData);
 
     //Generate report with appropriate data
@@ -202,7 +210,11 @@ class NotesTileViewModel extends BaseViewModel {
 
     //Check whether user is banned
     User user = await _firestoreService.refreshUser();
-    if(!user.isUserAllowedToUpload){_userIsNotAllowedNotToReport();setBusy(false);return;}
+    if (!user.isUserAllowedToUpload) {
+      _userIsNotAllowedNotToReport();
+      setBusy(false);
+      return;
+    }
 
     //If user is reporting the same document 2nd time the result will be a String
     var result = await _reportsService.addReport(report);
@@ -275,7 +287,13 @@ class NotesTileViewModel extends BaseViewModel {
   }
 
   navigateToEditView(Note note) {
-    _navigationService.navigateTo(Routes.editViewRoute,arguments:EditViewArguments(path: Document.Notes,subjectName: note.subjectName,textFieldsMap: Constants.EditNotes,note: note,title:note.title));
+    _navigationService.navigateTo(Routes.editViewRoute,
+        arguments: EditViewArguments(
+            path: Document.Notes,
+            subjectName: note.subjectName,
+            textFieldsMap: Constants.EditNotes,
+            note: note,
+            title: note.title));
   }
 
   void _userIsNotAllowedNotToReport() async {
@@ -285,6 +303,7 @@ class NotesTileViewModel extends BaseViewModel {
           "You have been banned by admins for uploading irrelevant content or reporting documents with no issue again and again. Use the feedback option in the drawer to contact the admins if you think this is a mistake",
     );
   }
+
   void incrementViewForAd() {
     this.admobService.incrementNumberOfTimeNotesOpened();
     if (this.admobService.shouldAdBeShown()) {

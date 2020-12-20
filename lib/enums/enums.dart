@@ -17,4 +17,5 @@ enum Document {
 
 enum Menu {
   Report,
+  Pin,
 }
