@@ -19,7 +19,7 @@ class Helper {
           ],
         ),
         content: Text(
-          'Do you really want to exit',
+          'Do you really want to exit?',
           style: theme.textTheme.headline6.copyWith(fontSize: 18),
         ),
         actions: [
