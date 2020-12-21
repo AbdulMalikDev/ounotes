@@ -15,6 +15,7 @@ import 'package:FSOUNotes/services/funtional_services/sharedpref_service.dart';
 import 'package:FSOUNotes/services/funtional_services/admob_service.dart';
 import 'package:FSOUNotes/services/state_services/report_service.dart';
 import 'package:FSOUNotes/services/state_services/vote_service.dart';
+import 'package:FSOUNotes/services/state_services/subjects_service.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:stacked/stacked.dart';
@@ -39,6 +40,7 @@ class NotesTileViewModel extends BaseViewModel {
   GoogleDriveService _googleDriveService = locator<GoogleDriveService>();
     BottomSheetService _bottomSheetService = locator<BottomSheetService>();
   VoteService _voteService = locator<VoteService>();
+  SubjectsService _subjectService = locator<SubjectsService>();
 
   bool _hasalreadyvoted = false;
   bool get hasalreadyvoted => _hasalreadyvoted;
@@ -290,5 +292,49 @@ class NotesTileViewModel extends BaseViewModel {
     if (this.admobService.shouldAdBeShown()) {
       this.admobService.showNotesViewInterstitialAd();
     }
+  }
+
+  void pinNotes(Note note,Function refresh) {
+
+    //Initialize and fetch pinned notes
+    Map<String,Map<String,DateTime>> pinnedNotes = _subjectService.documentHiveBox.get("pinnedNotes") ?? {"empty":{}};
+    Map<String,DateTime> subjectPinnedNotes = pinnedNotes[note.subjectName] ?? {};
+
+    //add the pinned notes
+    subjectPinnedNotes[note.id.toString()] = DateTime.now();
+
+    //save the pinned notes
+    pinnedNotes.update(
+      note.subjectName,
+      (value) => subjectPinnedNotes,
+      ifAbsent: () => subjectPinnedNotes,
+    );
+    _subjectService.documentHiveBox.put("pinnedNotes",pinnedNotes);
+
+    //Notify UI
+    refresh(note.subjectName);
+  }
+
+  void unpinNotes(Note note,Function refresh) {
+
+    //Initialize and fetch pinned notes
+    Map<String,Map<String,DateTime>> pinnedNotes = _subjectService.documentHiveBox.get("pinnedNotes");
+    if(pinnedNotes == null)return;
+    Map<String,DateTime> subjectPinnedNotes = pinnedNotes[note.subjectName];
+    if(subjectPinnedNotes == null || subjectPinnedNotes.isEmpty)return;
+
+    //remove pinned notes
+    subjectPinnedNotes.remove(note.id);
+
+    //save the pinned notes
+    pinnedNotes.update(
+      note.subjectName,
+      (value) => subjectPinnedNotes,
+      ifAbsent: () => subjectPinnedNotes,
+    );
+    _subjectService.documentHiveBox.put("pinnedNotes",pinnedNotes);
+    
+    //notify UI for update
+    refresh(note.subjectName);
   }
 }

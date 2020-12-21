@@ -11,6 +11,7 @@ import 'package:injectable/injectable.dart';
 import 'package:logger/logger.dart';
 import 'package:observable_ish/list/list.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:hive/hive.dart';
 
 @lazySingleton
 class SubjectsService with ChangeNotifier {
@@ -20,6 +21,12 @@ class SubjectsService with ChangeNotifier {
     Subject.namedParameter(
         branch: ["s"], id: 12, name: "ljsdlf", semester: [1, 2])
   ];
+
+  Box documentHiveBox;
+
+  setBox(Box box){
+    this.documentHiveBox = box;
+  }
 
   ValueNotifier<List<Subject>> _userSubjects =
       new ValueNotifier(new List<Subject>());

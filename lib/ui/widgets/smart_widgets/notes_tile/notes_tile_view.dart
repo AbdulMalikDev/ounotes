@@ -19,20 +19,20 @@ import 'package:FSOUNotes/AppTheme/AppStateNotifier.dart';
 class NotesTileView extends StatelessWidget {
   final Note note;
   final List<Vote> votes;
-  final int index;
-  final BuildContext ctx;
   final List<Download> downloadedNotes;
   final bool notification;
+  final bool isPinned;
+  final Function refresh;
 
-  const NotesTileView(
-      {Key key,
-      this.note,
-      this.votes,
-      this.index,
-      this.ctx,
-      this.downloadedNotes,
-      this.notification})
-      : super(key: key);
+  const NotesTileView({
+    Key key,
+    this.note,
+    this.votes,
+    this.downloadedNotes,
+    this.notification = false,
+    this.isPinned = false,
+    this.refresh,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -51,11 +51,13 @@ class NotesTileView extends StatelessWidget {
     var theme = Theme.of(context);
 
     return ViewModelBuilder<NotesTileViewModel>.reactive(
-        onModelReady: (model) => model.checkIfUserVotedAndDownloadedNote(
-            voteval: votevalue,
-            downloadedNotebySub: downloadedNotes,
-            note: note,
-            votesbySub: votes),
+        onModelReady: (model) {
+          model.checkIfUserVotedAndDownloadedNote(
+              voteval: votevalue,
+              downloadedNotebySub: downloadedNotes,
+              note: note,
+              votesbySub: votes);
+        },
         builder: (context, model, child) {
           return FractionallySizedBox(
             widthFactor: 0.99,
@@ -71,16 +73,44 @@ class NotesTileView extends StatelessWidget {
                             boxShadow: [],
                           )
                         : Constants.mdecoration.copyWith(
-                            color: Theme.of(context).colorScheme.background,
+                            color:
+                            isPinned
+                            ?Colors.tealAccent.shade400
+                            :Theme.of(context).colorScheme.background,
                           ),
-                    child:
-                    notification 
-                    ?Shimmer.fromColors(
-                      baseColor: Colors.teal,
-                      highlightColor: Colors.white,
-                      child: notesColumnWidget(title: title, primary: primary, theme: theme, note: note, secondary: secondary, author: author, dateString: dateString, view: view, size: size,model: model,),
-                    )
-                    : notesColumnWidget(title: title, primary: primary, theme: theme, note: note, secondary: secondary, author: author, dateString: dateString, view: view, size: size,model: model,),
+                    child: notification
+                        ? Shimmer.fromColors(
+                            baseColor: Colors.teal,
+                            highlightColor: Colors.white,
+                            child: notesColumnWidget(
+                              refresh: refresh,
+                              title: title,
+                              primary: primary,
+                              theme: theme,
+                              note: note,
+                              secondary: secondary,
+                              author: author,
+                              dateString: dateString,
+                              view: view,
+                              size: size,
+                              model: model,
+                              isPinned: isPinned,
+                            ),
+                          )
+                        : notesColumnWidget(
+                            refresh: refresh,
+                            title: title,
+                            primary: primary,
+                            theme: theme,
+                            note: note,
+                            secondary: secondary,
+                            author: author,
+                            dateString: dateString,
+                            view: view,
+                            size: size,
+                            model: model,
+                            isPinned: isPinned,
+                          ),
                   ),
           );
         },
@@ -101,6 +131,8 @@ class notesColumnWidget extends StatelessWidget {
     @required this.view,
     @required this.size,
     @required this.model,
+    @required this.isPinned,
+    @required this.refresh,
   }) : super(key: key);
 
   final String title;
@@ -113,6 +145,8 @@ class notesColumnWidget extends StatelessWidget {
   final int view;
   final String size;
   final NotesTileViewModel model;
+  final bool isPinned;
+  final Function refresh;
 
   @override
   Widget build(BuildContext context) {
@@ -131,10 +165,8 @@ class notesColumnWidget extends StatelessWidget {
                 children: <Widget>[
                   Container(
                     margin: EdgeInsets.only(right: 25),
-                    height: App(context)
-                        .appScreenHeightWithOutSafeArea(0.11),
-                    width: App(context)
-                        .appScreenWidthWithOutSafeArea(0.2),
+                    height: App(context).appScreenHeightWithOutSafeArea(0.11),
+                    width: App(context).appScreenWidthWithOutSafeArea(0.2),
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
                       image: DecorationImage(
@@ -151,32 +183,26 @@ class notesColumnWidget extends StatelessWidget {
               Padding(
                 padding: EdgeInsets.symmetric(vertical: 10),
                 child: Column(
-                  crossAxisAlignment:
-                      CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Row(
                       mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment:
-                          MainAxisAlignment.spaceAround,
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: <Widget>[
                         Container(
                           width: 160,
                           child: Row(
                             children: <Widget>[
                               Container(
-                                constraints:
-                                    model.isnotedownloaded
-                                        ? BoxConstraints(
-                                            maxWidth: 140)
-                                        : BoxConstraints(
-                                            maxWidth: 160),
+                                constraints: model.isnotedownloaded
+                                    ? BoxConstraints(maxWidth: 140)
+                                    : BoxConstraints(maxWidth: 160),
                                 child: Text(
                                   title,
                                   overflow: TextOverflow.clip,
                                   style: TextStyle(
                                       color: primary,
-                                      fontWeight:
-                                          FontWeight.bold,
+                                      fontWeight: FontWeight.bold,
                                       fontSize: 18),
                                 ),
                               ),
@@ -188,8 +214,7 @@ class notesColumnWidget extends StatelessWidget {
                               model.isnotedownloaded
                                   ? Icon(
                                       Icons.done_all,
-                                      color: theme
-                                          .iconTheme.color,
+                                      color: theme.iconTheme.color,
                                       size: 18,
                                     )
                                   : SizedBox(),
@@ -203,30 +228,31 @@ class notesColumnWidget extends StatelessWidget {
                             color: theme.primaryColor,
                           ),
                           onPressed: () {
-                            final RenderBox box =
-                                context.findRenderObject();
+                            final RenderBox box = context.findRenderObject();
                             Share.share(
                                 "Notes Name: ${note.title}\n\nSubject Name: ${note.subjectName}\n\nLink:${note.GDriveLink}\n\nFind Latest Notes | Question Papers | Syllabus | Resources for Osmania University at the OU NOTES App\n\nhttps://play.google.com/store/apps/details?id=com.notes.ounotes",
                                 sharePositionOrigin:
-                                    box.localToGlobal(
-                                            Offset.zero) &
-                                        box.size);
+                                    box.localToGlobal(Offset.zero) & box.size);
                           },
                         ),
                         Flexible(
                           child: PopupMenuButton(
                             padding: EdgeInsets.zero,
                             onSelected: (Menu selectedValue) {
-                              if (selectedValue ==
-                                  Menu.Report) {
+                              if (selectedValue == Menu.Report) {
                                 model.reportNote(
                                   doc: note,
                                   id: note.id,
-                                  subjectName:
-                                      note.subjectName,
+                                  subjectName: note.subjectName,
                                   title: note.title,
                                   type: Constants.notes,
                                 );
+                              } else if (selectedValue == Menu.Pin) {
+                                if (isPinned){
+                                  model.unpinNotes(note,refresh);
+                                }else{
+                                  model.pinNotes(note,refresh);
+                                }
                               }
                             },
                             icon: Icon(Icons.more_vert),
@@ -234,6 +260,12 @@ class notesColumnWidget extends StatelessWidget {
                               PopupMenuItem(
                                 child: Text('Report'),
                                 value: Menu.Report,
+                              ),
+                              PopupMenuItem(
+                                child: isPinned
+                                    ? Text('Un-Pin Notes')
+                                    : Text('Pin Notes'),
+                                value: Menu.Pin,
                               ),
                             ],
                           ),
@@ -296,9 +328,7 @@ class notesColumnWidget extends StatelessWidget {
                         Text(
                           view.toString(),
                           style: TextStyle(
-                              color: primary,
-                              fontSize: 13,
-                              letterSpacing: .3),
+                              color: primary, fontSize: 13, letterSpacing: .3),
                         ),
                         SizedBox(
                           width: 10,
@@ -306,57 +336,47 @@ class notesColumnWidget extends StatelessWidget {
                         Text(
                           size,
                           style: TextStyle(
-                              color: primary,
-                              fontSize: 13,
-                              letterSpacing: .3),
+                              color: primary, fontSize: 13, letterSpacing: .3),
                         ),
                         SizedBox(
                           width: 15,
                         ),
                         GestureDetector(
                           onTap: () {
-                            model.handleVotes(model.vote,
-                                Constants.upvote, note);
+                            model.handleVotes(
+                                model.vote, Constants.upvote, note);
                           },
                           child: Container(
                             width: 30,
                             child: IconButton(
                                 padding: EdgeInsets.all(0.0),
-                                icon: FaIcon(FontAwesomeIcons
-                                    .longArrowAltUp),
-                                color: model.vote ==
-                                        Constants.upvote
+                                icon: FaIcon(FontAwesomeIcons.longArrowAltUp),
+                                color: model.vote == Constants.upvote
                                     ? Colors.green
                                     : Colors.white,
                                 iconSize: 30,
                                 onPressed: () {
                                   model.handleVotes(
-                                      model.vote,
-                                      Constants.upvote,
-                                      note);
+                                      model.vote, Constants.upvote, note);
                                 }),
                           ),
                         ),
                         GestureDetector(
                           onTap: () {
-                            model.handleVotes(model.vote,
-                                Constants.downvote, note);
+                            model.handleVotes(
+                                model.vote, Constants.downvote, note);
                           },
                           child: Container(
                             width: 30,
                             child: IconButton(
-                                icon: FaIcon(FontAwesomeIcons
-                                    .longArrowAltDown),
-                                color: model.vote ==
-                                        Constants.downvote
+                                icon: FaIcon(FontAwesomeIcons.longArrowAltDown),
+                                color: model.vote == Constants.downvote
                                     ? Colors.red
                                     : Colors.white,
                                 iconSize: 30,
                                 onPressed: () {
                                   model.handleVotes(
-                                      model.vote,
-                                      Constants.downvote,
-                                      note);
+                                      model.vote, Constants.downvote, note);
                                 }),
                           ),
                         ),
@@ -367,13 +387,9 @@ class notesColumnWidget extends StatelessWidget {
                                 width: 20,
                                 child: FittedBox(
                                   child: Text(
-                                    model.numberOfVotes[
-                                            note.title]
-                                        .toString(),
-                                    style: theme
-                                        .textTheme.subtitle1
-                                        .copyWith(
-                                            fontSize: 18),
+                                    model.numberOfVotes[note.title].toString(),
+                                    style: theme.textTheme.subtitle1
+                                        .copyWith(fontSize: 18),
                                   ),
                                 ),
                               ),
@@ -392,34 +408,27 @@ class notesColumnWidget extends StatelessWidget {
           ),
         ),
         model.isAdmin
-            ? Row(
-                mainAxisAlignment:
-                    MainAxisAlignment.spaceEvenly,
-                children: [
-                    Container(
-                      child: RaisedButton(
-                        child: Text("EDIT",
-                            style: TextStyle(
-                                color: Colors.white)),
-                        color: Colors.blue,
-                        onPressed: () async {
-                          await model
-                              .navigateToEditView(note);
-                        },
-                      ),
-                    ),
-                    Container(
-                      child: RaisedButton(
-                        child: Text("DELETE",
-                            style: TextStyle(
-                                color: Colors.white)),
-                        color: Colors.red,
-                        onPressed: () async {
-                          await model.deleteFromGdrive(note);
-                        },
-                      ),
-                    ),
-                  ])
+            ? Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+                Container(
+                  child: RaisedButton(
+                    child: Text("EDIT", style: TextStyle(color: Colors.white)),
+                    color: Colors.blue,
+                    onPressed: () async {
+                      await model.navigateToEditView(note);
+                    },
+                  ),
+                ),
+                Container(
+                  child: RaisedButton(
+                    child:
+                        Text("DELETE", style: TextStyle(color: Colors.white)),
+                    color: Colors.red,
+                    onPressed: () async {
+                      await model.deleteFromGdrive(note);
+                    },
+                  ),
+                ),
+              ])
             : Container(),
       ],
     );

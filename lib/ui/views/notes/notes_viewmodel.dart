@@ -25,18 +25,19 @@ import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:logger/logger.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:shimmer/shimmer.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:hive/hive.dart';
 
 class NotesViewModel extends BaseViewModel {
   Logger log = getLogger("Notes view model");
   String table = 'uservoted_subjects';
   List<Vote> userVotedNotesList = [];
   List<Download> downloadedNotes = [];
-  var _notes;
-
+  ValueNotifier<List<Widget>> _notesTiles =
+      new ValueNotifier(new List<Widget>());
+  
   FirestoreService _firestoreService = locator<FirestoreService>();
   AdmobService _admobService = locator<AdmobService>();
   RemoteConfigService _remoteConfigService = locator<RemoteConfigService>();
@@ -55,19 +56,18 @@ class NotesViewModel extends BaseViewModel {
   String _notetitle = '';
   String get notetitle => _notetitle;
   bool _ischecked = false;
-
+  Note notificationNote;
+  List<Widget> mainListOfNotes = [];
   List<Vote> get voteslist => userVotedNotesList;
   AdmobService get admobService => _admobService;
   RemoteConfigService get remoteConfig => _remoteConfigService;
   String get ADMOB_AD_BANNER_ID => _admobService.ADMOB_AD_BANNER_ID;
   String get ADMOB_APP_ID => _admobService.ADMOB_APP_ID;
-  List<Widget> _notesTiles = [];
-
-  List<Widget> get notesTiles => _notesTiles;
-
+  List<Note> _notes = [];
+  ValueNotifier<List<Widget>> get notesTiles => _notesTiles;
   bool isloading = false;
   bool get loading => isloading;
-
+  Box box ;
   ValueNotifier<List<Vote>> get userVotesBySub => _voteService.votesBySub;
 
   setLoading(bool val) {
@@ -75,9 +75,16 @@ class NotesViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  List<Note> get notes => _notes;
+  //Refresh the notes Value Notifier to show pinned notes above
+  refresh(subjectName) async {
+    notesTiles.value = [];
+    await fetchNotesAndVotes(subjectName);
+  }
 
-  Future fetchNotesAndVotes(String subjectName, BuildContext context) async {
+  List<Note> get notes => _notes;
+  // _notes.addListener(() { })
+
+  Future fetchNotesAndVotes(String subjectName) async {
     setBusy(true);
     _notes = await _firestoreService.loadNotesFromFirebase(subjectName);
     if (_notes is String) {
@@ -89,18 +96,58 @@ class NotesViewModel extends BaseViewModel {
     await _voteService.fetchAndSetVotesBySubject(subjectName);
     // await _downloadService.fetchAndSetDownloads();
     userVotedNotesList = _voteService.userVotesList;
-
+    
+    //> Populate Notes list
+    bool notesForNotificationDisplay = false;
+    log.e(box.get("pinnedNotes"));
+    // box.delete("pinnedNotes");
+    Map<String,Map<String,DateTime>> pinnedNotes = (box.get("pinnedNotes") ?? {"empty":{"a":DateTime.now()}}) as Map<String,Map<String,DateTime>>;
+    Map<String,DateTime> subjectPinnedNotes = pinnedNotes[subjectName] ?? {};
+    List<String> pinnedNotesIDs = subjectPinnedNotes.keys.toList(); 
+    List<Note> currentSubjectPinnedNotes = [];
     for (int i = 0; i < _notes.length; i++) {
       Note note = _notes[i];
-      if (notes[i].GDriveLink == null) {
+      if (note.GDriveLink == null) {
         continue;
       }
-      //To show document highlighted in notification
+
+      //>To show document highlighted in notification
       if(newDocIDUploaded!=null && newDocIDUploaded==note.id){
-        _notesTiles.insert(0,_addInkWellWidget(context,note,i,notification:true),);
-      }else{
-        _notesTiles.add(_addInkWellWidget(context,note,i),);
+        notesForNotificationDisplay = true;
+        notificationNote = note;
+        continue;
       }
+      //>Skip pinned notes to add them in the last
+      else if(pinnedNotesIDs.contains(note.id)){
+        currentSubjectPinnedNotes.add(note);
+        continue;
+      }
+      //>Add normal notes to the list as usual
+      else{
+        _notesTiles.value.add(_addInkWellWidget(note),);
+      }
+    }
+
+    //Add all the pinned notes
+    if(currentSubjectPinnedNotes.isNotEmpty){
+
+      //>Order dates by most recently pinned
+      List<DateTime> dates = subjectPinnedNotes.values.toList();
+      dates.sort((a,b)=>a.compareTo(b));
+      dates = dates.reversed.toList();
+
+      currentSubjectPinnedNotes.asMap().forEach((index, _) {
+        DateTime recentDate = dates[index];
+        String notesIdCorrespondingToTheRecentDate
+         = subjectPinnedNotes.keys.toList().where((key) => subjectPinnedNotes[key]==recentDate).toList()[0];
+        Note noteToAdd = currentSubjectPinnedNotes.where((note) => note.id == notesIdCorrespondingToTheRecentDate).toList()[0];
+        _notesTiles.value.insert(index,_addInkWellWidget(noteToAdd,isPinned: true),);
+      });
+
+    }
+    //> Adding this in the end so that it doesn't mess up the pinned notes
+    if(notesForNotificationDisplay){
+      _notesTiles.value.insert(0,_addInkWellWidget(notificationNote,notification:true),);
     }
     setBusy(false);
     notifyListeners();
@@ -138,7 +185,7 @@ class NotesViewModel extends BaseViewModel {
   //   return false;
   // }
 
-  void openDoc(BuildContext context, Note note) async {
+  void openDoc(Note note) async {
     SharedPreferences prefs = await _sharedPreferencesService.store();
     // prefs.remove("openDocChoice");
     // print('yo');
@@ -179,17 +226,17 @@ class NotesViewModel extends BaseViewModel {
       );
 
       if (response2.confirmed) {
-        navigateToPDFScreen(response.responseData['buttonText'], note, context);
+        navigateToPDFScreen(response.responseData['buttonText'], note);
         return;
       }
     } else {
-      navigateToPDFScreen(response.responseData['buttonText'], note, context);
+      navigateToPDFScreen(response.responseData['buttonText'], note);
     }
 
     return;
   }
 
-  navigateToPDFScreen(String buttonText, Note note, BuildContext context) {
+  navigateToPDFScreen(String buttonText, Note note) {
     if (buttonText == 'Open In App') {
       navigateToWebView(note);
     } else {
@@ -303,20 +350,25 @@ class NotesViewModel extends BaseViewModel {
     return _subjectsService.getSimilarSubjects(subjectName);
   }
 
-  Widget _addInkWellWidget(BuildContext context,Note note,int i,{bool notification=false}) {
+  Widget _addInkWellWidget(Note note,{bool notification=false,bool isPinned=false}) {
     return InkWell(
       child: NotesTileView(
-          ctx: context,
           note: note,
-          index: i,
           votes: _voteService.votesBySub.value,
           downloadedNotes: getListOfNotesInDownloads(note.subjectName),
           notification:notification,
+          isPinned:isPinned,
+          refresh:refresh,
         ),
       onTap: () {
         incrementViewForAd();
-        openDoc(context, note);
+        openDoc(note);
       },
     );
+  }
+
+  initialize() async {
+    box = await Hive.openBox("Documents");
+    _subjectsService.setBox(box);
   }
 }
