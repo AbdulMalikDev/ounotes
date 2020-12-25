@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:FSOUNotes/AppTheme/AppStateNotifier.dart';
 import 'package:FSOUNotes/CustomIcons/custom_icons.dart';
 import 'package:FSOUNotes/enums/enums.dart';
@@ -10,32 +8,32 @@ import 'package:FSOUNotes/ui/widgets/dumb_widgets/nav_item.dart';
 import 'package:FSOUNotes/ui/widgets/smart_widgets/drawer/drawer_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_intro/flutter_intro.dart';
-import 'package:in_app_review/in_app_review.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:open_appstore/open_appstore.dart';
 import 'package:share/share.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:stacked/stacked.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:wiredash/wiredash.dart';
+import 'package:rate_my_app/rate_my_app.dart';
 
 class DrawerView extends StatefulWidget {
-  
-
   @override
   _DrawerViewState createState() => _DrawerViewState();
 }
 
 class _DrawerViewState extends State<DrawerView> {
   Intro intro;
-  List<Map<String,String>> drawerPrompts;
+  List<Map<String, String>> drawerPrompts;
+  RateMyApp _rateMyApp = RateMyApp();
 
   _DrawerViewState() {
     drawerPrompts = OnboardingService.drawerPrompts;
+
     /// init Intro
     intro = Intro(
       stepCount: 2,
       padding: EdgeInsets.zero,
+
       /// use defaultTheme, or you can implement widgetBuilder function yourself
       widgetBuilder: StepWidgetBuilder.useDefaultTheme(
         texts: [
@@ -43,7 +41,9 @@ class _DrawerViewState extends State<DrawerView> {
           ...drawerPrompts[1].keys,
         ],
         buttonTextBuilder: (curr, total) {
-          return curr < total - 1 ? drawerPrompts[0].values.toList()[0] : drawerPrompts[1].values.toList()[0];
+          return curr < total - 1
+              ? drawerPrompts[0].values.toList()[0]
+              : drawerPrompts[1].values.toList()[0];
         },
       ),
     );
@@ -55,19 +55,20 @@ class _DrawerViewState extends State<DrawerView> {
       ),
     );
   }
-  
+
   @override
   void dispose() {
     intro?.dispose();
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     var subtitle1 =
         Theme.of(context).textTheme.subtitle1.copyWith(fontSize: 16);
 
     return ViewModelBuilder<DrawerViewModel>.reactive(
-        onModelReady: (model) async => await model.showIntro(intro,context),
+        onModelReady: (model) async => await model.showIntro(intro, context),
         builder: (context, model, child) => Container(
               width: App(context).appScreenWidthWithOutSafeArea(0.78),
               child: Drawer(
@@ -140,16 +141,10 @@ class _DrawerViewState extends State<DrawerView> {
                                     : Colors.grey[700],
                               ),
                               onTap: () async {
-                                OpenAppstore.launch(
-                                    androidAppId: 'com.notes.ounotes',
-                                    iOSAppId: 'com.notes.ounotes');
-                                // print('review');
-                                // final InAppReview inAppReview =
-                                //     InAppReview.instance;
-
-                                // if (await inAppReview.isAvailable()) {
-                                //   inAppReview.requestReview();
-                                // }
+                                // OpenAppstore.launch(
+                                //     androidAppId: 'com.notes.ounotes',
+                                //     iOSAppId: 'com.notes.ounotes');
+                                model.showRateMyAppDialog(context);
                               }),
                           // NavItem(
                           //     Icons.arrow_drop_down_circle,
@@ -169,7 +164,12 @@ class _DrawerViewState extends State<DrawerView> {
                               highlightColor: Colors.yellow,
                               child: Text(
                                 'Feedback',
-                                style: TextStyle(fontWeight:FontWeight.bold,fontFamily: "Montserrat",fontSize: 22,letterSpacing: 3,),
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontFamily: "Montserrat",
+                                  fontSize: 22,
+                                  letterSpacing: 3,
+                                ),
                               ),
                             ),
                             onTap: () async {

@@ -14,24 +14,25 @@ class NotesView extends StatefulWidget {
   final String subjectName;
   final String path;
   final String newDocIDUploaded;
-  const NotesView({@required this.subjectName, this.path, this.newDocIDUploaded, Key key})
+  const NotesView(
+      {@required this.subjectName, this.path, this.newDocIDUploaded, Key key})
       : super(key: key);
 
   @override
   _NotesViewState createState() => _NotesViewState();
 }
 
-class _NotesViewState extends State<NotesView>{
-  listener(AdColonyAdListener event) {
-    print(event);
-    if (event == AdColonyAdListener.onRequestFilled) AdColony.show();
-  }
-
+class _NotesViewState extends State<NotesView>
+    with AutomaticKeepAliveClientMixin {
   @override
   Widget build(BuildContext context) {
     // super.build(context);
     return ViewModelBuilder<NotesViewModel>.reactive(
-      onModelReady: (model) {_initState(model, context, listener);model.newDocIDUploaded = widget.newDocIDUploaded;},
+      onModelReady: (model) {
+        model.initialize();
+        _initState(model);
+        model.newDocIDUploaded = widget.newDocIDUploaded;
+      },
       builder: (context, model, child) => WillPopScope(
         onWillPop: () {
           model.admobService.hideNotesViewBanner();
@@ -56,56 +57,56 @@ class _NotesViewState extends State<NotesView>{
                         )
                       : model.notes.length == 0
                           ? SingleChildScrollView(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              // crossAxisAlignment: CrossAxisAlignment.s,
-                              // mainAxisSize: MainAxisSize.min,
-                              children: <Widget>[
-                                SimilarSubjectTile(
-                                  similarSubjects: model.getSimilarSubjects(
-                                      widget.subjectName),
-                                ),
-                                Image.asset(
-                                  'assets/images/study1.jpg',
-                                  alignment: Alignment.center,
-                                  width: 300,
-                                  height: 300,
-                                ),
-                                Text(
-                                  "Notes are empty!",
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .headline6
-                                      .copyWith(
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .onSurface,
-                                          fontWeight: FontWeight.w300),
-                                ),
-                                SizedBox(
-                                  height: 15,
-                                ),
-                                Text(
-                                  "why don't you upload some?",
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .headline6
-                                      .copyWith(
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .onSurface,
-                                          fontWeight: FontWeight.w300),
-                                ),
-                              ],
-                            ),
-                          )
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                // crossAxisAlignment: CrossAxisAlignment.s,
+                                // mainAxisSize: MainAxisSize.min,
+                                children: <Widget>[
+                                  SimilarSubjectTile(
+                                    similarSubjects: model
+                                        .getSimilarSubjects(widget.subjectName),
+                                  ),
+                                  Image.asset(
+                                    'assets/images/study1.jpg',
+                                    alignment: Alignment.center,
+                                    width: 300,
+                                    height: 300,
+                                  ),
+                                  Text(
+                                    "Notes are empty!",
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .headline6
+                                        .copyWith(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .onSurface,
+                                            fontWeight: FontWeight.w300),
+                                  ),
+                                  SizedBox(
+                                    height: 15,
+                                  ),
+                                  Text(
+                                    "why don't you upload some?",
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .headline6
+                                        .copyWith(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .onSurface,
+                                            fontWeight: FontWeight.w300),
+                                  ),
+                                ],
+                              ),
+                            )
                           : ValueListenableBuilder(
-                              valueListenable: model.userVotesBySub,
-                              builder: (BuildContext context, dynamic value,
+                              valueListenable: model.notesTiles,
+                              builder: (BuildContext context, List<Widget> value,
                                   Widget child) {
                                 return ListView(
                                   padding: EdgeInsets.only(bottom: 150),
-                                  children: model.notesTiles +
+                                  children: value +
                                       [
                                         SimilarSubjectTile(
                                           similarSubjects:
@@ -126,8 +127,11 @@ class _NotesViewState extends State<NotesView>{
     );
   }
 
-  _initState(NotesViewModel model, BuildContext context, var func) async {
-    model.fetchNotesAndVotes(widget.subjectName, context);
+  @override
+  bool get wantKeepAlive => true;
+
+  _initState(NotesViewModel model) async {
+    model.fetchNotesAndVotes(widget.subjectName);
     try {
       // FirebaseAdMob.instance.initialize(appId: model.admobService.ADMOB_APP_ID);
       // model.admobService.showNotesViewBanner();

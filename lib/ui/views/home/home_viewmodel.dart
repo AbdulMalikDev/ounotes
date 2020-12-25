@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:math';
 
 import 'package:FSOUNotes/app/locator.dart';
@@ -17,9 +18,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:open_appstore/open_appstore.dart';
+import 'package:rate_my_app/rate_my_app.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:wiredash/wiredash.dart';
+import 'package:FSOUNotes/services/funtional_services/app_info_service.dart';
+import 'package:FSOUNotes/models/user.dart';
+import 'package:package_info/package_info.dart';
+import 'package:FSOUNotes/services/funtional_services/authentication_service.dart';
 
 class HomeViewModel extends BaseViewModel {
   AnalyticsService _analyticsService = locator<AnalyticsService>();
@@ -30,9 +37,14 @@ class HomeViewModel extends BaseViewModel {
   ValueNotifier<List<Subject>> get userSubjects =>
       _subjectsService.userSubjects;
   ValueNotifier<List<Subject>> get allSubjects => _subjectsService.allSubjects;
-
+  AppInfoService _appInfoService = locator<AppInfoService>();
   SharedPreferencesService _sharedPreferencesService =
       locator<SharedPreferencesService>();
+  AuthenticationService _authenticationService =
+      locator<AuthenticationService>();
+
+  User user;
+  PackageInfo packageInfo;
 
   AdmobService get admobService => _admobService;
   showTelgramDialog(BuildContext context) async {
@@ -108,13 +120,102 @@ class HomeViewModel extends BaseViewModel {
     }
   }
 
+  RateMyApp rateMyApp = RateMyApp(
+    preferencesPrefix: 'rateMyApp_',
+    minDays: 0, // Show rate popup on first day of install,
+    minLaunches:
+        3, // Show rate popup after 3 launches of app after minDays is passed.
+    remindDays: 7,
+    remindLaunches: 10,
+    googlePlayIdentifier: 'com.notes.ounotes',
+    appStoreIdentifier: 'com.notes.ounotes',
+  );
+
+  showRateMyAppDialog(BuildContext context) {
+    rateMyApp.init().then((_) {
+      if (rateMyApp.shouldOpenDialog) {
+        rateMyApp.showStarRateDialog(
+          context,
+          title: 'Rate this app', // The dialog title.
+          message:
+              'You like this app ? Then take a little bit of your time to leave a rating :', // The dialog message.
+          // contentBuilder: (context, defaultContent) => content, // This one allows you to change the default dialog content.
+          actionsBuilder: (context, stars) {
+            // Triggered when the user updates the star rating.
+            return [
+              // Return a list of actions (that will be shown at the bottom of the dialog).
+              FlatButton(
+                child: Text('OK'),
+                onPressed: () async {
+                  print('Thanks for the ' +
+                      (stars == null ? '0' : stars.round().toString()) +
+                      ' star(s) !');
+                  if (stars < 3) {
+                    // model.dispatchEmail();
+                    await getPackageInfo();
+                    Wiredash.of(context).setBuildProperties(
+                      buildNumber: packageInfo.version,
+                      buildVersion: packageInfo.buildNumber,
+                    );
+                    Wiredash.of(context).setUserProperties(
+                      userEmail: await getUserEmail(),
+                      userId: await getUserId(),
+                    );
+                    Wiredash.of(context).show();
+                  } else {
+                    OpenAppstore.launch(
+                        androidAppId: 'com.notes.ounotes',
+                        iOSAppId: 'com.notes.ounotes');
+                  }
+                  // This allows to mimic the behavior of the default "Rate" button. See "Advanced > Broadcasting events" for more information :
+                  await rateMyApp
+                      .callEvent(RateMyAppEventType.rateButtonPressed);
+                  Navigator.pop<RateMyAppDialogButton>(
+                      context, RateMyAppDialogButton.rate);
+                },
+              ),
+            ];
+          },
+          ignoreNativeDialog: Platform
+              .isAndroid, // Set to false if you want to show the Apple's native app rating dialog on iOS or Google's native app rating dialog (depends on the current Platform).
+          dialogStyle: DialogStyle(
+            // Custom dialog styles.
+            titleAlign: TextAlign.center,
+            messageAlign: TextAlign.center,
+            messagePadding: EdgeInsets.only(bottom: 20),
+          ),
+          starRatingOptions:
+              StarRatingOptions(), // Custom star bar rating options.
+          onDismissed: () => rateMyApp.callEvent(RateMyAppEventType
+              .laterButtonPressed), // Called when the user dismissed the dialog (either by taping outside or by pressing the "back" button).
+        );
+      }
+    });
+  }
+
+  Future<String> getUserEmail() async =>
+      await _getUser().then((user) => user.email);
+
+  Future<String> getUserId() async => await _getUser().then((user) => user.id);
+
+  Future<User> _getUser() async {
+    if (user == null) user = await _authenticationService.getUser();
+    return user;
+  }
+
+  getPackageInfo() async {
+    if (packageInfo == null) {
+      packageInfo = await _appInfoService.getPackageInfo();
+    }
+  }
+
   showIntroDialog(BuildContext context) async {
     if (_subjectsService.userSubjects.value.length == 0) {
       SchedulerBinding.instance.addPostFrameCallback((Duration duration) {
         //TODO DevChecklist - Dev feature to test intro, do not forget to remove
-        // FeatureDiscovery.clearPreferences(context, <String>{ 
-        //   OnboardingService.floating_action_button_to_add_subjects, 
-        //   OnboardingService.drawer_hamburger_icon_to_access_other_features, 
+        // FeatureDiscovery.clearPreferences(context, <String>{
+        //   OnboardingService.floating_action_button_to_add_subjects,
+        //   OnboardingService.drawer_hamburger_icon_to_access_other_features,
         // });
         FeatureDiscovery.discoverFeatures(
           context,
@@ -168,33 +269,39 @@ class HomeViewModel extends BaseViewModel {
     return notes;
   }
 
-  void updateDialog(bool shouldShowUpdateDialog,Map<String,dynamic> versionDetails) {
+  void updateDialog(
+      bool shouldShowUpdateDialog, Map<String, dynamic> versionDetails) {
     SchedulerBinding.instance.addPostFrameCallback((timeStamp) async {
-        if (shouldShowUpdateDialog) {
-          String updatedVersion = versionDetails["updatedVersion"];
-          String currentVersion = versionDetails["currentVersion"];
-          String warning = "If you don't see the update option, please wait a day or two for the update to roll-out";
-          //To show this warning only sometimes, using a random bool
-          Random random = new Random();
-          bool shouldShowWarning = random.nextBool();
-          SheetResponse response = await _bottomSheetService.showCustomSheet(
-            variant: BottomSheetType.confirm,
-            title: "Update App? ✨",
-            description:
-                "A new version of OU Notes is available. Update the app to avoid crashes and access new features !!",
-            mainButtonTitle: 'UPDATE',
-            secondaryButtonTitle: 'NOT NOW',
-            barrierDismissible: false,
-            customData: [updatedVersion,currentVersion,shouldShowWarning ? warning : ""],
-          );
-          //BottomSheet closed by tapping elsewhere on the screen
-          if(response == null)return;
-          //Confirm action
-          if (response.confirmed) {
-            OpenAppstore.launch(
-                androidAppId: 'com.notes.ounotes', iOSAppId: 'com.notes.ounotes');
-          }
+      if (shouldShowUpdateDialog) {
+        String updatedVersion = versionDetails["updatedVersion"];
+        String currentVersion = versionDetails["currentVersion"];
+        String warning =
+            "If you don't see the update option, please wait a day or two for the update to roll-out";
+        //To show this warning only sometimes, using a random bool
+        Random random = new Random();
+        bool shouldShowWarning = random.nextBool();
+        SheetResponse response = await _bottomSheetService.showCustomSheet(
+          variant: BottomSheetType.confirm,
+          title: "Update App? ✨",
+          description:
+              "A new version of OU Notes is available. Update the app to avoid crashes and access new features !!",
+          mainButtonTitle: 'UPDATE',
+          secondaryButtonTitle: 'NOT NOW',
+          barrierDismissible: false,
+          customData: [
+            updatedVersion,
+            currentVersion,
+            shouldShowWarning ? warning : ""
+          ],
+        );
+        //BottomSheet closed by tapping elsewhere on the screen
+        if (response == null) return;
+        //Confirm action
+        if (response.confirmed) {
+          OpenAppstore.launch(
+              androidAppId: 'com.notes.ounotes', iOSAppId: 'com.notes.ounotes');
         }
+      }
     });
   }
 }
