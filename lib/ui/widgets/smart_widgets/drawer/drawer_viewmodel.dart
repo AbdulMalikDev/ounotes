@@ -1,5 +1,4 @@
-import 'dart:math';
-
+import 'dart:io';
 import 'package:FSOUNotes/AppTheme/AppStateNotifier.dart';
 import 'package:FSOUNotes/app/locator.dart';
 import 'package:FSOUNotes/app/logger.dart';
@@ -20,31 +19,112 @@ import 'package:package_info/package_info.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
+import 'package:wiredash/wiredash.dart';
+import 'package:rate_my_app/rate_my_app.dart';
+import 'package:open_appstore/open_appstore.dart';
+
 Logger log = getLogger("DrawerViewModel");
+
 class DrawerViewModel extends BaseViewModel {
   NavigationService _navigationService = locator<NavigationService>();
   AppStateNotifier _appStateNotifier = locator<AppStateNotifier>();
   AnalyticsService _analyticsService = locator<AnalyticsService>();
-  SharedPreferencesService _sharedPreferencesService = locator<SharedPreferencesService>();
+  SharedPreferencesService _sharedPreferencesService =
+      locator<SharedPreferencesService>();
   AppInfoService _appInfoService = locator<AppInfoService>();
   AuthenticationService _authenticationService =
       locator<AuthenticationService>();
-  
+
   User user;
   PackageInfo packageInfo;
 
-  getPackageInfo()async{
-    if(packageInfo == null){packageInfo = await _appInfoService.getPackageInfo();}
+  getPackageInfo() async {
+    if (packageInfo == null) {
+      packageInfo = await _appInfoService.getPackageInfo();
+    }
   }
 
   bool get isAdmin => _authenticationService.user.isAdmin;
-
 
   dispatchEmail() async {
     await EmailService.emailFunc(
       subject: "OU Notes Feedback",
       body:
           "[if you are facing errors please attach Screen Shots or Screen Recordings]",
+    );
+  }
+
+  RateMyApp rateMyApp = RateMyApp(
+    preferencesPrefix: 'rateMyApp_',
+    // minDays: 0, // Show rate popup on first day of install,
+    // minLaunches:
+    //     3, // Show rate popup after 3 launches of app after minDays is passed.
+    // remindDays: 7,
+    // remindLaunches: 10,
+    googlePlayIdentifier: 'com.notes.ounotes',
+    appStoreIdentifier: 'com.notes.ounotes',
+  );
+
+  showRateMyAppDialog(BuildContext context) {
+    rateMyApp.init().then(
+      (_) {
+        rateMyApp.showStarRateDialog(
+          context,
+          title: 'Rate this app', // The dialog title.
+          message:
+              'You like this app ? Then take a little bit of your time to leave a rating :', // The dialog message.
+          // contentBuilder: (context, defaultContent) => content, // This one allows you to change the default dialog content.
+          actionsBuilder: (context, stars) {
+            // Triggered when the user updates the star rating.
+            return [
+              // Return a list of actions (that will be shown at the bottom of the dialog).
+              FlatButton(
+                child: Text('OK'),
+                onPressed: () async {
+                  print('Thanks for the ' +
+                      (stars == null ? '0' : stars.round().toString()) +
+                      ' star(s) !');
+                  Navigator.pop<RateMyAppDialogButton>(
+                      context, RateMyAppDialogButton.rate);
+                  if (stars < 4) {
+                    // model.dispatchEmail();
+                    await getPackageInfo();
+                    Wiredash.of(context).setBuildProperties(
+                      buildNumber: packageInfo.version,
+                      buildVersion: packageInfo.buildNumber,
+                    );
+                    Wiredash.of(context).setUserProperties(
+                      userEmail: await getUserEmail(),
+                      userId: await getUserId(),
+                    );
+                    Wiredash.of(context).show();
+                  } else {
+                    OpenAppstore.launch(
+                        androidAppId: 'com.notes.ounotes',
+                        iOSAppId: 'com.notes.ounotes');
+                  }
+                  // This allows to mimic the behavior of the default "Rate" button. See "Advanced > Broadcasting events" for more information :
+                  // await rateMyApp
+                  //     .callEvent(RateMyAppEventType.rateButtonPressed);
+                },
+              ),
+            ];
+          },
+          ignoreNativeDialog: Platform
+              .isAndroid, // Set to false if you want to show the Apple's native app rating dialog on iOS or Google's native app rating dialog (depends on the current Platform).
+          dialogStyle: DialogStyle(
+            // Custom dialog styles.
+            titleAlign: TextAlign.center,
+            messageAlign: TextAlign.center,
+            messagePadding: EdgeInsets.only(bottom: 20),
+          ),
+          starRatingOptions:
+              StarRatingOptions(), // Custom star bar rating options.
+          onDismissed: (){
+            
+          } // Called when the user dismissed the dialog (either by taping outside or by pressing the "back" button).
+        );
+      },
     );
   }
 
@@ -95,29 +175,31 @@ class DrawerViewModel extends BaseViewModel {
     _analyticsService.logEvent(name: "TELEGRAM_VISIT");
   }
 
-  Future<String> getUserEmail() async => await _getUser().then((user) => user.email);
-  
+  Future<String> getUserEmail() async =>
+      await _getUser().then((user) => user.email);
 
   Future<String> getUserId() async => await _getUser().then((user) => user.id);
 
-
   Future<User> _getUser() async {
-    if (user == null)user = await _authenticationService.getUser();
+    if (user == null) user = await _authenticationService.getUser();
     return user;
   }
 
-  showIntro(Intro intro,BuildContext context) async {
-
-    if(intro==null){log.e("intro is null");return;}
+  showIntro(Intro intro, BuildContext context) async {
+    if (intro == null) {
+      log.e("intro is null");
+      return;
+    }
 
     SchedulerBinding.instance.addPostFrameCallback((Duration duration) async {
-      bool shouldIntroBeShown = await _sharedPreferencesService.shouldIShowDrawerIntro();
-      if (shouldIntroBeShown){
-        if(Scaffold.of(context).isDrawerOpen){
-          Future.delayed(Duration(milliseconds: 240),()=>intro?.start(context));
+      bool shouldIntroBeShown =
+          await _sharedPreferencesService.shouldIShowDrawerIntro();
+      if (shouldIntroBeShown) {
+        if (Scaffold.of(context).isDrawerOpen) {
+          Future.delayed(
+              Duration(milliseconds: 240), () => intro?.start(context));
         }
       }
     });
-    
   }
 }

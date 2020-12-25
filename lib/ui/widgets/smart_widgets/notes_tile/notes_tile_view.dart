@@ -18,23 +18,19 @@ import 'package:FSOUNotes/AppTheme/AppStateNotifier.dart';
 class NotesTileView extends StatelessWidget {
   final Note note;
   final List<Vote> votes;
-  final int index;
-  final BuildContext ctx;
   final List<Download> downloadedNotes;
   final bool notification;
-  final Function updateNotesList;
-  final bool isNotePinned;
+  final bool isPinned;
+  final Function refresh;
 
   const NotesTileView({
     Key key,
     this.note,
     this.votes,
-    this.index,
-    this.ctx,
     this.downloadedNotes,
-    this.notification,
-    this.updateNotesList,
-    this.isNotePinned = false,
+    this.notification = false,
+    this.isPinned = false,
+    this.refresh,
   }) : super(key: key);
 
   @override
@@ -54,11 +50,13 @@ class NotesTileView extends StatelessWidget {
     var theme = Theme.of(context);
 
     return ViewModelBuilder<NotesTileViewModel>.reactive(
-        onModelReady: (model) => model.checkIfUserVotedAndDownloadedNote(
-            voteval: votevalue,
-            downloadedNotebySub: downloadedNotes,
-            note: note,
-            votesbySub: votes),
+        onModelReady: (model) {
+          model.checkIfUserVotedAndDownloadedNote(
+              voteval: votevalue,
+              downloadedNotebySub: downloadedNotes,
+              note: note,
+              votesbySub: votes);
+        },
         builder: (context, model, child) {
           return FractionallySizedBox(
             widthFactor: 0.99,
@@ -74,13 +72,17 @@ class NotesTileView extends StatelessWidget {
                             boxShadow: [],
                           )
                         : Constants.mdecoration.copyWith(
-                            color: Theme.of(context).colorScheme.background,
+                            color:
+                            isPinned
+                            ?Colors.tealAccent.shade400
+                            :Theme.of(context).colorScheme.background,
                           ),
                     child: notification
                         ? Shimmer.fromColors(
                             baseColor: Colors.teal,
                             highlightColor: Colors.white,
                             child: NotesColumnWidget(
+                              refresh: refresh,
                               title: title,
                               primary: primary,
                               theme: theme,
@@ -91,11 +93,11 @@ class NotesTileView extends StatelessWidget {
                               view: view,
                               size: size,
                               model: model,
-                              isNotePinned: isNotePinned,
-                              updateNotesList: updateNotesList,
+                              isPinned: isPinned,
                             ),
                           )
                         : NotesColumnWidget(
+                            refresh: refresh,
                             title: title,
                             primary: primary,
                             theme: theme,
@@ -106,8 +108,7 @@ class NotesTileView extends StatelessWidget {
                             view: view,
                             size: size,
                             model: model,
-                            isNotePinned: isNotePinned,
-                            updateNotesList: updateNotesList,
+                            isPinned: isPinned,
                           ),
                   ),
           );
@@ -129,8 +130,8 @@ class NotesColumnWidget extends StatelessWidget {
     @required this.view,
     @required this.size,
     @required this.model,
-    @required this.isNotePinned,
-    @required this.updateNotesList,
+    @required this.isPinned,
+    @required this.refresh,
   }) : super(key: key);
 
   final String title;
@@ -143,8 +144,8 @@ class NotesColumnWidget extends StatelessWidget {
   final int view;
   final String size;
   final NotesTileViewModel model;
-  final bool isNotePinned;
-  final Function updateNotesList;
+  final bool isPinned;
+  final Function refresh;
 
   @override
   Widget build(BuildContext context) {
@@ -204,10 +205,16 @@ class NotesColumnWidget extends StatelessWidget {
                                       fontSize: 18),
                                 ),
                               ),
-                              isNotePinned
-                                  ? IconButton(
-                                      icon: Icon(MdiIcons.pin),
-                                      onPressed: () {},
+                              model.isnotedownloaded
+                                  ? SizedBox(
+                                      width: 10,
+                                    )
+                                  : SizedBox(),
+                              model.isnotedownloaded
+                                  ? Icon(
+                                      Icons.done_all,
+                                      color: theme.iconTheme.color,
+                                      size: 18,
                                     )
                                   : SizedBox(),
                               // model.isnotedownloaded
@@ -236,37 +243,38 @@ class NotesColumnWidget extends StatelessWidget {
                         ),
                         Flexible(
                           child: PopupMenuButton(
-                              padding: EdgeInsets.zero,
-                              onSelected: (Menu selectedValue) {
-                                if (selectedValue == Menu.Report) {
-                                  model.reportNote(
-                                    doc: note,
-                                    id: note.id,
-                                    subjectName: note.subjectName,
-                                    title: note.title,
-                                    type: Constants.notes,
-                                  );
-                                } else {
-                                  isNotePinned
-                                      ? updateNotesList(
-                                          note.subjectName, note.id, false)
-                                      : updateNotesList(
-                                          note.subjectName, note.id, true);
+                            padding: EdgeInsets.zero,
+                            onSelected: (Menu selectedValue) {
+                              if (selectedValue == Menu.Report) {
+                                model.reportNote(
+                                  doc: note,
+                                  id: note.id,
+                                  subjectName: note.subjectName,
+                                  title: note.title,
+                                  type: Constants.notes,
+                                );
+                              } else if (selectedValue == Menu.Pin) {
+                                if (isPinned){
+                                  model.unpinNotes(note,refresh);
+                                }else{
+                                  model.pinNotes(note,refresh);
                                 }
-                              },
-                              icon: Icon(Icons.more_vert),
-                              itemBuilder: (_) => [
-                                    PopupMenuItem(
-                                      child: isNotePinned
-                                          ? Text("UnPin Note")
-                                          : Text('Pin Note'),
-                                      value: Menu.Pin,
-                                    ),
-                                    PopupMenuItem(
-                                      child: Text('Report'),
-                                      value: Menu.Report,
-                                    ),
-                                  ]),
+                              }
+                            },
+                            icon: Icon(Icons.more_vert),
+                            itemBuilder: (_) => [
+                              PopupMenuItem(
+                                child: Text('Report'),
+                                value: Menu.Report,
+                              ),
+                              PopupMenuItem(
+                                child: isPinned
+                                    ? Text('Un-Pin Notes')
+                                    : Text('Pin Notes'),
+                                value: Menu.Pin,
+                              ),
+                            ],
+                          ),
                         ),
                       ],
                     ),

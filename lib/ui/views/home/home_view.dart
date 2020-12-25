@@ -10,12 +10,14 @@ import 'package:FSOUNotes/ui/widgets/smart_widgets/user_subject_list/user_subjec
 import 'package:feature_discovery/feature_discovery.dart';
 import 'package:flutter/material.dart';
 import 'package:pimp_my_button/pimp_my_button.dart';
+import 'package:rate_my_app/rate_my_app.dart';
 import 'package:stacked/stacked.dart';
 
 class HomeView extends StatelessWidget {
   final bool shouldShowUpdateDialog;
-  final Map<String,dynamic> versionDetails;
-  const HomeView({Key key,this.shouldShowUpdateDialog,this.versionDetails}) : super(key: key);
+  final Map<String, dynamic> versionDetails;
+  const HomeView({Key key, this.shouldShowUpdateDialog, this.versionDetails})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -23,99 +25,107 @@ class HomeView extends StatelessWidget {
     return ViewModelBuilder<HomeViewModel>.reactive(
       onModelReady: (model) async {
         // await model.admobService.hideNotesViewBanner();
-        model.updateDialog(shouldShowUpdateDialog,versionDetails);
+        model.showRateMyAppDialog(context);
+        model.updateDialog(shouldShowUpdateDialog, versionDetails);
         model.showIntroDialog(context);
       },
       builder: (context, model, child) => WillPopScope(
         onWillPop: () => Helper.showWillPopDialog(context: context),
-        child: Scaffold(
-          drawer: DrawerView(),
-          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-          appBar: AppBar(
-            leading: Builder(builder: (BuildContext context) {
-              return DescribedFeatureOverlay(
-                featureId:
-                    OnboardingService.drawer_hamburger_icon_to_access_other_features, // Unique id that identifies this overlay.
+        child: RateMyAppBuilder(
+          builder: (context) => Scaffold(
+            drawer: DrawerView(),
+            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+            appBar: AppBar(
+              leading: Builder(builder: (BuildContext context) {
+                return DescribedFeatureOverlay(
+                  featureId: OnboardingService
+                      .drawer_hamburger_icon_to_access_other_features, // Unique id that identifies this overlay.
+                  tapTarget: const Icon(Icons
+                      .menu), // The widget that will be displayed as the tap target.
+                  title: Text('Drawer'),
+                  description: Text('Find cool new features in the drawer'),
+                  backgroundColor: Theme.of(context).primaryColor,
+                  targetColor: Colors.white,
+                  textColor: Colors.white,
+                  onComplete: () {
+                    Scaffold.of(context).openDrawer();
+                    return Future.value(true);
+                  },
+                  child: IconButton(
+                    icon: Icon(Icons.menu),
+                    onPressed: () => Scaffold.of(context).openDrawer(),
+                  ),
+                );
+              }),
+              iconTheme: IconThemeData(
+                color: Colors.white, //change your color here
+              ),
+              title: Text(
+                'My Subjects',
+                style: theme.appBarTheme.textTheme.headline6,
+              ),
+              backgroundColor: theme.appBarTheme.color,
+              actions: <Widget>[
+                IconButton(
+                  icon: Icon(
+                    Icons.search,
+                    color: Colors.white,
+                  ),
+                  onPressed: () {
+                    showSearch(
+                        context: context,
+                        delegate: SearchView(path: Path.Appbar));
+                  },
+                ),
+              ],
+            ),
+            body: ValueListenableBuilder(
+              valueListenable: model.userSubjects,
+              builder: (context, userSubjects, child) {
+                return model.userSubjects.value.length == 0
+                    ? NoSubjectsOverlay()
+                    : UserSubjectListView();
+              },
+            ),
+            floatingActionButton: Padding(
+              padding: const EdgeInsets.only(bottom: 20.0),
+              child: DescribedFeatureOverlay(
+                featureId: OnboardingService
+                    .floating_action_button_to_add_subjects, // Unique id that identifies this overlay.
                 tapTarget: const Icon(Icons
-                    .menu), // The widget that will be displayed as the tap target.
-                title: Text('Drawer'),
-                description:
-                    Text('Find cool new features in the drawer'),
+                    .add), // The widget that will be displayed as the tap target.
+                title: Text('Add Your Subjects !'),
+                description: Text(
+                    'Please use \"+\" button to add subjects and swipe left or right to delete them'),
                 backgroundColor: Theme.of(context).primaryColor,
-                targetColor: Colors.white,
+                targetColor: Theme.of(context).accentColor,
                 textColor: Colors.white,
-                onComplete: () {Scaffold.of(context).openDrawer();return Future.value(true);},
-                child: IconButton(
-                  icon: Icon(Icons.menu),
-                  onPressed: () => Scaffold.of(context).openDrawer(),
+                child: PimpedButton(
+                  particle: DemoParticle(),
+                  pimpedWidgetBuilder: (context, controller) {
+                    return FloatingActionButton(
+                      onPressed: () async {
+                        //
+                        controller.forward(from: 0.4);
+                        await Future.delayed(Duration(milliseconds: 290));
+                        showModalBottomSheet(
+                            context: context,
+                            isScrollControlled: true,
+                            backgroundColor: Colors.transparent,
+                            builder: (BuildContext context) =>
+                                SubjectsDialogView());
+                      },
+                      child: const Icon(Icons.add),
+                      backgroundColor: Theme.of(context).accentColor,
+                    );
+                  },
                 ),
-              );
-            }),
-            iconTheme: IconThemeData(
-              color: Colors.white, //change your color here
-            ),
-            title: Text(
-              'My Subjects',
-              style: theme.appBarTheme.textTheme.headline6,
-            ),
-            backgroundColor: theme.appBarTheme.color,
-            actions: <Widget>[
-              IconButton(
-                icon: Icon(
-                  Icons.search,
-                  color: Colors.white,
-                ),
-                onPressed: () {
-                  showSearch(
-                      context: context,
-                      delegate: SearchView(path: Path.Appbar));
-                },
-              ),
-            ],
-          ),
-          body: ValueListenableBuilder(
-            valueListenable: model.userSubjects,
-            builder: (context, userSubjects, child) {
-              return model.userSubjects.value.length == 0
-                  ? NoSubjectsOverlay()
-                  : UserSubjectListView();
-            },
-          ),
-          floatingActionButton: Padding(
-            padding: const EdgeInsets.only(bottom: 20.0),
-            child: DescribedFeatureOverlay(
-              featureId: OnboardingService
-                  .floating_action_button_to_add_subjects, // Unique id that identifies this overlay.
-              tapTarget: const Icon(Icons
-                  .add), // The widget that will be displayed as the tap target.
-              title: Text('Add Your Subjects !'),
-              description: Text(
-                  'Please use \"+\" button to add subjects and swipe left or right to delete them'),
-              backgroundColor: Theme.of(context).primaryColor,
-              targetColor: Theme.of(context).accentColor,
-              textColor: Colors.white,
-              child: PimpedButton(
-                particle: DemoParticle(),
-                pimpedWidgetBuilder: (context, controller) {
-                  return FloatingActionButton(
-                    onPressed: () async {
-                      //
-                      controller.forward(from: 0.4);
-                      await Future.delayed(Duration(milliseconds: 290));
-                      showModalBottomSheet(
-                          context: context,
-                          isScrollControlled: true,
-                          backgroundColor: Colors.transparent,
-                          builder: (BuildContext context) =>
-                              SubjectsDialogView());
-                    },
-                    child: const Icon(Icons.add),
-                    backgroundColor: Theme.of(context).accentColor,
-                  );
-                },
               ),
             ),
           ),
+          onInitialized: (context, rateMyApp) {
+            
+          },
         ),
       ),
       viewModelBuilder: () => HomeViewModel(),
