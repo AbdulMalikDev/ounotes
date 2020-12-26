@@ -190,15 +190,15 @@ class CourseInfo {
 
     //TODO CHANGE ID'S OF NEWLY ADDED SUBJECTS
     //ADDED
-    Subject(77, "THERMAL ENGINEERING", [4], ['CIVIL'],branchToSem: {'AE':['3'],},),
+    Subject(367, "THERMAL ENGINEERING", [4], ['CIVIL'],branchToSem: {'AE':['3'],},),
     //ADDED
-    Subject(63, "AUTOMOTIVE CHASSIS COMPONENTS", [4], ['MECH'],branchToSem: {'AE':['4'],}, ),
+    Subject(368, "AUTOMOTIVE CHASSIS COMPONENTS", [4], ['MECH'],branchToSem: {'AE':['4'],}, ),
     //ADDED 
-    Subject(31, "OVERVIEW OF CIVIL ENGINEERING", [3], ['MECH'],branchToSem: {'CIVIL':['3'],}, ),
+    Subject(369, "OVERVIEW OF CIVIL ENGINEERING", [3], ['MECH'],branchToSem: {'CIVIL':['3'],}, ),
     //ADDED
-    Subject(81, "TRANSDUCERS ENGINEERING", [4], ['EEE'],branchToSem: {'EIE':['4']},),
+    Subject(370, "TRANSDUCERS ENGINEERING", [4], ['EEE'],branchToSem: {'EIE':['4']},),
     //ADDED
-    Subject(71, "ENGINEERING ELECTRONICS", [4], ['IT'],branchToSem: {'MECH':['3']},),
+    Subject(371, "ENGINEERING ELECTRONICS", [4], ['IT'],branchToSem: {'MECH':['3']},),
 
     
     //Deleted 2nd year subjects
