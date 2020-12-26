@@ -246,7 +246,7 @@ class CourseInfo {
     Subject(210, "Fluid Mechanics and Hydraulic Machines", [], [],branchToSem: {"MECH":["5"]}),
     Subject(212, "Production Planning and Control", [], [],branchToSem: {"MECH":["5"]},type: SubjectType.Elective),
     Subject(213, "Powder Metallurgy", [], [],branchToSem: {"MECH":["5"]},type: SubjectType.Elective),
-    Subject(214, "Robotic Engineering", [], [],branchToSem: {"MECH":["5"]},type: SubjectType.Elective),
+    Subject(214, "Robotic Engineering", [], [],branchToSem: {"MECH":["5","8"],"PE":['8']},type: SubjectType.Elective),
     Subject(215, "Theory of Elasticity", [], [],branchToSem: {"MECH":["5"]},type: SubjectType.Elective),
     Subject(215, "Dynamics of Machines", [], [],branchToSem: {"MECH":["5"]}),
     //AE
@@ -264,16 +264,18 @@ class CourseInfo {
     Subject(248, "Hybrid Electric Vehicles", [], [],branchToSem: {"EEE":["5"]}),
     //CSE
     Subject(257, "Advanced Computer Architecture", [], [],branchToSem: {"CSE":["5"],"IT":["6"],},type: SubjectType.Elective),
-    Subject(258, "Image Processing", [], [],branchToSem: {"CSE":["5"]},type: SubjectType.Elective),
+    Subject(258, "Image Processing", [], [],branchToSem: {"CSE":["5","8"],},type: SubjectType.Elective),
     
-    Subject(259, "Embedded Systems", [], [],branchToSem: {"CSE":["5"],"IT":["6"],'ECE':['7']},type: SubjectType.Elective),
+    Subject(259, "Embedded Systems", [], [],branchToSem: {"CSE":["5","8"],"IT":["6"],'ECE':['7']},type: SubjectType.Elective),
     Subject(260, "Graph Theory", [], [],branchToSem: {"CSE":["5"]},type: SubjectType.Elective),
     Subject(261, "Data Analytics", [], [],branchToSem: {"CSE":["5"]},type: SubjectType.Elective),
     Subject(262, "Block Chain Technologies", [], [],branchToSem: {"CSE":["5"]},type: SubjectType.Elective),
-    Subject(263, "Information Retrieval Systems", [], [],branchToSem: {"CSE":["5"]},type: SubjectType.Elective),
+    Subject(263, "Information Retrieval Systems", [], [],branchToSem: {"CSE":["5","8"],"IT":["8"]},type: SubjectType.Elective),
     Subject(264, "Soft Computing", [], [],branchToSem: {"CSE":["5"]},type: SubjectType.Elective),
     //IT
     Subject(265, "Multimedia Technologies", [], [],branchToSem: {"IT":["5"]},type: SubjectType.Elective),
+    Subject(265, "Software Quality and Testing", [], [],branchToSem: {"CSE":["8"]},type: SubjectType.Elective),
+    Subject(265, "Web Services and Architecture", [], [],branchToSem: {"CSE":["8"],"IT":["8"],},type: SubjectType.Elective),
 
 
 
@@ -290,7 +292,7 @@ class CourseInfo {
     Subject(192, "Sustainable Construction Methods", [], [],branchToSem: {"CIVIL":["6"]},type: SubjectType.Elective),
     Subject(193, "Remote Sensing & Geographical Information", [], [],branchToSem: {"CIVIL":["6"]},type: SubjectType.Elective),
     Subject(194, "Road Safety Engineering", [], [],branchToSem: {"CIVIL":["6",'7'],'CSE':['7'],'IT':['7'],'EEE':['7'],'MECH':['7'],'EIE':['7'],'PE':['7']},type: SubjectType.Elective),
-    Subject(195, "Principles of Green Building Practices", [], [],branchToSem: {"CIVIL":["6"]},type: SubjectType.Elective),
+    Subject(195, "Principles of Green Building Practices", [], [],branchToSem: {"CIVIL":["6","8"]},type: SubjectType.Elective),
     Subject(196, "Disaster Mitigation & Management", [], [],branchToSem: {"CIVIL":["6"]},type: SubjectType.Elective),
     Subject(197, "Open Channel Flow & River Engineering", [], [],branchToSem: {"CIVIL":["6"]},type: SubjectType.Elective),
     //EIE
@@ -310,10 +312,10 @@ class CourseInfo {
     Subject(222, "Optical Communications", [], [],branchToSem: {"ECE":["6"]},type: SubjectType.Elective),
     Subject(223, "IOT Sensors", [], [],branchToSem: {"ECE":["6"]},type: SubjectType.Elective),
     //MECH
-    Subject(224, "Design of Solar Energy Systems", [], [],branchToSem: {"MECH":["6"]},type: SubjectType.Elective),
+    Subject(224, "Design of Solar Energy Systems", [], [],branchToSem: {"MECH":["6",'8'],'PE':['8']},type: SubjectType.Elective),
     Subject(225, "Refrigeration and Air Conditioning", [], [],branchToSem: {"MECH":["6"]},type: SubjectType.Elective),
     Subject(226, "Control System Theory", [], [],branchToSem: {"MECH":["6"]},type: SubjectType.Elective),
-    Subject(227, "Additive Manufacturing Technologies", [], [],branchToSem: {"MECH":["6"],"PE":["6"]},type: SubjectType.Elective),
+    Subject(227, "Additive Manufacturing Technologies", [], [],branchToSem: {"MECH":["6",'8'],"PE":["6"]},type: SubjectType.Elective),
     
     Subject(228, "Mechatronics Systems", [], [],branchToSem: {"MECH":["6",'7'],'CSE':['7'],'IT':['7'],'EEE':['7'],'CIVIL':['7'],'EIE':['7'],'PE':['7']},type: SubjectType.Elective),
     Subject(229, "Fatigue, Creep and Fracture", [], [],branchToSem: {"MECH":["6"]},type: SubjectType.Elective),
@@ -333,24 +335,24 @@ class CourseInfo {
     Subject(253, "Material Handling and Earth Moving Vehicles", [], [],branchToSem: {"AE":["6"]},type: SubjectType.Elective),
     Subject(254, "Electric and Hybrid Vehicles", [], [],branchToSem: {"AE":["6"]},type: SubjectType.Elective),
     //EEE
-    Subject(255, "Utilization of Electrical Energy", [], [],branchToSem: {"EEE":["6"]}),
+    Subject(255, "Utilization of Electrical Energy", [], [],branchToSem: {"EEE":["6","8"]}),
     //CSE
     Subject(256, "Compiler Design", [], [],branchToSem: {"CSE":["6"]}),
     Subject(267, "Advanced Operating Systems", [], [],branchToSem: {"CSE":["6"]},type: SubjectType.Elective),
-    Subject(268, "Cloud Computing", [], [],branchToSem: {"CSE":["6"]},type: SubjectType.Elective),
+    Subject(268, "Cloud Computing", [], [],branchToSem: {"CSE":["6","8"]},type: SubjectType.Elective),
     Subject(269, "Speech and Natural Language Processing", [], [],branchToSem: {"CSE":["6"]},type: SubjectType.Elective),
-    Subject(270, "Machine Learning", [], [],branchToSem: {"CSE":["6"],"IT":["6"],},type: SubjectType.Elective),
-    Subject(271, "Human Computer Interaction", [], [],branchToSem: {"CSE":["6"]},type: SubjectType.Elective),
+    Subject(270, "Machine Learning", [], [],branchToSem: {"CSE":["6","8"],"IT":["6","8"],},type: SubjectType.Elective),
+    Subject(271, "Human Computer Interaction", [], [],branchToSem: {"CSE":["6","8"],"IT":["8"]},type: SubjectType.Elective),
     Subject(272, "Digital Forensics", [], [],branchToSem: {"CSE":["6"]},type: SubjectType.Elective),
-    Subject(273, "Internet of Things", [], [],branchToSem: {"CSE":["6"]}),
+    Subject(273, "Internet of Things", [], [],branchToSem: {"CSE":["6"],"ECE":["8"]}),
     Subject(274, "Soft Skills & Interpersonal Skills", [], [],branchToSem: {"CSE":["6"]},type: SubjectType.Elective),
     Subject(275, "Human Resource Development and Organizational Behaviour", [], [],branchToSem: {"CSE":["6"]},type: SubjectType.Elective),
     Subject(276, "Cyber Law and Ethics", [], [],branchToSem: {"CSE":["6"]},type: SubjectType.Elective),
     //IT
-    Subject(277, "Computational Intelligence", [], [],branchToSem: {"IT":["6"]},type: SubjectType.Elective),
-    Subject(278, "Adhoc and Sensor Networks", [], [],branchToSem: {"IT":["6"]},type: SubjectType.Elective),
-    Subject(279, "Natural Language Processing", [], [],branchToSem: {"IT":["6"]},type: SubjectType.Elective),
-    Subject(280, "Information Storage and Management", [], [],branchToSem: {"IT":["6"]},type: SubjectType.Elective),
+    Subject(277, "Computational Intelligence", [], [],branchToSem: {"IT":["6",'8'],"CSE":["8"],},type: SubjectType.Elective),
+    Subject(278, "Adhoc and Sensor Networks", [], [],branchToSem: {"IT":["6",'8']},type: SubjectType.Elective),
+    Subject(279, "Natural Language Processing", [], [],branchToSem: {"IT":["6","8"],"CSE":["8"]},type: SubjectType.Elective),
+    Subject(280, "Information Storage and Management", [], [],branchToSem: {"IT":["6","8"]},type: SubjectType.Elective),
     Subject(281, "Geo Spatial Techniques", [], [],branchToSem: {"IT":["6"]},type: SubjectType.Elective),
     Subject(282, "Principles of Embedded Systems", [], [],branchToSem: {"IT":["6"]},type: SubjectType.Elective),
     Subject(283, "Digital System Design using HDL Verilog", [], [],branchToSem: {"IT":["6"]},type: SubjectType.Elective),
@@ -360,14 +362,14 @@ class CourseInfo {
     Subject(287, "Automotive Safety & Ergonomics", [], [],branchToSem: {"IT":["6"]},type: SubjectType.Elective),
     Subject(288, "Object Oriented Analysis and Design", [], [],branchToSem: {"IT":["6"]},type: SubjectType.Elective),
     Subject(289, "Multimedia", [], [],branchToSem: {"IT":["6"]},type: SubjectType.Elective),
-    Subject(290, "Data Science Using R Programming", [], [],branchToSem: {"IT":["6",'7'],"CSE":['7'],'ECE':['7'],'EEE':['7'],'CIVIL':['7'],'MECH':['7'],'EIE':['7'],'PE':['7']},type: SubjectType.Elective),
+    Subject(290, "Data Science Using R Programming", [], [],branchToSem: {"IT":["6",'7','8'],"CSE":['7','8'],'ECE':['7'],'EEE':['7'],'CIVIL':['7'],'MECH':['7'],'EIE':['7'],'PE':['7']},type: SubjectType.Elective),
 
 
     //5TH SEM
 
     //COMMON SUBJECTS
     //* VERIFIED FOR ECE 5
-    Subject(82, "GENDER SENSITIZATION", [5], ['CSE', 'EEE', 'IT', 'MECH'],branchToSem: {"ECE":["5"],"IT":["5"],}),
+    Subject(82, "GENDER SENSITIZATION", [5], ['CSE', 'EEE', 'IT', 'MECH'],branchToSem: {"ECE":["5"],"IT":["5"],"CIVIL":["8"]}),
     //* VERIFIED
     Subject(83, "OPERATING SYSTEMS", [5], ['CSE', 'IT'],branchToSem: {"CSE":["5"],"IT":["5"]}),
     //MECH
@@ -499,30 +501,108 @@ class CourseInfo {
 
     //!NEW ADDED SUBJECTS
     //TODO ADD NEW ID'S TO THESE SUBJECTS
-    //CSE,IT,EEE,CIVIL,MECH
-    Subject(145, "Green Building Technologies", [7], ['MECH'],branchToSem: {'CSE':['7'],'IT':['7'],'ECE':['7'],'EEE':['7'],'CIVIL':['7'],'MECH':['7'],'EIE':['7'],'PE':['7']},type: SubjectType.Elective),
-    Subject(145, "Fundamentals of IoT", [7], ['MECH'],branchToSem: {'CSE':['7'],'IT':['7'],'ECE':['7'],'EEE':['7'],'CIVIL':['7'],'MECH':['7'],'EIE':['7'],'PE':['7']},type: SubjectType.Elective),
-    Subject(145, "Non-Conventional Energy Sources", [7], ['MECH'],branchToSem: {'CSE':['7'],'IT':['7'],'ECE':['7'],'EEE':['7'],'CIVIL':['7'],'MECH':['7'],'EIE':['7'],'PE':['7']},type: SubjectType.Elective),
-    Subject(145, "Entrepreneurship", [7], ['MECH'],branchToSem: {'CSE':['7'],'IT':['7'],'ECE':['7'],'EEE':['7'],'CIVIL':['7'],'MECH':['7'],'EIE':['7'],'PE':['7']},type: SubjectType.Elective),
-    Subject(145, "Principles of Electronic Communications", [7], ['MECH'],branchToSem: {'CSE':['7'],'IT':['7'],'EEE':['7'],'CIVIL':['7'],'MECH':['7'],'EIE':['7'],'PE':['7']},type: SubjectType.Elective),
-    Subject(145, "Illumination and Electric Traction systems", [7], ['MECH'],branchToSem: {'CSE':['7'],'IT':['7'],'EEE':['7'],'CIVIL':['7'],'MECH':['7'],'EIE':['7'],'PE':['7']},type: SubjectType.Elective),
+    //7th SEM
+    Subject(291, "Green Building Technologies", [7], ['MECH'],branchToSem: {'CSE':['7'],'IT':['7'],'ECE':['7'],'EEE':['7'],'CIVIL':['7'],'MECH':['7'],'EIE':['7'],'PE':['7']},type: SubjectType.Elective),
+    Subject(292, "Fundamentals of IoT", [7], ['MECH'],branchToSem: {'CSE':['7'],'IT':['7'],'ECE':['7'],'EEE':['7'],'CIVIL':['7'],'MECH':['7'],'EIE':['7'],'PE':['7']},type: SubjectType.Elective),
+    Subject(293, "Non-Conventional Energy Sources", [7], ['MECH'],branchToSem: {'CSE':['7'],'IT':['7'],'ECE':['7'],'EEE':['7'],'CIVIL':['7'],'MECH':['7'],'EIE':['7'],'PE':['7']},type: SubjectType.Elective),
+    Subject(294, "Entrepreneurship", [7], ['MECH'],branchToSem: {'CSE':['7'],'IT':['7'],'ECE':['7'],'EEE':['7'],'CIVIL':['7'],'MECH':['7'],'EIE':['7'],'PE':['7']},type: SubjectType.Elective),
+    Subject(295, "Principles of Electronic Communications", [7], ['MECH'],branchToSem: {'CSE':['7'],'IT':['7'],'EEE':['7'],'CIVIL':['7'],'MECH':['7'],'EIE':['7'],'PE':['7']},type: SubjectType.Elective),
+    Subject(296, "Illumination and Electric Traction systems", [7], ['MECH'],branchToSem: {'CSE':['7'],'IT':['7'],'EEE':['7'],'CIVIL':['7'],'MECH':['7'],'EIE':['7'],'PE':['7']},type: SubjectType.Elective),
     
     //ECE
-    Subject(145, "Mobile and Cellular Communications", [7], ['MECH'],branchToSem: {'ECE':['7']},type: SubjectType.Elective),
-    Subject(145, "Speech Signal Processing", [7], ['MECH'],branchToSem: {'ECE':['7']},type: SubjectType.Elective),
-    Subject(145, "Digital Signal Processor Architectures", [7], ['MECH'],branchToSem: {'ECE':['7']},type: SubjectType.Elective),
+    Subject(297, "Mobile and Cellular Communications", [7], ['MECH'],branchToSem: {'ECE':['7']},type: SubjectType.Elective),
+    Subject(298, "Speech Signal Processing", [7], ['MECH'],branchToSem: {'ECE':['7']},type: SubjectType.Elective),
+    Subject(299, "Digital Signal Processor Architectures", [7], ['MECH'],branchToSem: {'ECE':['7']},type: SubjectType.Elective),
     
     //EEE
-    Subject(145, "Digital Signal Processor Architectures", [7], ['MECH'],branchToSem: {'ECE':['7']},type: SubjectType.Elective),
+    Subject(300, "Digital Signal Processor Architectures", [7], ['MECH'],branchToSem: {'ECE':['7']},type: SubjectType.Elective),
 
-    
     //EIE
-    Subject(145, "Opto-Electronic Instrumentation", [], [],branchToSem: {'EIE':['7']}),
-    Subject(145, "Virtual Instrumentation", [], [],branchToSem: {'EIE':['7']}),
-    Subject(145, "Analytical Instrumentation", [], [],branchToSem: {'EIE':['7']}),
+    Subject(301, "Opto-Electronic Instrumentation", [], [],branchToSem: {'EIE':['7']}),
+    Subject(302, "Virtual Instrumentation", [], [],branchToSem: {'EIE':['7']}),
+    Subject(303, "Analytical Instrumentation", [], [],branchToSem: {'EIE':['7']}),
 
     //PE
-    Subject(145, "Tool Design", [], [],branchToSem: {'PE':['7']}),
+    Subject(304, "Tool Design", [], [],branchToSem: {'PE':['7'],'MECH':['8']}),
+
+    //! 8TH SEM
+
+    //* CSE DONE
+    Subject(305, "Mobile Computing", [], [],branchToSem: {'CSE':['8']},type: SubjectType.Elective),
+    Subject(306, "Multicore and GPU Programming", [], [],branchToSem: {'CSE':['8']},type: SubjectType.Elective),
+    //IT
+    Subject(307, "Distributed Databases", [], [],branchToSem: {'IT':['8']},type: SubjectType.Elective),
+    //ECE
+    Subject(308, "Field Programmable Gate Arrays", [], [],branchToSem: {'ECE':['8']},type: SubjectType.Elective),
+    Subject(309, "Neural Networks", [], [],branchToSem: {'ECE':['8']},type: SubjectType.Elective),
+    Subject(310, "Satellite Communications", [], [],branchToSem: {'ECE':['8']},type: SubjectType.Elective),
+    Subject(311, "Wireless Sensor Networks", [], [],branchToSem: {'ECE':['8']},type: SubjectType.Elective),
+    Subject(312, "Global Navigational Satellite Systems", [], [],branchToSem: {'ECE':['8']},type: SubjectType.Elective),
+    Subject(313, "System Verilog", [], [],branchToSem: {'ECE':['8']},type: SubjectType.Elective),
+    Subject(314, "Multirate Signal Processing", [], [],branchToSem: {'ECE':['8']},type: SubjectType.Elective),
+    Subject(315, "Real Time Operating Systems", [], [],branchToSem: {'ECE':['8']},type: SubjectType.Elective),
+    Subject(316, "Fuzzy Logic And Applications", [], [],branchToSem: {'ECE':['8']},type: SubjectType.Elective),
+    Subject(317, "Radar Systems", [], [],branchToSem: {'ECE':['8']},type: SubjectType.Elective),
+    Subject(318, "Digital Fault Tolerant Systems", [], [],branchToSem: {'ECE':['8']},type: SubjectType.Elective),
+    //EEE
+    Subject(319, "Power System Reliability", [], [],branchToSem: {'EEE':['8']},type: SubjectType.Elective),
+    Subject(320, "Electric Vehicle and Hybrid Electric Vehicle", [], [],branchToSem: {'EEE':['8']},type: SubjectType.Elective),
+    Subject(321, "Machine Modelling Analysis", [], [],branchToSem: {'EEE':['8']},type: SubjectType.Elective),
+    Subject(322, "High Voltage DC Transmission", [], [],branchToSem: {'EEE':['8']},type: SubjectType.Elective),
+    Subject(323, "Advanced Control Systems", [], [],branchToSem: {'EEE':['8']},type: SubjectType.Elective),
+    Subject(324, "Electrical Estimation Costing & Safety", [], [],branchToSem: {'EEE':['8']},type: SubjectType.Elective),
+    Subject(325, "Advanced Power Electronics", [], [],branchToSem: {'EEE':['8']},type: SubjectType.Elective),
+    Subject(326, "Power Quality", [], [],branchToSem: {'EEE':['8'],"EIE":["8"]},type: SubjectType.Elective),
+    Subject(327, "Smart Grid Technologies", [], [],branchToSem: {'EEE':['8']},type: SubjectType.Elective),
+    Subject(328, "Energy Management Systems and SCADA", [], [],branchToSem: {'EEE':['8'],'EIE':["8"]},type: SubjectType.Elective),
+    Subject(329, "Special Electrical Machines", [], [],branchToSem: {'EEE':['8']},type: SubjectType.Elective),
+    Subject(330, "Power Electronics Applications to Renewable Energy", [], [],branchToSem: {'EEE':['8']},type: SubjectType.Elective),
+    Subject(331, "Electrical Substation Design and Equipment", [], [],branchToSem: {'EEE':['8']},type: SubjectType.Elective),
+    //CIVIL
+    Subject(332, "Construction Management AND Technology", [], [],branchToSem: {'CIVIL':['8']},type: SubjectType.Elective),
+    Subject(333, "Retrofitting and Rehabilitation of Structures", [], [],branchToSem: {'CIVIL':['8']},type: SubjectType.Elective),
+    Subject(334, "Computer Aided Analysis and Design", [], [],branchToSem: {'CIVIL':['8']},type: SubjectType.Elective),
+    Subject(335, "Applied Hydrology", [], [],branchToSem: {'CIVIL':['8']},type: SubjectType.Elective),
+    Subject(336, "Introduction to Climate Change", [], [],branchToSem: {'CIVIL':['8']},type: SubjectType.Elective),
+    Subject(337, "Structural Dynamics", [], [],branchToSem: {'CIVIL':['8']},type: SubjectType.Elective),
+    Subject(338, "Design with Geosynthetics", [], [],branchToSem: {'CIVIL':['8']},type: SubjectType.Elective),
+    Subject(339, "Groundwater Management", [], [],branchToSem: {'CIVIL':['8']},type: SubjectType.Elective),
+    Subject(340, "Intelligent Transportation Systems", [], [],branchToSem: {'CIVIL':['8']},type: SubjectType.Elective),
+    Subject(341, "Prefabrication Engineering", [], [],branchToSem: {'CIVIL':['8']},type: SubjectType.Elective),
+    Subject(342, "Advanced Reinforced Concrete Design", [], [],branchToSem: {'CIVIL':['8']},type: SubjectType.Elective),
+    Subject(343, "Traffic Engineering & Infrastructure Design", [], [],branchToSem: {'CIVIL':['8']},type: SubjectType.Elective),
+    //MECH
+    Subject(344, "Mechanical Vibrations", [], [],branchToSem: {'MECH':['8'],'PE':['8']},type: SubjectType.Elective),
+    Subject(345, "Composite Materials", [], [],branchToSem: {'MECH':['8'],'PE':['8']},type: SubjectType.Elective),
+    Subject(346, "Non-Destructive Testing", [], [],branchToSem: {'MECH':['8'],'PE':['8']},type: SubjectType.Elective),
+    Subject(347, "Power Plant Engineering", [], [],branchToSem: {'MECH':['8']},type: SubjectType.Elective),
+    Subject(348, "Product Design And Process Planning", [], [],branchToSem: {'MECH':['8'],'PE':['8']},type: SubjectType.Elective),
+    Subject(349, "Intellectual Property Rights", [], [],branchToSem: {'MECH':['8'],'PE':['8'],},type: SubjectType.Elective),
+    Subject(350, "Machine Tool Engineering and Design", [], [],branchToSem: {'MECH':['8'],'PE':['8'],},type: SubjectType.Elective),
+    Subject(351, "Energy Conservation and Management", [], [],branchToSem: {'MECH':['8'],'PE':['8'],},type: SubjectType.Elective),
+    Subject(352, "Advanced Propulsion and Space Science", [], [],branchToSem: {'MECH':['8'],'PE':['8']},type: SubjectType.Elective),
+    Subject(353, "Waste Heat Recovery and Co-Generation", [], [],branchToSem: {'MECH':['8'],'PE':['8']},type: SubjectType.Elective),
+    Subject(354, "Aerodynamic Design of Thermal Turbines", [], [],branchToSem: {'MECH':['8'],'PE':['8']},type: SubjectType.Elective),
+    //EIE
+    Subject(355, "Advance Programmable Logic Controller", [], [],branchToSem: {'EIE':['8']},type: SubjectType.Elective),
+    Subject(356, "Digital Control Systems", [], [],branchToSem: {'EIE':['8']},type: SubjectType.Elective),
+    Subject(357, "Automation in Process Control", [], [],branchToSem: {'EIE':['8']},type: SubjectType.Elective),
+    Subject(358, "Hydraulic & Pneumatics", [], [],branchToSem: {'EIE':['8']},type: SubjectType.Elective),
+    Subject(359, "Software Design tools for Sensing & Control", [], [],branchToSem: {'EIE':['8']},type: SubjectType.Elective),
+    Subject(360, "Advance Digital Signal Processing", [], [],branchToSem: {'EIE':['8']},type: SubjectType.Elective),
+    Subject(361, "Biomedical Signal Processing", [], [],branchToSem: {'EIE':['8']},type: SubjectType.Elective),
+    Subject(362, "Power plant design and safety management", [], [],branchToSem: {'EIE':['8']},type: SubjectType.Elective),
+    Subject(363, "Digital Image Processing", [], [],branchToSem: {'EIE':['8']},type: SubjectType.Elective),
+    //PE
+    Subject(364, "Total Quality Management", [], [],branchToSem: {'PE':['8']},type: SubjectType.Elective),
+    Subject(365, "Rapid Prototyping Technologies", [], [],branchToSem: {'PE':['8']},type: SubjectType.Elective),
+    Subject(366, "Plastic Engineering and Technology", [], [],branchToSem: {'PE':['8']},type: SubjectType.Elective),
+
+
+
+
+
+
 
     
 
@@ -543,7 +623,7 @@ class CourseInfo {
     //* VERIFIED
     Subject(151, "INFORMATION SECURITY", [7], ['CSE'],branchToSem: {'CSE':['7']}),
     //*VERIFIED
-    Subject(152, "DISTRIBUTED SYSTEMS", [7], ['CSE'],branchToSem: {"IT":["6"],"CSE":['7']},type: SubjectType.Elective),
+    Subject(152, "DISTRIBUTED SYSTEMS", [7], ['CSE'],branchToSem: {"IT":["6","8"],"CSE":['7'],},type: SubjectType.Elective),
     //*VERIFIED
     Subject(153, "DATA MINING", [7], ['CSE'],branchToSem: {"CSE":["6",'7'],"IT":["6"],}),
     //IT
@@ -587,17 +667,20 @@ class CourseInfo {
     Subject(170, "FOUNDATION ENGINEERING", [7], ['CIVIL'],branchToSem: {"CIVIL":["6",'7']},),
 
     //8TH SEM
-    Subject(171, "PROFESSIONAL ELECTIVE-IV", [8],
-        ['CSE', 'CIVIL', 'EEE', 'EIE', 'ECE', 'IT', 'MECH']),
-    Subject(172, "PROFESSIONAL ELECTIVE-III", [8],
-        ['CSE', 'CIVIL', 'EEE', 'EIE', 'ECE', 'IT', 'MECH']),
-    Subject(173, "PROFESSIONAL ELECTIVE-V", [8],
-        ['CSE', 'CIVIL', 'EEE', 'EIE', 'ECE', 'IT', 'MECH']),
-    Subject(174, "UTILISATION OF ELECTRICAL ENERGY", [8], ['EEE']),
+    //! DELETE [USELESS] 
+    // Subject(171, "PROFESSIONAL ELECTIVE-IV", [8],['CSE', 'CIVIL', 'EEE', 'EIE', 'ECE', 'IT', 'MECH']),
+    //! DELETE [USELESS] 
+    // Subject(172, "PROFESSIONAL ELECTIVE-III", [8],['CSE', 'CIVIL', 'EEE', 'EIE', 'ECE', 'IT', 'MECH']),
+    //! DELETE [USELESS] 
+    // Subject(173, "PROFESSIONAL ELECTIVE-V", [8],['CSE', 'CIVIL', 'EEE', 'EIE', 'ECE', 'IT', 'MECH']),
+    //! DELETE
+    // Subject(174, "UTILISATION OF ELECTRICAL ENERGY", [8], ['EEE']),
     //! DELETE [EXTRA]
     // Subject(175, "GENDER SENSITIZATION", [8], ['CIVIL']),
-    Subject(176, "CONSTRUCTION MANAGEMENT AND TECHNOLOGY", [8], ['CIVIL']),
-    Subject(177, "PROFESSIONAL ELECTIVE-II", [8], ['MECH']),
+    //* VERIFIED 
+    Subject(176, "CONSTRUCTION MANAGEMENT AND TECHNOLOGY", [8], ['CIVIL'],branchToSem: {"CIVIL":["8"]},type: SubjectType.Elective),
+    //! DELETE [USELESS] 
+    // Subject(177, "PROFESSIONAL ELECTIVE-II", [8], ['MECH']),
   ];
 }
 
