@@ -101,111 +101,126 @@ class CourseInfo {
     Subject(1, "ENVIRONMENTAL SCIENCE", [1], ['CSE', 'CIVIL', 'EEE', 'EIE'],branchToSem: {'ECE':['2','4'],"MECH":['2','4'],"IT":['2','4'],"PE":['2','4'],"AE":['2','4'],"CSE":['1','3'],"CIVIL":['1','3'],"EEE":['1','3'],"EIE":['1','3']}),
     Subject(2, "ESSENCE OF INDIAN TRADITIONAL KNOWLEDGE", [1],
         ['CSE', 'CIVIL', 'EEE', 'EIE'],branchToSem:{'ECE':["2",'4'],"MECH":["2",'4'],"IT":["2",'4'],"PE":["2",'4'],"AE":["2",'4'],"CSE":['1','3'],"CIVIL":['1','3'],"EEE":['1','3'],"EIE":['1','3']}),
-    Subject(10, "ENGLISH", [2],
-        ['CSE', 'CIVIL', 'EEE', 'EIE', 'ECE', 'IT', 'MECH', 'PE'],branchToSem: {"ECE":["2"],"IT":["2"],"MECH":["2"],"PE":["2"],"AE":["2"],"CSE":['2'],"CIVIL":['2'],"EEE":['2'],"EIE":['2']}),
-    Subject(9, "MATHEMATICS-II", [2],
-        ['CSE', 'CIVIL', 'EEE', 'EIE', 'ECE', 'IT', 'MECH', 'PE'],branchToSem:{"ECE":["2"],"IT":["2"],"MECH":["2"],"PE":["2"],"AE":["2"],"CSE":['2'],"CIVIL":['2'],"EEE":['2'],"EIE":['2'],}),
+    Subject(3, "MATHEMATICS-I", [1],
+        ['CSE', 'CIVIL', 'EEE', 'EIE', 'ECE', 'IT', 'MECH', 'PE'],branchToSem: {"ECE":['1'],"IT":['1'],"MECH":['1'],"PE":['1'],"AE":['1'],"CSE":['1'],"CIVIL":['1'],"EEE":['1'],"EIE":['1']}),
     Subject(4, "CHEMISTRY", [1], ['CSE', 'CIVIL', 'EEE', 'EIE'],branchToSem: {'ECE':["2"],"MECH":["2"],"IT":["2"],"PE":["2"],"AE":["2"],"CSE":['1'],"CIVIL":['1'],"EEE":['1'],"EIE":['1'],}),
     Subject(5, "PROGRAMMING FOR PROBLEM SOLVING", [1],
         ['CSE', 'CIVIL', 'EEE', 'EIE'],branchToSem: {'ECE':["2",],"MECH":["2"],"IT":["2"],"PE":["2"],"AE":["2",],"CSE":['1'],"CIVIL":['1',],"EEE":['1'],"EIE":['1']}),
     Subject(6, "INDIAN CONSTITUTION", [1], ['ECE', 'IT', 'MECH', 'PE'],branchToSem: {'ECE':['1','3'],"MECH":["1",'3'],"IT":["1",'3'],"PE":["1",'3'],"AE":["1",'3'],"CSE":['2','4'],"CIVIL":['2','4'],"EEE":['2','4'],"EIE":['2','4']}),
-    Subject(3, "MATHEMATICS-I", [1],
-        ['CSE', 'CIVIL', 'EEE', 'EIE', 'ECE', 'IT', 'MECH', 'PE'],branchToSem: {"ECE":['1'],"IT":['1'],"MECH":['1'],"PE":['1'],"AE":['1'],"CSE":['1'],"CIVIL":['1'],"EEE":['1'],"EIE":['1']}),
     Subject(7, "PHYSICS", [1], ['ECE', 'IT', 'MECH', 'PE'],branchToSem: {'ECE':['1'],"MECH":['1'],"IT":["1"],"PE":["1"],"AE":["1"],"CSE":['2'],"CIVIL":['2'],"EEE":['2'],"EIE":['2']}),
     Subject(
         8, "BASIC ELECTRICAL ENGINEERING", [1], ['ECE', 'IT', 'MECH', 'PE'],branchToSem: {'ECE':['1'],"MECH":["1"],"IT":["1"],"PE":["1"],"AE":["1"],"CSE":['2'],"CIVIL":['2'],"EEE":['2'],"EIE":['2']}),
+    Subject(9, "MATHEMATICS-II", [2],
+        ['CSE', 'CIVIL', 'EEE', 'EIE', 'ECE', 'IT', 'MECH', 'PE'],branchToSem:{"ECE":["2"],"IT":["2"],"MECH":["2"],"PE":["2"],"AE":["2"],"CSE":['2'],"CIVIL":['2'],"EEE":['2'],"EIE":['2'],}),
+    Subject(10, "ENGLISH", [2],
+        ['CSE', 'CIVIL', 'EEE', 'EIE', 'ECE', 'IT', 'MECH', 'PE'],branchToSem: {"ECE":["2"],"IT":["2"],"MECH":["2"],"PE":["2"],"AE":["2"],"CSE":['2'],"CIVIL":['2'],"EEE":['2'],"EIE":['2']}),
 
+    //Deleted 1st year duplicate subjects
+    // Subject(11, "INDIAN CONSTITUTION", [2], ['CSE', 'CIVIL', 'EEE', 'EIE']),
+    // Subject(12, "PHYSICS", [2], ['CSE', 'CIVIL', 'EEE', 'EIE']),
+    // Subject(13, "BASIC ELECTRICAL ENGINEERING", [2],
+    //     ['CSE', 'CIVIL', 'EEE', 'EIE']),
+    // Subject(14, "ENVIRONMENTAL SCIENCE", [2], ['ECE', 'IT', 'MECH', 'PE']),
+    // Subject(15, "ESSENCE OF INDIAN TRADITIONAL KNOWLEDGE", [2],
+    //     ['ECE', 'IT', 'MECH', 'PE']),
+    // Subject(16, "CHEMISTRY", [2], ['ECE', 'IT', 'MECH', 'PE']),
+    // Subject(17, "PROGRAMMING AND PROBLEM SOLVING", [2],
+    //     ['ECE', 'IT', 'MECH', 'PE']),
+
+    
     //2nd year
+    Subject(21, "EFFECTIVE TECHNICAL COMMUNICATION IN ENGLISH", [3],
+        ['MECH', 'IT', 'ECE'],branchToSem: {'CIVIL':['4'],'CSE':['4'],'ECE':['3'],'EEE':['4'],'EIE':['4'],'IT':['3'],'MECH':['3'],'PE':['3']},),
     Subject(22, "FINANCE AND ACCOUNTING", [3], ['ECE', 'IT', 'MECH'],branchToSem: {'AE':['3'],'CIVIL':['4'],'CSE':['4'],'ECE':['3'],'EEE':['4'],'EIE':['4'],'IT':['3'],'MECH':['3'],'PE':['3']}),
     Subject(23, "MATHEMATICS-III(PDE,PROB&STATS)", [3], ['ECE', 'MECH'],branchToSem: {'AE':['3'],'CIVIL':['4'],'ECE':['3'],'MECH':['3'],'PE':['3']}),
-    Subject(28, "ENGINEERING MECHANICS", [3], ['EEE', 'CIVIL', 'MECH'],branchToSem: {'AE':['3'],'CIVIL':['3'],'EEE':['3'],'EIE':['3'],'PE':['3']}),
+    Subject(24, "MATHEMATICS-III(PROB&STATS)", [3], ['IT'],branchToSem: {'CSE':['4'],'EEE':['4'],'EIE':['4'],'IT':['3']},),
     Subject(25, "BASIC ELECTRONICS", [3], ['MECH', 'IT', 'CSE'],branchToSem: {'AE':['3'],'CSE':['3'],'IT':['3'],'MECH':['3'],'PE':['3']}),
-    //name of this subject is Fluid mechanics and machinary for Automobile sutdents
-    Subject(77, "FLUID MECHANICS", [4], ['CIVIL'],branchToSem: {'AE':['3'],'CIVIL':['4'],'PE':['3']},),
-    //ADDED
-    Subject(77, "THERMAL ENGINEERING", [4], ['CIVIL'],branchToSem: {'AE':['3'],},),
-
-    Subject(29, "INDUSTRIAL PSYCHOLOGY", [3], ['EEE', 'CIVIL'],branchToSem: {'AE':['4'],'CIVIL':['3'],'ECE':['4'],'EEE':['3'],'EIE':['3'],'MECH':['4'],'PE':['4']},),
     Subject(26, "BIOLOGY FOR ENGINEERS", [3], ['EEE', 'CIVIL', 'CSE'],branchToSem: {'AE':['4'],'CIVIL':['3'],'CSE':['3'],'ECE':['4'],'EEE':['3'],'EIE':['3'],'IT':['4'],'MECH':['4'],'PE':['4']},),
+    //name of this subject is digital electronics and logic design for EEE AND EIE (SIMILAR TO SUBJECT ID 80)
+    Subject(27, "DIGITAL ELECTRONICS", [3], ['ECE', 'IT', 'CSE'],branchToSem: {'CSE':['3'],'ECE':['3'],'EEE':[4],'EIE':['4'],'IT':['3']},),
+    Subject(28, "ENGINEERING MECHANICS", [3], ['EEE', 'CIVIL', 'MECH'],branchToSem: {'AE':['3'],'CIVIL':['3'],'EEE':['3'],'EIE':['3'],'PE':['3']}),
+    Subject(29, "INDUSTRIAL PSYCHOLOGY", [3], ['EEE', 'CIVIL'],branchToSem: {'AE':['4'],'CIVIL':['3'],'ECE':['4'],'EEE':['3'],'EIE':['3'],'MECH':['4'],'PE':['4']},),
     Subject(30, "ENERGY SCIENCES AND ENGINEERING", [3], ['EEE', 'CIVIL'],branchToSem: {'AE':['4'],'CIVIL':['3'],'EEE':['3'],'EIE':['3'],'MECH':['4'],'PE':['4']},),
-    Subject(60, "MECHANICS OF MATERIALS", [4], ['MECH'],branchToSem: {'AE':['4'],'CIVIL':['4'],'MECH':['4'],'PE':['4']}, ),
-    Subject(62, "KINEMATICS OF MACHINERY", [4], ['MECH'],branchToSem: {'AE':['4'],'MECH':['4'],'PE':['4']},),
-    Subject(63, "AUTOMOTIVE CHASSIS COMPONENTS", [4], ['MECH'],branchToSem: {'AE':['4'],}, ),
+    //name of this subject is Fluid mechanics and machinary for Automobile sutdents
     Subject(31, "METALLURGY AND MATERIAL SCIENCE", [3], ['MECH'],branchToSem: {'AE':['4'],'MECH':['3'],'PE':['3']}, ),
-    //ADDED
-    Subject(31, "OVERVIEW OF CIVIL ENGINEERING", [3], ['MECH'],branchToSem: {'CIVIL':['3'],}, ),
+    Subject(32, "THERMODYNAMICS", [3], ['MECH'],branchToSem: {'MECH':['3'],'PE':['3']},),
+    Subject(33, "OPERATIONS RESEARCH", [3], ['CSE'],branchToSem: {'CSE':['3'],'IT':['4']},),
+    Subject(34, "DATA STRUCTURES AND ALGORITHMS", [3], ['CSE'],branchToSem: {'CSE':['3']},),
+    Subject(35, "DISCRETE MATHEMATICS", [3], ['CSE'],branchToSem: {'CSE':['3'],},),
+    Subject(36, "PROGRAMMING LANGUAGES", [3], ['CSE'],branchToSem: {'CSE':['3'],},),
+    //subject similar to id no. 34
+    Subject(37, "DATA STRUCTURES", [3], ['IT'],branchToSem: {'IT':['3']},),
+    Subject(38, "MATHEMATICAL FOUNDATIONS OF INFORMATION TECHNOLOGY", [4], ['EEE'],branchToSem: {'IT':['3']},),
+    Subject(39, "ELEMENTS OF MECHANICAL ENGINEERING", [3],
+        ['MECH', 'IT', 'ECE'],branchToSem: {'CIVIL':['4'],'ECE':['3'],'EEE':['4'],'EIE':['4'],},),
+    Subject(40, "ELECTRONIC DEVICES", [3], ['ECE'],branchToSem: {'ECE':['3'],},),
+    Subject(41, "NETWORK THEORY", [3], ['ECE'],branchToSem: {'ECE':['3'],'EIE':['3']},),
     Subject(42, "SOLID MECHANICS", [3], ['CIVIL'],branchToSem: {'CIVIL':['3'],},),
     Subject(43, "ENGINEERING GEOLOGY", [3], ['CIVIL'],branchToSem: {'CIVIL':['3'],},),
     Subject(44, "SURVEYING AND GEOMATICS", [3], ['CIVIL'],branchToSem: {'CIVIL':['3'],},),
-
-    Subject(21, "EFFECTIVE TECHNICAL COMMUNICATION IN ENGLISH", [3],
-        ['MECH', 'IT', 'ECE'],branchToSem: {'CIVIL':['4'],'CSE':['4'],'ECE':['3'],'EEE':['4'],'EIE':['4'],'IT':['3'],'MECH':['3'],'PE':['3']},),
-    //ADDED
-    Subject(21, "ELEMENTS OF MECHANICAL ENGINEERING", [3],
-        ['MECH', 'IT', 'ECE'],branchToSem: {'CIVIL':['4'],'ECE':['3'],'EEE':['4'],'EIE':['4'],},),
-  
-    Subject(21, "MATERIALS: TESTING AND EVALUATION", [3],
-        ['MECH', 'IT', 'ECE'],branchToSem: {'CIVIL':['4']},),
-    
-
-    Subject(33, "OPERATIONS RESEARCH", [3], ['CSE'],branchToSem: {'CSE':['3'],'IT':['4']},),
-
-    //name of this subject is digital electronics and logic design for EEE AND EIE
-    Subject(27, "DIGITAL ELECTRONICS", [3], ['ECE', 'IT', 'CSE'],branchToSem: {'CSE':['3'],'ECE':['3'],'EEE':[4],'EIE':['4'],'IT':['3']},),
-  
-    //SIMILAR SUBJECTS
-    Subject(34, "DATA STRUCTURES AND ALGORITHMS", [3], ['CSE'],branchToSem: {'CSE':['3']},),
-    Subject(37, "DATA STRUCTURES", [3], ['IT'],branchToSem: {'IT':['3']},),
-
-    Subject(35, "DISCRETE MATHEMATICS", [3], ['CSE'],branchToSem: {'CSE':['3'],},),
-    Subject(36, "PROGRAMMING LANGUAGES", [3], ['CSE'],branchToSem: {'CSE':['3'],},),
-    
-    Subject(24, "MATHEMATICS-III(PROB&STATS)", [3], ['IT'],branchToSem: {'CSE':['4'],'EEE':['4'],'EIE':['4'],'IT':['3']},),
-    Subject(58, "SIGNALS AND SYSTEMS", [4], ['ECE', 'IT', 'CSE'],branchToSem: {'CSE':['4'],'ECE':['4'],'IT':['4']},),
-
-    //these two subjects are also similar
-    Subject(64, "OOP USING JAVA", [4], ['CSE'],branchToSem: {'CSE':['4'],},),
-     Subject(68, "JAVA PROGRAMMING", [4], ['IT'],branchToSem: {'IT':['4']},),
-
-    Subject(65, "COMPUTER ORGANISATION", [4], ['CSE'],branchToSem: {'CSE':['4'],},),
-    Subject(66, "DATABASE MANAGEMENT SYSTEMS", [4], ['CSE'],branchToSem: {'CSE':['4'],},),
-    
-    Subject(40, "ELECTRONIC DEVICES", [3], ['ECE'],branchToSem: {'ECE':['3'],},),
-    Subject(41, "NETWORK THEORY", [3], ['ECE'],branchToSem: {'ECE':['3'],'EIE':['3']},),
-  
-    //THESE TWO SUBJECTS ARE SIMILAR
-    Subject(72, "ANALOG ELECTRONIC CIRCUITS", [4], ['ECE'],branchToSem: {'ECE':['4'],},),
-    //ADDED
-    Subject(47, "ANALOG ELECTRONICS", [3], ['EEE'],branchToSem: {'EEE':['3'],'EIE':['3']},),
-
-    Subject(74, "PULSE AND LINEAR INTEGRATED CIRCUITS", [4], ['ECE'],branchToSem: {'ECE':['4'],},),
-    Subject(75, "COMPUTER ORGANISATION AND ARCHITECHTURE", [4], ['ECE'],branchToSem: {'ECE':['4'],},),
-    Subject(73, "ELECTROMAGNETIC THEORY AND MAGNETIC LINES", [4], ['ECE'],branchToSem: {'ECE':['4'],},),
-
+    Subject(45, "ANALOG ELECTRONICS", [3], ['EEE'],branchToSem: {'EEE':['3'],'EIE':['3']},),
     Subject(46, "ELECTRICAL CIRCUIT ANALYSIS", [3], ['EEE'],branchToSem: {'EEE':['3'],},),
     Subject(47, "ELECTROMAGNETIC FIELDS", [3], ['EEE'],branchToSem: {'EEE':['3'],'EIE':['3']},),
-    
-    
-    Subject(79, "ELECTRICAL MACHINES-I", [4], ['EEE'],branchToSem: {'EEE':['4'],},),
-    Subject(81, "POWER ELECTRONICS", [4], ['EEE'],branchToSem: {'EEE':['4'],'EIE':['4']},),
-    //ADDED
-    Subject(81, "TRANSDUCERS ENGINEERING", [4], ['EEE'],branchToSem: {'EIE':['4']},),
-    Subject(81, "MATHEMATICAL FOUNDATIONS OF INFORMATION TECHNOLOGY", [4], ['EEE'],branchToSem: {'IT':['3']},),
+    Subject(58, "SIGNALS AND SYSTEMS", [4], ['ECE', 'IT', 'CSE'],branchToSem: {'CSE':['4'],'ECE':['4'],'IT':['4']},),
+    Subject(60, "MECHANICS OF MATERIALS", [4], ['MECH'],branchToSem: {'AE':['4'],'CIVIL':['4'],'MECH':['4'],'PE':['4']}, ),
+    Subject(61, "APPLIED THERMODYNAMICS", [4], ['MECH'],branchToSem: {'MECH':['4'],'PE':['4']},),
+    Subject(62, "KINEMATICS OF MACHINERY", [4], ['MECH'],branchToSem: {'AE':['4'],'MECH':['4'],'PE':['4']},),
+    Subject(63, "MANUFACTURING PROCESS", [4], ['MECH'],branchToSem: {'MECH':['4'],'PE':['4']},),
+    Subject(64, "OOP USING JAVA", [4], ['CSE'],branchToSem: {'CSE':['4'],},),
+    Subject(65, "COMPUTER ORGANISATION", [4], ['CSE'],branchToSem: {'CSE':['4'],},),
+    Subject(66, "DATABASE MANAGEMENT SYSTEMS", [4], ['CSE'],branchToSem: {'CSE':['4'],},),
+    //subject similar to id 64
+    Subject(68, "JAVA PROGRAMMING", [4], ['IT'],branchToSem: {'IT':['4']},),
     Subject(69, "DATABASE SYSTEMS", [4], ['IT'],branchToSem: {'IT':['4']},),
     Subject(70, "COMPUTER ORGANISATION AND MICROPROCESSOR", [4], ['IT'],branchToSem: {'IT':['4']},),
     Subject(71, "DATA COMMUNICATIONS", [4], ['IT'],branchToSem: {'IT':['4']},),
+    //subject similar to id 45
+    Subject(72, "ANALOG ELECTRONIC CIRCUITS", [4], ['ECE'],branchToSem: {'ECE':['4'],},),
+    Subject(73, "ELECTROMAGNETIC THEORY AND MAGNETIC LINES", [4], ['ECE'],branchToSem: {'ECE':['4'],},),
+    Subject(74, "PULSE AND LINEAR INTEGRATED CIRCUITS", [4], ['ECE'],branchToSem: {'ECE':['4'],},),
+    Subject(75, "COMPUTER ORGANISATION AND ARCHITECHTURE", [4], ['ECE'],branchToSem: {'ECE':['4'],},),
+    Subject(76, "MECHANISMS OF MATERIALS AND STRUCTURES", [4], ['CIVIL'],branchToSem: {'PE':['3']}),
+    Subject(77, "FLUID MECHANICS", [4], ['CIVIL'],branchToSem: {'AE':['3'],'CIVIL':['4'],'PE':['3']},),
+    Subject(78, "MATERIALS:TESTING AND EVALUATION", [3],
+        ['MECH', 'IT', 'ECE'],branchToSem: {'CIVIL':['4']},),
+    Subject(79, "ELECTRICAL MACHINES-I", [4], ['EEE'],branchToSem: {'EEE':['4'],},),
+    Subject(80, "DIGITAL ELECTRONICS AND LOGIC DESIGN", [4], ['EEE'],branchToSem: {'EEE':[4],'EIE':['4']}),
+    Subject(81, "POWER ELECTRONICS", [4], ['EEE'],branchToSem: {'EEE':['4'],'EIE':['4']},),
+
+    //TODO CHANGE ID'S OF NEWLY ADDED SUBJECTS
+    //ADDED
+    Subject(77, "THERMAL ENGINEERING", [4], ['CIVIL'],branchToSem: {'AE':['3'],},),
+    //ADDED
+    Subject(63, "AUTOMOTIVE CHASSIS COMPONENTS", [4], ['MECH'],branchToSem: {'AE':['4'],}, ),
+    //ADDED 
+    Subject(31, "OVERVIEW OF CIVIL ENGINEERING", [3], ['MECH'],branchToSem: {'CIVIL':['3'],}, ),
+    //ADDED
+    Subject(81, "TRANSDUCERS ENGINEERING", [4], ['EEE'],branchToSem: {'EIE':['4']},),
     //ADDED
     Subject(71, "ENGINEERING ELECTRONICS", [4], ['IT'],branchToSem: {'MECH':['3']},),
-    Subject(32, "THERMODYNAMICS", [3], ['MECH'],branchToSem: {'MECH':['3'],'PE':['3']},),
-    Subject(61, "APPLIED THERMODYNAMICS", [4], ['MECH'],branchToSem: {'MECH':['4'],'PE':['4']},),
-    Subject(63, "MANUFACTURING PROCESS", [4], ['MECH'],branchToSem: {'MECH':['4'],'PE':['4']},),
 
-    Subject(76, "MECHANISMS OF MATERIALS AND STRUCTURES", [4], ['CIVIL'],branchToSem: {'PE':['3']}),
     
-    //TODO ADD 3RD AND 4TH YEAR SUBJECTS 
-    
-    
+    //Deleted 2nd year subjects
+    // Subject(18, "INDIAN CONSTITUTION", [3], ['MECH', 'ECE', 'IT']),
+    // Subject(19, "ENVIRONMENTAL SCIENCE", [3], ['CSE', 'CIVIL', 'EEE']),
+    // Subject(20, "ESSENCE OF INDIAN TRADITIONAL KNOWLEDGE", [3],
+    //     ['CSE', 'CIVIL', 'EEE']), 
+    // Subject(48, "INDIAN CONSTITUTION", [4], ['EEE', 'CIVIL', 'CSE']),
+    // Subject(49, "ENVIRONMENTAL SCIENCE", [4], ['MECH', 'IT', 'ECE']),
+    // Subject(50, "ESSENCE OF INDIAN TRADITIONAL KNOWLEDGE", [4],
+    //     ['MECH', 'IT', 'ECE']),
+    // Subject(51, "EFFECTIVE TECHNICAL COMMUNICATION IN ENGLISH", [4],
+    //     ['CSE', 'CIVIL', 'EEE']),
+    // Subject(52, "FINANCE AND ACCOUNTING", [4], ['CSE', 'CIVIL', 'EEE']),
+    // Subject(53, "MATHEMATICS-III(PROB&STATS)", [4], ['EEE', 'CSE']),
+    // Subject(54, "MATHEMATICS-III(PDE,PROB&STATS)", [4], ['CIVIL']),
+    // Subject(55, "BIOLOGY FOR ENGINEERS", [4], ['ECE', 'IT', 'MECH']),
+    // Subject(56, "INDUSTRIAL PSYCHOLOGY", [4], ['MECH', 'ECE']),
+    // Subject(57, "ELEMENTS OF MECHANICAL ENGINEERING", [4], ['EEE', 'CIVIL']),
+    // Subject(59, "ENERGY SCIENCES AND ENGINEERING", [4], ['MECH']),
+    // Subject(67, "OPERATIONS RESEARCH", [4], ['IT']),
 
+     //TODO ADD 3RD AND 4TH YEAR SUBJECTS 
     
 
     //5TH SEM
