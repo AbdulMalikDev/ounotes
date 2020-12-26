@@ -248,7 +248,7 @@ class CourseInfo {
     Subject(213, "Powder Metallurgy", [], [],branchToSem: {"MECH":["5"]},type: SubjectType.Elective),
     Subject(214, "Robotic Engineering", [], [],branchToSem: {"MECH":["5","8"],"PE":['8']},type: SubjectType.Elective),
     Subject(215, "Theory of Elasticity", [], [],branchToSem: {"MECH":["5"]},type: SubjectType.Elective),
-    Subject(215, "Dynamics of Machines", [], [],branchToSem: {"MECH":["5"]}),
+    Subject(372, "Dynamics of Machines", [], [],branchToSem: {"MECH":["5"]}),
     //AE
     Subject(238, "Internal Combustion Engines", [], [],branchToSem: {"AE":["5"]}),
     Subject(239, "Automotive Transmission", [], [],branchToSem: {"AE":["5"]}),
@@ -273,9 +273,9 @@ class CourseInfo {
     Subject(263, "Information Retrieval Systems", [], [],branchToSem: {"CSE":["5","8"],"IT":["8"]},type: SubjectType.Elective),
     Subject(264, "Soft Computing", [], [],branchToSem: {"CSE":["5"]},type: SubjectType.Elective),
     //IT
-    Subject(265, "Multimedia Technologies", [], [],branchToSem: {"IT":["5"]},type: SubjectType.Elective),
-    Subject(265, "Software Quality and Testing", [], [],branchToSem: {"CSE":["8"]},type: SubjectType.Elective),
-    Subject(265, "Web Services and Architecture", [], [],branchToSem: {"CSE":["8"],"IT":["8"],},type: SubjectType.Elective),
+    Subject(374, "Multimedia Technologies", [], [],branchToSem: {"IT":["5"]},type: SubjectType.Elective),
+    Subject(375, "Software Quality and Testing", [], [],branchToSem: {"CSE":["8"]},type: SubjectType.Elective),
+    Subject(376, "Web Services and Architecture", [], [],branchToSem: {"CSE":["8"],"IT":["8"],},type: SubjectType.Elective),
 
 
 
@@ -326,7 +326,7 @@ class CourseInfo {
     Subject(234, "Electronic Instrumentation", [], [],branchToSem: {"MECH":["6"]},type: SubjectType.Elective),
     Subject(235, "Principles of Electronic Communication Systems", [], [],branchToSem: {"MECH":["6"]},type: SubjectType.Elective),
     Subject(236, "3D Printing Technology", [], [],branchToSem: {"MECH":["6"]},type: SubjectType.Elective),
-    Subject(236, "Modern Machining and Forming Methods", [], [],branchToSem: {"MECH":["6"]},type: SubjectType.Elective),
+    Subject(377, "Modern Machining and Forming Methods", [], [],branchToSem: {"MECH":["6"]},type: SubjectType.Elective),
     //AE
     Subject(249, "Design of Automotive Components", [], [],branchToSem: {"AE":["6"]}),
     Subject(250, "Computer Aided Design, Analysis and Manufacturing", [], [],branchToSem: {"AE":["6"]}),
