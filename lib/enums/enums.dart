@@ -19,3 +19,8 @@ enum Menu {
   Report,
   Pin,
 }
+
+enum SubjectType{
+  Main,
+  Elective,
+}

@@ -1,3 +1,5 @@
+import 'package:FSOUNotes/enums/enums.dart';
+
 class Subject {
   int id;
   String name;
@@ -7,6 +9,8 @@ class Subject {
   List branch;
   bool userSubject = false;
 
+  SubjectType type;
+
   // GDrive data
   String gdriveFolderID;
   String gdriveNotesFolderID;
@@ -14,7 +18,7 @@ class Subject {
   String gdriveSyllabusFolderID;
 
   Subject.namedParameter({this.id, this.name, this.branchToSem,this.semester,this.branch});
-  Subject(this.id, this.name,this.semester,this.branch,{this.branchToSem});
+  Subject(this.id, this.name,this.semester,this.branch,{this.branchToSem,this.type});
 
   Subject.fromData(Map<String, dynamic> data)
       : id = data['id'],
