@@ -18,13 +18,12 @@ class SubjectsService with ChangeNotifier {
   Logger log = getLogger("SubjectsService");
   FirestoreService _firestoreService = locator<FirestoreService>();
   static List<Subject> fakeData = [
-    Subject.namedParameter(
-        branch: ["s"], id: 12, name: "ljsdlf", semester: [1, 2])
+    Subject.namedParameter(id: 12, name: "ljsdlf", branchToSem: {})
   ];
 
   Box documentHiveBox;
 
-  setBox(Box box){
+  setBox(Box box) {
     this.documentHiveBox = box;
   }
 
@@ -39,7 +38,7 @@ class SubjectsService with ChangeNotifier {
   }
 
   ValueNotifier<List<Subject>> get userSubjects => _userSubjects;
-  ValueNotifier<List<Subject>> get allSubjects  => _allSubjects;
+  ValueNotifier<List<Subject>> get allSubjects => _allSubjects;
 
   Future<dynamic> addUserSubject(Subject subject) async {
     if (_userSubjects.value.firstWhere(
@@ -137,7 +136,6 @@ class SubjectsService with ChangeNotifier {
     }
 
     subjectObjects = [];
-    var subjects;
     //For User subjects
     if (prefs.containsKey("user_subjects")) {
       log.i("user subjects found in local storage");
@@ -166,7 +164,7 @@ class SubjectsService with ChangeNotifier {
   //* This was created for getting the subject by name
   //* even if it is in userSubjects or allSubjects does not matter
   Subject getSubjectByName(String subjectName) {
-    Subject subject = null;
+    Subject subject;
     List<Subject> allSubs = this.allSubjects.value;
     List<Subject> userSubs = this.userSubjects.value;
     subject = allSubs.firstWhere((subject) => subject.name == subjectName,
@@ -181,28 +179,30 @@ class SubjectsService with ChangeNotifier {
   //* Returns all subjects with match atleast one word with any other subject.
   //? Test Input : Database Management Systems
   //test ajldkja;lksdjf;lskjf;al;jsalkdfj;alskdjf;alskdjf
-  List<Subject> getSimilarSubjects(String query){
+  List<Subject> getSimilarSubjects(String query) {
     List<String> queryWords = _sanitizeAndSplitQuery(query);
     List<Subject> matchingSubjects = [];
-    List<Subject> allSubjects = this.userSubjects.value + this.allSubjects.value;
+    List<Subject> allSubjects =
+        this.userSubjects.value + this.allSubjects.value;
     allSubjects.forEach((subject) {
-        
-        //Skip iteration if same subject
-        if(subject.name == query)return; 
-        List<String> subjectWords = _sanitizeAndSplitQuery(subject.name);//? [INDUSTRIAL, PHSYCHOLOGY]
-        subjectWords.forEach((subjectWord) {
-          queryWords.forEach((queryWord) {
-            String longWord  = subjectWord.length >= queryWord.length ? subjectWord : queryWord;
-            String shortWord = subjectWord.length < queryWord.length ? subjectWord : queryWord;
-            if(longWord.contains(shortWord)){
-              bool isSimilar = _isSimilar(longWord,shortWord);
-              if(isSimilar && !matchingSubjects.contains(subject)){
-                matchingSubjects.add(subject);
-              }
+      //Skip iteration if same subject
+      if (subject.name == query) return;
+      List<String> subjectWords =
+          _sanitizeAndSplitQuery(subject.name); //? [INDUSTRIAL, PHSYCHOLOGY]
+      subjectWords.forEach((subjectWord) {
+        queryWords.forEach((queryWord) {
+          String longWord =
+              subjectWord.length >= queryWord.length ? subjectWord : queryWord;
+          String shortWord =
+              subjectWord.length < queryWord.length ? subjectWord : queryWord;
+          if (longWord.contains(shortWord)) {
+            bool isSimilar = _isSimilar(longWord, shortWord);
+            if (isSimilar && !matchingSubjects.contains(subject)) {
+              matchingSubjects.add(subject);
             }
-          });
+          }
         });
-        
+      });
     });
     return matchingSubjects.reversed.toList();
   }
@@ -210,13 +210,13 @@ class SubjectsService with ChangeNotifier {
   bool _isSimilar(String longWord, String shortWord) {
     int sameLetters = 0;
     int totalLetters = longWord.length;
-    longWord.split("").asMap().forEach((index,longWordChar) { 
-      if(index >= shortWord.length)return;
-      if(longWordChar == shortWord[index])sameLetters++;
+    longWord.split("").asMap().forEach((index, longWordChar) {
+      if (index >= shortWord.length) return;
+      if (longWordChar == shortWord[index]) sameLetters++;
     });
-    double percentage = sameLetters/totalLetters * 100;
+    double percentage = sameLetters / totalLetters * 100;
     int percentageMatchingSet = 90;
-    
+
     return percentage >= percentageMatchingSet;
   }
 

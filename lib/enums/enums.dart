@@ -24,3 +24,7 @@ enum SubjectType{
   Main,
   Elective,
 }
+
+enum CourseType{
+  BE,
+}
