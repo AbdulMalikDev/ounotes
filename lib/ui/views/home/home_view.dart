@@ -1,5 +1,9 @@
+import 'package:FSOUNotes/app/locator.dart';
 import 'package:FSOUNotes/enums/enums.dart';
+import 'package:FSOUNotes/misc/course_info.dart';
 import 'package:FSOUNotes/misc/helper.dart';
+import 'package:FSOUNotes/models/subject.dart';
+import 'package:FSOUNotes/services/funtional_services/firestore_service.dart';
 import 'package:FSOUNotes/services/funtional_services/onboarding_service.dart';
 import 'package:FSOUNotes/ui/views/home/home_viewmodel.dart';
 import 'package:FSOUNotes/ui/views/search/search_view.dart';
@@ -105,15 +109,91 @@ class HomeView extends StatelessWidget {
                   pimpedWidgetBuilder: (context, controller) {
                     return FloatingActionButton(
                       onPressed: () async {
-                        //
-                        controller.forward(from: 0.4);
-                        await Future.delayed(Duration(milliseconds: 290));
-                        showModalBottomSheet(
-                            context: context,
-                            isScrollControlled: true,
-                            backgroundColor: Colors.transparent,
-                            builder: (BuildContext context) =>
-                                SubjectsDialogView());
+                        // controller.forward(from: 0.4);
+                        // await Future.delayed(Duration(milliseconds: 290));
+                        // showModalBottomSheet(
+                        //     context: context,
+                        //     isScrollControlled: true,
+                        //     backgroundColor: Colors.transparent,
+                        //     builder: (BuildContext context) =>
+                        //         SubjectsDialogView());
+                        FirestoreService _firestore = locator<FirestoreService>();
+                        print("start");
+                        List<int> ids = [];
+                        List<Subject> mainSubs = [];
+                        List<Subject> commentedOut = [];
+                        try {
+                          CourseInfo.aallsubjects.forEach((sub)=>ids.add(sub.id));
+                          for(int i=1 ; i<=378 ; i++){
+                            if(ids.contains(i)){
+                              Subject mainSub = CourseInfo.aallsubjects.firstWhere((sub)=>sub.id==i,orElse: ()=>null); 
+                              if(mainSub!=null)mainSubs.add(mainSub);
+                            }else{
+                              Subject commentedOutSub = CourseInfo.allOldSubjects.firstWhere((sub)=>sub.id==i,orElse: ()=>null); 
+                              if(commentedOutSub!=null)commentedOut.add(commentedOutSub);
+                            }
+                          }
+                        } catch (e) {
+                          print(e.toString());
+                        }
+                        List mainNames = mainSubs.map((e) => e.name).toSet().toList();
+                        mainNames.sort((b,c)=>b.compareTo(c));
+                        List commentedOutNames = commentedOut.map((e) => e.name).toSet().toList();
+                        commentedOutNames.sort((b,c)=>b.compareTo(c));
+                        // commentedOutNames.forEach((element) {print(element);});
+                        // print();
+                        // print(a.length);
+                        print("Main Subjects : " + mainNames.length.toString());
+                        print("\n");
+                        print("Commented Out Subjects : " + commentedOut.length.toString());
+                        List<Subject> duplicateSubject = []; 
+                        commentedOutNames.forEach((commentedOutName){
+                          bool dupExist = mainNames.contains(commentedOutName);
+                          if(dupExist){
+                            //Found duplicateSubject that needs to be deleted rightaway
+                            Subject currentSub = CourseInfo.aallsubjects.firstWhere((sub)=>sub.name==commentedOutName,orElse: ()=>null);
+                            if(currentSub!=null)duplicateSubject.add(currentSub);
+                            // print(currentSub?.name);
+                          }
+                        });
+                        print("Duplicate Subjects : " + duplicateSubject.length.toString());
+                        List<String> duplicateSubjectNames = duplicateSubject.map((e) => e.name).toList();
+                        print(duplicateSubjectNames);
+                        //Duplicate subjects already handled so need of any deletion, 
+                        //only need of new subject upload + delete of useless ones
+                        //* There are 378 subjects
+                        try {
+                          for( int i=1 ; i<379 ; i++){
+                            
+                            // There is a subject linked to each number
+                            // It is either to be deleted or updated
+                            if(ids.contains(i)){
+                                Subject currentSub = CourseInfo.aallsubjects.firstWhere((sub)=>sub.id==i,orElse: ()=>null);
+                                if(duplicateSubjectNames.contains(currentSub.name)){
+                                  //DO NOTHING SINCE ALREADY HANDLED
+                                  continue;
+                                }
+                                //The subject is in the main list so upload it
+                                //UPLOAD
+                                //TODO ADD SUBJECT TO FIREBASE AS WELL AS RUN CODE IN GDRIVE TO ADD 4 FOLDERS
+                                print("Upload : " + currentSub.name);
+                            }else{
+                              Subject currentSub = CourseInfo.allOldSubjects.firstWhere((sub)=>sub.id==i,orElse: ()=>null);
+                              if(currentSub==null)continue;
+                              //If subject is duplicate simply ignore
+                              if(duplicateSubjectNames.contains(currentSub.name)){
+                                //DO NOTHING SINCE ALREADY HANDLED
+                                continue;
+                              }else{
+                                //DELETE WITH ALL NOTES
+                                print("Delete : " + currentSub.name);
+                                //TODO DELETE SUBJECT IN FIREBASE AS WELL AS ALL NOTES ASSOCIATED TO IT
+                              }
+                            }
+                          }
+                        }catch (e) {
+                                print(e.toString());                  
+                        }
                       },
                       child: const Icon(Icons.add),
                       backgroundColor: Theme.of(context).accentColor,

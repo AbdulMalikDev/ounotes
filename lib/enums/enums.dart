@@ -24,3 +24,17 @@ enum SubjectType{
   Main,
   Elective,
 }
+
+class Enums{
+
+  // To serialize and deserialize enums from firebase
+  static getSubjectTypeFromString(String statusAsString) {
+    for (SubjectType element in SubjectType.values) {
+      if (element.toString() == statusAsString) {
+          return element;
+      }
+    }
+    return null;
+  }
+
+}
