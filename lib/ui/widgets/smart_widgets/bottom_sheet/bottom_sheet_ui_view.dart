@@ -15,9 +15,11 @@ void setUpBottomSheetUi() {
     BottomSheetType.floating2: (context, sheetRequest, completer) =>
         _FloatingBoxBottomSheet2(request: sheetRequest, completer: completer),
     BottomSheetType.confirm: (context, sheetRequest, completer) =>
-        _FloatingBoxConfirmBottomSheet(request: sheetRequest, completer: completer),
+        _FloatingBoxConfirmBottomSheet(
+            request: sheetRequest, completer: completer),
     BottomSheetType.filledStacks: (context, sheetRequest, completer) =>
-        _FilledStacksFloatingBoxBottomSheet(request: sheetRequest, completer: completer),
+        _FilledStacksFloatingBoxBottomSheet(
+            request: sheetRequest, completer: completer),
   };
 
   bottomSheetService.setCustomSheetBuilders(builders);
@@ -53,7 +55,6 @@ class _FloatingBoxBottomSheet2 extends StatelessWidget {
               ),
               SizedBox(height: 10),
               CheckboxListTile(
-
                 title: Text("Remember My Choice"),
                 value: model.ischecked,
                 onChanged: (newValue) {
@@ -64,7 +65,7 @@ class _FloatingBoxBottomSheet2 extends StatelessWidget {
               ),
               SizedBox(height: 15),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal:3.0),
+                padding: const EdgeInsets.symmetric(horizontal: 3.0),
                 child: Text(request.description),
               ),
               SizedBox(height: 15),
@@ -73,7 +74,7 @@ class _FloatingBoxBottomSheet2 extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Expanded(
-                    flex:2,
+                    flex: 2,
                     child: MaterialButton(
                       onPressed: () => completer(
                         SheetResponse(
@@ -85,7 +86,7 @@ class _FloatingBoxBottomSheet2 extends StatelessWidget {
                         ),
                       ),
                       child: FittedBox(
-                                              child: Text(
+                        child: Text(
                           request.secondaryButtonTitle,
                           style: TextStyle(
                               color: Theme.of(context).primaryColor,
@@ -98,7 +99,7 @@ class _FloatingBoxBottomSheet2 extends StatelessWidget {
                     width: 30,
                   ),
                   Expanded(
-                    flex:3,
+                    flex: 3,
                     child: FlatButton(
                       onPressed: () => completer(
                         SheetResponse(
@@ -110,7 +111,7 @@ class _FloatingBoxBottomSheet2 extends StatelessWidget {
                         ),
                       ),
                       child: FittedBox(
-                                              child: Text(
+                        child: Text(
                           request.mainButtonTitle,
                           style: TextStyle(
                               color: Colors.white, fontWeight: FontWeight.bold),
@@ -121,7 +122,6 @@ class _FloatingBoxBottomSheet2 extends StatelessWidget {
                   ),
                 ],
               ),
-              
             ],
           ),
         ),
@@ -236,7 +236,7 @@ class _FloatingBoxConfirmBottomSheet extends StatelessWidget {
           ),
           SizedBox(height: 30),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal:18.0),
+            padding: const EdgeInsets.symmetric(horizontal: 18.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -244,13 +244,23 @@ class _FloatingBoxConfirmBottomSheet extends StatelessWidget {
                   request.description,
                   style: TextStyle(color: Colors.grey),
                 ),
-                 SizedBox(height: 15),
-                 Text("Your Version : "+request.customData[1]+"+",style: TextStyle(color: Colors.grey),),
-                 SizedBox(height: 10),
-                 Text("Latest Version : "+request.customData[1]+"+",style: TextStyle(color: Colors.grey),),
-                 SizedBox(height: 10),
-                 if(request.customData[2].length > 0)Text(request.customData[2],style: TextStyle(color: Colors.grey),),
-                 SizedBox(height: 10),
+                SizedBox(height: 15),
+                Text(
+                  "Your Version : " + request.customData[1] + "+",
+                  style: TextStyle(color: Colors.grey),
+                ),
+                SizedBox(height: 10),
+                Text(
+                  "Latest Version : " + request.customData[1] + "+",
+                  style: TextStyle(color: Colors.grey),
+                ),
+                SizedBox(height: 10),
+                if (request.customData[2].length > 0)
+                  Text(
+                    request.customData[2],
+                    style: TextStyle(color: Colors.grey),
+                  ),
+                SizedBox(height: 10),
               ],
             ),
           ),
@@ -305,7 +315,7 @@ class _FilledStacksFloatingBoxBottomSheet extends StatelessWidget {
         children: [
           SizedBox(height: 10),
           Padding(
-            padding: const EdgeInsets.only(left:13.0),
+            padding: const EdgeInsets.only(left: 13.0),
             child: Text(
               request.title,
               style: TextStyle(
@@ -317,10 +327,10 @@ class _FilledStacksFloatingBoxBottomSheet extends StatelessWidget {
           ),
           SizedBox(height: 25),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal:15.0),
+            padding: const EdgeInsets.symmetric(horizontal: 15.0),
             child: Text(
               request.description,
-              style: TextStyle(color: Colors.grey,fontSize: 19),
+              style: TextStyle(color: Colors.grey, fontSize: 19),
             ),
           ),
           SizedBox(height: 30),
@@ -339,7 +349,8 @@ class _FilledStacksFloatingBoxBottomSheet extends StatelessWidget {
                 onPressed: () => completer(SheetResponse(confirmed: true)),
                 child: Text(
                   request.mainButtonTitle,
-                  style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                      color: Colors.white, fontWeight: FontWeight.bold),
                 ),
                 color: Theme.of(context).primaryColor,
               )
