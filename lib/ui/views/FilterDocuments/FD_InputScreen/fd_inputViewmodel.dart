@@ -1,9 +1,13 @@
+import 'dart:convert';
+
 import 'package:FSOUNotes/app/locator.dart';
 import 'package:FSOUNotes/app/router.gr.dart';
-import 'package:FSOUNotes/misc/constants.dart';
 import 'package:FSOUNotes/enums/enums.dart';
 import 'package:FSOUNotes/misc/course_info.dart';
+import 'package:FSOUNotes/models/user.dart';
+import 'package:FSOUNotes/services/funtional_services/sharedpref_service.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 
@@ -17,6 +21,8 @@ class FDInputViewModel extends BaseViewModel {
   String titleOfLinks =
       "Are you confused with where to study from?check out links!";
   NavigationService _navigationService = locator<NavigationService>();
+  SharedPreferencesService _sharedPreferencesService =
+      locator<SharedPreferencesService>();
   String _title;
   String get title => _title;
 
@@ -31,13 +37,18 @@ class FDInputViewModel extends BaseViewModel {
       _dropDownMenuItemsofsemester;
   List<DropdownMenuItem<String>> get dropdownofbr => _dropDownMenuItemsofBranch;
 
-  initialise() {
+  init() async {
     _dropDownMenuItemsofBranch =
         buildAndGetDropDownMenuItems(CourseInfo.branch);
     _dropDownMenuItemsofsemester =
         buildAndGetDropDownMenuItems(CourseInfo.semesters);
-    _selectedSemester = _dropDownMenuItemsofsemester[0].value;
-    _selectedBranch = _dropDownMenuItemsofBranch[0].value;
+    setBusy(true);
+    SharedPreferences prefs = await _sharedPreferencesService.store();
+    User user = User.fromData(
+        json.decode(prefs.getString("current_user_is_logged_in")));
+    _selectedSemester = user.semester;
+    _selectedBranch = user.branch;
+    setBusy(false);
   }
 
   List<DropdownMenuItem<String>> buildAndGetDropDownMenuItems(List items) {
@@ -59,7 +70,7 @@ class FDInputViewModel extends BaseViewModel {
   }
 
   setTitleAccordingtoPath(Document path) {
-    initialise();
+    init();
     if (path == Document.Notes) {
       _title = titleOfNotes;
     } else if (path == Document.QuestionPapers) {

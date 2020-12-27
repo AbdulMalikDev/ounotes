@@ -6,6 +6,7 @@ import 'package:FSOUNotes/ui/shared/app_config.dart';
 import 'package:FSOUNotes/ui/widgets/dumb_widgets/drawer_header.dart';
 import 'package:FSOUNotes/ui/widgets/dumb_widgets/nav_item.dart';
 import 'package:FSOUNotes/ui/widgets/smart_widgets/drawer/drawer_viewmodel.dart';
+import 'package:day_night_switcher/day_night_switcher.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_intro/flutter_intro.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -86,13 +87,30 @@ class _DrawerViewState extends State<DrawerView> {
                                   ? Colors.white
                                   : Colors.grey[700],
                             ),
-                            title: Text(
-                              "SWITCH THEME",
-                              style: subtitle1,
+                            title: GestureDetector(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    "SWITCH THEME",
+                                    style: subtitle1,
+                                  ),
+                                  Spacer(),
+                                  Container(
+                                    height: 45,
+                                    width: 50,
+                                    child: DayNightSwitcher(
+                                      isDarkModeEnabled:
+                                          AppStateNotifier.isDarkModeOn,
+                                      onStateChanged: (val) {
+                                        model.updateAppTheme();
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
-                            onTap: () {
-                              model.updateAppTheme(context);
-                            },
+                            onTap: () {},
                           ),
                           NavItem(
                               Icons.file_upload,
@@ -193,57 +211,10 @@ class _DrawerViewState extends State<DrawerView> {
                                 subtitle1,
                                 model.navigateToAdminUploadScreen,
                                 Document.Drawer),
-                          ListTile(
-                            leading: SizedBox(
-                              height: 30,
-                              width: 40,
-                              child: ClipRRect(
-                                  child: Image.asset(
-                                      "assets/images/github-logo.png")
-                                  //)
-                                  ),
-                            ),
-                            title: Text(
-                              "Check us out on Github",
-                              style: subtitle1,
-                            ),
-                            onTap: () async {
-                              const url =
-                                  'https://github.com/AbdulMalikDev/ounotes';
-                              if (await canLaunch(url)) {
-                                await launch(url);
-                              } else {
-                                throw 'Could not launch $url';
-                              }
-                            },
-                          ),
-                          ListTile(
-                            leading: SizedBox(
-                              height: 30,
-                              width: 40,
-                              child: ClipRRect(
-                                  child: Image.asset(
-                                      "assets/images/telegram-logo.png")
-                                  //)
-                                  ),
-                            ),
-                            title: Text(
-                              "Join us on telegram",
-                              style: subtitle1,
-                            ),
-                            onTap: () async {
-                              const url = 'https://t.me/ounotes';
-                              if (await canLaunch(url)) {
-                                model.recordTelegramVisit();
-                                await launch(url);
-                              } else {
-                                throw 'Could not launch $url';
-                              }
-                            },
-                          ),
+
                           Divider(color: Colors.grey.shade600),
                           Row(children: <Widget>[
-                            SizedBox(width: 10),
+                            SizedBox(width: 20),
                             Text(" Search", style: subtitle1),
                           ]),
                           NavItem(
@@ -277,11 +248,11 @@ class _DrawerViewState extends State<DrawerView> {
                           Divider(color: Colors.grey.shade600),
                           Row(
                             children: <Widget>[
-                              SizedBox(width: 10),
+                              SizedBox(width: 20),
                               Text("Others", style: subtitle1),
                             ],
                           ),
-                          NavItem(Icons.account_box, "Profile", subtitle1,
+                          NavItem(Icons.settings, "Settings", subtitle1,
                               model.navigateToProfileScreen, Document.None),
                           ListTile(
                             leading: Icon(
@@ -301,7 +272,6 @@ class _DrawerViewState extends State<DrawerView> {
                                           box.size);
                             },
                           ),
-
                           NavItem(Icons.import_contacts, "About Us", subtitle1,
                               model.navigateToAboutUsScreen, Document.None),
                           SizedBox(

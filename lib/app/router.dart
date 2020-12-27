@@ -1,7 +1,7 @@
 import 'package:FSOUNotes/ui/views/FilterDocuments/FD_DocumentDisplay/fd_documentview.dart';
 import 'package:FSOUNotes/ui/views/FilterDocuments/FD_InputScreen/fd_inputView.dart';
 import 'package:FSOUNotes/ui/views/FilterDocuments/FD_subjectdisplay/fd_subjectview.dart';
-import 'package:FSOUNotes/ui/views/Profile/profile_view.dart';
+import 'package:FSOUNotes/ui/views/Settings/settings_view.dart';
 import 'package:FSOUNotes/ui/views/about_us/privacy_policy/privacy_policyview.dart';
 import 'package:FSOUNotes/ui/views/about_us/privacy_policy/terms_and_conditionview.dart';
 import 'package:FSOUNotes/ui/views/admin/admin_view.dart';
@@ -35,7 +35,7 @@ class $Router {
   SyllabusView syllabusViewRoute;
   LinksView linksViewRoute;
   AboutUsView aboutUsViewRoute;
-  ProfileView profileView;
+  SettingsView profileView;
   UploadView uploadViewRoute;
   UploadSelectionView uploadSelectionViewRoute;
   DownLoadView downLoadView;

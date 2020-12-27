@@ -18,6 +18,9 @@ class _SubjectsDialogViewState extends State<SubjectsDialogView> {
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<SubjectsDialogViewModel>.reactive(
+        onModelReady: (model) {
+          model.alter();
+        },
         builder: (context, model, child) => Container(
               height: MediaQuery.of(context).size.height * 0.82,
               color: Colors.transparent,
@@ -117,14 +120,14 @@ class _SubjectsDialogViewState extends State<SubjectsDialogView> {
                         child: ValueListenableBuilder(
                             valueListenable: model.allSubjects,
                             builder: (context, allSubjects, child) {
-                              List<Subject> allSubjectsAltered =
-                                  model.alter(allSubjects);
+                              // List<Subject> allSubjectsAltered =
+                              //     model.alter(allSubjects);
 
                               return ListView.builder(
                                 physics: BouncingScrollPhysics(),
-                                itemCount: allSubjectsAltered.length,
+                                itemCount: allSubjects.length,
                                 itemBuilder: (context, index) {
-                                  Subject subject = allSubjectsAltered[index];
+                                  Subject subject = allSubjects[index];
 
                                   if (!(searchKeyWord.trim() == "" ||
                                       subject.name
