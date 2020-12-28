@@ -1,11 +1,18 @@
 
+import 'dart:convert';
+
 import 'package:FSOUNotes/app/locator.dart';
+import 'package:FSOUNotes/app/logger.dart';
 import 'package:FSOUNotes/app/router.gr.dart';
 import 'package:FSOUNotes/enums/bottom_sheet_type.dart';
 import 'package:FSOUNotes/enums/constants.dart';
+import 'package:FSOUNotes/services/funtional_services/remote_config_service.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:injectable/injectable.dart';
+import 'package:logger/logger.dart';
 import 'package:stacked_services/stacked_services.dart';
+import 'package:http/http.dart' as http;
+Logger log = getLogger("PushNotificationService");
 
 @lazySingleton
 class PushNotificationService{
@@ -13,6 +20,7 @@ class PushNotificationService{
 
   NavigationService _navigationService = locator<NavigationService>();
   BottomSheetService _bottomSheetService = locator<BottomSheetService>();
+  RemoteConfigService _remoteConfigService = locator<RemoteConfigService>();
 
   Future initialise() async {
 
@@ -70,7 +78,21 @@ class PushNotificationService{
   }
 
   // ignore: non_constant_identifier_names
-  void handleFcmTopicUnSubscription(String fcm_semester,String fcm_branch,String fcm_college,String user_semester,String user_branch,String user_college) {
+  void handleFcmTopicUnSubscription
+  (
+    // ignore: non_constant_identifier_names
+    String fcm_semester,String fcm_branch,
+    // ignore: non_constant_identifier_names
+    String fcm_college,String user_semester,
+    // ignore: non_constant_identifier_names
+    String user_branch,String user_college,
+    String fcmToken,
+  ) {
+
+    if(fcm_semester==null||fcm_branch==null||fcm_college==null){
+      _unSubscribeFromAll(fcmToken);
+    }
+
     List fcm = [fcm_semester,fcm_branch,fcm_college];
     List user = [user_semester,user_branch,user_college];
 
@@ -81,5 +103,26 @@ class PushNotificationService{
         this.fcm.unsubscribeFromTopic(value);
       }
     });
+
+  }
+
+  _unSubscribeFromAll(String fcmToken) async {
+    log.i("User being unsubscribed from all the topics that existed for its account in the past");
+
+    var url = "https://iid.googleapis.com/iid/info/$fcmToken?details=true";
+    http.Response response = await http.get(
+        url,
+        headers: {"Content-Type": "application/json","Authorization": "Bearer ${_remoteConfigService.remoteConfig.getString('FCM_CLOUD')}"},
+      );
+    Map body = json.decode(response.body);
+    bool hasFcmTopics = body["rel"] != null || body["error"]==null;
+    if(hasFcmTopics){
+      log.e(body["rel"]["topics"]);
+      List topics = new Map.from(body["rel"]["topics"]).keys.toList();
+      topics.forEach((topic) {
+        this.fcm.unsubscribeFromTopic(topic);
+      });
+      log.e(topics);
+    } 
   }
 }

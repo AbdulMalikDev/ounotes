@@ -204,7 +204,7 @@ class AuthenticationService {
       var fcm_semester  = OnboardingService.box.get("fcm_semester");
       var fcm_branch    = OnboardingService.box.get("fcm_branch");
       var fcm_college   = OnboardingService.box.get("fcm_college");
-      _pushNotificationService.handleFcmTopicUnSubscription(fcm_semester,fcm_branch,fcm_college,user_semester,user_branch,user_college);
+      _pushNotificationService.handleFcmTopicUnSubscription(fcm_semester,fcm_branch,fcm_college,user_semester,user_branch,user_college,_user.fcmToken);
       //Save these locally to ensure that topics subscribed can be tracked and unsubscribed later
       OnboardingService.box.put("fcm_semester", user_semester);
       OnboardingService.box.put("fcm_branch"  , user_branch  );
