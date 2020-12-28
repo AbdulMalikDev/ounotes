@@ -107,11 +107,15 @@ class UploadLogViewModel extends FutureViewModel{
 
     GoogleDriveService _googleDriveService = locator<GoogleDriveService>();
     dynamic doc = await _firestoreService.getDocumentById(logItem.id,Constants.getDocFromConstant(logItem.type));
-    String result = await _googleDriveService.processFile(doc: doc, document:Constants.getDocFromConstant(logItem.type) , addToGdrive: false);
-    _dialogService.showDialog(title: "OUTPUT" , description: result);
+    if(doc!=null)
+    {
+      String result = await _googleDriveService.processFile(doc: doc, document:Constants.getDocFromConstant(logItem.type) , addToGdrive: false);
+      _dialogService.showDialog(title: "OUTPUT" , description: result);
+    }
     setBusy(false);
 
     }
+
   
     void _showLink(UploadLog logItem) async {
       Link link = await _firestoreService.getLinkById(logItem.id);

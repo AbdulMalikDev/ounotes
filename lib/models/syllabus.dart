@@ -14,6 +14,7 @@ class Syllabus extends AbstractDocument{
   //For Syllabus , the title is the year + branch
   String title;
   String subjectName;
+  int subjectId;
   String size;
   String url;
   DateTime uploadDate;
@@ -50,6 +51,7 @@ class Syllabus extends AbstractDocument{
     this.GDriveSyllabusFolderID,
     this.id,
     this.uploader_id,
+    this.subjectId,
   });
 
   
@@ -68,6 +70,7 @@ class Syllabus extends AbstractDocument{
     uploader_id  = data["uploader_id"];
     type         = Constants.syllabus;
     year         = data["year"] ?? "";
+    subjectId = data["subjectId"];
     GDriveID     = data["GDriveID"];
     GDriveLink   = data["GDriveLink"];
     GDriveSyllabusFolderID   = data["GDriveSyllabusFolderID"];
@@ -95,6 +98,7 @@ class Syllabus extends AbstractDocument{
       "branch"      : branch,
       "year"        : year,
       "uploader_id" : uploader_id,
+      "subjectId" : subjectId,
       "GDriveID"    : GDriveID,
       "GDriveLink"  : GDriveLink,
       "GDriveSyllabusFolderID"  : GDriveSyllabusFolderID,
@@ -113,6 +117,10 @@ class Syllabus extends AbstractDocument{
   @override
    set setPath(Document path) {
     this.path = path;
+  }
+
+    set setSubjectId(int id){
+    this.subjectId = id;
   }
 
    @override

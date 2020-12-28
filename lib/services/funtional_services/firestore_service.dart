@@ -19,6 +19,7 @@ import 'package:FSOUNotes/services/funtional_services/sharedpref_service.dart';
 import 'package:FSOUNotes/services/state_services/links_service.dart';
 import 'package:FSOUNotes/services/state_services/notes_service.dart';
 import 'package:FSOUNotes/services/state_services/question_paper_service.dart';
+import 'package:FSOUNotes/services/state_services/subjects_service.dart';
 import 'package:FSOUNotes/services/state_services/syllabus_service.dart';
 import 'package:FSOUNotes/services/state_services/vote_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -58,25 +59,34 @@ class FirestoreService {
   SyllabusService _syllabusService = locator<SyllabusService>();
   LinksService _linksService = locator<LinksService>();
   VoteService _voteServie = locator<VoteService>();
+  
 
   AnalyticsService _analyticsService = locator<AnalyticsService>();
   BottomSheetService _bottomSheetService = locator<BottomSheetService>();
   SharedPreferencesService _sharedPreferencesService =
       locator<SharedPreferencesService>();
 
-  _getCollectionReferenceAccordingToType(Document path) {
+  _getCollectionReferenceAccordingToType(Document path,id) {
     switch (path) {
       case Document.Notes:
-        return _notesCollectionReference;
+        return _subjectsCollectionReference
+          .document(id.toString()) 
+          .collection(Constants.firebase_notes);
         break;
       case Document.QuestionPapers:
-        return _questionPapersCollectionReference;
+        return _subjectsCollectionReference
+          .document(id.toString()) 
+          .collection(Constants.firebase_questionPapers);
         break;
       case Document.Syllabus:
-        return _syllabusCollectionReference;
+        return _subjectsCollectionReference
+          .document(id.toString()) 
+          .collection(Constants.firebase_syllabus);
         break;
       case Document.Links:
-        return _linksCollectionReference;
+        return _subjectsCollectionReference
+          .document(id.toString()) 
+          .collection(Constants.firebase_links);
         break;
       case Document.None:
       case Document.Report:
@@ -129,8 +139,15 @@ class FirestoreService {
 
   loadNotesFromFirebase(String subjectName) async {
     try {
-      QuerySnapshot snapshot = await _notesCollectionReference
-          .where('subjectName', isEqualTo: subjectName)
+      SubjectsService _subjectsService = locator<SubjectsService>();
+      Subject subject = _subjectsService.getSubjectByName(subjectName);
+      // QuerySnapshot snapshot = await _notesCollectionReference
+      //     .where('subjectName', isEqualTo: subjectName)
+      //     .orderBy('votes', descending: true)
+      //     .getDocuments();
+      QuerySnapshot snapshot = await _subjectsCollectionReference
+          .document(subject.id.toString()) 
+          .collection(Constants.firebase_notes) 
           .orderBy('votes', descending: true)
           .getDocuments();
       List<Note> notes = snapshot.documents
@@ -152,8 +169,15 @@ class FirestoreService {
 
   loadQuestionPapersFromFirebase(String subjectName) async {
     try {
-      QuerySnapshot snapshot = await _questionPapersCollectionReference
-          .where('subjectName', isEqualTo: subjectName)
+      SubjectsService _subjectsService = locator<SubjectsService>();
+      Subject subject = _subjectsService.getSubjectByName(subjectName);
+      // QuerySnapshot snapshot = await _questionPapersCollectionReference
+      //     .where('subjectName', isEqualTo: subjectName)
+      //     .orderBy("year", descending: true)
+      //     .getDocuments();
+      QuerySnapshot snapshot = await _subjectsCollectionReference
+          .document(subject.id.toString()) 
+          .collection(Constants.firebase_questionPapers)
           .orderBy("year", descending: true)
           .getDocuments();
       List<QuestionPaper> questionPapers = snapshot.documents
@@ -170,8 +194,14 @@ class FirestoreService {
 
   loadSyllabusFromFirebase(String subjectName) async {
     try {
-      QuerySnapshot snapshot = await _syllabusCollectionReference
-          .where('subjectName', isEqualTo: subjectName)
+      SubjectsService _subjectsService = locator<SubjectsService>();
+      Subject subject = _subjectsService.getSubjectByName(subjectName);
+      // QuerySnapshot snapshot = await _syllabusCollectionReference
+      //     .where('subjectName', isEqualTo: subjectName)
+      //     .getDocuments();
+      QuerySnapshot snapshot = await _subjectsCollectionReference
+          .document(subject.id.toString()) 
+          .collection(Constants.firebase_syllabus)
           .getDocuments();
       List<Syllabus> syllabus =
           snapshot.documents.map((doc) => Syllabus.fromData(doc.data)).toList();
@@ -185,8 +215,14 @@ class FirestoreService {
 
   loadLinksFromFirebase(String subjectName) async {
     try {
-      QuerySnapshot snapshot = await _linksCollectionReference
-          .where('subjectName', isEqualTo: subjectName)
+      SubjectsService _subjectsService = locator<SubjectsService>();
+      Subject subject = _subjectsService.getSubjectByName(subjectName);
+      // QuerySnapshot snapshot = await _linksCollectionReference
+      //     .where('subjectName', isEqualTo: subjectName)
+      //     .getDocuments();
+      QuerySnapshot snapshot = await _subjectsCollectionReference
+          .document(subject.id.toString()) 
+          .collection(Constants.firebase_links)
           .getDocuments();
       List<Link> links =
           snapshot.documents.map((doc) => Link.fromData(doc.data)).toList();
@@ -238,7 +274,7 @@ class FirestoreService {
       note.setUploaderId = user.id;
       log.i("Document being saved");
       CollectionReference ref =
-          _getCollectionReferenceAccordingToType(note.path);
+          _getCollectionReferenceAccordingToType(note.path,note.subjectId);
       log.i(ref.toString());
       log.i(note.path);
       log.i(note.id);
@@ -322,7 +358,7 @@ class FirestoreService {
   deleteDocument(AbstractDocument doc) async {
     log.w(doc.path);
 
-    CollectionReference ref = _getCollectionReferenceAccordingToType(doc.path);
+    CollectionReference ref = _getCollectionReferenceAccordingToType(doc.path,doc.subjectId);
 
     //Before rewriting whole application , there was no real system of ids
     //In an effort to be backward compatible we had to take care of both cases
@@ -402,7 +438,10 @@ class FirestoreService {
   // }
 
   incrementVotes(Note doc, int val) {
-    CollectionReference ref = _notesCollectionReference;
+    SubjectsService _subjectsService = locator<SubjectsService>();
+    CollectionReference ref = _subjectsCollectionReference
+          .document(doc.subjectId.toString()) 
+          .collection(Constants.firebase_notes);
     try {
       if (doc.id != null && doc.id.length > 5) {
         log.i("Document being upvoted using ID");
@@ -414,11 +453,11 @@ class FirestoreService {
       } else {
         log.i("Document being upvoted");
         if (val == 1) {
-          _notesCollectionReference
+          ref
               .document("Note_${doc.subjectName}_${doc.title}")
               .updateData({"votes": FieldValue.increment(1)});
         } else if (val == 2) {
-          _notesCollectionReference
+          ref
               .document("Note_${doc.subjectName}_${doc.title}")
               .updateData({"votes": FieldValue.increment(2)});
         }
@@ -430,7 +469,9 @@ class FirestoreService {
   }
 
   decrementVotes(Note doc, int val) {
-    CollectionReference ref = _notesCollectionReference;
+    CollectionReference ref = _subjectsCollectionReference
+          .document(doc.subjectId.toString()) 
+          .collection(Constants.firebase_notes);
 
     try {
       if (doc.id != null && doc.id.length > 5) {
@@ -444,11 +485,11 @@ class FirestoreService {
       } else {
         log.i("Document being downvoting in firebase");
         if (val == 1) {
-          _notesCollectionReference
+          ref
               .document("Note_${doc.subjectName}_${doc.title}")
               .updateData({"votes": FieldValue.increment(-1)});
         } else if (val == 2) {
-          _notesCollectionReference
+          ref
               .document("Note_${doc.subjectName}_${doc.title}")
               .updateData({"votes": FieldValue.increment(-2)});
         }
@@ -564,7 +605,9 @@ class FirestoreService {
   }
 
   updateNoteInFirebase(Note note) async {
-    CollectionReference ref = _notesCollectionReference;
+    CollectionReference ref = _subjectsCollectionReference
+          .document(note.subjectId.toString()) 
+          .collection(Constants.firebase_notes);
     try {
       if (note.id != null && note.id.length > 3) {
         log.w("Document being updated using ID");
@@ -663,6 +706,7 @@ class FirestoreService {
 
   Future<Note> getNoteById(String id) async {
     DocumentSnapshot doc = await _notesCollectionReference.document(id).get();
+    if(!doc.exists)return null;
     return Note.fromData(doc.data, doc.documentID);
   }
 
@@ -800,6 +844,11 @@ class FirestoreService {
       log.e(e.toString());
     }
     log.e("uploaded");
+  }
+
+  Future<Subject> getSubjectByName(String subjectName) async {
+    QuerySnapshot docs = await _subjectsCollectionReference.where("name",isEqualTo:subjectName).getDocuments();
+    return Subject.fromData(docs.documents[0].data);
   }
   
 }

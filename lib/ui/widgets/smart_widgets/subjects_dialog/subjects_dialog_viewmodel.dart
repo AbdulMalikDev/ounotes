@@ -60,7 +60,7 @@ class SubjectsDialogViewModel extends BaseViewModel {
       allSubjects.insert(i, filteredSubjects[i]);
     }
 
-    notifyListeners();
+    // notifyListeners();
     return allSubjects;
   }
 }

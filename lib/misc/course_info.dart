@@ -290,12 +290,12 @@ class CourseInfo {
     Subject(199, "Process Control",branchToSem: {"EIE":["6"]}),
     Subject(200, "Electrical Energy Conservation and Auditing",branchToSem: {"EIE":["6"],"EEE":["6"]},subjectType: SubjectType.Elective),
     Subject(201, "Reliability Engineering",branchToSem: {"EIE":["6"],"EEE":["6"],"IT":["6"]},subjectType: SubjectType.Elective),
-    Subject(202, "Non-Conventional Energy Sources",branchToSem: {"EIE":["6"],"EEE":["6"]},subjectType: SubjectType.Elective),
+    // Subject(202, "Non-Conventional Energy Sources",branchToSem: {"EIE":["6"],"EEE":["6"]},subjectType: SubjectType.Elective),
     Subject(203, "Illumination and Electric Traction Systems",branchToSem: {"EIE":["6"],"EEE":["6"]},subjectType: SubjectType.Elective),
     //ECE
     Subject(216, "Data Communication and computer networking",branchToSem: {"ECE":["6"]}),
     Subject(217, "Electronic Measurements and Instrumentation",branchToSem: {"ECE":["6",'7']}),
-    Subject(218, "Principles of Electronic Communications",branchToSem: {"ECE":["6"]},subjectType: SubjectType.Elective),
+    // Subject(218, "Principles of Electronic Communications",branchToSem: {"ECE":["6"]},subjectType: SubjectType.Elective),
     Subject(219, "Fundamental Digital design using Verilog HDL",branchToSem: {"ECE":["6"]},subjectType: SubjectType.Elective),
     Subject(220, "Image and Video Processing",branchToSem: {"ECE":["6"]},subjectType: SubjectType.Elective),
     Subject(221, "Advanced Microcontrollers",branchToSem: {"ECE":["6"]},subjectType: SubjectType.Elective),
@@ -449,8 +449,8 @@ class CourseInfo {
     Subject(123, "DESIGN AND ANALYSIS OF ALGORITHMS",branchToSem: {"CSE":["6"],"IT":["6"],}),
     //* VERIFIED
     Subject(124, "SOFTWARE ENGINEERING",branchToSem: {"CSE":["5",'7'],"IT":["5",'7'],'EEE':['7'],'CIVIL':['7'],'MECH':['7'],'EIE':['7'],'PE':['7']}),
-    //* VERIFIED NAME COMPUTER NETWORKS AND PROGRAMMING --> COMPUTER NETWORKS
-    Subject(125, "COMPUTER NETWORKS",branchToSem: {"CSE":["6"]}),
+    //  VERIFIED NAME COMPUTER NETWORKS AND PROGRAMMING --> COMPUTER NETWORKS
+    // Subject(125, "COMPUTER NETWORKS",branchToSem: {"CSE":["6"]}),
     //! Delete
     // Subject(126, "WEB PROGRAMMING",  ),
     //IT
@@ -497,15 +497,15 @@ class CourseInfo {
     //7th SEM
     Subject(291, "Green Building Technologies",branchToSem: {'CSE':['7'],'IT':['7'],'ECE':['7'],'EEE':['7'],'CIVIL':['7'],'MECH':['7'],'EIE':['7'],'PE':['7']},subjectType: SubjectType.Elective),
     Subject(292, "Fundamentals of IoT",branchToSem: {'CSE':['7'],'IT':['7'],'ECE':['7'],'EEE':['7'],'CIVIL':['7'],'MECH':['7'],'EIE':['7'],'PE':['7']},subjectType: SubjectType.Elective),
-    Subject(293, "Non-Conventional Energy Sources",branchToSem: {'CSE':['7'],'IT':['7'],'ECE':['7'],'EEE':['7'],'CIVIL':['7'],'MECH':['7'],'EIE':['7'],'PE':['7']},subjectType: SubjectType.Elective),
+    Subject(293, "Non-Conventional Energy Sources",branchToSem: {'CSE':['7'],'IT':['7'],'ECE':['7'],'EEE':['6','7'],'CIVIL':['7'],'MECH':['7'],'EIE':['6','7'],'PE':['7']},subjectType: SubjectType.Elective),
     Subject(294, "Entrepreneurship",branchToSem: {'CSE':['7'],'IT':['7'],'ECE':['7'],'EEE':['7'],'CIVIL':['7'],'MECH':['7'],'EIE':['7'],'PE':['7']},subjectType: SubjectType.Elective),
-    Subject(295, "Principles of Electronic Communications",branchToSem: {'CSE':['7'],'IT':['7'],'EEE':['7'],'CIVIL':['7'],'MECH':['7'],'EIE':['7'],'PE':['7']},subjectType: SubjectType.Elective),
+    Subject(295, "Principles of Electronic Communications",branchToSem: {'CSE':['7'],'IT':['7'],'EEE':['7'],'CIVIL':['7'],'MECH':['7'],'EIE':['7'],'PE':['7'],"ECE":["6"]},subjectType: SubjectType.Elective),
     Subject(296, "Illumination and Electric Traction systems",branchToSem: {'CSE':['7'],'IT':['7'],'EEE':['7'],'CIVIL':['7'],'MECH':['7'],'EIE':['7'],'PE':['7']},subjectType: SubjectType.Elective),
     
     //ECE
     Subject(297, "Mobile and Cellular Communications",branchToSem: {'ECE':['7']},subjectType: SubjectType.Elective),
     Subject(298, "Speech Signal Processing",branchToSem: {'ECE':['7']},subjectType: SubjectType.Elective),
-    Subject(299, "Digital Signal Processor Architectures",branchToSem: {'ECE':['7']},subjectType: SubjectType.Elective),
+    // Subject(299, "Digital Signal Processor Architectures",branchToSem: {'ECE':['7']},subjectType: SubjectType.Elective),
     
     //EEE
     Subject(300, "Digital Signal Processor Architectures",branchToSem: {'ECE':['7']},subjectType: SubjectType.Elective),

@@ -193,6 +193,7 @@ class NotesTileViewModel extends BaseViewModel {
       mainButtonTitle: 'Report',
       secondaryButtonTitle: 'Go Back',
     );
+    if(reportResponse == null)return;
     if (!reportResponse.confirmed) {
       setBusy(false);
       return;
@@ -310,7 +311,15 @@ class NotesTileViewModel extends BaseViewModel {
   void pinNotes(Note note,Function refresh) {
 
     //Initialize and fetch pinned notes
-    Map<String,Map<String,DateTime>> pinnedNotes = _subjectService.documentHiveBox.get("pinnedNotes") ?? {"empty":{}};
+    Map<String, Map<String, DateTime>> pinnedNotes = {"empty": {"a": DateTime.now()}};
+    if(_subjectService.documentHiveBox.get("pinnedNotes") != null){
+      Map notesMap = _subjectService.documentHiveBox.get("pinnedNotes");
+      notesMap = notesMap.map((key, value) {
+        if(value.isEmpty){value = {"a": DateTime.now()};}
+        pinnedNotes.addEntries([MapEntry<String,Map<String, DateTime>>(key as String, new Map<String,DateTime>.from(value))]);
+        return MapEntry<String,Map<String, DateTime>>(key as String, new Map<String,DateTime>.from(value));
+      });
+    }
     Map<String,DateTime> subjectPinnedNotes = pinnedNotes[note.subjectName] ?? {};
 
     //add the pinned notes
@@ -329,10 +338,17 @@ class NotesTileViewModel extends BaseViewModel {
   }
 
   void unpinNotes(Note note,Function refresh) {
-
+    Map<String, Map<String, DateTime>> pinnedNotes = {"empty": {"a": DateTime.now()}};
     //Initialize and fetch pinned notes
-    Map<String,Map<String,DateTime>> pinnedNotes = _subjectService.documentHiveBox.get("pinnedNotes");
-    if(pinnedNotes == null)return;
+    if(_subjectService.documentHiveBox.get("pinnedNotes") == null)return;
+
+    Map notesMap = _subjectService.documentHiveBox.get("pinnedNotes");
+    notesMap = notesMap.map((key, value) {
+      if(value.isEmpty){value = {"a": DateTime.now()};}
+      pinnedNotes.addEntries([MapEntry<String,Map<String, DateTime>>(key as String, new Map<String,DateTime>.from(value))]);
+      return MapEntry<String,Map<String, DateTime>>(key as String, new Map<String,DateTime>.from(value));
+    });
+  
     Map<String,DateTime> subjectPinnedNotes = pinnedNotes[note.subjectName];
     if(subjectPinnedNotes == null || subjectPinnedNotes.isEmpty)return;
 

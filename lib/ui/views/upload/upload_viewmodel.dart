@@ -148,7 +148,7 @@ class UploadViewModel extends BaseViewModel {
     //* their value may be different while uploading , so i have used switch case to
     //* handle all 4 situations
     setBusy(true);
-
+    Subject subject = await _firestoreService.getSubjectByName(subjectName);
     String type;
     log.e("year $_year");
     AbstractDocument doc;
@@ -163,6 +163,7 @@ class UploadViewModel extends BaseViewModel {
           uploadDate: DateTime.now(),
           view: 0,
           type: type,
+          subjectId: subject?.id,
         );
         break;
       case Document.QuestionPapers:
@@ -174,6 +175,7 @@ class UploadViewModel extends BaseViewModel {
           branch: _selectedBranch,
           year: "$_year",
           type: type,
+          subjectId: subject?.id,
         );
         break;
       case Document.Syllabus:
@@ -186,6 +188,7 @@ class UploadViewModel extends BaseViewModel {
           semester: _selectedSemester,
           branch: _selectedBranch,
           year: _year.toString(),
+          subjectId: subject?.id,
         );
         break;
       case Document.Links:
@@ -196,6 +199,7 @@ class UploadViewModel extends BaseViewModel {
           description: text2,
           linkUrl: text3,
           path: Document.Links,
+          subjectId: subject?.id,
         );
         break;
       case Document.None:

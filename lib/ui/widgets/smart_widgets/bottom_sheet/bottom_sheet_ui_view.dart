@@ -87,7 +87,7 @@ class _FloatingBoxBottomSheet2 extends StatelessWidget {
                       ),
                       child: FittedBox(
                         child: Text(
-                          request.secondaryButtonTitle,
+                          request.secondaryButtonTitle ?? "NO",
                           style: TextStyle(
                               color: Theme.of(context).primaryColor,
                               fontWeight: FontWeight.bold),
@@ -112,7 +112,7 @@ class _FloatingBoxBottomSheet2 extends StatelessWidget {
                       ),
                       child: FittedBox(
                         child: Text(
-                          request.mainButtonTitle,
+                          request.mainButtonTitle ?? "YES",
                           style: TextStyle(
                               color: Colors.white, fontWeight: FontWeight.bold),
                         ),

@@ -99,12 +99,18 @@ class NotesViewModel extends BaseViewModel {
 
     //> Populate Notes list
     bool notesForNotificationDisplay = false;
-    log.e(box.get("pinnedNotes"));
+    // log.e(box.get("pinnedNotes"));
     // box.delete("pinnedNotes");
-    Map<String, Map<String, DateTime>> pinnedNotes = (box.get("pinnedNotes") ??
-        {
-          "empty": {"a": DateTime.now()}
-        }) as Map<String, Map<String, DateTime>>;
+    Map<String, Map<String, DateTime>> pinnedNotes = {"empty": {"a": DateTime.now()}};
+    if(box.get("pinnedNotes") != null){
+      Map notesMap = box.get("pinnedNotes");
+      notesMap = notesMap.map((key, value) {
+        if(value.isEmpty){value = {"a": DateTime.now()};}
+        pinnedNotes.addEntries([MapEntry<String,Map<String, DateTime>>(key as String, new Map<String,DateTime>.from(value))]);
+        return MapEntry<String,Map<String, DateTime>>(key as String, new Map<String,DateTime>.from(value));
+      });
+      // log.e(pinnedNotes);
+    }
     Map<String, DateTime> subjectPinnedNotes = pinnedNotes[subjectName] ?? {};
     List<String> pinnedNotesIDs = subjectPinnedNotes.keys.toList();
     List<Note> currentSubjectPinnedNotes = [];
