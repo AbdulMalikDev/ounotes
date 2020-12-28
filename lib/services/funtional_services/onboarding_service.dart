@@ -34,6 +34,9 @@ class OnboardingService{
 
   static const List<Map<String, String>> drawerPrompts = [
     {
+      'You can change the theme of the app by using this button.':'Okayy!',
+    },
+    {
       'It took us months of work 😓 to build this app, we would be really thankful if you donate a 5 🌟 😇 !!':
           "Okayy !"
     },

@@ -28,7 +28,6 @@ Logger log = getLogger("DrawerViewModel");
 class DrawerViewModel extends BaseViewModel {
   NavigationService _navigationService = locator<NavigationService>();
   AppStateNotifier _appStateNotifier = locator<AppStateNotifier>();
-  AnalyticsService _analyticsService = locator<AnalyticsService>();
   SharedPreferencesService _sharedPreferencesService =
       locator<SharedPreferencesService>();
   AppInfoService _appInfoService = locator<AppInfoService>();
@@ -128,7 +127,7 @@ class DrawerViewModel extends BaseViewModel {
     );
   }
 
-  updateAppTheme(BuildContext context) async {
+  updateAppTheme() async {
     bool boolVal = !AppStateNotifier.isDarkModeOn;
     _appStateNotifier.updateTheme(boolVal);
     SharedPreferences pref = await SharedPreferences.getInstance();
@@ -169,12 +168,7 @@ class DrawerViewModel extends BaseViewModel {
         arguments: FDInputViewArguments(path: path));
   }
 
-  void recordTelegramVisit() {
-    _analyticsService.addTagInNotificationService(
-        key: "TELEGRAM", value: "VISITED");
-    _analyticsService.logEvent(name: "TELEGRAM_VISIT");
-  }
-
+ 
   Future<String> getUserEmail() async =>
       await _getUser().then((user) => user.email);
 

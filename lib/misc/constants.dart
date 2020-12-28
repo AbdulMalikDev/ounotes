@@ -1,7 +1,7 @@
 import 'package:FSOUNotes/enums/enums.dart';
 import 'package:flutter/material.dart';
 
-const Color primary = Color(0xff5177d6);
+const Color primary = Color(0xff2A9D8F);
 const Color secondary = Color(0xffFFB800);
 const Color ternary = Color(0xffFF8282);
 const Color count_red = Color(0xffFF5F5F);

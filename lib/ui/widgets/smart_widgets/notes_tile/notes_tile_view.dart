@@ -72,10 +72,7 @@ class NotesTileView extends StatelessWidget {
                             boxShadow: [],
                           )
                         : Constants.mdecoration.copyWith(
-                            color:
-                            isPinned
-                            ?Colors.tealAccent.shade400
-                            :Theme.of(context).colorScheme.background,
+                            color: Theme.of(context).colorScheme.background,
                           ),
                     child: notification
                         ? Shimmer.fromColors(
@@ -205,14 +202,10 @@ class NotesColumnWidget extends StatelessWidget {
                                       fontSize: 18),
                                 ),
                               ),
-                              model.isnotedownloaded
-                                  ? SizedBox(
-                                      width: 10,
-                                    )
-                                  : SizedBox(),
-                              model.isnotedownloaded
+                              SizedBox(width: 10,),
+                              isPinned
                                   ? Icon(
-                                      Icons.done_all,
+                                      MdiIcons.pin,
                                       color: theme.iconTheme.color,
                                       size: 18,
                                     )
@@ -254,10 +247,10 @@ class NotesColumnWidget extends StatelessWidget {
                                   type: Constants.notes,
                                 );
                               } else if (selectedValue == Menu.Pin) {
-                                if (isPinned){
-                                  model.unpinNotes(note,refresh);
-                                }else{
-                                  model.pinNotes(note,refresh);
+                                if (isPinned) {
+                                  model.unpinNotes(note, refresh);
+                                } else {
+                                  model.pinNotes(note, refresh);
                                 }
                               }
                             },
