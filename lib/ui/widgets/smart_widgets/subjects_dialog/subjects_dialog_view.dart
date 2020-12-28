@@ -4,6 +4,7 @@ import 'package:FSOUNotes/ui/widgets/smart_widgets/subjects_dialog/subjects_dial
 import 'package:dynamic_text_highlighting/dynamic_text_highlighting.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
+import 'package:substring_highlight/substring_highlight.dart';
 
 class SubjectsDialogView extends StatefulWidget {
   const SubjectsDialogView({Key key}) : super(key: key);
@@ -117,7 +118,6 @@ class _SubjectsDialogViewState extends State<SubjectsDialogView> {
                         child: ValueListenableBuilder(
                             valueListenable: model.allSubjects,
                             builder: (context, allSubjects, child) {
-                              
                               List<Subject> allSubjectsAltered =
                                   model.alter(allSubjects);
 
@@ -160,32 +160,52 @@ class _SubjectsDialogViewState extends State<SubjectsDialogView> {
                                             model.onSubjectSelected(subject);
                                           },
                                         ),
-                                        title: RichText(
-                                          text: TextSpan(
-                                            text: subject.name.substring(
-                                                0, searchKeyWord.length),
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .headline6
-                                                .copyWith(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 17,
-                                                ),
-                                            children: <TextSpan>[
-                                              TextSpan(
-                                                text: subject.name.substring(
-                                                    searchKeyWord.length),
-                                                style: Theme.of(context)
+                                        title: SubstringHighlight(
+                                          text: subject.name
+                                              .toUpperCase(), // each string needing highlighting
+                                          term: searchKeyWord
+                                              .toUpperCase(), // user typed "m4a"
+                                          textStyle:Theme.of(context)
                                                     .textTheme
                                                     .headline6
                                                     .copyWith(
                                                         fontSize: 16,
                                                         fontWeight:
                                                             FontWeight.w500),
-                                              ),
-                                            ],
-                                          ),
+                                          textStyleHighlight: Theme.of(context)
+                                                .textTheme
+                                                .headline6
+                                                .copyWith(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 17,
+                                                ),
                                         ),
+                                        // title: RichText(
+                                        //   text: TextSpan(
+                                        //     text: subject.name.substring(
+                                        //         0, searchKeyWord.length),
+                                        //     style: Theme.of(context)
+                                        //         .textTheme
+                                        //         .headline6
+                                        //         .copyWith(
+                                        //           fontWeight: FontWeight.bold,
+                                        //           fontSize: 17,
+                                        //         ),
+                                        //     children: <TextSpan>[
+                                        //       TextSpan(
+                                        //         text: subject.name.substring(
+                                        //             searchKeyWord.length),
+                                        //         style: Theme.of(context)
+                                        //             .textTheme
+                                        //             .headline6
+                                        //             .copyWith(
+                                        //                 fontSize: 16,
+                                        //                 fontWeight:
+                                        //                     FontWeight.w500),
+                                        //       ),
+                                        //     ],
+                                        //   ),
+                                        // ),
                                       ),
                                     ),
                                   );

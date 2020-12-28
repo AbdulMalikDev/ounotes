@@ -17,7 +17,8 @@ class Constants {
   static const String openInApp = 'openInApp';
 
   //Notification Events [ Make sure Cloud Functions file has same constants ]
-  static const String notificationEventNotesUpload = "notificationEventNotesUpload"; 
+  static const String notificationEventNotesUpload =
+      "notificationEventNotesUpload";
 
   static TextStyle kHintTextStyle = TextStyle(
     color: Colors.white54,
@@ -173,49 +174,46 @@ class Constants {
     ],
   );
 
-
-static getConstantFromDoc(Document document){
-  switch(document){
-    case Document.Notes:
+  static getConstantFromDoc(Document document) {
+    switch (document) {
+      case Document.Notes:
         return Constants.notes;
         break;
-    case Document.QuestionPapers:
-      return Constants.questionPapers;
-      break;
-    case Document.Syllabus:
-      return Constants.syllabus;
-      break;
-    case Document.Links:
-      return Constants.links;
-      break;
-    case Document.Report:
-      return Constants.report;
-      break;
-    case Document.UploadLog:
-      return Constants.uploadLog;
-      break;
-    default:
-      break;
+      case Document.QuestionPapers:
+        return Constants.questionPapers;
+        break;
+      case Document.Syllabus:
+        return Constants.syllabus;
+        break;
+      case Document.Links:
+        return Constants.links;
+        break;
+      case Document.Report:
+        return Constants.report;
+        break;
+      case Document.UploadLog:
+        return Constants.uploadLog;
+        break;
+      default:
+        break;
+    }
   }
-}
 
-static Document getDocFromConstant(String constant){
-  switch(constant){
-    case Constants.notes:
+  static getDocFromConstant(String constant) {
+    switch (constant) {
+      case Constants.notes:
         return Document.Notes;
         break;
-    case Constants.questionPapers:
-      return Document.QuestionPapers;
-      break;
-    case Constants.syllabus:
-      return Document.Syllabus;
-      break;
-    default:
-      break;
+      case Constants.questionPapers:
+        return Document.QuestionPapers;
+        break;
+      case Constants.syllabus:
+        return Document.Syllabus;
+        break;
+      default:
+        break;
+    }
   }
-}
-
-
 }
 
 //DO NOT DELETE THIS

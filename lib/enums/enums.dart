@@ -25,12 +25,28 @@ enum SubjectType{
   Elective,
 }
 
-class Enums{
+enum CourseType{
+  BE,
+}
+
+class Enum{
 
   // To serialize and deserialize enums from firebase
   static getSubjectTypeFromString(String statusAsString) {
+    if(statusAsString == null)return null;
+    
     for (SubjectType element in SubjectType.values) {
       if (element.toString() == statusAsString) {
+          return element;
+      }
+    }
+    return null;
+  }
+  static getCourseTypeFromString(String courseTypeAsString) {
+    if(courseTypeAsString == null)return null;
+
+    for (CourseType element in CourseType.values) {
+      if (element.toString() == courseTypeAsString) {
           return element;
       }
     }

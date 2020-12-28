@@ -1,5 +1,6 @@
 import 'package:FSOUNotes/app/locator.dart';
 import 'package:FSOUNotes/app/logger.dart';
+import 'package:FSOUNotes/enums/bottom_sheet_type.dart';
 import 'package:FSOUNotes/enums/constants.dart';
 import 'package:FSOUNotes/enums/enums.dart';
 import 'package:FSOUNotes/models/UploadLog.dart';
@@ -28,6 +29,7 @@ import 'package:flutter/services.dart';
 import 'package:injectable/injectable.dart';
 import 'package:logger/logger.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
+import 'package:stacked_services/stacked_services.dart';
 
 @lazySingleton
 class FirestoreService {
@@ -58,6 +60,7 @@ class FirestoreService {
   VoteService _voteServie = locator<VoteService>();
 
   AnalyticsService _analyticsService = locator<AnalyticsService>();
+  BottomSheetService _bottomSheetService = locator<BottomSheetService>();
   SharedPreferencesService _sharedPreferencesService =
       locator<SharedPreferencesService>();
 
@@ -758,4 +761,45 @@ class FirestoreService {
     _sharedPreferencesService.saveUserLocally(newUser);
     return newUser;
   }
+
+  // Handling subjects
+  Future<bool> destroySubject(String subjectName,int subjectId) async {
+    //Warn
+    log.e("Warning this will delete all Notes,QPapers and syllabi having subject name ${subjectName}");
+    SheetResponse response = await _bottomSheetService.showCustomSheet(variant:BottomSheetType.filledStacks,title: "Sure?",description:"Warning this will delete all Notes,QPapers and syllabi having subject name that was entered",mainButtonTitle: "ok",secondaryButtonTitle: "no");
+    if (response==null || !response.confirmed){return false;}
+
+    //Delete subject
+    try {
+
+      await deleteSubjectById(subjectId);
+      QuerySnapshot noteDocs     = await _notesCollectionReference.where('subjectName',isEqualTo: subjectName).getDocuments();
+      QuerySnapshot qPaperDocs   = await _questionPapersCollectionReference.where('subjectName',isEqualTo: subjectName).getDocuments();
+      QuerySnapshot syllabusDocs = await _syllabusCollectionReference.where('subjectName',isEqualTo: subjectName).getDocuments();
+      QuerySnapshot linksDocs    = await _linksCollectionReference.where('subjectName',isEqualTo: subjectName).getDocuments();
+      
+      noteDocs.documents.forEach((DocumentSnapshot doc)     { doc.reference.delete(); });
+      qPaperDocs.documents.forEach((DocumentSnapshot doc)   { doc.reference.delete(); });
+      syllabusDocs.documents.forEach((DocumentSnapshot doc) { doc.reference.delete(); });
+      linksDocs.documents.forEach((DocumentSnapshot doc)    { doc.reference.delete(); });
+
+      return true;
+    }catch (e) {
+      log.e(e.toString());
+    }
+  }
+
+  deleteSubjectById(int id)async{
+    await _subjectsCollectionReference.document(id.toString()).delete();
+  }
+
+  addSubject(Subject subject) async {
+    try {
+      await _subjectsCollectionReference.document(subject.id.toString()).setData(subject.toJson());
+    } catch (e) {
+      log.e(e.toString());
+    }
+    log.e("uploaded");
+  }
+  
 }

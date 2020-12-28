@@ -7,10 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:logger/logger.dart';
 import 'package:stacked/stacked.dart';
-
 import 'package:FSOUNotes/services/funtional_services/authentication_service.dart';
 import 'package:FSOUNotes/services/state_services/subjects_service.dart';
-import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 class SubjectsDialogViewModel extends BaseViewModel {
@@ -47,11 +45,14 @@ class SubjectsDialogViewModel extends BaseViewModel {
     log.e("user semester : $semester ${_authenticationService.user.semester}");
     log.e("user branch : $branch");
 
-    List<Subject> filteredSubjects = allSubjects
-        .where((sub) =>
-            sub.branch.contains(branch) &&
-            sub.semester.contains(int.parse(semester[semester.length - 1])))
-        .toList();
+    List<Subject> filteredSubjects = [];
+    allSubjects.forEach((sub) {
+      if (sub.branchToSem.keys.contains(branch)) {
+        if (sub.branchToSem[branch].contains(semester[semester.length - 1])) {
+          filteredSubjects.add(sub);
+        }
+      }
+    });
 
     for (int i = 0; i < filteredSubjects.length; i++) {
       allSubjects.remove(filteredSubjects[i]);
@@ -59,17 +60,6 @@ class SubjectsDialogViewModel extends BaseViewModel {
       allSubjects.insert(i, filteredSubjects[i]);
     }
 
-    //remove subject with same name
-    for (int i = 0; i < allSubjects.length; i++) {
-      for (int j = 0; j < allSubjects.length; j++) {
-        if (i != j &&
-            allSubjects[i].name == allSubjects[j].name &&
-            !allSubjects[j].userSubject) {
-          allSubjects.remove(allSubjects[j]);
-        }
-      }
-    }
-    
     notifyListeners();
     return allSubjects;
   }
