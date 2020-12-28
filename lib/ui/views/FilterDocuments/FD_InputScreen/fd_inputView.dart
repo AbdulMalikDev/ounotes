@@ -1,4 +1,3 @@
-import 'package:FSOUNotes/AppTheme/AppStateNotifier.dart';
 import 'package:FSOUNotes/enums/constants.dart';
 import 'package:FSOUNotes/enums/enums.dart';
 import 'package:FSOUNotes/ui/shared/app_config.dart';
@@ -128,9 +127,7 @@ class FDInputView extends StatelessWidget {
               FractionallySizedBox(
                 widthFactor: 0.8,
                 child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(25),
-                  ),
+                  height: 55,
                   child: RaisedButton(
                     onPressed: () {
                       model.onTap(path);
@@ -144,9 +141,12 @@ class FDInputView extends StatelessWidget {
                     color: Colors.teal,
                     padding: const EdgeInsets.symmetric(
                         horizontal: 25.0, vertical: 15),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30),
+                    ),
                     child: new Text(
                       "Search",
-                      style: TextStyle(fontSize: 20),
+                      style: TextStyle(fontSize: 18),
                     ),
                   ),
                 ),

@@ -165,20 +165,19 @@ class _SubjectsDialogViewState extends State<SubjectsDialogView> {
                                               .toUpperCase(), // each string needing highlighting
                                           term: searchKeyWord
                                               .toUpperCase(), // user typed "m4a"
-                                          textStyle:Theme.of(context)
-                                                    .textTheme
-                                                    .headline6
-                                                    .copyWith(
-                                                        fontSize: 16,
-                                                        fontWeight:
-                                                            FontWeight.w500),
+                                          textStyle: Theme.of(context)
+                                              .textTheme
+                                              .headline6
+                                              .copyWith(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w500),
                                           textStyleHighlight: Theme.of(context)
-                                                .textTheme
-                                                .headline6
-                                                .copyWith(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 17,
-                                                ),
+                                              .textTheme
+                                              .headline6
+                                              .copyWith(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 17,
+                                              ),
                                         ),
                                         // title: RichText(
                                         //   text: TextSpan(

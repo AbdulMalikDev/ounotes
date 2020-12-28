@@ -4,6 +4,7 @@
 // AutoRouteGenerator
 // **************************************************************************
 
+import 'package:FSOUNotes/ui/views/Settings/settings_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:auto_route/auto_route.dart';
@@ -17,7 +18,6 @@ import 'package:FSOUNotes/ui/views/question_papers/question_papers_view.dart';
 import 'package:FSOUNotes/ui/views/syllabus/syllabus_view.dart';
 import 'package:FSOUNotes/ui/views/links/links_view.dart';
 import 'package:FSOUNotes/ui/views/about_us/about_us_view.dart';
-import 'package:FSOUNotes/ui/views/Profile/profile_view.dart';
 import 'package:FSOUNotes/ui/views/upload/upload_view.dart';
 import 'package:FSOUNotes/enums/enums.dart';
 import 'package:FSOUNotes/ui/views/upload/upload_selection/upload_selection_view.dart';
@@ -204,13 +204,13 @@ class Router extends RouterBase {
           settings: settings,
         );
       case Routes.profileView:
-        if (hasInvalidArgs<ProfileViewArguments>(args)) {
-          return misTypedArgsRoute<ProfileViewArguments>(args);
+        if (hasInvalidArgs<SettingsViewArguments>(args)) {
+          return misTypedArgsRoute<SettingsViewArguments>(args);
         }
         final typedArgs =
-            args as ProfileViewArguments ?? ProfileViewArguments();
+            args as SettingsViewArguments ?? SettingsViewArguments();
         return MaterialPageRoute<dynamic>(
-          builder: (context) => ProfileView(key: typedArgs.key),
+          builder: (context) => SettingsView(key: typedArgs.key),
           settings: settings,
         );
       case Routes.uploadViewRoute:
@@ -419,10 +419,10 @@ class AboutUsViewArguments {
   AboutUsViewArguments({this.key});
 }
 
-//ProfileView arguments holder class
-class ProfileViewArguments {
+//SettingsView arguments holder class
+class SettingsViewArguments {
   final Key key;
-  ProfileViewArguments({this.key});
+  SettingsViewArguments({this.key});
 }
 
 //UploadView arguments holder class

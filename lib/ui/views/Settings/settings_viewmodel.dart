@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:FSOUNotes/services/funtional_services/analytics_service.dart';
 import 'package:flutter/material.dart';
 import 'package:FSOUNotes/app/locator.dart';
 import 'package:FSOUNotes/app/router.gr.dart';
@@ -10,13 +11,14 @@ import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'package:FSOUNotes/services/funtional_services/sharedpref_service.dart';
 
-class ProfileViewModel extends BaseViewModel {
-  DialogService _dialogService = locator<DialogService>();
+class SettingsViewModel extends BaseViewModel {
   AuthenticationService _authenticationService =
       locator<AuthenticationService>();
   NavigationService _navigationService = locator<NavigationService>();
   SharedPreferencesService _sharedPreferencesService =
       locator<SharedPreferencesService>();
+  AnalyticsService _analyticsService = locator<AnalyticsService>();
+
   User _user;
   User get user => _user;
   String _userOption;
@@ -38,7 +40,7 @@ class ProfileViewModel extends BaseViewModel {
     _userOption = newChoice;
     SharedPreferences prefs = await _sharedPreferencesService.store();
     if (newChoice == "Ask me before opening pdf") {
-      if (prefs.containsKey("openDocChoice")){
+      if (prefs.containsKey("openDocChoice")) {
         prefs.remove("openDocChoice");
       }
     } else {
@@ -48,7 +50,7 @@ class ProfileViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  setUser() async {
+  Future setUser() async {
     setBusy(true);
     SharedPreferences prefs = await _sharedPreferencesService.store();
     if (prefs.containsKey("openDocChoice")) {
@@ -67,6 +69,12 @@ class ProfileViewModel extends BaseViewModel {
     _user = user;
     setBusy(false);
     notifyListeners();
+  }
+
+  void recordTelegramVisit() {
+    _analyticsService.addTagInNotificationService(
+        key: "TELEGRAM", value: "VISITED");
+    _analyticsService.logEvent(name: "TELEGRAM_VISIT");
   }
 
   handleSignOut(BuildContext context) async {

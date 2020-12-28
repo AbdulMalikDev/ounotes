@@ -116,7 +116,8 @@ class QuestionPapersViewModel extends BaseViewModel {
     SheetResponse response = await _bottomSheetService.showCustomSheet(
       variant: BottomSheetType.floating2,
       title: 'Where do you want to open the file?',
-      description: "",
+       description:
+          "Tip : Open Notes in Google Drive app to avoid loading issues. ' Open in Browser > Google Drive Icon ' ",
       mainButtonTitle: 'Open In Browser',
       secondaryButtonTitle: 'Open In App',
     );
