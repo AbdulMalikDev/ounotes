@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math' as math;
-
 import 'package:FSOUNotes/app/locator.dart';
 import 'package:FSOUNotes/app/logger.dart';
 import 'package:FSOUNotes/enums/constants.dart';
@@ -15,6 +14,7 @@ import 'package:FSOUNotes/services/funtional_services/authentication_service.dar
 import 'package:FSOUNotes/services/funtional_services/cloud_storage_service.dart';
 import 'package:FSOUNotes/services/funtional_services/db_service.dart';
 import 'package:FSOUNotes/services/funtional_services/firestore_service.dart';
+import 'package:FSOUNotes/services/funtional_services/remote_config_service.dart';
 import 'package:FSOUNotes/services/funtional_services/sharedpref_service.dart';
 import 'package:FSOUNotes/services/state_services/download_service.dart';
 import 'package:FSOUNotes/services/state_services/notes_service.dart';
@@ -45,6 +45,7 @@ import 'package:path/path.dart' as path;
 @lazySingleton
 class GoogleDriveService {
   FilePickerService _filePickerService = locator<FilePickerService>();
+  RemoteConfigService _remoteConfigService = locator<RemoteConfigService>();
   AuthenticationService _authenticationService = locator<AuthenticationService>();
   SubjectsService _subjectsService = locator<SubjectsService>();
   NotesService _notesService = locator<NotesService>();
@@ -71,7 +72,6 @@ class GoogleDriveService {
         var AuthHeaders = await _authenticationService.refreshSignInCredentials();
         var client = GoogleHttpClient(AuthHeaders);  
         var drive = ga.DriveApi(client);
-        log.e(AuthHeaders);  
         
         // retrieve subject and notesmodel
         Subject subject = _subjectsService.getSubjectByName(doc.subjectName);
@@ -129,7 +129,6 @@ class GoogleDriveService {
       // initialize http client and GDrive API
       var AuthHeaders = await _authenticationService.refreshSignInCredentials();
       var client = GoogleHttpClient(AuthHeaders);
-      log.e(_authenticationService.user.googleSignInAuthHeaders);  
       var drive = ga.DriveApi(client);
 
       var response = await drive.files.delete(doc.GDriveID);
@@ -141,6 +140,71 @@ class GoogleDriveService {
     }
   }
 
+  Future<Subject> createSubjectFolders(Subject subject) async {
+    log.i("${subject.name} folders being created in GDrive");
+    // initialize http client and GDrive API
+    try {
+
+      var AuthHeaders = await _authenticationService.refreshSignInCredentials();
+      var client = GoogleHttpClient(AuthHeaders);
+      var drive = ga.DriveApi(client);
+      var subjectFolder = await drive.files.create(
+                    ga.File()
+                      ..name = subject.name
+                      ..parents = [_remoteConfigService.remoteConfig.getString("ROOT_FOLDER_GDRIVE")]// Optional if you want to create subfolder
+                      ..mimeType = 'application/vnd.google-apps.folder',  // this defines its folder
+                  );
+      var notesFolder = await drive.files.create(
+                    ga.File()
+                      ..name = 'NOTES'
+                      ..parents = [subjectFolder.id]// Optional if you want to create subfolder
+                      ..mimeType = 'application/vnd.google-apps.folder',  // this defines its folder
+                  );
+      var questionPapersFolder = await drive.files.create(
+                    ga.File()
+                      ..name = 'QUESTION PAPERS'
+                      ..parents = [subjectFolder.id]// Optional if you want to create subfolder
+                      ..mimeType = 'application/vnd.google-apps.folder',  // this defines its folder
+                  );
+      var syllabusFolder = await drive.files.create(
+                    ga.File()
+                      ..name = 'SYLLABUS'
+                      ..parents = [subjectFolder.id]// Optional if you want to create subfolder
+                      ..mimeType = 'application/vnd.google-apps.folder',  // this defines its folder
+                  );
+      
+      subject.addFolderID(subjectFolder.id);
+      subject.addNotesFolderID(notesFolder.id);
+      subject.addQuestionPapersFolderID(questionPapersFolder.id);
+      subject.addSyllabusFolderID(syllabusFolder.id);
+      log.e(subjectFolder.id);
+      log.e(notesFolder.id);
+      log.e(questionPapersFolder.id);
+      log.e(syllabusFolder.id);
+      return subject;
+
+    } catch (e) {
+      log.e("Error while creating folders for new subject ${subject.name}");
+      log.e(e.toString());
+      return null;
+    }
+  }
+
+  deleteSubjectFolder(Subject subject) async {
+    log.i("${subject.name} folders being DELETED in GDrive");
+    // initialize http client and GDrive API
+    try {
+
+      var AuthHeaders = await _authenticationService.refreshSignInCredentials();
+      var client = GoogleHttpClient(AuthHeaders);
+      var drive = ga.DriveApi(client);
+      await drive.files.delete(subject.gdriveFolderID);
+
+    } catch (e) {
+      log.e("Error while DELETING folders for subject : ${subject.name}");
+      log.e(e.toString());
+    }
+  }
   
 
   _errorHandling(e, String message) {

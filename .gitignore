@@ -50,3 +50,12 @@ app.*.map.json
 /android/app/key.jks
 /lib/enums/confidential.dart
 /config
+/.metadata
+/firebase-debug.log
+/firestore.indexes.json
+/firestore.rules
+/storage.rules
+/remoteconfig.template.json
+functions/
+.firebaserc
+firebase.json

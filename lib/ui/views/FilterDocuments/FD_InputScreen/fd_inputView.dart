@@ -127,7 +127,7 @@ class FDInputView extends StatelessWidget {
               FractionallySizedBox(
                 widthFactor: 0.8,
                 child: Container(
-                  height: 60,
+                  height: 55,
                   child: RaisedButton(
                     onPressed: () {
                       model.onTap(path);
@@ -142,11 +142,11 @@ class FDInputView extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(
                         horizontal: 25.0, vertical: 15),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(25),
+                      borderRadius: BorderRadius.circular(30),
                     ),
                     child: new Text(
                       "Search",
-                      style: TextStyle(fontSize: 20),
+                      style: TextStyle(fontSize: 18),
                     ),
                   ),
                 ),

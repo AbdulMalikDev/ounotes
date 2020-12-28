@@ -1,4 +1,7 @@
+import 'package:FSOUNotes/app/logger.dart';
 import 'package:FSOUNotes/enums/enums.dart';
+import 'package:logger/logger.dart';
+Logger log = getLogger("Subject.dart");
 
 class Subject {
   int id;
@@ -7,7 +10,7 @@ class Subject {
   bool userSubject = false;
   CourseType courseType;
 
-  SubjectType type;
+  SubjectType subjectType;
 
   // GDrive data
   String gdriveFolderID;
@@ -24,19 +27,39 @@ class Subject {
     this.id,
     this.name, {
     this.branchToSem,
-    this.type = SubjectType.Main,
+    this.subjectType = SubjectType.Main,
     this.courseType = CourseType.BE,
   });
 
-  Subject.fromData(Map<String, dynamic> data)
-      : id = data['id'],
-        name = data['name'],
-        branchToSem = data['branchToSem'],
-        gdriveFolderID = data['gdriveFolderID'] ?? "",
-        gdriveNotesFolderID = data['gdriveNotesFolderID'] ?? "",
+  Subject.fromData(Map<String, dynamic> data) {
+
+      try{ 
+        id = data['id'];
+        name = data['name'].toString();
+        branchToSem = _deserializeBranchToSem(data['branchToSem']);
+        gdriveFolderID = data['gdriveFolderID'] ?? "";
+        gdriveNotesFolderID = data['gdriveNotesFolderID'] ?? "";
         gdriveQuestionPapersFolderID =
-            data['gdriveQuestionPapersFolderID'] ?? "",
+            data['gdriveQuestionPapersFolderID'] ?? "";
         gdriveSyllabusFolderID = data['gdriveSyllabusFolderID'] ?? "";
+        subjectType = Enum.getSubjectTypeFromString(data['subjectType']) ?? SubjectType.Main;
+        courseType = Enum.getCourseTypeFromString(data['courseType']) ?? CourseType.BE;
+      }catch(e){
+        log.e("Error while deserializing subject object");
+        log.e(e.toString());
+      }
+  }
+
+  _deserializeBranchToSem(data){
+      if(data==null){return null;}
+      Map<String,dynamic> receivedData = data;
+      Map<String,List<String>> branchToSemMap = {"test":[]};
+      receivedData.forEach((key, value) { 
+        branchToSemMap.addAll({key : new List<String>.from(value)});
+      });
+      return branchToSemMap;
+  }
+        
 
   Map<String, dynamic> toJson() {
     return {
@@ -45,8 +68,10 @@ class Subject {
       "branchToSem": branchToSem,
       "gdriveFolderID": gdriveFolderID,
       "gdriveNotesFolderID": gdriveNotesFolderID,
-      "gdriveQuestionPapersFolderID": gdriveNotesFolderID,
-      "gdriveSyllabusFolderID": gdriveNotesFolderID,
+      "gdriveQuestionPapersFolderID": gdriveQuestionPapersFolderID,
+      "gdriveSyllabusFolderID": gdriveSyllabusFolderID,
+      "subjectType": subjectType.toString(),
+      "courseType": courseType.toString(),
     };
   }
 

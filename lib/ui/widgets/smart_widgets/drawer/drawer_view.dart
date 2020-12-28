@@ -32,7 +32,7 @@ class _DrawerViewState extends State<DrawerView> {
 
     /// init Intro
     intro = Intro(
-      stepCount: 2,
+      stepCount: 3,
       padding: EdgeInsets.zero,
 
       /// use defaultTheme, or you can implement widgetBuilder function yourself
@@ -40,6 +40,7 @@ class _DrawerViewState extends State<DrawerView> {
         texts: [
           ...drawerPrompts[0].keys,
           ...drawerPrompts[1].keys,
+          ...drawerPrompts[2].keys,
         ],
         buttonTextBuilder: (curr, total) {
           return curr < total - 1
@@ -97,6 +98,7 @@ class _DrawerViewState extends State<DrawerView> {
                                   ),
                                   Spacer(),
                                   Container(
+                                    key: intro.keys[0],
                                     height: 45,
                                     width: 50,
                                     child: DayNightSwitcher(
@@ -134,7 +136,7 @@ class _DrawerViewState extends State<DrawerView> {
                           //     ),
                           //     onTap: model.navigateToDonateScreen),
                           ListTile(
-                              key: intro.keys[0],
+                              key: intro.keys[1],
                               leading: Icon(
                                 Custom.emo_thumbsup,
                                 color: AppStateNotifier.isDarkModeOn
@@ -171,7 +173,7 @@ class _DrawerViewState extends State<DrawerView> {
                           //     model.navigateToDownloadScreen,
                           //     Document.None),
                           ListTile(
-                            key: intro.keys[1],
+                            key: intro.keys[2],
                             leading: Icon(
                               MdiIcons.volumeHigh,
                               size: 30,

@@ -66,7 +66,7 @@ class NotesTileView extends StatelessWidget {
                   )
                 : Container(
                     margin: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                    decoration: AppStateNotifier.isDarkModeOn || !isPinned
+                    decoration: AppStateNotifier.isDarkModeOn
                         ? Constants.mdecoration.copyWith(
                             color: Theme.of(context).colorScheme.background,
                             boxShadow: [],
@@ -202,6 +202,7 @@ class NotesColumnWidget extends StatelessWidget {
                                       fontSize: 18),
                                 ),
                               ),
+                              SizedBox(width: 10,),
                               isPinned
                                   ? Icon(
                                       MdiIcons.pin,

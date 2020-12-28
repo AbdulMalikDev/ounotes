@@ -68,6 +68,7 @@ dependencies:
   flutter_windowmanager: ^0.0.2
   disable_screenshots: ^0.1.0
   rate_my_app: ^0.7.2
+  substring_highlight: ^0.1.2
 
   # Architecture related packages
   flutter_hooks: null

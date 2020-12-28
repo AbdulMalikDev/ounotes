@@ -1,5 +1,12 @@
+import 'package:FSOUNotes/app/locator.dart';
+import 'package:FSOUNotes/app/logger.dart';
 import 'package:FSOUNotes/enums/enums.dart';
+import 'package:FSOUNotes/misc/course_info.dart';
 import 'package:FSOUNotes/misc/helper.dart';
+import 'package:FSOUNotes/models/subject.dart';
+import 'package:FSOUNotes/services/funtional_services/authentication_service.dart';
+import 'package:FSOUNotes/services/funtional_services/firestore_service.dart';
+import 'package:FSOUNotes/services/funtional_services/google_drive_service.dart';
 import 'package:FSOUNotes/services/funtional_services/onboarding_service.dart';
 import 'package:FSOUNotes/ui/views/home/home_viewmodel.dart';
 import 'package:FSOUNotes/ui/views/search/search_view.dart';
@@ -9,9 +16,12 @@ import 'package:FSOUNotes/ui/widgets/smart_widgets/subjects_dialog/subjects_dial
 import 'package:FSOUNotes/ui/widgets/smart_widgets/user_subject_list/user_subject_list_view.dart';
 import 'package:feature_discovery/feature_discovery.dart';
 import 'package:flutter/material.dart';
+import 'package:googleapis/drive/v3.dart' as ga;
+import 'package:logger/logger.dart';
 import 'package:pimp_my_button/pimp_my_button.dart';
 import 'package:rate_my_app/rate_my_app.dart';
 import 'package:stacked/stacked.dart';
+Logger log = getLogger("HomeView");
 
 class HomeView extends StatelessWidget {
   final bool shouldShowUpdateDialog;
@@ -105,7 +115,6 @@ class HomeView extends StatelessWidget {
                   pimpedWidgetBuilder: (context, controller) {
                     return FloatingActionButton(
                       onPressed: () async {
-                        //
                         controller.forward(from: 0.4);
                         await Future.delayed(Duration(milliseconds: 290));
                         showModalBottomSheet(
@@ -131,6 +140,140 @@ class HomeView extends StatelessWidget {
       viewModelBuilder: () => HomeViewModel(),
     );
   }
+  // FirestoreService _firestore = locator<FirestoreService>();
+  // print("start");
+  // List<int> ids = [];
+  // List<Subject> mainSubs = [];
+  // List<Subject> commentedOut = [];
+  // try {
+  //   CourseInfo.aallsubjects.forEach((sub)=>ids.add(sub.id));
+  //   for(int i=1 ; i<=378 ; i++){
+  //     if(ids.contains(i)){
+  //       Subject mainSub = CourseInfo.aallsubjects.firstWhere((sub)=>sub.id==i,orElse: ()=>null); 
+  //       if(mainSub!=null)mainSubs.add(mainSub);
+  //     }else{
+  //       Subject commentedOutSub = CourseInfo.allOldSubjects.firstWhere((sub)=>sub.id==i,orElse: ()=>null); 
+  //       if(commentedOutSub!=null)commentedOut.add(commentedOutSub);
+  //     }
+  //   }
+  // } catch (e) {
+  //   print(e.toString());
+  // }
+  // List mainNames = mainSubs.map((e) => e.name).toSet().toList();
+  // mainNames.sort((b,c)=>b.compareTo(c));
+  // List commentedOutNames = commentedOut.map((e) => e.name).toSet().toList();
+  // commentedOutNames.sort((b,c)=>b.compareTo(c));
+  // // commentedOutNames.forEach((element) {print(element);});
+  // // print();
+  // // print(a.length);
+  // print("Main Subjects : " + mainNames.length.toString());
+  // print("\n");
+  // print("Commented Out Subjects : " + commentedOut.length.toString());
+  // List<Subject> duplicateSubject = []; 
+  // commentedOutNames.forEach((commentedOutName){
+  //   bool dupExist = mainNames.contains(commentedOutName);
+  //   if(dupExist){
+  //     //Found duplicateSubject that needs to be deleted rightaway
+  //     Subject currentSub = CourseInfo.aallsubjects.firstWhere((sub)=>sub.name==commentedOutName,orElse: ()=>null);
+  //     if(currentSub!=null)duplicateSubject.add(currentSub);
+  //     // print(currentSub?.name);
+  //   }
+  // });
+  // print("Duplicate Subjects : " + duplicateSubject.length.toString());
+  // List<String> duplicateSubjectNames = duplicateSubject.map((e) => e.name).toList();
+  // print(duplicateSubjectNames);
+  // //Duplicate subjects already handled so need of any deletion, 
+  // //only need of new subject upload + delete of useless ones
+  // //* There are 378 subjects
+  // try {
+  //   for( int i=1 ; i<379 ; i++){
+      
+  //     // There is a subject linked to each number
+  //     // It is either to be deleted or updated
+  //     if(ids.contains(i)){
+  //         Subject currentSub = CourseInfo.aallsubjects.firstWhere((sub)=>sub.id==i,orElse: ()=>null);
+  //         if(duplicateSubjectNames.contains(currentSub.name)){
+  //           //DO NOTHING SINCE ALREADY HANDLED
+  //           continue;
+  //         }
+  //         //The subject is in the main list so upload it
+  //         //UPLOAD
+  //         //TODO ADD SUBJECT TO FIREBASE AS WELL AS RUN CODE IN GDRIVE TO ADD 4 FOLDERS [VERIFIED]
+  //         await _addCompleteSubject(currentSub,_firestore);
+  //         print("Upload : " + currentSub.name);
+  //     }else{
+  //       Subject currentSub = CourseInfo.allOldSubjects.firstWhere((sub)=>sub.id==i,orElse: ()=>null);
+  //       if(currentSub==null)continue;
+  //       //If subject is duplicate simply ignore
+  //       if(duplicateSubjectNames.contains(currentSub.name)){
+  //         //DO NOTHING SINCE ALREADY HANDLED
+  //         continue;
+  //       }else{
+  //         //DELETE WITH ALL NOTES
+  //         print("Delete : " + currentSub.name);
+  //         _deleteExistenceOfSubject(currentSub.name,_firestore,i);
+  //       }
+  //     }
+  //   }
+  // }catch (e) {
+  //         print(e.toString());                  
+  // }
+
+  // void _deleteExistenceOfSubject(String subjectName,FirestoreService _firestore,int id) async {
+  //   bool result = await _firestore.destroySubject(subjectName, id);
+  //   log.e("DESTROYED");
+  //   log.e("SubjectName : " + subjectName);
+  //   log.e("Result : " + result.toString());
+  // }
+
+  // void _addCompleteSubject(Subject subject,FirestoreService _firestore) async {
+  //   // bool should_make_new_files = CourseInfo.allOldSubjects.any((element) => element.name == subject.name);
+  //   // if(!should_make_new_files){
+  //   subject = await _makeNewSubject(subject);
+  //   await _firestore.addSubject(subject);
+  // }
+
+  // Future<Subject> _makeNewSubject(Subject subject) async {
+  //   // DriveApi.DriveAppdataScope
+  //       AuthenticationService _authenticationService = locator<AuthenticationService>();
+  //       var AuthHeaders = await _authenticationService.refreshSignInCredentials();
+  //       var client = GoogleHttpClient(AuthHeaders);
+  //       var drive = ga.DriveApi(client);
+  //       var subjectFolder = await drive.files.create(
+  //                     ga.File()
+  //                       ..name = subject.name
+  //                       ..parents = ["10z-Uogzkp9ifd8wDzV1gGOgnqGPDKmsR"]// Optional if you want to create subfolder
+  //                       ..mimeType = 'application/vnd.google-apps.folder',  // this defines its folder
+  //                   );
+  //       var notesFolder = await drive.files.create(
+  //                     ga.File()
+  //                       ..name = 'NOTES'
+  //                       ..parents = [subjectFolder.id]// Optional if you want to create subfolder
+  //                       ..mimeType = 'application/vnd.google-apps.folder',  // this defines its folder
+  //                   );
+  //       var questionPapersFolder = await drive.files.create(
+  //                     ga.File()
+  //                       ..name = 'QUESTION PAPERS'
+  //                       ..parents = [subjectFolder.id]// Optional if you want to create subfolder
+  //                       ..mimeType = 'application/vnd.google-apps.folder',  // this defines its folder
+  //                   );
+  //       var syllabusFolder = await drive.files.create(
+  //                     ga.File()
+  //                       ..name = 'SYLLABUS'
+  //                       ..parents = [subjectFolder.id]// Optional if you want to create subfolder
+  //                       ..mimeType = 'application/vnd.google-apps.folder',  // this defines its folder
+  //                   );
+
+  //       subject.addFolderID(subjectFolder.id);
+  //       subject.addNotesFolderID(notesFolder.id);
+  //       subject.addQuestionPapersFolderID(questionPapersFolder.id);
+  //       subject.addSyllabusFolderID(syllabusFolder.id);
+  //       log.e(subjectFolder.id);
+  //       log.e(notesFolder.id);
+  //       log.e(questionPapersFolder.id);
+  //       log.e(syllabusFolder.id);
+  //       return subject;
+  // }
 }
 
 // import 'dart:io';

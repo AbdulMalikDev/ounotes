@@ -4,6 +4,7 @@ import 'package:FSOUNotes/ui/widgets/smart_widgets/subjects_dialog/subjects_dial
 import 'package:dynamic_text_highlighting/dynamic_text_highlighting.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
+import 'package:substring_highlight/substring_highlight.dart';
 
 class SubjectsDialogView extends StatefulWidget {
   const SubjectsDialogView({Key key}) : super(key: key);
@@ -18,9 +19,6 @@ class _SubjectsDialogViewState extends State<SubjectsDialogView> {
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<SubjectsDialogViewModel>.reactive(
-        onModelReady: (model) {
-          model.alter();
-        },
         builder: (context, model, child) => Container(
               height: MediaQuery.of(context).size.height * 0.82,
               color: Colors.transparent,
@@ -120,14 +118,14 @@ class _SubjectsDialogViewState extends State<SubjectsDialogView> {
                         child: ValueListenableBuilder(
                             valueListenable: model.allSubjects,
                             builder: (context, allSubjects, child) {
-                              // List<Subject> allSubjectsAltered =
-                              //     model.alter(allSubjects);
+                              List<Subject> allSubjectsAltered =
+                                  model.alter(allSubjects);
 
                               return ListView.builder(
                                 physics: BouncingScrollPhysics(),
-                                itemCount: allSubjects.length,
+                                itemCount: allSubjectsAltered.length,
                                 itemBuilder: (context, index) {
-                                  Subject subject = allSubjects[index];
+                                  Subject subject = allSubjectsAltered[index];
 
                                   if (!(searchKeyWord.trim() == "" ||
                                       subject.name
@@ -162,32 +160,51 @@ class _SubjectsDialogViewState extends State<SubjectsDialogView> {
                                             model.onSubjectSelected(subject);
                                           },
                                         ),
-                                        title: RichText(
-                                          text: TextSpan(
-                                            text: subject.name.substring(
-                                                0, searchKeyWord.length),
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .headline6
-                                                .copyWith(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 17,
-                                                ),
-                                            children: <TextSpan>[
-                                              TextSpan(
-                                                text: subject.name.substring(
-                                                    searchKeyWord.length),
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .headline6
-                                                    .copyWith(
-                                                        fontSize: 16,
-                                                        fontWeight:
-                                                            FontWeight.w500),
+                                        title: SubstringHighlight(
+                                          text: subject.name
+                                              .toUpperCase(), // each string needing highlighting
+                                          term: searchKeyWord
+                                              .toUpperCase(), // user typed "m4a"
+                                          textStyle: Theme.of(context)
+                                              .textTheme
+                                              .headline6
+                                              .copyWith(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w500),
+                                          textStyleHighlight: Theme.of(context)
+                                              .textTheme
+                                              .headline6
+                                              .copyWith(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 17,
                                               ),
-                                            ],
-                                          ),
                                         ),
+                                        // title: RichText(
+                                        //   text: TextSpan(
+                                        //     text: subject.name.substring(
+                                        //         0, searchKeyWord.length),
+                                        //     style: Theme.of(context)
+                                        //         .textTheme
+                                        //         .headline6
+                                        //         .copyWith(
+                                        //           fontWeight: FontWeight.bold,
+                                        //           fontSize: 17,
+                                        //         ),
+                                        //     children: <TextSpan>[
+                                        //       TextSpan(
+                                        //         text: subject.name.substring(
+                                        //             searchKeyWord.length),
+                                        //         style: Theme.of(context)
+                                        //             .textTheme
+                                        //             .headline6
+                                        //             .copyWith(
+                                        //                 fontSize: 16,
+                                        //                 fontWeight:
+                                        //                     FontWeight.w500),
+                                        //       ),
+                                        //     ],
+                                        //   ),
+                                        // ),
                                       ),
                                     ),
                                   );

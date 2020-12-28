@@ -2,18 +2,24 @@ import 'package:FSOUNotes/app/locator.dart';
 import 'package:FSOUNotes/app/logger.dart';
 import 'package:FSOUNotes/models/subject.dart';
 import 'package:FSOUNotes/models/user.dart';
+import 'package:FSOUNotes/services/funtional_services/firestore_service.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:logger/logger.dart';
 import 'package:stacked/stacked.dart';
 import 'package:FSOUNotes/services/funtional_services/authentication_service.dart';
 import 'package:FSOUNotes/services/state_services/subjects_service.dart';
+import 'package:stacked_services/stacked_services.dart';
 
 class SubjectsDialogViewModel extends BaseViewModel {
   Logger log = getLogger("SubjectsDialogViewModel");
+  DialogService _dialogService = locator<DialogService>();
   AuthenticationService _authenticationService =
       locator<AuthenticationService>();
+  NavigationService _navigationService = locator<NavigationService>();
   SubjectsService _subjectsService = locator<SubjectsService>();
+  FirestoreService _firestoreService = locator<FirestoreService>();
+
   ValueNotifier<List<Subject>> get allSubjects => _subjectsService.allSubjects;
 
   onSubjectSelected(Subject subject) async {
@@ -32,7 +38,7 @@ class SubjectsDialogViewModel extends BaseViewModel {
     // _navigationService.back();
   }
 
-   alter() {
+  List<Subject> alter(List<Subject> allSubjects) {
     User user = _authenticationService.user;
     String semester = user.semester;
     String branch = user.branch;
@@ -40,12 +46,7 @@ class SubjectsDialogViewModel extends BaseViewModel {
     log.e("user branch : $branch");
 
     List<Subject> filteredSubjects = [];
-    //allSubjects
-    //     .where((sub) =>
-    //         sub.branchToSem.keys.contains(branch) &&
-    //         sub.branchToSem.values.contains(semester[semester.length - 1]))
-    //     .toList();
-    allSubjects.value.forEach((sub) {
+    allSubjects.forEach((sub) {
       if (sub.branchToSem.keys.contains(branch)) {
         if (sub.branchToSem[branch].contains(semester[semester.length - 1])) {
           filteredSubjects.add(sub);
@@ -54,11 +55,12 @@ class SubjectsDialogViewModel extends BaseViewModel {
     });
 
     for (int i = 0; i < filteredSubjects.length; i++) {
-      allSubjects.value.remove(filteredSubjects[i]);
+      allSubjects.remove(filteredSubjects[i]);
       filteredSubjects[i].userSubject = true;
-      allSubjects..value.insert(i, filteredSubjects[i]);
+      allSubjects.insert(i, filteredSubjects[i]);
     }
 
     notifyListeners();
+    return allSubjects;
   }
 }

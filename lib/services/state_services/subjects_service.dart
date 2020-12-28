@@ -4,6 +4,7 @@ import 'package:FSOUNotes/app/logger.dart';
 import 'package:FSOUNotes/misc/course_info.dart';
 import 'package:FSOUNotes/models/subject.dart';
 import 'package:FSOUNotes/services/funtional_services/firestore_service.dart';
+import 'package:FSOUNotes/services/funtional_services/google_drive_service.dart';
 import 'package:FSOUNotes/services/funtional_services/sharedpref_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
@@ -17,6 +18,7 @@ import 'package:hive/hive.dart';
 class SubjectsService with ChangeNotifier {
   Logger log = getLogger("SubjectsService");
   FirestoreService _firestoreService = locator<FirestoreService>();
+  
   static List<Subject> fakeData = [
     Subject.namedParameter(id: 12, name: "ljsdlf", branchToSem: {})
   ];
@@ -230,4 +232,41 @@ class SubjectsService with ChangeNotifier {
     queryWords.removeWhere((queryWord) => queryWord.length <= 3);
     return queryWords;
   }
+
+  addSubject(Subject subject) async {
+    GoogleDriveService _googleDriveService = locator<GoogleDriveService>();
+    subject = await _googleDriveService.createSubjectFolders(subject);
+    if(subject==null)return "ERROR ADDING SUBJECT";
+    await _firestoreService.addSubject(subject);
+    return "SUCCESS ADDING SUBJECT";
+  }
+
+  removeSubject(Subject subject) async {
+    GoogleDriveService _googleDriveService = locator<GoogleDriveService>();
+    String subjectName = subject.name;
+    int id = subject.id;
+    //Destroy from Gdrive
+    await _googleDriveService.deleteSubjectFolder(subject);
+    //Destroy from firebase with all notes syllabus and papers
+    bool result = await _firestoreService.destroySubject(subjectName, id);
+    log.e("DESTROYED");
+    log.e("SubjectName : " + subjectName);
+    log.e("Result : " + result.toString());
+  }
+
+  addSemesterToSubject(Subject subject, String branch, String semester){
+    if(subject==null || branch==null || semester==null)return;
+    subject.branchToSem.update(branch, (value) => value + [semester], ifAbsent: ()=>[semester]);
+  }
+
+  removeSemesterFromSubject(Subject subject, String branch, String semester){
+    if(subject==null || branch==null || semester==null)return;
+    List<String> semesters = subject.branchToSem[branch];
+    if(semesters.contains(semester)){
+      semesters.remove(semester);
+    }
+    subject.branchToSem[branch] = semesters;
+    return subject;
+  }
+
 }
