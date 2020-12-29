@@ -7,11 +7,13 @@ import 'package:FSOUNotes/models/link.dart';
 import 'package:FSOUNotes/models/notes.dart';
 import 'package:FSOUNotes/models/question_paper.dart';
 import 'package:FSOUNotes/models/report.dart';
+import 'package:FSOUNotes/models/subject.dart';
 import 'package:FSOUNotes/models/syllabus.dart';
 import 'package:FSOUNotes/services/funtional_services/analytics_service.dart';
 import 'package:FSOUNotes/services/funtional_services/firestore_service.dart';
 import 'package:FSOUNotes/services/funtional_services/google_drive_service.dart';
 import 'package:FSOUNotes/services/state_services/report_service.dart';
+import 'package:FSOUNotes/services/state_services/subjects_service.dart';
 import 'package:FSOUNotes/ui/views/notes/notes_viewmodel.dart';
 import 'package:FSOUNotes/models/user.dart';
 import 'package:FSOUNotes/ui/widgets/smart_widgets/notes_tile/notes_tile_viewmodel.dart';
@@ -27,6 +29,7 @@ class ReportViewModel extends FutureViewModel {
   AnalyticsService _analyticsService = locator<AnalyticsService>();
   NavigationService _navigationService = locator<NavigationService>();
   SharedPreferencesService _sharedPreferencesService = locator<SharedPreferencesService>();
+  SubjectsService _subjectsService = locator<SubjectsService>();
 
   List<Report> _reports;
 
@@ -93,7 +96,7 @@ class ReportViewModel extends FutureViewModel {
         _showLink(report);
       }else{
 
-        var document = await _firestoreService.getDocumentById(report.id, Constants.getDocFromConstant(report.type));
+        var document = await _firestoreService.getDocumentById(report.subjectName,report.id, Constants.getDocFromConstant(report.type));
         _navigationService.navigateTo(Routes.webViewWidgetRoute,arguments: WebViewWidgetArguments(url: document.GDriveLink));
 
       }
@@ -116,7 +119,7 @@ class ReportViewModel extends FutureViewModel {
           return;
         }
         GoogleDriveService _googleDriveService = locator<GoogleDriveService>();
-        dynamic doc = await _firestoreService.getDocumentById(report.id,Constants.getDocFromConstant(report.type));
+        dynamic doc = await _firestoreService.getDocumentById(report.subjectName,report.id,Constants.getDocFromConstant(report.type));
         String result = await _googleDriveService.processFile(doc: doc, document:Constants.getDocFromConstant(report.type) , addToGdrive: false);
         _dialogService.showDialog(title: "OUTPUT" , description: result);
         setBusy(false);
@@ -125,22 +128,24 @@ class ReportViewModel extends FutureViewModel {
     }
   
   void _deleteDocument(Report report) async {
+    Subject sub = _subjectsService.getSubjectByName(report.subjectName);
       NotesTileViewModel notesTileViewModel = NotesTileViewModel();
       log.e(report.type);
       if (report.type == Constants.questionPapers)
       {
-        QuestionPaper questionPaper = await _firestoreService.getQuestionPaperById(report.id);
+        QuestionPaper questionPaper = await _firestoreService.getQuestionPaperById(sub.id,report.id);
         notesTileViewModel.delete(questionPaper);
       }else if(report.type == Constants.syllabus){
-        Syllabus syllabus = await _firestoreService.getSyllabusById(report.id);
+        Syllabus syllabus = await _firestoreService.getSyllabusById(sub.id,report.id);
         notesTileViewModel.delete(syllabus);
       }else if(report.type == Constants.links){
-        Link link = await _firestoreService.deleteLinkById(report.id);
+        Link link = await _firestoreService.deleteLinkById(sub.id,report.id);
       }
     }
 
   void _showLink(Report report) async {
-      Link link = await _firestoreService.getLinkById(report.id);
+    Subject sub = _subjectsService.getSubjectByName(report.subjectName);
+      Link link = await _firestoreService.getLinkById(sub.id,report.id);
       _dialogService.showDialog(title: "Link Content" , description: link.linkUrl);
     }
 

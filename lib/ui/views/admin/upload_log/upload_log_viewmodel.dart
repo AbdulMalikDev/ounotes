@@ -8,6 +8,7 @@ import 'package:FSOUNotes/models/link.dart';
 import 'package:FSOUNotes/enums/constants.dart';
 import 'package:FSOUNotes/models/notes.dart';
 import 'package:FSOUNotes/models/question_paper.dart';
+import 'package:FSOUNotes/models/subject.dart';
 import 'package:FSOUNotes/models/syllabus.dart';
 import 'package:FSOUNotes/models/user.dart';
 import 'package:FSOUNotes/services/funtional_services/analytics_service.dart';
@@ -15,6 +16,7 @@ import 'package:FSOUNotes/services/funtional_services/authentication_service.dar
 import 'package:FSOUNotes/services/funtional_services/firestore_service.dart';
 import 'package:FSOUNotes/services/funtional_services/google_drive_service.dart';
 import 'package:FSOUNotes/services/funtional_services/sharedpref_service.dart';
+import 'package:FSOUNotes/services/state_services/subjects_service.dart';
 import 'package:FSOUNotes/ui/views/admin/upload_log/upload_log_view.dart';
 import 'package:FSOUNotes/ui/views/notes/notes_viewmodel.dart';
 import 'package:FSOUNotes/ui/widgets/smart_widgets/notes_tile/notes_tile_viewmodel.dart';
@@ -29,7 +31,7 @@ class UploadLogViewModel extends FutureViewModel{
  AuthenticationService _authenticationService = locator<AuthenticationService>();
  AnalyticsService _analyticsService = locator<AnalyticsService>();
  SharedPreferencesService _sharedPreferencesService = locator<SharedPreferencesService>();
-
+ SubjectsService _subjectsService = locator<SubjectsService>();
   List<UploadLog> _logs;
 
   List<UploadLog> get logs => _logs;
@@ -80,7 +82,7 @@ class UploadLogViewModel extends FutureViewModel{
       setBusy(false);
       return;
     }
-    dynamic doc = await _firestoreService.getDocumentById(logItem.id,Constants.getDocFromConstant(logItem.type));
+    dynamic doc = await _firestoreService.getDocumentById(logItem.subjectName,logItem.id,Constants.getDocFromConstant(logItem.type));
     if(doc.GDriveLink != null){await _dialogService.showDialog(title: "ERROR" , description: "ALREADY UPLOADED");setBusy(false);return;}
     String result = await _googleDriveService.processFile(doc: doc, document:Constants.getDocFromConstant(logItem.type) , addToGdrive: true);
     User user = await _sharedPreferencesService.getUser();
@@ -106,7 +108,7 @@ class UploadLogViewModel extends FutureViewModel{
     }
 
     GoogleDriveService _googleDriveService = locator<GoogleDriveService>();
-    dynamic doc = await _firestoreService.getDocumentById(logItem.id,Constants.getDocFromConstant(logItem.type));
+    dynamic doc = await _firestoreService.getDocumentById(logItem.subjectName,logItem.id,Constants.getDocFromConstant(logItem.type));
     if(doc!=null)
     {
       String result = await _googleDriveService.processFile(doc: doc, document:Constants.getDocFromConstant(logItem.type) , addToGdrive: false);
@@ -118,28 +120,30 @@ class UploadLogViewModel extends FutureViewModel{
 
   
     void _showLink(UploadLog logItem) async {
-      Link link = await _firestoreService.getLinkById(logItem.id);
+      Subject sub = _subjectsService.getSubjectByName(logItem.subjectName);
+      Link link = await _firestoreService.getLinkById(sub.id,logItem.id);
         _dialogService.showDialog(title: "Link Content" , description: link.linkUrl);
     }
   
     void _deleteDocument(UploadLog logItem) async {
+      Subject sub = _subjectsService.getSubjectByName(logItem.subjectName);
       NotesTileViewModel notesTileViewModel = NotesTileViewModel();
       log.e(logItem.type);
       if (logItem.type == Constants.questionPapers)
       {
-        QuestionPaper questionPaper = await _firestoreService.getQuestionPaperById(logItem.id);
+        QuestionPaper questionPaper = await _firestoreService.getQuestionPaperById(sub.id,logItem.id);
         notesTileViewModel.delete(questionPaper);
       }else if(logItem.type == Constants.syllabus){
-        Syllabus syllabus = await _firestoreService.getSyllabusById(logItem.id);
+        Syllabus syllabus = await _firestoreService.getSyllabusById(sub.id,logItem.id);
         notesTileViewModel.delete(syllabus);
       }else if(logItem.type == Constants.links){
-        Link link = await _firestoreService.deleteLinkById(logItem.id);
+        Link link = await _firestoreService.deleteLinkById(sub.id,logItem.id);
       }
     }
 
   Future<String> getUploadStatus(UploadLog logItem) async {
     if (logItem.type != Constants.links){
-      var document = await _firestoreService.getDocumentById(logItem.id,Constants.getDocFromConstant(logItem.type));
+      var document = await _firestoreService.getDocumentById(logItem.subjectName,logItem.id,Constants.getDocFromConstant(logItem.type));
       return document.GDriveLink==null ? "NOT UPLOADED" : "UPLOADED";
     } 
     return "None";

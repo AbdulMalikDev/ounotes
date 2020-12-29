@@ -109,20 +109,24 @@ class PushNotificationService{
   _unSubscribeFromAll(String fcmToken) async {
     log.i("User being unsubscribed from all the topics that existed for its account in the past");
 
-    var url = "https://iid.googleapis.com/iid/info/$fcmToken?details=true";
-    http.Response response = await http.get(
-        url,
-        headers: {"Content-Type": "application/json","Authorization": "Bearer ${_remoteConfigService.remoteConfig.getString('FCM_CLOUD')}"},
-      );
-    Map body = json.decode(response.body);
-    bool hasFcmTopics = body["rel"] != null || body["error"]==null;
-    if(hasFcmTopics){
-      log.e(body["rel"]["topics"]);
-      List topics = new Map.from(body["rel"]["topics"]).keys.toList();
-      topics.forEach((topic) {
-        this.fcm.unsubscribeFromTopic(topic);
-      });
-      log.e(topics);
-    } 
+    try {
+      var url = "https://iid.googleapis.com/iid/info/$fcmToken?details=true";
+      http.Response response = await http.get(
+          url,
+          headers: {"Content-Type": "application/json","Authorization": "Bearer ${_remoteConfigService.remoteConfig.getString('FCM_CLOUD')}"},
+        );
+      Map body = json.decode(response.body);
+      bool hasFcmTopics = body["rel"] != null || body["error"]==null;
+      if(hasFcmTopics){
+        log.e(body["rel"]["topics"]);
+        List topics = new Map.from(body["rel"]["topics"]).keys.toList();
+        topics.forEach((topic) {
+          this.fcm.unsubscribeFromTopic(topic);
+        });
+        log.e(topics);
+      } 
+    } catch (e) {
+      log.e(e.toString());
+    }
   }
 }

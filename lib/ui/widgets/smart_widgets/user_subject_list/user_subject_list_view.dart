@@ -35,10 +35,6 @@ class UserSubjectListView extends StatelessWidget {
                       key: UniqueKey(),
                       onDismissed: (direction) {
                         model.removeSubject(subject);
-                        showSnackBar(
-                          context,
-                          subject.name,
-                        );
                       },
                       background: Container(
                         //margin: EdgeInsets.symmetric(horizontal:10),

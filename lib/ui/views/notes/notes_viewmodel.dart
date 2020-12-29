@@ -99,7 +99,7 @@ class NotesViewModel extends BaseViewModel {
 
     //> Populate Notes list
     bool notesForNotificationDisplay = false;
-    // log.e(box.get("pinnedNotes"));
+    log.e(box.get("pinnedNotes"));
     // box.delete("pinnedNotes");
     Map<String, Map<String, DateTime>> pinnedNotes = {"empty": {"a": DateTime.now()}};
     if(box.get("pinnedNotes") != null){
@@ -145,7 +145,8 @@ class NotesViewModel extends BaseViewModel {
       List<DateTime> dates = subjectPinnedNotes.values.toList();
       dates.sort((a, b) => a.compareTo(b));
       dates = dates.reversed.toList();
-
+      subjectPinnedNotes.remove("a");
+      log.e(currentSubjectPinnedNotes);
       currentSubjectPinnedNotes.asMap().forEach((index, _) {
         DateTime recentDate = dates[index];
         String notesIdCorrespondingToTheRecentDate = subjectPinnedNotes.keys
@@ -161,6 +162,7 @@ class NotesViewModel extends BaseViewModel {
         );
       });
     }
+
     //> Adding this in the end so that it doesn't mess up the pinned notes
     if (notesForNotificationDisplay) {
       _notesTiles.value.insert(
@@ -226,6 +228,7 @@ class NotesViewModel extends BaseViewModel {
       secondaryButtonTitle: 'Open In App',
     );
     log.i("openDoc BottomSheetResponse ");
+    if(response == null)return;
     if (!response.confirmed ?? false) {
       return;
     }

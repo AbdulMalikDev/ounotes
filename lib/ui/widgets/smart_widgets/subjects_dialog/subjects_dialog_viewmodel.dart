@@ -27,12 +27,11 @@ class SubjectsDialogViewModel extends BaseViewModel {
     var result = await _subjectsService.addUserSubject(subject);
     //* while adding subject itself i have removed the subject
     //* from all subject list in subjectsService
-    print(result);
     if (result is String) {
       Fluttertoast.showToast(msg: "Subject Already added");
     } else {
-      Fluttertoast.showToast(
-          msg: "${subject.name} added to your list of subjects...");
+      // Fluttertoast.showToast(
+      //     msg: "${subject.name} added to your list of subjects...");
     }
     notifyListeners();
     // _navigationService.back();
@@ -42,12 +41,12 @@ class SubjectsDialogViewModel extends BaseViewModel {
     User user = _authenticationService.user;
     String semester = user.semester;
     String branch = user.branch;
-    log.e("user semester : $semester ${_authenticationService.user.semester}");
-    log.e("user branch : $branch");
+    // log.e("user semester : $semester ${_authenticationService.user.semester}");
+    // log.e("user branch : $branch");
 
     List<Subject> filteredSubjects = [];
     allSubjects.forEach((sub) {
-      if (sub.branchToSem.keys.contains(branch)) {
+      if (sub?.branchToSem?.keys?.contains(branch) ?? false) {
         if (sub.branchToSem[branch].contains(semester[semester.length - 1])) {
           filteredSubjects.add(sub);
         }
