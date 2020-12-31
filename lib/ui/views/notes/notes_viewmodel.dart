@@ -242,7 +242,7 @@ class NotesViewModel extends BaseViewModel {
       SheetResponse response2 = await _bottomSheetService.showBottomSheet(
         title: "Settings Saved !",
         description:
-            "You can change this setting in the profile screen anytime.",
+            "You can change this anytime in settings screen.",
       );
 
       if (response2.confirmed) {

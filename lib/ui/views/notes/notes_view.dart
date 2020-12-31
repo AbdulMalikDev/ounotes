@@ -26,7 +26,7 @@ class _NotesViewState extends State<NotesView>
     with AutomaticKeepAliveClientMixin {
   @override
   Widget build(BuildContext context) {
-    // super.build(context);
+    super.build(context);
     return ViewModelBuilder<NotesViewModel>.reactive(
       onModelReady: (model) {
         model.initialize();

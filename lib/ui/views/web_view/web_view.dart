@@ -17,7 +17,8 @@ class WebViewWidget extends StatefulWidget {
   final QuestionPaper questionPaper;
   final Syllabus syllabus;
   final String url;
-  WebViewWidget({this.note, Key key, this.questionPaper, this.syllabus,this.url})
+  WebViewWidget(
+      {this.note, Key key, this.questionPaper, this.syllabus, this.url})
       : super(key: key);
 
   @override
@@ -58,7 +59,7 @@ class _WebViewWidgetState extends State<WebViewWidget> {
       year = widget.questionPaper.year;
       br = widget.questionPaper.branch;
       url = widget.questionPaper.GDriveLink;
-    } else if(widget.syllabus != null) {
+    } else if (widget.syllabus != null) {
       subjectName = widget.syllabus.subjectName;
       year = widget.syllabus.year;
       br = widget.syllabus.branch;
@@ -118,6 +119,8 @@ class _WebViewWidgetState extends State<WebViewWidget> {
             hidden: true,
             url: url ?? widget.url,
             headers: {},
+            scrollBar: true,
+            withZoom: true,
             appBar: isLandscape
                 ? null
                 : new AppBar(
@@ -138,7 +141,7 @@ class _WebViewWidgetState extends State<WebViewWidget> {
                           } else if (widget.questionPaper != null) {
                             share =
                                 "QuestionPaper year: $year\n\nSubject Name: $subjectName\n\nLink:$url\n\nFind Latest Notes | Question Papers | Syllabus | Resources for Osmania University at the OU NOTES App\n\nhttps://play.google.com/store/apps/details?id=com.notes.ounotes";
-                          } else if(widget.syllabus != null) {
+                          } else if (widget.syllabus != null) {
                             share =
                                 "Syllabus Branch: $br\n\nSubject Name: $subjectName\n\nLink:$url\n\nFind Latest Notes | Question Papers | Syllabus | Resources for Osmania University at the OU NOTES App\n\nhttps://play.google.com/store/apps/details?id=com.notes.ounotes";
                           }
@@ -157,11 +160,12 @@ class _WebViewWidgetState extends State<WebViewWidget> {
   void _screenshotDisable(bool isDisable) async {
     AuthenticationService _Auth = locator<AuthenticationService>();
     bool isAdmin = await _Auth.getUser().then((value) => value.isAdmin);
-    if(isAdmin){return;}
-    if(isDisable)
-    {
-      await FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE); 
-    }else{
+    if (isAdmin) {
+      return;
+    }
+    if (isDisable) {
+      await FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
+    } else {
       await FlutterWindowManager.clearFlags(FlutterWindowManager.FLAG_SECURE);
     }
   }
