@@ -220,9 +220,7 @@ class NotesViewModel extends BaseViewModel {
     if (prefs.containsKey("openDocChoice")) {
       String button = prefs.getString("openDocChoice");
       if (button == "Open In App") {
-        // navigateToWebView(note);
-        
-        
+        navigateToWebView(note);
       } else {
         _sharedPreferencesService.updateView(note.id);
         Helper.launchURL(note.GDriveLink);
@@ -276,8 +274,8 @@ class NotesViewModel extends BaseViewModel {
     }
   }
 
-  void navigateToWebView(Note note,) {
-    _googleDriveService.downloadFile(note: note, onDownloadedCallback: (path){
+  void navigateToWebView(Note note) {
+    _googleDriveService.downloadFile(note: note, onDownloadedCallback: (path,note){
           _navigationService.navigateTo(Routes.pdfScreenRoute,arguments: PDFScreenArguments(pathPDF: path,doc: note));
         });
   }

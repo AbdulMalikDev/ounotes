@@ -149,48 +149,53 @@ class GoogleDriveService {
     @required Note note,
     @required onDownloadedCallback,
   }) async {
-    
-    //*If file exists, avoid downloading again
-    File localFile;
-    Directory tempDir = await getTemporaryDirectory();
-    String filePath = "${tempDir.path}/${note.subjectId}_${note.id}"; 
-    bool doesFileExist = await _checkIfFileExists(filePath);
-    if(doesFileExist){onDownloadedCallback(filePath);return;}
+    try{ 
+      log.e(note.toJson());
+      //*If file exists, avoid downloading again
+      File localFile;
+      Directory tempDir = await getTemporaryDirectory();
+      String filePath = "${tempDir.path}/${note.subjectId}_${note.id}"; 
+      bool doesFileExist = await _checkIfFileExists(filePath);
+      if(doesFileExist){onDownloadedCallback(filePath,note);return;}
 
-    //*Google Drive Set Up
-    final accountCredentials = new ServiceAccountCredentials.fromJson(_remote.remoteConfig.getString("GDRIVE"));
-    final scopes = ['https://www.googleapis.com/auth/drive'];
-    AutoRefreshingAuthClient gdriveAuthClient = await clientViaServiceAccount(accountCredentials, scopes);
-    var drive = ga.DriveApi(gdriveAuthClient);
-    String fileID = note.GDriveID;
+      //*Google Drive Set Up
+      final accountCredentials = new ServiceAccountCredentials.fromJson(_remote.remoteConfig.getString("GDRIVE"));
+      final scopes = ['https://www.googleapis.com/auth/drive'];
+      AutoRefreshingAuthClient gdriveAuthClient = await clientViaServiceAccount(accountCredentials, scopes);
+      var drive = ga.DriveApi(gdriveAuthClient);
+      String fileID = note.GDriveID;
 
-    //*Download file
-    ga.Media file = await drive.files.get(fileID,downloadOptions: ga.DownloadOptions.FullMedia);
-    
-    //*Figure out size from note.size property to show proper loading indicator
-    double contentLength = double.parse(note.size.split(" ")[0]);
-    contentLength = note.size.split(" ")[1] == 'KB' ? contentLength*1000 : contentLength*1000000 ;
-    double _progress = 0;
-    int downloadedLength = 0;
-    List<int> dataStore = [];
+      //*Download file
+      ga.Media file = await drive.files.get(fileID,downloadOptions: ga.DownloadOptions.FullMedia);
+      
+      //*Figure out size from note.size property to show proper loading indicator
+      double contentLength = double.parse(note.size.split(" ")[0]);
+      contentLength = note.size.split(" ")[1] == 'KB' ? contentLength*1000 : contentLength*1000000 ;
+      double _progress = 0;
+      int downloadedLength = 0;
+      List<int> dataStore = [];
 
-    //*Start the download
-    file.stream.listen((data) {
+      //*Start the download
+      file.stream.listen((data) {
 
-      downloadedLength += data.length;
-      _progress = (downloadedLength / contentLength) * 100;
-      print(_progress);
-      dataStore.insertAll(dataStore.length, data);
+        downloadedLength += data.length;
+        _progress = (downloadedLength / contentLength) * 100;
+        print(_progress);
+        dataStore.insertAll(dataStore.length, data);
 
-    }, onDone: () async {
+      }, onDone: () async {
 
-      _progress = 0;
-      localFile = File(filePath); 
-      await localFile.writeAsBytes(dataStore);
-      _insertBookmarks(filePath,note);
-      onDownloadedCallback(localFile.path);
+        _progress = 0;
+        localFile = File(filePath); 
+        await localFile.writeAsBytes(dataStore);
+        _insertBookmarks(filePath,note);
+        onDownloadedCallback(localFile.path,note);
 
-    });
+      });
+
+    }catch(e){
+      log.e(e.toString());
+    }
   }
 
 
