@@ -115,7 +115,7 @@ class _AllDocumentsViewState extends State<AllDocumentsView>
                                       style: TextStyle(
                                         color: Colors.white,
                                         fontWeight: FontWeight.bold,
-                                        fontSize: 12,
+                                        fontSize: 10,
                                       ),
                                     ),
                                   ),

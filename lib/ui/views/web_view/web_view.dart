@@ -117,6 +117,7 @@ class _WebViewWidgetState extends State<WebViewWidget> {
             ),
             hidden: true,
             url: url ?? widget.url,
+            headers: {},
             appBar: isLandscape
                 ? null
                 : new AppBar(
