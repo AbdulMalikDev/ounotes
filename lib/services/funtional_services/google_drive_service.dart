@@ -75,9 +75,10 @@ class GoogleDriveService {
       if (addToGdrive){
 
         // initialize http client and GDrive API
-        var AuthHeaders = await _authenticationService.refreshSignInCredentials();
-        var client = GoogleHttpClient(AuthHeaders);  
-        var drive = ga.DriveApi(client);
+        final accountCredentials = new ServiceAccountCredentials.fromJson(_remote.remoteConfig.getString("GDRIVE"));
+        final scopes = ['https://www.googleapis.com/auth/drive'];
+        AutoRefreshingAuthClient gdriveAuthClient = await clientViaServiceAccount(accountCredentials, scopes);
+        var drive = ga.DriveApi(gdriveAuthClient);
         // ServiceAccountCredentials
         // retrieve subject and notesmodel
         Subject subject = _subjectsService.getSubjectByName(doc.subjectName);
@@ -133,9 +134,10 @@ class GoogleDriveService {
     try{
       log.e("File being deleted");
       // initialize http client and GDrive API
-      var AuthHeaders = await _authenticationService.refreshSignInCredentials();
-      var client = GoogleHttpClient(AuthHeaders);
-      var drive = ga.DriveApi(client);
+      final accountCredentials = new ServiceAccountCredentials.fromJson(_remote.remoteConfig.getString("GDRIVE"));
+      final scopes = ['https://www.googleapis.com/auth/drive'];
+      AutoRefreshingAuthClient gdriveAuthClient = await clientViaServiceAccount(accountCredentials, scopes);
+      var drive = ga.DriveApi(gdriveAuthClient);
 
       var response = await drive.files.delete(doc.GDriveID);
       await _firestoreService.deleteDocument(doc);
@@ -183,8 +185,11 @@ class GoogleDriveService {
         //TODO WAJID - downloadProgress is a value notifier, so make a loading smart widget
         // in that you can use VALUE LISTENABLE BUILDER, you can get this value notifier,
         // by calling googeDriveService from viewmodel of that loading widget,
-        // Ensure that you do not add more than one line of code of here to keep code clean 
-        downloadProgress.value = (downloadedLength / contentLength) * 100 as int;
+        // Ensure that you do not add more than one line of code of here to keep code 
+        //! Tip : Subtract the loading value by 3 or 4 since the size value we are saving of the note
+        // is a bit less than actual size. Or else the loading show 100% and user will still have to wait
+        // so Loading percentage = Loading percentage - 4  <--dothis 
+        downloadProgress.value = ((downloadedLength / contentLength) * 100).round();
         print(downloadProgress.value);
         dataStore.insertAll(dataStore.length, data);
 
@@ -194,6 +199,7 @@ class GoogleDriveService {
         localFile = File(filePath); 
         await localFile.writeAsBytes(dataStore);
         _insertBookmarks(filePath,note);
+        await Future.delayed(Duration(seconds:1));
         onDownloadedCallback(localFile.path,note);
 
       });
@@ -344,7 +350,6 @@ class GoogleDriveService {
     int pages = document.pages.count;
     List<String> bookmarkNames = note.bookmarks.keys.toList();
     List<int> bookmarkPageNos = note.bookmarks.values.toList();
-
     for( int i=0 ; i<note.bookmarks.length ; i++)
     {
 
@@ -353,7 +358,6 @@ class GoogleDriveService {
 
       //Sets the destination page and location
       bookmark.destination = PdfDestination(document.pages[bookmarkPageNos[i]], Offset(20, 20));
-    
     }
 
     //Saves the document

@@ -31,7 +31,7 @@ class _PDFScreenState extends State<PDFScreen> {
           ? null
           : PreferredSize(preferredSize: Size.fromHeight(100.0), child: Padding(
             padding: const EdgeInsets.only(top:35.0),
-            child: _getAppBar(_pdfViewerController,_color,_disabledColor,context,_textEditingController),
+            child: _getAppBar(_pdfViewerController,_color,_disabledColor,context,_textEditingController,_pdfViewerKey),
           )),
       body: SfPdfViewer.file(
         File(widget.pathPDF),
@@ -51,7 +51,7 @@ class _PDFScreenState extends State<PDFScreen> {
 
 
 
-Widget _getAppBar(_pdfViewerController,_color,_disabledColor,context,_textEditingController){
+Widget _getAppBar(_pdfViewerController,_color,_disabledColor,context,_textEditingController,GlobalKey<SfPdfViewerState> pdfViewerKey){
   _textEditingController =
         TextEditingController(text: _pdfViewerController.pageNumber.toString());
   int _pageCount = _pdfViewerController.pageCount;
@@ -139,12 +139,8 @@ Widget _getAppBar(_pdfViewerController,_color,_disabledColor,context,_textEditin
                           color: Colors.black,
                           size: 24,
                         ),
-                        onPressed: _pdfViewerController.pageNumber == 0
-                            ? null
-                            : () {
-                                _textEditingController.selection =
-                                    TextSelection(
-                                        baseOffset: -1, extentOffset: -1);
+                        onPressed:() {
+                               pdfViewerKey.currentState.openBookmarkView();
                               },
                       ),
                     )),

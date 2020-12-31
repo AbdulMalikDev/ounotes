@@ -1,8 +1,10 @@
+import 'package:FSOUNotes/app/logger.dart';
 import 'package:FSOUNotes/enums/constants.dart';
 import 'package:FSOUNotes/enums/enums.dart';
 import 'package:FSOUNotes/models/document.dart';
 import 'package:flutter/foundation.dart';
-
+import 'package:logger/logger.dart';
+Logger log = getLogger("Note.dart");
 class Note extends AbstractDocument {
   String id;
   String title;
@@ -52,6 +54,7 @@ class Note extends AbstractDocument {
   });
 
   Note.fromData(Map<String, dynamic> data , String documentID) {
+    
     title = data['title'];
     subjectName = data['subjectName'];
     author = data['author'];
