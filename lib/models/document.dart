@@ -5,6 +5,7 @@ abstract class AbstractDocument {
   bool isDownloaded = false;
   Document path;
   String subjectName;
+  int subjectId;
   String title;
   String url;
   String size;

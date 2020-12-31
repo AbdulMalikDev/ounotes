@@ -6,6 +6,7 @@ import 'package:cuid/cuid.dart';
 class Link extends AbstractDocument{
 
   String subjectName;
+  int subjectId;
   String title;
   String description;
   String linkUrl;
@@ -16,7 +17,7 @@ class Link extends AbstractDocument{
   Document path;
   String uploader_id;
 
-  Link({this.subjectName, this.title, this.description, this.linkUrl, this.id, this.path,this.uploader_id});
+  Link({this.subjectName, this.title, this.description, this.linkUrl, this.id, this.path,this.uploader_id,this.subjectId});
 
 
   Link.fromData(Map<String,dynamic> data)
@@ -29,6 +30,7 @@ class Link extends AbstractDocument{
     path         = Document.Links;
     id           = data["id"] ?? getNewId();
     type         = Constants.links;
+    subjectId = data["subjectId"];
     uploader_id         = data["uploader_id"];
   }
 
@@ -51,6 +53,7 @@ class Link extends AbstractDocument{
     "description" : description,
     "url"         : linkUrl,
     "id"          : id,
+    "subjectId" : subjectId,
     "uploader_id" : uploader_id,
     };
   }
@@ -60,7 +63,9 @@ class Link extends AbstractDocument{
       this.size =size;
     }
   
-  
+    set setSubjectId(int id){
+    this.subjectId = id;
+  }
 
   @override
   set setUrl(String url) {

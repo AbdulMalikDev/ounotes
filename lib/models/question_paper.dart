@@ -15,6 +15,7 @@ class QuestionPaper extends AbstractDocument{
   String title;
 
   String subjectName;
+  int subjectId;
   String size;
   String url;
   DateTime uploadDate;
@@ -51,6 +52,7 @@ class QuestionPaper extends AbstractDocument{
     this.GDriveQuestionPaperFolderID,
     this.id,
     this.uploader_id,
+    this.subjectId,
   });
 
   
@@ -68,6 +70,7 @@ class QuestionPaper extends AbstractDocument{
     uploader_id  = data["uploader_id"];
     year         = data["year"].toString() ?? "";
     type         = Constants.questionPapers;
+    subjectId = data["subjectId"];
     GDriveID     = data["GDriveID"]; 
     GDriveLink   = data["GDriveLink"];
     GDriveQuestionPaperFolderID   = data["GDriveQuestionPaperFolderID"];
@@ -97,6 +100,7 @@ class QuestionPaper extends AbstractDocument{
       "title"       : title,
       "uploader_id" : uploader_id,
       "isDownloaded": isDownloaded ?? false,
+      "subjectId" : subjectId,
       "GDriveID": GDriveID,
       "GDriveLink": GDriveLink,
       "GDriveQuestionPaperFolderID": GDriveQuestionPaperFolderID,
@@ -109,7 +113,9 @@ class QuestionPaper extends AbstractDocument{
       this.size =size;
     }
   
-  
+    set setSubjectId(int id){
+    this.subjectId = id;
+  }
 
   @override
    set setUrl(String url) {

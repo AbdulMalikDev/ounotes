@@ -126,11 +126,22 @@ class _SubjectsDialogViewState extends State<SubjectsDialogView> {
                                 itemCount: allSubjectsAltered.length,
                                 itemBuilder: (context, index) {
                                   Subject subject = allSubjectsAltered[index];
-
-                                  if (!(searchKeyWord.trim() == "" ||
-                                      subject.name
-                                          .toLowerCase()
-                                          .contains(searchKeyWord)))
+                                  String subjectName = subject.name.toLowerCase();
+                                  List<String> firstLetters = subjectName
+                                                                .split(" ")
+                                                                .map((word) {if(word.isNotEmpty)return word[0];})
+                                                                .toList();                 
+                                  //handling edge case where subject name may have extra space                            
+                                  firstLetters.removeWhere((letter) => letter == null);                            
+                                  int lettersMatched = 0;
+                                  searchKeyWord.split("").forEach((letter) { 
+                                    if(firstLetters.contains(letter))lettersMatched++;
+                                  });
+                                  double matchingPercentage = (lettersMatched/searchKeyWord.length)*100;
+                                  bool subjectMatched = searchKeyWord.trim().isEmpty
+                                                        || matchingPercentage > 90 
+                                                        || subjectName.contains(searchKeyWord); 
+                                  if (!subjectMatched)
                                     return Container();
                                   return GestureDetector(
                                     onTap: () {

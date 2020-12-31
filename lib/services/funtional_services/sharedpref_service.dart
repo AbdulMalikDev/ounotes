@@ -99,7 +99,6 @@ class SharedPreferencesService {
       //update views to the server
       notesView.views.forEach((docId, view) {
         if (view != 0) {
-          print("id" + docId + " view: " + view.toString());
           _firestoreService.incrementView(docId, view);
         }
         notesView.views[docId] = 0;

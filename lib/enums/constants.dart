@@ -16,6 +16,13 @@ class Constants {
   static const String openInBrowser = 'openInBrowser';
   static const String openInApp = 'openInApp';
 
+
+  //firebase collection names
+  static const String firebase_notes = "Notes";
+  static const String firebase_questionPapers = "QuestionPapers";
+  static const String firebase_syllabus = "Syllabus";
+  static const String firebase_links = "Links";
+
   //Notification Events [ Make sure Cloud Functions file has same constants ]
   static const String notificationEventNotesUpload =
       "notificationEventNotesUpload";

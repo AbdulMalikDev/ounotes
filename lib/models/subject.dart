@@ -32,7 +32,7 @@ class Subject {
   });
 
   Subject.fromData(Map<String, dynamic> data) {
-
+        
       try{ 
         id = data['id'];
         name = data['name'].toString();

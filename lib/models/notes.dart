@@ -7,6 +7,7 @@ class Note extends AbstractDocument {
   String id;
   String title;
   String subjectName;
+  int subjectId;
   String author;
   int view;
   String size;
@@ -44,6 +45,7 @@ class Note extends AbstractDocument {
     this.firebaseId,
     this.id,
     this.uploader_id,
+    this.subjectId,
   });
 
   Note.fromData(Map<String, dynamic> data , String documentID) {
@@ -64,6 +66,7 @@ class Note extends AbstractDocument {
     GDriveID = data['GDriveID'] ?? null;
     GDriveNotesFolderID = data['GDriveNotesFolderID'] ?? null;
     firebaseId = documentID;
+    subjectId = data["subjectId"];
   }
 
   Map<String, dynamic> toJson() {
@@ -83,7 +86,12 @@ class Note extends AbstractDocument {
       "GDriveID":GDriveID ?? null,
       "GDriveNotesFolderID":GDriveNotesFolderID ?? null,
       "firebaseId":firebaseId ?? "",
+      "subjectId" : subjectId,
     };
+  }
+
+  set setSubjectId(int id){
+    this.subjectId = id;
   }
 
   set setId(String id) {

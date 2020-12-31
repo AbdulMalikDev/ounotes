@@ -39,8 +39,8 @@ class SearchViewModel extends BaseViewModel {
     if (result is String) {
       Fluttertoast.showToast(msg: "Subject Already added");
     }else{
-       Fluttertoast.showToast(
-        msg: "$suggestion added to your list of subjects...");
+      //  Fluttertoast.showToast(
+      //   msg: "$suggestion added to your list of subjects...");
     }
     notifyListeners();
    
