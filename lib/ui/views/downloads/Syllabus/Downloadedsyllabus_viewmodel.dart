@@ -28,10 +28,10 @@ class DownloadedSyllabusViewModel extends BaseViewModel {
   }
 
   void onTap({String PDFpath, String notesName}) {
-    _navigationService.navigateTo(
-      Routes.pdfScreenRoute,
-      arguments: PDFScreenArguments(pathPDF: PDFpath, title: notesName),
-    );
+    // _navigationService.navigateTo(
+    //   Routes.pdfScreenRoute,
+    //   arguments: PDFScreenArguments(pathPDF: PDFpath, title: notesName),
+    // );
   }
 
   removeSyllabusFromDownloads(String path) {

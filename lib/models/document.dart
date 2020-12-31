@@ -8,6 +8,7 @@ abstract class AbstractDocument {
   int subjectId;
   String title;
   String url;
+  int pages;
   String size;
   String type;
   String uploader_id;
@@ -16,6 +17,7 @@ abstract class AbstractDocument {
   set setDate(DateTime setDate) {}
   set setSize(String size);
   set setUrl(String url) ;
+  set setPages(int value) => this.pages = value;
 
   set setId(String id) {
     this.id = id;

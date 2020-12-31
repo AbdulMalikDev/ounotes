@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:FSOUNotes/ui/widgets/dumb_widgets/TextFieldView.dart';
 import 'package:FSOUNotes/ui/widgets/smart_widgets/bottom_sheet/bottom_sheet_view_model.dart';
 import 'package:flutter/material.dart';
@@ -295,14 +297,19 @@ class _FloatingBoxConfirmBottomSheet extends StatelessWidget {
 class _FilledStacksFloatingBoxBottomSheet extends StatelessWidget {
   final SheetRequest request;
   final Function(SheetResponse) completer;
-  const _FilledStacksFloatingBoxBottomSheet({
+  _FilledStacksFloatingBoxBottomSheet({
     Key key,
     this.request,
     this.completer,
   }) : super(key: key);
-
+  bool isFileUploadSheet = false;
   @override
   Widget build(BuildContext context) {
+    if (request.customData != null &&
+        request.customData.runtimeType.toString() ==
+            "_InternalLinkedHashMap<String, bool>") {
+      isFileUploadSheet = true;
+    }
     return Container(
       margin: EdgeInsets.all(25),
       padding: EdgeInsets.all(25),
@@ -326,33 +333,61 @@ class _FilledStacksFloatingBoxBottomSheet extends StatelessWidget {
             ),
           ),
           SizedBox(height: 25),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15.0),
-            child: Text(
-              request.description,
-              style: TextStyle(color: Colors.grey, fontSize: 19),
+          if (!isFileUploadSheet)
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15.0),
+              child: Text(
+                request.description,
+                style: TextStyle(color: Colors.grey, fontSize: 19),
+              ),
             ),
-          ),
           SizedBox(height: 30),
           Row(
             mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: isFileUploadSheet
+                ? MainAxisAlignment.spaceEvenly
+                : MainAxisAlignment.spaceBetween,
             children: [
-              MaterialButton(
-                onPressed: () => completer(SheetResponse(confirmed: false)),
-                child: Text(
-                  request.secondaryButtonTitle,
-                  style: TextStyle(color: Theme.of(context).primaryColor),
+              if (!isFileUploadSheet)
+                Expanded(
+                  flex:4,
+                  child: MaterialButton(
+                    onPressed: () => completer(SheetResponse(confirmed: false)),
+                    child: Text(
+                      request.secondaryButtonTitle,
+                      style: TextStyle(color: Theme.of(context).primaryColor),
+                    ),
+                  ),
                 ),
-              ),
-              FlatButton(
-                onPressed: () => completer(SheetResponse(confirmed: true)),
-                child: Text(
-                  request.mainButtonTitle,
-                  style: TextStyle(
-                      color: Colors.white, fontWeight: FontWeight.bold),
+              if (isFileUploadSheet)
+                Expanded(
+                  flex:4,
+                  child: FlatButton(
+                    // padding: EdgeInsets.symmetric(horizontal:0,vertical:13),
+                    onPressed: () => completer(SheetResponse(confirmed: false)),
+                    child: Text(
+                      request.secondaryButtonTitle,
+                      style: TextStyle(
+                          color: Colors.white, fontWeight: FontWeight.bold),
+                    ),
+                    color: Theme.of(context).primaryColor,
+                  ),
                 ),
-                color: Theme.of(context).primaryColor,
+              Expanded(flex:1,child:SizedBox()),
+              Expanded(
+                flex:4,
+                child: FlatButton(
+                  // padding: EdgeInsets.symmetric(horizontal:30,vertical:13),
+                  onPressed: () => completer(SheetResponse(confirmed: true)),
+                  child: Text(
+                    request.mainButtonTitle,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  color: Theme.of(context).primaryColor,
+                ),
               )
             ],
           )

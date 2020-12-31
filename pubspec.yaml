@@ -14,7 +14,7 @@ description: A new Flutter project.
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 2.1.0+33
+version: 2.1.0+34
 
 environment:
   sdk: ">=2.9.0 <3.0.0"
@@ -63,12 +63,13 @@ dependencies:
   permission_handler: ^5.0.1+1
   share: ^0.6.4+3
   feature_discovery: ^0.12.1
-  syncfusion_flutter_pdfviewer: ^18.3.53-beta
   connectivity_wrapper: ^1.0.4
   flutter_windowmanager: ^0.0.2
   disable_screenshots: ^0.1.0
   rate_my_app: ^0.7.2
   substring_highlight: ^0.1.2
+  syncfusion_flutter_pdfviewer: ^18.4.32-beta
+  syncfusion_flutter_pdf: ^18.4.32-beta
 
   # Architecture related packages
   flutter_hooks: null

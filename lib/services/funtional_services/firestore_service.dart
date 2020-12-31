@@ -609,71 +609,77 @@ class FirestoreService {
 
   updateNoteInFirebase(Note note) async {
     try {
-    QuerySnapshot docSnaps = await Firestore.instance 
-                            .collectionGroup(Constants.firebase_notes)
-                            .where("id",isEqualTo:note.id)
-                            .getDocuments();
-    List<DocumentSnapshot> docs = docSnaps.documents;
-    if(docs.isEmpty)throw Exception("Document Empty");
-    DocumentSnapshot doc = docs[docs.length-1];
-    await doc.reference.setData(note.toJson());
+      if(note.subjectId == null){
+        SubjectsService _subjectsService = locator<SubjectsService>();
+        Subject subject = _subjectsService.getSubjectByName(note.subjectName);
+        note.setSubjectId = subject.id;
+      }
+      log.e("Note with id ${note.id} is being updated");
+      await _subjectsCollectionReference
+              .document(note.subjectId.toString()) 
+              .collection(Constants.firebase_notes)
+              .document(note.id)
+              .setData(note.toJson(),merge: true);
     if (note.path == Document.Links) {
       await _subjectsCollectionReference
             .document("links_length")
             .updateData({"len": FieldValue.increment(-1)});
     }
      
-    } on Exception catch (e) {
+    } catch (e) {
       log.e(e.toString());
     }
   }
 
   updateQuestionPaperInFirebase(QuestionPaper note) async {
-    log.e(note.id);
+    if(note.subjectId == null){
+        SubjectsService _subjectsService = locator<SubjectsService>();
+        Subject subject = _subjectsService.getSubjectByName(note.subjectName);
+        note.setSubjectId = subject.id;
+      }
 
     try {
-      QuerySnapshot docSnaps = await Firestore.instance 
-                            .collectionGroup(Constants.firebase_questionPapers)
-                            .where("id",isEqualTo:note.id)
-                            .getDocuments();
-      List<DocumentSnapshot> docs = docSnaps.documents;
-      if(docs.isEmpty)throw Exception("Document Empty");
-      DocumentSnapshot doc = docs[docs.length-1];
-      await doc.reference.setData(note.toJson());
+      await _subjectsCollectionReference
+              .document(note.subjectId.toString()) 
+              .collection(Constants.firebase_questionPapers)
+              .document(note.id)
+              .setData(note.toJson(),merge: true);
     } on Exception catch (e) {
       log.e(e.toString());
     }
   }
 
   updateSyllabusInFirebase(Syllabus note) async {
-    log.e(note.id);
+    if(note.subjectId == null){
+        SubjectsService _subjectsService = locator<SubjectsService>();
+        Subject subject = _subjectsService.getSubjectByName(note.subjectName);
+        note.setSubjectId = subject.id;
+      }
 
     try {
-      QuerySnapshot docSnaps = await Firestore.instance 
-                            .collectionGroup(Constants.firebase_syllabus)
-                            .where("id",isEqualTo:note.id)
-                            .getDocuments();
-      List<DocumentSnapshot> docs = docSnaps.documents;
-      if(docs.isEmpty)throw Exception("Document Empty");
-      DocumentSnapshot doc = docs[docs.length-1];
-      await doc.reference.setData(note.toJson());
+      await _subjectsCollectionReference
+              .document(note.subjectId.toString()) 
+              .collection(Constants.firebase_syllabus)
+              .document(note.id)
+              .setData(note.toJson(),merge: true);
     } on Exception catch (e) {
       log.e(e.toString());
     }
   }
 
   updateLinkInFirebase(Link note) async {
-    log.e(note.id);
+    if(note.subjectId == null){
+        SubjectsService _subjectsService = locator<SubjectsService>();
+        Subject subject = _subjectsService.getSubjectByName(note.subjectName);
+        note.setSubjectId = subject.id;
+      }
 
     try {
-      QuerySnapshot docSnaps = await Firestore.instance 
-                            .collectionGroup(Constants.firebase_links)
-                            .where("id",isEqualTo:note.id)
-                            .getDocuments();
-      List<DocumentSnapshot> docs = docSnaps.documents;
-      if(docs.isEmpty)throw Exception("Document Empty");
-      DocumentSnapshot doc = docs[docs.length-1];
-      await doc.reference.setData(note.toJson());
+      await _subjectsCollectionReference
+              .document(note.subjectId.toString()) 
+              .collection(Constants.firebase_links)
+              .document(note.id)
+              .setData(note.toJson(),merge: true);
       log.e(note.toJson());
     } on Exception catch (e) {
       log.e(e.toString());
@@ -783,13 +789,11 @@ class FirestoreService {
     //       .collection(Constants.firebase_links)
     //       .document(id)
     //       .delete();
-    QuerySnapshot docSnaps = await Firestore.instance 
-          .collectionGroup(Constants.firebase_links)
-          .where("id",isEqualTo:id)
-          .getDocuments();
-    List<DocumentSnapshot> docs = docSnaps.documents;
-    DocumentSnapshot doc = docs[docs.length-1];
-    await doc.reference.delete();
+    await _subjectsCollectionReference
+              .document(subId.toString()) 
+              .collection(Constants.firebase_links)
+              .document(id)
+              .delete();
     await _uploadLogCollectionReference.document(id).delete();
     await _reportCollectionReference.document(id).delete();
     await _subjectsCollectionReference
@@ -804,13 +808,11 @@ class FirestoreService {
     //       .collection(Constants.firebase_notes)
     //       .document(id)
     //       .delete();
-    QuerySnapshot docSnaps = await Firestore.instance 
-          .collectionGroup(Constants.firebase_notes)
-          .where("id",isEqualTo:id)
-          .getDocuments();
-    List<DocumentSnapshot> docs = docSnaps.documents;
-    DocumentSnapshot doc = docs[docs.length-1];
-    await doc.reference.delete();
+    await _subjectsCollectionReference
+              .document(subId.toString()) 
+              .collection(Constants.firebase_notes)
+              .document(id)
+              .delete();
     await _uploadLogCollectionReference.document(id).delete();
     await _reportCollectionReference.document(id).delete();
     return null;
@@ -842,12 +844,11 @@ class FirestoreService {
   }
 
   getDocumentById(String subjectName,String id, Document document) async {
-    log.e(subjectName);
-    log.e(id);
-    log.e(document);
+    // log.e(subjectName);
+    // log.e(id);
+    // log.e(document);
     SubjectsService _subjectsService = locator<SubjectsService>();
     Subject subject = _subjectsService.getSubjectByName(subjectName);
-    log.e(subject.id);
     switch (document) {
       case Document.Notes:
         return await this.getNoteById(subject.id,id);

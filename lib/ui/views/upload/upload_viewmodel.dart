@@ -1,8 +1,10 @@
 import 'package:FSOUNotes/app/locator.dart';
 import 'package:FSOUNotes/app/logger.dart';
 import 'package:FSOUNotes/app/router.gr.dart';
+import 'package:FSOUNotes/enums/bottom_sheet_type.dart';
 import 'package:FSOUNotes/misc/constants.dart';
 import 'package:FSOUNotes/enums/enums.dart';
+import 'package:FSOUNotes/enums/constants.dart' as enumConst;
 import 'package:FSOUNotes/misc/course_info.dart';
 import 'package:FSOUNotes/models/document.dart';
 import 'package:FSOUNotes/models/link.dart';
@@ -21,12 +23,14 @@ import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+
 class UploadViewModel extends BaseViewModel {
   Logger log = getLogger("UploadViewModel");
   CloudStorageService _cloudStorageService = locator<CloudStorageService>();
   FirestoreService _firestoreService = locator<FirestoreService>();
   NavigationService _navigationService = locator<NavigationService>();
   DialogService _dialogService = locator<DialogService>();
+  BottomSheetService _bottomSheetService = locator<BottomSheetService>();
   SubjectsService _subjectsService = locator<SubjectsService>();
 
   List<DropdownMenuItem<String>> _dropDownMenuItemsofsemester;
@@ -213,7 +217,17 @@ class UploadViewModel extends BaseViewModel {
         break;
     }
     if (doc.path != Document.Links) {
-      var result = await _cloudStorageService.uploadFile(note: doc, type: type);
+      SheetResponse response = await _bottomSheetService.showCustomSheet(
+                                                                          variant: BottomSheetType.filledStacks,
+                                                                          title:"What do you want to upload?",
+                                                                          description: "",
+                                                                          mainButtonTitle: "PDF",
+                                                                          secondaryButtonTitle: "Image",
+                                                                          customData: {"file_upload":true}
+                                                                        );
+      if(response == null){setBusy(false);return;}                                                                  
+      String fileType = response.confirmed ? enumConst.Constants.pdf : enumConst.Constants.png;                                                                       
+      var result = await _cloudStorageService.uploadFile(note: doc, type: type,uploadFileType: fileType);
       log.w(result);
       if (result == "BLOCKED") {
         await _dialogService.showDialog(

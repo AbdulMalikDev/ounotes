@@ -16,6 +16,7 @@ class QuestionPaper extends AbstractDocument{
 
   String subjectName;
   int subjectId;
+  int pages;
   String size;
   String url;
   DateTime uploadDate;
@@ -74,6 +75,7 @@ class QuestionPaper extends AbstractDocument{
     GDriveID     = data["GDriveID"]; 
     GDriveLink   = data["GDriveLink"];
     GDriveQuestionPaperFolderID   = data["GDriveQuestionPaperFolderID"];
+    pages = data["pages"];
    
     }catch(e)
     {
@@ -101,9 +103,10 @@ class QuestionPaper extends AbstractDocument{
       "uploader_id" : uploader_id,
       "isDownloaded": isDownloaded ?? false,
       "subjectId" : subjectId,
-      "GDriveID": GDriveID,
-      "GDriveLink": GDriveLink,
-      "GDriveQuestionPaperFolderID": GDriveQuestionPaperFolderID,
+      if(GDriveLink!=null)"GDriveLink":GDriveLink,
+      if(GDriveID!=null)"GDriveID":GDriveID,
+      if(GDriveQuestionPaperFolderID!=null)"GDriveNotesFolderID":GDriveQuestionPaperFolderID,
+      if(pages!=null)"pages":pages,
       
     };
   }
@@ -112,6 +115,8 @@ class QuestionPaper extends AbstractDocument{
    set setSize(String size) {
       this.size =size;
     }
+
+  set setPages(int value) => this.pages = value;
   
     set setSubjectId(int id){
     this.subjectId = id;

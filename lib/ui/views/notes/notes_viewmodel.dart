@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:FSOUNotes/app/locator.dart';
 import 'package:FSOUNotes/app/logger.dart';
@@ -10,7 +11,9 @@ import 'package:FSOUNotes/models/notes.dart';
 import 'package:FSOUNotes/models/subject.dart';
 import 'package:FSOUNotes/models/vote.dart';
 import 'package:FSOUNotes/services/funtional_services/admob_service.dart';
+import 'package:FSOUNotes/services/funtional_services/authentication_service.dart';
 import 'package:FSOUNotes/services/funtional_services/firestore_service.dart';
+import 'package:FSOUNotes/services/funtional_services/google_drive_service.dart';
 import 'package:FSOUNotes/services/funtional_services/remote_config_service.dart';
 import 'package:FSOUNotes/services/funtional_services/sharedpref_service.dart';
 import 'package:FSOUNotes/services/state_services/download_service.dart';
@@ -23,12 +26,17 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:googleapis_auth/auth.dart';
+import 'package:googleapis_auth/auth_io.dart';
 import 'package:logger/logger.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:hive/hive.dart';
+import 'package:googleapis/drive/v3.dart' as ga;
+import 'package:http/http.dart' as http;
+import 'package:path/path.dart' as path;
 
 class NotesViewModel extends BaseViewModel {
   Logger log = getLogger("Notes view model");
@@ -39,6 +47,7 @@ class NotesViewModel extends BaseViewModel {
       new ValueNotifier(new List<Widget>());
 
   FirestoreService _firestoreService = locator<FirestoreService>();
+  GoogleDriveService _googleDriveService = locator<GoogleDriveService>(); 
   AdmobService _admobService = locator<AdmobService>();
   RemoteConfigService _remoteConfigService = locator<RemoteConfigService>();
   NavigationService _navigationService = locator<NavigationService>();
@@ -266,8 +275,9 @@ class NotesViewModel extends BaseViewModel {
   }
 
   void navigateToWebView(Note note) {
-    _navigationService.navigateTo(Routes.webViewWidgetRoute,
-        arguments: WebViewWidgetArguments(note: note));
+    _googleDriveService.downloadFile(note: note, onDownloadedCallback: (path,note){
+          _navigationService.navigateTo(Routes.pdfScreenRoute,arguments: PDFScreenArguments(pathPDF: path,doc: note));
+        });
   }
 
   void navigateBack() {
@@ -318,7 +328,7 @@ class NotesViewModel extends BaseViewModel {
     // _firestoreService.incrementView(note);
     setLoading(false);
     _navigationService.navigateTo(Routes.pdfScreenRoute,
-        arguments: PDFScreenArguments(pathPDF: PDFpath, title: notesName));
+        arguments: PDFScreenArguments(pathPDF: PDFpath));
   }
 
   @override

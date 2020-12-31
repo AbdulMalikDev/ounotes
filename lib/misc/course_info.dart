@@ -291,7 +291,7 @@ class CourseInfo {
     Subject(200, "Electrical Energy Conservation and Auditing",branchToSem: {"EIE":["6"],"EEE":["6"]},subjectType: SubjectType.Elective),
     Subject(201, "Reliability Engineering",branchToSem: {"EIE":["6"],"EEE":["6"],"IT":["6"]},subjectType: SubjectType.Elective),
     // Subject(202, "Non-Conventional Energy Sources",branchToSem: {"EIE":["6"],"EEE":["6"]},subjectType: SubjectType.Elective),
-    Subject(203, "Illumination and Electric Traction Systems",branchToSem: {"EIE":["6"],"EEE":["6"]},subjectType: SubjectType.Elective),
+    // Subject(203, "Illumination and Electric Traction Systems",branchToSem: {"EIE":["6"],"EEE":["6"]},subjectType: SubjectType.Elective),
     //ECE
     Subject(216, "Data Communication and computer networking",branchToSem: {"ECE":["6"]}),
     Subject(217, "Electronic Measurements and Instrumentation",branchToSem: {"ECE":["6",'7']}),
@@ -381,7 +381,7 @@ class CourseInfo {
     // Subject(91, "DATA COMMUNICATIONS",  ),
     // Subject(88, "OPERATIONS RESEARCH",  ),
     //*VERIFIED
-    Subject(92, "AUTOMATA LANGUAGES AND COMPUTATION",branchToSem: {"CSE":["5"]}),
+    // Subject(92, "AUTOMATA LANGUAGES AND COMPUTATION",branchToSem: {"CSE":["5"]}),
     //* VERIFIED
     Subject(93, "COMPUTER GRAPHICS",branchToSem: {"CSE":["5"],"IT":["5"],}),
     //* VERIFIED FOR MECH SEM 6
@@ -500,7 +500,7 @@ class CourseInfo {
     Subject(293, "Non-Conventional Energy Sources",branchToSem: {'CSE':['7'],'IT':['7'],'ECE':['7'],'EEE':['6','7'],'CIVIL':['7'],'MECH':['7'],'EIE':['6','7'],'PE':['7']},subjectType: SubjectType.Elective),
     Subject(294, "Entrepreneurship",branchToSem: {'CSE':['7'],'IT':['7'],'ECE':['7'],'EEE':['7'],'CIVIL':['7'],'MECH':['7'],'EIE':['7'],'PE':['7']},subjectType: SubjectType.Elective),
     Subject(295, "Principles of Electronic Communications",branchToSem: {'CSE':['7'],'IT':['7'],'EEE':['7'],'CIVIL':['7'],'MECH':['7'],'EIE':['7'],'PE':['7'],"ECE":["6"]},subjectType: SubjectType.Elective),
-    Subject(296, "Illumination and Electric Traction systems",branchToSem: {'CSE':['7'],'IT':['7'],'EEE':['7'],'CIVIL':['7'],'MECH':['7'],'EIE':['7'],'PE':['7']},subjectType: SubjectType.Elective),
+    Subject(296, "Illumination and Electric Traction systems",branchToSem: {'CSE':['7'],'IT':['7'],'EEE':['6','7'],'CIVIL':['7'],'MECH':['7'],'EIE':['6','7'],'PE':['7']},subjectType: SubjectType.Elective),
     
     //ECE
     Subject(297, "Mobile and Cellular Communications",branchToSem: {'ECE':['7']},subjectType: SubjectType.Elective),
@@ -663,7 +663,7 @@ class CourseInfo {
     //! DELETE [EXTRA]
     // Subject(175, "GENDER SENSITIZATION",  ),
     //* VERIFIED 
-    Subject(176, "CONSTRUCTION MANAGEMENT AND TECHNOLOGY",branchToSem: {"CIVIL":["8"]},subjectType: SubjectType.Elective),
+    // Subject(176, "CONSTRUCTION MANAGEMENT AND TECHNOLOGY",branchToSem: {"CIVIL":["8"]},subjectType: SubjectType.Elective),
     //! DELETE [USELESS] 
     // Subject(177, "PROFESSIONAL ELECTIVE-II",  ),
   ];
