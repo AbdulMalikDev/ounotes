@@ -74,6 +74,7 @@ class Syllabus extends AbstractDocument{
     GDriveID     = data["GDriveID"];
     GDriveLink   = data["GDriveLink"];
     GDriveSyllabusFolderID   = data["GDriveSyllabusFolderID"];
+    pages = data["pages"];
 
     } catch (e) {
       log.e("While DESERIALIZING syllabus model from Firebase , Error occurred");
@@ -99,9 +100,10 @@ class Syllabus extends AbstractDocument{
       "year"        : year,
       "uploader_id" : uploader_id,
       "subjectId" : subjectId,
-      "GDriveID"    : GDriveID,
-      "GDriveLink"  : GDriveLink,
-      "GDriveSyllabusFolderID"  : GDriveSyllabusFolderID,
+      if(GDriveLink!=null)"GDriveLink":GDriveLink,
+      if(GDriveID!=null)"GDriveID":GDriveID,
+      if(GDriveSyllabusFolderID!=null)"GDriveNotesFolderID":GDriveSyllabusFolderID,
+      if(pages!=null)"pages":pages,
     };
   }
 

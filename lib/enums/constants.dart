@@ -23,6 +23,12 @@ class Constants {
   static const String firebase_syllabus = "Syllabus";
   static const String firebase_links = "Links";
 
+  //file extension names
+  static const String pdf = 'pdf';
+  static const String png = 'png';
+  static const String jpeg = 'jpeg';
+  static const String jpg = 'jpg';
+
   //Notification Events [ Make sure Cloud Functions file has same constants ]
   static const String notificationEventNotesUpload =
       "notificationEventNotesUpload";

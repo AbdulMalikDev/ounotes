@@ -1,15 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math' as math;
-import 'package:FSOUNotes/app/locator.dart';
-import 'package:FSOUNotes/app/logger.dart';
-import 'package:FSOUNotes/enums/constants.dart';
-import 'package:FSOUNotes/enums/enums.dart';
-import 'package:FSOUNotes/models/document.dart';
-import 'package:FSOUNotes/models/notes.dart';
-import 'package:FSOUNotes/models/question_paper.dart';
-import 'package:FSOUNotes/models/subject.dart';
-import 'package:FSOUNotes/models/syllabus.dart';
 import 'package:FSOUNotes/services/funtional_services/authentication_service.dart';
 import 'package:FSOUNotes/services/funtional_services/cloud_storage_service.dart';
 import 'package:FSOUNotes/services/funtional_services/db_service.dart';
@@ -21,6 +12,16 @@ import 'package:FSOUNotes/services/state_services/notes_service.dart';
 import 'package:FSOUNotes/services/state_services/question_paper_service.dart';
 import 'package:FSOUNotes/services/state_services/subjects_service.dart';
 import 'package:FSOUNotes/services/state_services/syllabus_service.dart';
+import 'package:FSOUNotes/app/locator.dart';
+import 'package:FSOUNotes/app/logger.dart';
+import 'package:FSOUNotes/enums/constants.dart';
+import 'package:FSOUNotes/enums/enums.dart';
+import 'package:FSOUNotes/models/document.dart';
+import 'package:syncfusion_flutter_pdf/pdf.dart';
+import 'package:FSOUNotes/models/notes.dart';
+import 'package:FSOUNotes/models/question_paper.dart';
+import 'package:FSOUNotes/models/subject.dart';
+import 'package:FSOUNotes/models/syllabus.dart';
 import 'package:FSOUNotes/ui/views/home/home_view.dart';
 import 'package:FSOUNotes/ui/views/notes/notes_viewmodel.dart';
 import 'package:FSOUNotes/utils/file_picker_service.dart';
@@ -31,6 +32,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:googleapis_auth/auth.dart';
+import 'package:googleapis_auth/auth_io.dart';
 import 'package:http/io_client.dart';
 import 'package:injectable/injectable.dart';
 import 'package:logger/logger.dart';
@@ -41,6 +44,7 @@ import 'package:stacked_services/stacked_services.dart';
 import 'package:googleapis/drive/v3.dart' as ga;
 import 'package:http/http.dart' as http;
 import 'package:path/path.dart' as path;
+Logger log = getLogger("GoogleDriveService");
 
 @lazySingleton
 class GoogleDriveService {
@@ -56,7 +60,7 @@ class GoogleDriveService {
   DownloadService _downloadService = locator<DownloadService>();
   DialogService _dialogService = locator<DialogService>();
   SharedPreferencesService _sharedPreferencesService = locator<SharedPreferencesService>();
-  Logger log = getLogger("GoogleDriveService");
+  RemoteConfigService _remote = locator<RemoteConfigService>();
 
   processFile({
     @required dynamic doc,
@@ -72,7 +76,7 @@ class GoogleDriveService {
         var AuthHeaders = await _authenticationService.refreshSignInCredentials();
         var client = GoogleHttpClient(AuthHeaders);  
         var drive = ga.DriveApi(client);
-        
+        // ServiceAccountCredentials
         // retrieve subject and notesmodel
         Subject subject = _subjectsService.getSubjectByName(doc.subjectName);
         String subjectSubFolderID = _getFolderIDForType(subject,document);
@@ -140,6 +144,56 @@ class GoogleDriveService {
     }
   }
 
+  downloadFile
+  ({
+    @required Note note,
+    @required onDownloadedCallback,
+  }) async {
+    
+    //*If file exists, avoid downloading again
+    File localFile;
+    Directory tempDir = await getTemporaryDirectory();
+    String filePath = "${tempDir.path}/${note.subjectId}_${note.id}"; 
+    bool doesFileExist = await _checkIfFileExists(filePath);
+    if(doesFileExist){onDownloadedCallback(filePath);return;}
+
+    //*Google Drive Set Up
+    final accountCredentials = new ServiceAccountCredentials.fromJson(_remote.remoteConfig.getString("GDRIVE"));
+    final scopes = ['https://www.googleapis.com/auth/drive'];
+    AutoRefreshingAuthClient gdriveAuthClient = await clientViaServiceAccount(accountCredentials, scopes);
+    var drive = ga.DriveApi(gdriveAuthClient);
+    String fileID = note.GDriveID;
+
+    //*Download file
+    ga.Media file = await drive.files.get(fileID,downloadOptions: ga.DownloadOptions.FullMedia);
+    
+    //*Figure out size from note.size property to show proper loading indicator
+    double contentLength = double.parse(note.size.split(" ")[0]);
+    contentLength = note.size.split(" ")[1] == 'KB' ? contentLength*1000 : contentLength*1000000 ;
+    double _progress = 0;
+    int downloadedLength = 0;
+    List<int> dataStore = [];
+
+    //*Start the download
+    file.stream.listen((data) {
+
+      downloadedLength += data.length;
+      _progress = (downloadedLength / contentLength) * 100;
+      print(_progress);
+      dataStore.insertAll(dataStore.length, data);
+
+    }, onDone: () async {
+
+      _progress = 0;
+      localFile = File(filePath); 
+      await localFile.writeAsBytes(dataStore);
+      _insertBookmarks(filePath,note);
+      onDownloadedCallback(localFile.path);
+
+    });
+  }
+
+
   Future<Subject> createSubjectFolders(Subject subject) async {
     log.i("${subject.name} folders being created in GDrive");
     // initialize http client and GDrive API
@@ -189,6 +243,7 @@ class GoogleDriveService {
       return null;
     }
   }
+
 
   deleteSubjectFolder(Subject subject) async {
     log.i("${subject.name} folders being DELETED in GDrive");
@@ -258,6 +313,46 @@ class GoogleDriveService {
       default:
         break;
     }
+  }
+
+  Future<bool> _checkIfFileExists(String filePath) async {
+    bool doesExist = false;
+    try{doesExist = await File(filePath).exists();}
+    catch(e){return false;}
+    return doesExist;
+  }
+
+  void _insertBookmarks(String filePath,Note note) {
+    //Check if pages field is populated
+    //if not update in firebase.
+    bool noteHasPages = true;
+    if(note.pages == null){noteHasPages = false;}
+
+    //Loads an existing PDF document
+    PdfDocument document =
+        PdfDocument(inputBytes: File(filePath).readAsBytesSync());
+    int pages = document.pages.count;
+    List<String> bookmarkNames = note.bookmarks.keys.toList();
+    List<int> bookmarkPageNos = note.bookmarks.values.toList();
+
+    for( int i=0 ; i<note.bookmarks.length ; i++)
+    {
+
+      //Creates a document bookmark
+      PdfBookmark bookmark = document.bookmarks.insert(i, bookmarkNames[i]);
+
+      //Sets the destination page and location
+      bookmark.destination = PdfDestination(document.pages[bookmarkPageNos[i]], Offset(20, 20));
+    
+    }
+
+    //Saves the document
+    File(filePath).writeAsBytes(document.save());
+    note.setPages = pages;
+    if(!noteHasPages){_firestoreService.updateDocument(note, Document.Notes);}
+
+    //Disposes the document
+    document.dispose();
   }
 }
 

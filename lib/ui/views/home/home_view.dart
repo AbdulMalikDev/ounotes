@@ -445,26 +445,26 @@ class HomeView extends StatelessWidget {
 //    var AuthHeaders = await _authenticationService.refreshSignInCredentials();
 //    var client = GoogleHttpClient(AuthHeaders);
 //    var drive = ga.DriveApi(client);
-//   //
-//   //  ga.File fileMetadata = ga.File();
-//   // fileMetadata.name = "ounotes";
-//   // fileMetadata.mimeType = "application/vnd.google-apps.folder";
-//   // var responsed = await drive.files.create(fileMetadata);
-//   // print("response file id: ${responsed.id}");
+  //
+  //  ga.File fileMetadata = ga.File();
+  // fileMetadata.name = "ounotes";
+  // fileMetadata.mimeType = "application/vnd.google-apps.folder";
+  // var responsed = await drive.files.create(fileMetadata);
+  // print("response file id: ${responsed.id}");
 
-//   // ga.File fileMetadataq = ga.File();
-//   // fileMetadataq.name = "something";
-//   // fileMetadataq.mimeType = "application/vnd.google-apps.folder";
-//   // fileMetadataq.parents = ["${responsed.id}"];
-//   // var responsedq = await drive.files.create(fileMetadata);
-//   // print("response file id: ${responsedq.id}");
-// // // print("s");
-//   // var PDF_FOLDER = await drive.files.create(
-//   //                 ga.File()
-//   //                   ..name = "PDFs_NEW"
-//   //                 // Optional if you want to create subfolder
-//   //                   ..mimeType = 'application/vnd.google-apps.folder',  // this defines its folder
-//   //               );
+  // ga.File fileMetadataq = ga.File();
+  // fileMetadataq.name = "something";
+  // fileMetadataq.mimeType = "application/vnd.google-apps.folder";
+  // fileMetadataq.parents = ["${responsed.id}"];
+  // var responsedq = await drive.files.create(fileMetadata);
+  // print("response file id: ${responsedq.id}");
+// // print("s");
+  // var PDF_FOLDER = await drive.files.create(
+  //                 ga.File()
+  //                   ..name = "PDFs_NEW"
+  //                 // Optional if you want to create subfolder
+  //                   ..mimeType = 'application/vnd.google-apps.folder',  // this defines its folder
+  //               );
 //   print("Getting all subjects....");
 //   List<Subject> allSubjects = model.allSubjects.value;
 //   allSubjects.sort((a,b)=>a.name.compareTo(b.name));
@@ -541,15 +541,15 @@ class HomeView extends StatelessWidget {
 //                   await localFile.writeAsBytes(dataStore);
 //                   print("Task Done");
 
-//       //file downloaded
-//       //TODO STEP 2 UPLOAD IT ON GOOGLE DRIVE
-//       //Make new GDrive file
+      //file downloaded
+//    //TODO STEP 2 UPLOAD IT ON GOOGLE DRIVE
+      //Make new GDrive file
 //       ga.File fileToUpload = ga.File();
-//       //Add new contents
+      //Add new contents
 //       fileToUpload.name = note.title;
 //       fileToUpload.copyRequiresWriterPermission = true;
 //       fileToUpload.parents = [subject.gdriveNotesFolderID];
-//       //upload to drive
+      //upload to drive
 //       var response;
 //       try {
 //           response = await drive.files.create(

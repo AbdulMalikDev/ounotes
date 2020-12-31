@@ -15,12 +15,14 @@ import 'package:FSOUNotes/utils/file_picker_service.dart';
 import 'package:cuid/cuid.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:injectable/injectable.dart';
 import 'package:logger/logger.dart';
 import 'package:mime/mime.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:stacked_services/stacked_services.dart';
+import 'package:syncfusion_flutter_pdf/pdf.dart';
 
 @lazySingleton
 class CloudStorageService {
@@ -101,6 +103,7 @@ class CloudStorageService {
   uploadFile({
     String type,
     AbstractDocument note,
+    String uploadFileType,
   }) async {
     AuthenticationService _authenticationService =
         locator<AuthenticationService>();
@@ -119,47 +122,64 @@ class CloudStorageService {
     log.i("Type : $type");
     
     try {
-      File document = await _filePickerService.selectFile();
-      String mimeStr = lookupMimeType(document.path);
+      //*Select file and sanitize extension
+      PdfDocument pdf;
+      //Not defining type since it could be List of files or just one file
+      final document = await _filePickerService.selectFile(uploadFileType:uploadFileType);
+      if(document==null)return "File is null";
+      bool isImage = (document.runtimeType.toString() == "List<File>");
+      String docPath = isImage ? document[0].path : document.path; 
+      String mimeStr = lookupMimeType(docPath);
       var fileType = mimeStr.split('/').last;
-      if (fileType != 'pdf') {
-        return 'file is not pdf';
+      if (!['pdf','jpg','jpeg','png'].contains(fileType)) {
+        return 'file is not compatible. Please make sure you uploaded a PDF';
+      }else if(['jpg','jpeg','png'].contains(fileType)){
+        pdf = _convertImageToPdf(document);
+      }else{
+        pdf = PdfDocument(inputBytes: document.readAsBytesSync(),);
       }
-      final String bytes = _formatBytes2(await document.length(), 2);
-      final String bytesuffix = _formatBytes2Suffix(await document.length(), 2);
+
+      //*Find the size of the file and make sure it's note more than 35 MB
+      int lengthOfDoc = isImage ? await _getLengthOfImages(document) : await document.length(); 
+      final String bytes = _formatBytes2(lengthOfDoc, 2);
+      final String bytesuffix = _formatBytes2Suffix(lengthOfDoc, 2);
       log.i("suffix of size" + bytesuffix);
       log.i("size of file" + bytes);
       var suffix = ["MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
-
       if (double.parse(bytes) > 35 && suffix.contains(bytesuffix)) {
         return "File size more than 35mb";
       }
-      if (document == null) {
-        return "File is null";
-      }
-      log.e(document.uri);
+      
+      //*Set info on document and upload
       String fileName = assignFileName(note);
       note.setTitle = fileName;
+      File fileToUpload = isImage ? null : document; 
+      //Store in temp file
+      if(fileToUpload==null)fileToUpload = await new File((await _localPath)+"/${DateTime.now().millisecondsSinceEpoch}").writeAsBytes(document.save());
       StorageUploadTask uploadTask = _storageReference
           .child("pdfs/${note.subjectName}/$type/$fileName")
-          .putFile(document);
-     
-      // _storageReference.
+          .putFile(fileToUpload);
       log.i("url : pdfs/${note.subjectName}/$type/$fileName");
+
       StorageTaskSnapshot storageSnap = await uploadTask.onComplete;
       String downloadUrl = await storageSnap.ref.getDownloadURL();
+
       final metaData = await storageSnap.ref.getMetadata();
       final sizeInBytes = metaData.sizeBytes;
       final uploadedOn = metaData.creationTimeMillis;
       final String size = _formatBytes(sizeInBytes, 2);
       log.w("Document uploaded has size $size");
       DateTime upload = DateTime.fromMillisecondsSinceEpoch(uploadedOn);
-      log.i("Download URL $downloadUrl");
       note.setUrl = downloadUrl;
       note.setSize = size;
       note.setDate = upload;
+      note.setPages = pdf.pages.count;
+
+      pdf.dispose();
+      fileToUpload.delete();
       _firestoreService.saveNotes(note);
       return "upload successful";
+
     } catch (e) {
       log.e("While UPLOADING Notes from Firebase STORAGE , Error occurred");
       String error;
@@ -247,5 +267,33 @@ class CloudStorageService {
     error = e.toString();
     log.e(error);
     return error;
+  }
+
+  PdfDocument _convertImageToPdf(List<File> documents) {
+    //Create a new PDF document
+    PdfDocument document = PdfDocument();
+
+    documents.forEach((file) { 
+
+      //Adds a page to the document
+      PdfPage page = document.pages.add();
+
+      //Draw the image
+      page.graphics.drawImage(
+          PdfBitmap(file.readAsBytesSync()),
+          Rect.fromLTWH(0, 0, page.getClientSize().width, page.getClientSize().height)
+      );
+    
+    });
+
+    return document;
+  }
+
+  _getLengthOfImages(List<File> documents) async {
+    int totalLength = 0;
+    documents.forEach((doc) async {
+      totalLength += (await doc.length());
+    });
+    return totalLength;
   }
 }

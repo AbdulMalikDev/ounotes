@@ -42,8 +42,8 @@ class LinksViewModel extends BaseViewModel {
       note: note,
     );
     setLoading(false);
-    _navigationService.navigateTo(Routes.pdfScreenRoute,
-        arguments: PDFScreenArguments(pathPDF: PDFpath, title: notesName));
+    // _navigationService.navigateTo(Routes.pdfScreenRoute,
+    //     arguments: PDFScreenArguments(pathPDF: PDFpath, title: notesName));
   }
 
   // @override

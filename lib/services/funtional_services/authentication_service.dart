@@ -145,7 +145,7 @@ class AuthenticationService {
       'https://www.googleapis.com/auth/drive.file',
       'https://www.googleapis.com/auth/drive.metadata'
       ]);
-      GoogleSignInAccount ga = await googleSignIn.signIn().whenComplete(() => () {});
+      GoogleSignInAccount ga = await googleSignIn.signIn();
       return ga.authHeaders;
   }
 

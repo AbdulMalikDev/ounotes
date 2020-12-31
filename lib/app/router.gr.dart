@@ -4,7 +4,6 @@
 // AutoRouteGenerator
 // **************************************************************************
 
-import 'package:FSOUNotes/ui/views/Settings/settings_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:auto_route/auto_route.dart';
@@ -13,11 +12,13 @@ import 'package:FSOUNotes/ui/views/intro/intro_view.dart';
 import 'package:FSOUNotes/ui/views/home/home_view.dart';
 import 'package:FSOUNotes/ui/views/all_documents/all_documents_view.dart';
 import 'package:FSOUNotes/ui/views/pdf/pdf_view.dart';
+import 'package:FSOUNotes/models/document.dart';
 import 'package:FSOUNotes/ui/views/notes/notes_view.dart';
 import 'package:FSOUNotes/ui/views/question_papers/question_papers_view.dart';
 import 'package:FSOUNotes/ui/views/syllabus/syllabus_view.dart';
 import 'package:FSOUNotes/ui/views/links/links_view.dart';
 import 'package:FSOUNotes/ui/views/about_us/about_us_view.dart';
+import 'package:FSOUNotes/ui/views/Settings/settings_view.dart';
 import 'package:FSOUNotes/ui/views/upload/upload_view.dart';
 import 'package:FSOUNotes/enums/enums.dart';
 import 'package:FSOUNotes/ui/views/upload/upload_selection/upload_selection_view.dart';
@@ -140,7 +141,7 @@ class Router extends RouterBase {
         final typedArgs = args as PDFScreenArguments ?? PDFScreenArguments();
         return MaterialPageRoute<dynamic>(
           builder: (context) =>
-              PDFScreen(pathPDF: typedArgs.pathPDF, title: typedArgs.title),
+              PDFScreen(pathPDF: typedArgs.pathPDF, doc: typedArgs.doc),
           settings: settings,
         );
       case Routes.notesViewRoute:
@@ -374,8 +375,8 @@ class AllDocumentsViewArguments {
 //PDFScreen arguments holder class
 class PDFScreenArguments {
   final String pathPDF;
-  final String title;
-  PDFScreenArguments({this.pathPDF, this.title});
+  final AbstractDocument doc;
+  PDFScreenArguments({this.pathPDF, this.doc});
 }
 
 //NotesView arguments holder class

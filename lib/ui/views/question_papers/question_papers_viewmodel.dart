@@ -171,10 +171,10 @@ class QuestionPapersViewModel extends BaseViewModel {
   }) async {
     checkQPInDownloads(note.year, subName, note.title).then((value) async {
       if (value) {
-        _navigationService.navigateTo(
-          Routes.pdfScreenRoute,
-          arguments: PDFScreenArguments(pathPDF: filePath, title: "Document"),
-        );
+        // _navigationService.navigateTo(
+        //   Routes.pdfScreenRoute,
+        //   arguments: PDFScreenArguments(pathPDF: filePath, title: "Document"),
+        // );
       } else {
         setLoading(true);
 
@@ -202,8 +202,8 @@ class QuestionPapersViewModel extends BaseViewModel {
         );
 
         setLoading(false);
-        _navigationService.navigateTo(Routes.pdfScreenRoute,
-            arguments: PDFScreenArguments(pathPDF: PDFpath, title: notesName));
+        // _navigationService.navigateTo(Routes.pdfScreenRoute,
+        //     arguments: PDFScreenArguments(pathPDF: PDFpath, title: notesName));
       }
     });
   }

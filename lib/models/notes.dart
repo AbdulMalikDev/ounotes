@@ -10,10 +10,12 @@ class Note extends AbstractDocument {
   int subjectId;
   String author;
   int view;
+  int pages;
   String size;
   String url;
   DateTime uploadDate;
   String firebaseId;
+  Map<String,int> bookmarks = {};
   bool isDownloaded = false;
   //Do not change name of this variable
   Document path;
@@ -26,6 +28,7 @@ class Note extends AbstractDocument {
   String GDriveNotesFolderID;
 
   String uploader_id;
+  
 
   Note({
     @required this.subjectName,
@@ -66,7 +69,9 @@ class Note extends AbstractDocument {
     GDriveID = data['GDriveID'] ?? null;
     GDriveNotesFolderID = data['GDriveNotesFolderID'] ?? null;
     firebaseId = documentID;
+    pages = data["pages"];
     subjectId = data["subjectId"];
+    bookmarks = data["bookmarks"] == null ? {} : new Map<String,int>.from(data["bookmarks"]);
   }
 
   Map<String, dynamic> toJson() {
@@ -82,17 +87,21 @@ class Note extends AbstractDocument {
       "votes": votes,
       "size":size,
       "uploader_id":uploader_id,
-      "GDriveLink":GDriveLink ?? null,
-      "GDriveID":GDriveID ?? null,
-      "GDriveNotesFolderID":GDriveNotesFolderID ?? null,
+      if(GDriveLink!=null)"GDriveLink":GDriveLink,
+      if(GDriveID!=null)"GDriveID":GDriveID,
+      if(GDriveNotesFolderID!=null)"GDriveNotesFolderID":GDriveNotesFolderID,
+      if(pages!=null)"pages":pages,
+      if(bookmarks!=null)"bookmarks":bookmarks,
       "firebaseId":firebaseId ?? "",
       "subjectId" : subjectId,
     };
   }
 
-  set setSubjectId(int id){
-    this.subjectId = id;
-  }
+  set setSubjectId(int id) => this.subjectId = id;
+
+  set setBookMarks(Map<String,int> value) => this.bookmarks = value;
+
+  set setPages(int value) => this.pages = value;
 
   set setId(String id) {
     this.id = id;

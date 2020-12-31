@@ -153,8 +153,8 @@ class SyllabusViewModel extends BaseViewModel {
     log.i("Title : ${doc.title}");
 
     if (value) {
-      _navigationService.navigateTo(Routes.pdfScreenRoute,
-          arguments: PDFScreenArguments(pathPDF: filePath, title: "Document"));
+      // _navigationService.navigateTo(Routes.pdfScreenRoute,
+      //     arguments: PDFScreenArguments(pathPDF: filePath, title: "Document"));
     } else {
       setLoading(true);
       String PDFpath = await _cloudStorageService.downloadFile(
@@ -181,8 +181,8 @@ class SyllabusViewModel extends BaseViewModel {
         title: doc.title,
       );
       setLoading(false);
-      _navigationService.navigateTo(Routes.pdfScreenRoute,
-          arguments: PDFScreenArguments(pathPDF: PDFpath, title: "Document"));
+      // _navigationService.navigateTo(Routes.pdfScreenRoute,
+      //     arguments: PDFScreenArguments(pathPDF: PDFpath, title: "Document"));
     }
     // });
   }
