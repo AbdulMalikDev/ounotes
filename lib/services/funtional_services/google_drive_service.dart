@@ -62,6 +62,8 @@ class GoogleDriveService {
   SharedPreferencesService _sharedPreferencesService = locator<SharedPreferencesService>();
   RemoteConfigService _remote = locator<RemoteConfigService>();
 
+  ValueNotifier<int> downloadProgress = new ValueNotifier(0);
+
   processFile({
     @required dynamic doc,
     @required bool addToGdrive,
@@ -171,7 +173,6 @@ class GoogleDriveService {
       //*Figure out size from note.size property to show proper loading indicator
       double contentLength = double.parse(note.size.split(" ")[0]);
       contentLength = note.size.split(" ")[1] == 'KB' ? contentLength*1000 : contentLength*1000000 ;
-      double _progress = 0;
       int downloadedLength = 0;
       List<int> dataStore = [];
 
@@ -179,13 +180,17 @@ class GoogleDriveService {
       file.stream.listen((data) {
 
         downloadedLength += data.length;
-        _progress = (downloadedLength / contentLength) * 100;
-        print(_progress);
+        //TODO WAJID - downloadProgress is a value notifier, so make a loading smart widget
+        // in that you can use VALUE LISTENABLE BUILDER, you can get this value notifier,
+        // by calling googeDriveService from viewmodel of that loading widget,
+        // Ensure that you do not add more than one line of code of here to keep code clean 
+        downloadProgress.value = (downloadedLength / contentLength) * 100 as int;
+        print(downloadProgress.value);
         dataStore.insertAll(dataStore.length, data);
 
       }, onDone: () async {
 
-        _progress = 0;
+        downloadProgress.value = 0;
         localFile = File(filePath); 
         await localFile.writeAsBytes(dataStore);
         _insertBookmarks(filePath,note);
