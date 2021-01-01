@@ -7,6 +7,8 @@ import 'package:FSOUNotes/app/locator.dart';
 import 'package:FSOUNotes/enums/bottom_sheet_type.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
+import 'package:syncfusion_flutter_sliders/sliders.dart';
+import 'package:syncfusion_flutter_core/theme.dart';
 
 void setUpBottomSheetUi() {
   final bottomSheetService = locator<BottomSheetService>();
@@ -22,6 +24,8 @@ void setUpBottomSheetUi() {
     BottomSheetType.filledStacks: (context, sheetRequest, completer) =>
         _FilledStacksFloatingBoxBottomSheet(
             request: sheetRequest, completer: completer),
+    BottomSheetType.bookMarks: (context, sheetRequest, completer) =>
+        BookMarkBottomSheet(request: sheetRequest, completer: completer),
   };
 
   bottomSheetService.setCustomSheetBuilders(builders);
@@ -350,7 +354,7 @@ class _FilledStacksFloatingBoxBottomSheet extends StatelessWidget {
             children: [
               if (!isFileUploadSheet)
                 Expanded(
-                  flex:4,
+                  flex: 4,
                   child: MaterialButton(
                     onPressed: () => completer(SheetResponse(confirmed: false)),
                     child: Text(
@@ -361,7 +365,7 @@ class _FilledStacksFloatingBoxBottomSheet extends StatelessWidget {
                 ),
               if (isFileUploadSheet)
                 Expanded(
-                  flex:4,
+                  flex: 4,
                   child: FlatButton(
                     // padding: EdgeInsets.symmetric(horizontal:0,vertical:13),
                     onPressed: () => completer(SheetResponse(confirmed: false)),
@@ -373,9 +377,9 @@ class _FilledStacksFloatingBoxBottomSheet extends StatelessWidget {
                     color: Theme.of(context).primaryColor,
                   ),
                 ),
-              Expanded(flex:1,child:SizedBox()),
+              Expanded(flex: 1, child: SizedBox()),
               Expanded(
-                flex:4,
+                flex: 4,
                 child: FlatButton(
                   // padding: EdgeInsets.symmetric(horizontal:30,vertical:13),
                   onPressed: () => completer(SheetResponse(confirmed: true)),
@@ -393,6 +397,112 @@ class _FilledStacksFloatingBoxBottomSheet extends StatelessWidget {
           )
         ],
       ),
+    );
+  }
+}
+
+class BookMarkBottomSheet extends StatelessWidget {
+  final SheetRequest request;
+  final Function(SheetResponse) completer;
+
+  BookMarkBottomSheet({
+    Key key,
+    this.request,
+    this.completer,
+  }) : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    return ViewModelBuilder<BottomSheetViewModel>.reactive(
+      viewModelBuilder: () => BottomSheetViewModel(),
+      builder: (
+        BuildContext context,
+        BottomSheetViewModel model,
+        Widget child,
+      ) {
+        return Container(
+          margin: EdgeInsets.all(25),
+          padding: EdgeInsets.all(25),
+          decoration: BoxDecoration(
+            color:Colors.grey[800],
+            borderRadius: BorderRadius.circular(15),
+          ),
+          child: !model.isNextPressed
+              ? Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    SizedBox(height: 10),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 13.0),
+                      child: Text(
+                        "How many Units are there in this pdf?",
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                    SfSlider(
+                      min: 0.0,
+                      max: 5.0,
+                      interval: 1,
+                      stepSize: 1,
+                      showTicks: true,
+                      showLabels: true,
+                      value: model.value,
+                      enableTooltip: true,
+                      activeColor: Theme.of(context).primaryColor,
+                      onChanged: (dynamic newValue) {
+                        model.setValue = newValue;
+                      },
+                    ),
+                    SizedBox(height: 25),
+                    Row(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        FlatButton(
+                          onPressed: () {
+                            model.setIsNextPressed = true;
+                          },
+                          child: Text(
+                            "Next",
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          color: Theme.of(context).primaryColor,
+                        )
+                      ],
+                    )
+                  ],
+                )
+              : Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    SizedBox(height: 10),
+                    
+                    SizedBox(height: 25),
+                    Row(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        FlatButton(
+                          onPressed: () {},
+                          child: Text(
+                            request.mainButtonTitle,
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          color: Theme.of(context).primaryColor,
+                        )
+                      ],
+                    ),
+                  ],
+                ),
+        );
+      },
     );
   }
 }

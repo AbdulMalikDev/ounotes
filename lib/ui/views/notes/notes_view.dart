@@ -1,4 +1,6 @@
 import 'package:FSOUNotes/models/notes.dart';
+import 'package:FSOUNotes/ui/shared/app_config.dart';
+import 'package:FSOUNotes/ui/widgets/dumb_widgets/progress.dart';
 import 'package:FSOUNotes/ui/widgets/dumb_widgets/similar_subjects_tile.dart';
 import 'package:FSOUNotes/ui/widgets/smart_widgets/notes_tile/notes_tile_view.dart';
 import 'package:adcolony/adcolony.dart';
@@ -26,7 +28,7 @@ class _NotesViewState extends State<NotesView>
     with AutomaticKeepAliveClientMixin {
   @override
   Widget build(BuildContext context) {
-    // super.build(context);
+    super.build(context);
     return ViewModelBuilder<NotesViewModel>.reactive(
       onModelReady: (model) {
         model.initialize();
@@ -41,6 +43,72 @@ class _NotesViewState extends State<NotesView>
         },
         child: ModalProgressHUD(
           inAsyncCall: model.isloading,
+          progressIndicator: Center(
+            child: ValueListenableBuilder(
+              valueListenable: model.downloadProgress,
+              builder: (context, progress, child) => Container(
+                decoration: BoxDecoration(
+                  color: Theme.of(context).scaffoldBackgroundColor,
+                  borderRadius: BorderRadius.circular(30),
+                ),
+                padding: EdgeInsets.all(10),
+                height: App(context).appHeight(0.13),
+                width: App(context).appWidth(0.85),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    circularProgress(),
+                    SizedBox(
+                      width: 20,
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Container(
+                          constraints: BoxConstraints(maxWidth: 180),
+                          child: progress < 100
+                              ? Text(
+                                  'Downloading...' +
+                                      progress.toStringAsFixed(0) +
+                                      '%',
+                                  overflow: TextOverflow.clip,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .subtitle1
+                                      .copyWith(fontSize: 15),
+                                )
+                              : Text(
+                                  'Downloading...' + '100%',
+                                  overflow: TextOverflow.clip,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .subtitle1
+                                      .copyWith(fontSize: 15),
+                                ),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Container(
+                          constraints: BoxConstraints(maxWidth: 180),
+                          child: Text(
+                            'Large files may take some time...',
+                            overflow: TextOverflow.clip,
+                            style: Theme.of(context)
+                                .textTheme
+                                .subtitle1
+                                .copyWith(fontSize: 12),
+                          ),
+                        )
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
           child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -102,8 +170,8 @@ class _NotesViewState extends State<NotesView>
                             )
                           : ValueListenableBuilder(
                               valueListenable: model.notesTiles,
-                              builder: (BuildContext context, List<Widget> value,
-                                  Widget child) {
+                              builder: (BuildContext context,
+                                  List<Widget> value, Widget child) {
                                 return ListView(
                                   padding: EdgeInsets.only(bottom: 150),
                                   children: value +

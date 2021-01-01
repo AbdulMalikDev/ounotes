@@ -517,6 +517,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.9.0"
+  flutter_inappwebview:
+    dependency: "direct main"
+    description:
+      name: flutter_inappwebview
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "4.0.0+4"
   flutter_intro:
     dependency: "direct main"
     description:
@@ -1320,6 +1327,13 @@ packages:
     dependency: "direct main"
     description:
       name: syncfusion_flutter_pdfviewer
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "18.4.32-beta"
+  syncfusion_flutter_sliders:
+    dependency: "direct main"
+    description:
+      name: syncfusion_flutter_sliders
       url: "https://pub.dartlang.org"
     source: hosted
     version: "18.4.32-beta"
