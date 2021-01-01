@@ -52,5 +52,15 @@ class Enum{
     }
     return null;
   }
+  static getDocumentFromString(String documentAsString) {
+    if(documentAsString == null)return null;
+
+    for (Document element in Document.values) {
+      if (element.toString() == documentAsString) {
+          return element;
+      }
+    }
+    return null;
+  }
 
 }

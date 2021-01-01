@@ -77,9 +77,9 @@ class User{
 
     set setIsUserAllowedToUpload(bool value){this.isUserAllowedToUpload = false;}
 
-    incrementUploads(){if(numOfUploads==null){numOfUploads=0;} numOfUploads++;}
+    // incrementUploads(){if(numOfUploads==null){numOfUploads=0;} numOfUploads++;}
 
-    incrementAcceptedUploads(){if(numOfAcceptedUploads==null){numOfAcceptedUploads=0;} numOfAcceptedUploads++;}
+    // incrementAcceptedUploads(){if(numOfAcceptedUploads==null){numOfAcceptedUploads=0;} numOfAcceptedUploads++;}
 
-    addToUploadedDocuments(String documentId){if(uploads==null){uploads=[];}uploads.add(documentId);}
+    // addToUploadedDocuments(String documentId){if(uploads==null){uploads=[];}uploads.add(documentId);}
 }

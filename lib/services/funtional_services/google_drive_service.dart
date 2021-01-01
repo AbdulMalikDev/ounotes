@@ -119,10 +119,11 @@ class GoogleDriveService {
       {
         log.w("File being deleted from GDrive");
         result = await this.deleteFile(doc:doc);
+      }else{
+        // Delete it from Firebase Storage
+        _cloudStorageService.deleteDocument(doc,addedToGdrive:addToGdrive);
       }
 
-      // Delete it from Firebase Storage
-      _cloudStorageService.deleteDocument(doc,addedToGdrive:addToGdrive);
 
       return addToGdrive ? "upload successful" : result ?? "delete successful";
     } catch (e) {
@@ -139,8 +140,8 @@ class GoogleDriveService {
       AutoRefreshingAuthClient gdriveAuthClient = await clientViaServiceAccount(accountCredentials, scopes);
       var drive = ga.DriveApi(gdriveAuthClient);
 
-      var response = await drive.files.delete(doc.GDriveID);
       await _firestoreService.deleteDocument(doc);
+      await drive.files.delete(doc.GDriveID);
       return "delete successful";
 
     }catch (e) {

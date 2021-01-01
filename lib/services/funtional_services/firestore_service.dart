@@ -96,6 +96,28 @@ class FirestoreService {
     }
   }
 
+  _getCollectionReferenceAccordingToTypeForTempUpload(Document path) {
+    switch (path) {
+      case Document.Notes:
+        return _notesCollectionReference;
+        break;
+      case Document.QuestionPapers:
+        return _questionPapersCollectionReference;
+        break;
+      case Document.Syllabus:
+        return _syllabusCollectionReference;
+        break;
+      case Document.Links:
+        return _linksCollectionReference;
+        break;
+      case Document.None:
+      case Document.Report:
+      case Document.UploadLog:
+      case Document.Drawer:
+        break;
+    }
+  }
+
   areUsersAllowed() async {
     bool areUsersAllowedToUpload = true;
     QuerySnapshot snapshot =
@@ -129,6 +151,7 @@ class FirestoreService {
       List<Subject> subjects =
           snapshot.documents.map((doc) => Subject.fromData(doc.data)).toList();
       subjects.removeWhere((sub) => sub.name == null.toString());
+      subjects.removeWhere((sub) => sub.name == null.toString().toUpperCase());
       return subjects;
     } catch (e) {
       _errorHandling(
@@ -266,15 +289,13 @@ class FirestoreService {
 
   Future saveNotes(AbstractDocument note) async {
     try {
-      AuthenticationService _authenticationService =
-          locator<AuthenticationService>();
       User user = await _sharedPreferencesService.getUser();
       String id = newCuid();
       note.setId = id;
       note.setUploaderId = user.id;
       log.i("Document being saved");
       CollectionReference ref =
-          _getCollectionReferenceAccordingToType(note.path,note.subjectId);
+          _getCollectionReferenceAccordingToTypeForTempUpload(note.path);
       log.i(ref.toString());
       log.i(note.path);
       log.i(note.id);
@@ -301,13 +322,8 @@ class FirestoreService {
       String id = newCuid();
       doc.setId = id;
       doc.setUploaderId = user.id;
-      await _subjectsCollectionReference
-            .document(doc.subjectId.toString()) 
-            .collection(Constants.firebase_links)
+      await _linksCollectionReference
             .document(doc.id).setData(doc.toJson());
-      await _subjectsCollectionReference
-            .document("links_length") 
-            .updateData({"len": FieldValue.increment(1)});
       await _uploadLogCollectionReference
           .document(doc.id)
           .setData(_linkUploadLog(doc, user));
@@ -366,29 +382,12 @@ class FirestoreService {
     //Before rewriting whole application , there was no real system of ids
     //In an effort to be backward compatible we had to take care of both cases
     try {
-      //Remove document from the user who uploaded this document and update his stats
-      if (doc.uploader_id != null) {
-        _usersCollectionReference.document(doc.uploader_id).updateData({
-          "uploads": FieldValue.arrayRemove([doc.id])
-        });
-        _usersCollectionReference
-            .document(doc.uploader_id)
-            .updateData({"numOfAcceptedUploads": FieldValue.increment(-1)});
-        _usersCollectionReference
-            .document(doc.uploader_id)
-            .updateData({"numOfUploads": FieldValue.increment(-1)});
-      }
 
       if (doc.id != null) {
         log.w("Document being deleted using ID");
         if (doc.id.length > 5) {
           await ref.document(doc.id).delete();
           await _uploadLogCollectionReference.document(doc.id).delete();
-          if (doc.path == Document.Links) {
-            await _subjectsCollectionReference
-                  .document("links_length")
-                .updateData({"len": FieldValue.increment(-1)});
-          }
           DocumentSnapshot docSnap =
               await _reportCollectionReference.document(doc.id).get();
           if (docSnap.exists) {
@@ -562,8 +561,6 @@ class FirestoreService {
       "email": _authenticationService.user.email,
       "size": note.size,
     };
-    user.incrementUploads();
-    updateUserInFirebase(user);
     _analyticsService.sendNotification(isAdmin: true,message: Strings.admin_document_upload_notification_message,title: Strings.admin_document_upload_notification_title);
     return uploadLog;
   }
@@ -615,16 +612,14 @@ class FirestoreService {
         note.setSubjectId = subject.id;
       }
       log.e("Note with id ${note.id} is being updated");
+      await _getCollectionReferenceAccordingToTypeForTempUpload(note.path)
+              .document(note.id)
+              .delete();
       await _subjectsCollectionReference
               .document(note.subjectId.toString()) 
               .collection(Constants.firebase_notes)
               .document(note.id)
               .setData(note.toJson(),merge: true);
-    if (note.path == Document.Links) {
-      await _subjectsCollectionReference
-            .document("links_length")
-            .updateData({"len": FieldValue.increment(-1)});
-    }
      
     } catch (e) {
       log.e(e.toString());
@@ -639,6 +634,9 @@ class FirestoreService {
       }
 
     try {
+      await _getCollectionReferenceAccordingToTypeForTempUpload(note.path)
+              .document(note.id)
+              .delete();
       await _subjectsCollectionReference
               .document(note.subjectId.toString()) 
               .collection(Constants.firebase_questionPapers)
@@ -657,6 +655,9 @@ class FirestoreService {
       }
 
     try {
+      await _getCollectionReferenceAccordingToTypeForTempUpload(note.path)
+              .document(note.id)
+              .delete();
       await _subjectsCollectionReference
               .document(note.subjectId.toString()) 
               .collection(Constants.firebase_syllabus)
@@ -675,6 +676,9 @@ class FirestoreService {
       }
 
     try {
+      await _getCollectionReferenceAccordingToTypeForTempUpload(note.path)
+              .document(note.id)
+              .delete();
       await _subjectsCollectionReference
               .document(note.subjectId.toString()) 
               .collection(Constants.firebase_links)
@@ -731,6 +735,7 @@ class FirestoreService {
           .where("id",isEqualTo:id)
           .getDocuments();
     List<DocumentSnapshot> docs = docSnaps.documents;
+    if(docs.isEmpty)return null;
     DocumentSnapshot doc = docs[docs.length-1];
     if(!doc.exists)return null;
     return Note.fromData(doc.data, doc.documentID);
@@ -746,6 +751,7 @@ class FirestoreService {
           .where("id",isEqualTo:id)
           .getDocuments();
     List<DocumentSnapshot> docs = docSnaps.documents;
+    if(docs.isEmpty)return null;
     DocumentSnapshot doc = docs[docs.length-1];
     return Link.fromData(doc.data);
   }
@@ -760,6 +766,7 @@ class FirestoreService {
           .where("id",isEqualTo:id)
           .getDocuments();
     List<DocumentSnapshot> docs = docSnaps.documents;
+    if(docs.isEmpty)return null;
     DocumentSnapshot doc = docs[docs.length-1];
     return QuestionPaper.fromData(doc.data);
   }
@@ -774,6 +781,7 @@ class FirestoreService {
           .where("id",isEqualTo:id)
           .getDocuments();
     List<DocumentSnapshot> docs = docSnaps.documents;
+    if(docs.isEmpty)return null;
     DocumentSnapshot doc = docs[docs.length-1];
     return Syllabus.fromData(doc.data);
   }
@@ -789,16 +797,15 @@ class FirestoreService {
     //       .collection(Constants.firebase_links)
     //       .document(id)
     //       .delete();
-    await _subjectsCollectionReference
-              .document(subId.toString()) 
-              .collection(Constants.firebase_links)
-              .document(id)
-              .delete();
+    QuerySnapshot docSnaps = await Firestore.instance 
+          .collectionGroup(Constants.firebase_links)
+          .where("id",isEqualTo:id)
+          .getDocuments();
+    List<DocumentSnapshot> docs = docSnaps.documents;
+    if(docs.isEmpty)return null;
+    docs.forEach((doc) { doc.reference.delete(); });
     await _uploadLogCollectionReference.document(id).delete();
     await _reportCollectionReference.document(id).delete();
-    await _subjectsCollectionReference
-        .document("links_length")
-        .updateData({"len": FieldValue.increment(-1)});
     return null;
   }
 
@@ -844,9 +851,6 @@ class FirestoreService {
   }
 
   getDocumentById(String subjectName,String id, Document document) async {
-    // log.e(subjectName);
-    // log.e(id);
-    // log.e(document);
     SubjectsService _subjectsService = locator<SubjectsService>();
     Subject subject = _subjectsService.getSubjectByName(subjectName);
     switch (document) {
@@ -858,6 +862,9 @@ class FirestoreService {
         break;
       case Document.Syllabus:
         return await this.getSyllabusById(subject.id,id);
+        break;
+      case Document.Links:
+        return await this.getLinkById(subject.id,id);
         break;
       default:
         break;

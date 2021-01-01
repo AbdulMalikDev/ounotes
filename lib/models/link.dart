@@ -10,14 +10,14 @@ class Link extends AbstractDocument{
   String title;
   String description;
   String linkUrl;
-
+  bool uploaded;
 
   //* variables needed for upload/download related features
   String id;
   Document path;
   String uploader_id;
 
-  Link({this.subjectName, this.title, this.description, this.linkUrl, this.id, this.path,this.uploader_id,this.subjectId});
+  Link({this.subjectName, this.title, this.description, this.linkUrl, this.id, this.path,this.uploader_id,this.subjectId,this.uploaded=false});
 
 
   Link.fromData(Map<String,dynamic> data)
@@ -27,11 +27,12 @@ class Link extends AbstractDocument{
     description  = data['description'];
     linkUrl      = data['url'];
     subjectName  = data['subjectName'];
-    path         = Document.Links;
+    path         = Enum.getDocumentFromString(data['path']) ?? Document.Links;
     id           = data["id"] ?? getNewId();
     type         = Constants.links;
     subjectId = data["subjectId"];
     uploader_id         = data["uploader_id"];
+    uploaded = data["uploaded"] ?? false;
   }
 
   getNewId(){
@@ -55,6 +56,8 @@ class Link extends AbstractDocument{
     "id"          : id,
     "subjectId" : subjectId,
     "uploader_id" : uploader_id,
+    "uploaded" : uploaded,
+    if(path!=null)"path"                              : path.toString(),
     };
   }
 

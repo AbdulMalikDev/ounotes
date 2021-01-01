@@ -34,16 +34,15 @@ class Subject {
   Subject.fromData(Map<String, dynamic> data) {
         
       try{ 
-        id = data['id'];
-        name = data['name'].toString();
-        branchToSem = _deserializeBranchToSem(data['branchToSem']);
-        gdriveFolderID = data['gdriveFolderID'] ?? "";
-        gdriveNotesFolderID = data['gdriveNotesFolderID'] ?? "";
-        gdriveQuestionPapersFolderID =
-            data['gdriveQuestionPapersFolderID'] ?? "";
-        gdriveSyllabusFolderID = data['gdriveSyllabusFolderID'] ?? "";
-        subjectType = Enum.getSubjectTypeFromString(data['subjectType']) ?? SubjectType.Main;
-        courseType = Enum.getCourseTypeFromString(data['courseType']) ?? CourseType.BE;
+        id                           = data['id'];
+        name                         = data['name'].toString();
+        branchToSem                  = _deserializeBranchToSem(data['branchToSem']);
+        gdriveFolderID               = data['gdriveFolderID'];
+        gdriveNotesFolderID          = data['gdriveNotesFolderID'];
+        gdriveQuestionPapersFolderID = data['gdriveQuestionPapersFolderID'];
+        gdriveSyllabusFolderID       = data['gdriveSyllabusFolderID'];
+        subjectType                  = Enum.getSubjectTypeFromString(data['subjectType']) ?? SubjectType.Main;
+        courseType                   = Enum.getCourseTypeFromString(data['courseType']) ?? CourseType.BE;
       }catch(e){
         log.e("Error while deserializing subject object");
         log.e(e.toString());
@@ -63,15 +62,15 @@ class Subject {
 
   Map<String, dynamic> toJson() {
     return {
-      "id": id,
-      "name": name,
-      "branchToSem": branchToSem,
-      "gdriveFolderID": gdriveFolderID,
-      "gdriveNotesFolderID": gdriveNotesFolderID,
-      "gdriveQuestionPapersFolderID": gdriveQuestionPapersFolderID,
-      "gdriveSyllabusFolderID": gdriveSyllabusFolderID,
-      "subjectType": subjectType.toString(),
-      "courseType": courseType.toString(),
+         "id"                                                             : id,
+         "name"                                                           : name,
+      if(branchToSem!=null)"branchToSem"                                  : branchToSem,
+      if(gdriveFolderID!=null)"gdriveFolderID"                            : gdriveFolderID,
+      if(gdriveNotesFolderID!=null)"gdriveNotesFolderID"                  : gdriveNotesFolderID,
+      if(gdriveQuestionPapersFolderID!=null)"gdriveQuestionPapersFolderID": gdriveQuestionPapersFolderID,
+      if(gdriveSyllabusFolderID!=null)"gdriveSyllabusFolderID"            : gdriveSyllabusFolderID,
+      if(subjectType!=null)"subjectType"                                  : subjectType.toString(),
+      if(courseType!=null)"courseType"                                    : courseType.toString(),
     };
   }
 
