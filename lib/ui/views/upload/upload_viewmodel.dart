@@ -23,7 +23,6 @@ import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-
 class UploadViewModel extends BaseViewModel {
   Logger log = getLogger("UploadViewModel");
   CloudStorageService _cloudStorageService = locator<CloudStorageService>();
@@ -83,15 +82,20 @@ class UploadViewModel extends BaseViewModel {
         ? []
         : subList
             .where((sub) => sub.toLowerCase().startsWith(query.toLowerCase()))
-            .toList().cast<String>();
+            .toList()
+            .cast<String>();
     return suggestions;
   }
 
   List<String> getAllSubjectsList() {
-    List<String> userSub =
-        _subjectsService.userSubjects.value.map((sub) => sub.name).toList().cast<String>();
-    List<String> allSub =
-        _subjectsService.allSubjects.value.map((sub) => sub.name).toList().cast<String>();
+    List<String> userSub = _subjectsService.userSubjects.value
+        .map((sub) => sub.name)
+        .toList()
+        .cast<String>();
+    List<String> allSub = _subjectsService.allSubjects.value
+        .map((sub) => sub.name)
+        .toList()
+        .cast<String>();
     List<String> subList = userSub + allSub;
     subList = subList.toSet().toList().cast<String>();
     return subList;
@@ -218,16 +222,21 @@ class UploadViewModel extends BaseViewModel {
     }
     if (doc.path != Document.Links) {
       SheetResponse response = await _bottomSheetService.showCustomSheet(
-                                                                          variant: BottomSheetType.filledStacks,
-                                                                          title:"What do you want to upload?",
-                                                                          description: "",
-                                                                          mainButtonTitle: "PDF",
-                                                                          secondaryButtonTitle: "Image",
-                                                                          customData: {"file_upload":true}
-                                                                        );
-      if(response == null){setBusy(false);return;}                                                                  
-      String fileType = response.confirmed ? enumConst.Constants.pdf : enumConst.Constants.png;                                                                       
-      var result = await _cloudStorageService.uploadFile(note: doc, type: type,uploadFileType: fileType);
+          variant: BottomSheetType.filledStacks,
+          title: "What do you want to upload?",
+          description: "",
+          mainButtonTitle: "PDF",
+          secondaryButtonTitle: "Image",
+          customData: {"file_upload": true});
+      if (response == null) {
+        setBusy(false);
+        return;
+      }
+      String fileType = response.confirmed
+          ? enumConst.Constants.pdf
+          : enumConst.Constants.png;
+      var result = await _cloudStorageService.uploadFile(
+          note: doc, type: type, uploadFileType: fileType);
       log.w(result);
       if (result == "BLOCKED") {
         await _dialogService.showDialog(
@@ -342,56 +351,56 @@ class UploadViewModel extends BaseViewModel {
             context: context,
             builder: (BuildContext context) {
               return AlertDialog(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20)),
-                  backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-                  content: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      Text(
-                        "Thank you for uploading ! The admins will verify if your uploaded document is relevant and it will be displayed in $subjectName.\n",
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20)),
+                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Text(
+                      "Thank you for uploading ! The admins will verify if your uploaded document is relevant and it will be displayed in $subjectName.\n",
+                      style: Theme.of(context)
+                          .textTheme
+                          .subtitle1
+                          .copyWith(fontSize: 18),
+                    ),
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.warning,
+                          size: 30,
+                        ),
+                        SizedBox(
+                          width: 5,
+                        ),
+                        Expanded(
+                          child: Text(
+                            "Uploading irrelevant information may result in a ban from the application",
+                            style: Theme.of(context)
+                                .textTheme
+                                .subtitle1
+                                .copyWith(fontSize: 15),
+                            overflow: TextOverflow.clip,
+                          ),
+                        )
+                      ],
+                    )
+                  ],
+                ),
+                actions: <Widget>[
+                  FlatButton(
+                      child: Text(
+                        "ok",
                         style: Theme.of(context)
                             .textTheme
-                            .subtitle1
-                            .copyWith(fontSize: 18),
+                            .subtitle2
+                            .copyWith(fontSize: 17),
                       ),
-                      Row(
-                        children: [
-                          Icon(
-                            Icons.warning,
-                            size: 30,
-                          ),
-                          SizedBox(
-                            width: 5,
-                          ),
-                          Expanded(
-                            child: Text(
-                              "Uploading irrelevant information may result in a ban from the application",
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .subtitle1
-                                  .copyWith(fontSize: 15),
-                              overflow: TextOverflow.clip,
-                            ),
-                          )
-                        ],
-                      )
-                    ],
-                  ),
-                  actions: <Widget>[
-                    FlatButton(
-                        child: Text(
-                          "ok",
-                          style: Theme.of(context)
-                              .textTheme
-                              .subtitle2
-                              .copyWith(fontSize: 17),
-                        ),
-                        onPressed: () {
-                          _navigationService.popUntil((route) =>
-                              route.settings.name == Routes.homeViewRoute);
-                        }),
-                  ]);
+                      onPressed: () {
+                        Navigator.pop(context);
+                      }),
+                ],
+              );
             });
         // Future.delayed(Duration(seconds: 2)).then((value) => _navigationService
         //     .popUntil((route) => route.settings.name == Routes.homeViewRoute));

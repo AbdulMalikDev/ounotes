@@ -179,7 +179,10 @@ class _AdminSubjectListViewState extends State<AdminSubjectListView> {
                                   icon: Icon(Icons.delete),
                                   onPressed: () {
                                     Helper.showDeleteConfirmDialog(
-                                        context: context);
+                                      context: context,
+                                      onDeletePressed:
+                                          model.deleteSubject(subject.id),
+                                    );
                                   },
                                 ),
                               ],

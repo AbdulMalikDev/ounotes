@@ -10,7 +10,6 @@ import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 import 'package:flutter_windowmanager/flutter_windowmanager.dart';
 import 'package:share/share.dart';
 import 'package:stacked/stacked.dart';
-import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 // import 'package:webview_flutter/webview_flutter.dart';
 
 class WebViewWidget extends StatefulWidget {
@@ -29,7 +28,6 @@ class WebViewWidget extends StatefulWidget {
 class _WebViewWidgetState extends State<WebViewWidget> {
   // Instance of WebView plugin
   final flutterWebViewPlugin = FlutterWebviewPlugin();
-  InAppWebViewController webView;
 
   // On destroy stream
   StreamSubscription _onDestroy;
@@ -46,7 +44,6 @@ class _WebViewWidgetState extends State<WebViewWidget> {
   String url;
   String br;
   String year;
-  double progress = 0;
 
   @override
   void initState() {
@@ -101,7 +98,28 @@ class _WebViewWidgetState extends State<WebViewWidget> {
     return ViewModelBuilder.reactive(
         onModelReady: (model) => localModel = model,
         builder: (context, model, child) {
-          return Scaffold(
+          return new WebviewScaffold(
+            initialChild: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    "Loading ....",
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.teal,
+                        fontSize: 25),
+                  ),
+                  SizedBox(
+                    height: 40,
+                  ),
+                  CircularProgressIndicator(),
+                ],
+              ),
+            ),
+            hidden: true,
+            url: url ?? widget.url,
+            headers: {},
             appBar: isLandscape
                 ? null
                 : new AppBar(
@@ -130,123 +148,10 @@ class _WebViewWidgetState extends State<WebViewWidget> {
                               sharePositionOrigin:
                                   box.localToGlobal(Offset.zero) & box.size);
                         },
-                      ),
+                      )
                     ],
                   ),
-            body: progress < 1.0
-                ? Center(
-                    child: CircularProgressIndicator(),
-                  )
-                : Container(
-                    child: Column(
-                      children: [
-                        // Container(
-                        //     padding: EdgeInsets.all(10.0),
-                        //     child: progress < 1.0
-                        //         ? LinearProgressIndicator(value: progress)
-                        //         : Container()),
-                        Expanded(
-                          child: Container(
-                            margin: const EdgeInsets.all(10.0),
-                            // decoration: BoxDecoration(
-                            //     border: Border.all(color: Colors.blueAccent)),
-                            child: InAppWebView(
-                              initialUrl: url ?? widget.url,
-                              initialHeaders: {},
-                              initialOptions: InAppWebViewGroupOptions(
-                                crossPlatform: InAppWebViewOptions(
-                                  debuggingEnabled: true,
-                                ),
-                              ),
-                              onWebViewCreated:
-                                  (InAppWebViewController controller) {
-                                webView = controller;
-                              },
-                              onLoadStart: (InAppWebViewController controller,
-                                  String url) {
-                                setState(() {
-                                  this.url = url;
-                                });
-                              },
-                              onLoadStop: (InAppWebViewController controller,
-                                  String url) async {
-                                setState(() {
-                                  this.url = url;
-                                });
-                              },
-                              onProgressChanged:
-                                  (InAppWebViewController controller,
-                                      int progress) {
-                                setState(() {
-                                  this.progress = progress / 100;
-                                });
-                              },
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
           );
-          // return new WebviewScaffold(
-          //   initialChild: Center(
-          //     child: Column(
-          //       mainAxisAlignment: MainAxisAlignment.center,
-          //       children: [
-          //         Text(
-          //           "Loading ....",
-          //           style: TextStyle(
-          //               fontWeight: FontWeight.bold,
-          //               color: Colors.teal,
-          //               fontSize: 25),
-          //         ),
-          //         SizedBox(
-          //           height: 40,
-          //         ),
-          //         CircularProgressIndicator(),
-          //       ],
-          //     ),
-          //   ),
-          //   hidden: true,
-          //   url: url ?? widget.url,
-          //   headers: {},
-
-          //   withZoom: true,
-          //   //  allowFileURLs: true,
-          //   primary: true,
-          //   withOverviewMode: true,
-          //   appBar: isLandscape
-          //       ? null
-          //       : new AppBar(
-          //           iconTheme: IconThemeData(
-          //             color: Colors.white, //change your color here
-          //           ),
-          //           title: new Text("Notes"),
-          //           actions: [
-          //             IconButton(
-          //               icon: Icon(Icons.share),
-          //               onPressed: () {
-          //                 final RenderBox box = context.findRenderObject();
-          //                 String share = "";
-
-          //                 if (widget.note != null) {
-          //                   share =
-          //                       "Notes Name: $title\n\nSubject Name: $subjectName\n\nLink:$url\n\nFind Latest Notes | Question Papers | Syllabus | Resources for Osmania University at the OU NOTES App\n\nhttps://play.google.com/store/apps/details?id=com.notes.ounotes";
-          //                 } else if (widget.questionPaper != null) {
-          //                   share =
-          //                       "QuestionPaper year: $year\n\nSubject Name: $subjectName\n\nLink:$url\n\nFind Latest Notes | Question Papers | Syllabus | Resources for Osmania University at the OU NOTES App\n\nhttps://play.google.com/store/apps/details?id=com.notes.ounotes";
-          //                 } else if (widget.syllabus != null) {
-          //                   share =
-          //                       "Syllabus Branch: $br\n\nSubject Name: $subjectName\n\nLink:$url\n\nFind Latest Notes | Question Papers | Syllabus | Resources for Osmania University at the OU NOTES App\n\nhttps://play.google.com/store/apps/details?id=com.notes.ounotes";
-          //                 }
-          //                 Share.share(share,
-          //                     sharePositionOrigin:
-          //                         box.localToGlobal(Offset.zero) & box.size);
-          //               },
-          //             )
-          //           ],
-          //         ),
-          // );
         },
         viewModelBuilder: () => WebViewModel());
   }

@@ -72,6 +72,7 @@ dependencies:
   substring_highlight: ^0.1.2
   syncfusion_flutter_pdfviewer: ^18.4.32-beta
   syncfusion_flutter_pdf: ^18.4.32-beta
+  syncfusion_flutter_sliders: ^18.4.32-beta
 
   # Architecture related packages
   flutter_hooks: null

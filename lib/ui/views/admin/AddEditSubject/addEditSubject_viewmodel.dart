@@ -1,11 +1,15 @@
+import 'package:FSOUNotes/app/locator.dart';
 import 'package:FSOUNotes/enums/enums.dart';
 import 'package:FSOUNotes/misc/course_info.dart';
+import 'package:FSOUNotes/models/subject.dart';
+import 'package:FSOUNotes/services/funtional_services/firestore_service.dart';
 import 'package:FSOUNotes/ui/shared/app_config.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:stacked/stacked.dart';
 
 class AddEditSubjectViewModel extends BaseViewModel {
+  FirestoreService _firestoreService = locator<FirestoreService>();
   List<Widget> _children = [];
 
   List<Widget> get children => _children;
@@ -164,5 +168,37 @@ class AddEditSubjectViewModel extends BaseViewModel {
 
     setBusy(false);
     notifyListeners();
+  }
+
+  addSubject({String id, String subName}) {
+    CourseType courseType = _selectedCourseType as CourseType;
+    SubjectType subjectType = _selectedSubjectType as SubjectType;
+    Subject sub = new Subject(
+      int.parse(id),
+      subName,
+      branchToSem: _branchToSem,
+      courseType: courseType,
+      subjectType: subjectType,
+    );
+    _firestoreService.addSubject(sub);
+  }
+
+  editSubject(
+    String id,
+    String name,
+  ) {
+    
+    Map<dynamic, dynamic> sub = {
+      "id": id,
+      "name": name,
+      "branchToSem": _branchToSem,
+      // "gdriveFolderID": gdriveFolderID,
+      // "gdriveNotesFolderID": gdriveNotesFolderID,
+      // "gdriveQuestionPapersFolderID": gdriveQuestionPapersFolderID,
+      // "gdriveSyllabusFolderID": gdriveSyllabusFolderID,
+      "subjectType": _selectedSubjectType,
+      "courseType": _selectedCourseType
+    };
+    _firestoreService.updateSubjectInFirebase(sub);
   }
 }

@@ -68,6 +68,7 @@ class _AdminViewState extends State<AdminView>
                       ),
                       SizedBox(height: 30,),
                       SelectionContainer(
+                        leading:  Icon(Icons.description),
                         title: "Report",
                         onTap: () => Navigator.of(context).push(
                           MaterialPageRoute(
@@ -76,6 +77,7 @@ class _AdminViewState extends State<AdminView>
                         ),
                       ),
                       SelectionContainer(
+                        leading: Icon(Icons.note),
                         title: "Upload Log",
                         onTap: () => Navigator.of(context).push(
                           MaterialPageRoute(
@@ -84,6 +86,7 @@ class _AdminViewState extends State<AdminView>
                         ),
                       ),
                       SelectionContainer(
+                        leading: Icon(Icons.pie_chart_rounded),
                         title: "User Stats",
                         onTap: () => Navigator.of(context).push(
                           MaterialPageRoute(
@@ -92,6 +95,7 @@ class _AdminViewState extends State<AdminView>
                         ),
                       ),
                       SelectionContainer(
+                        leading: Icon(Icons.dashboard),
                         title: "Subject List",
                         onTap: () => Navigator.of(context).push(
                           MaterialPageRoute(

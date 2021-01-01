@@ -77,9 +77,11 @@ class GoogleDriveService {
       log.e("Should this be added to GDrive : $addToGdrive");
       if (addToGdrive) {
         // initialize http client and GDrive API
-        final accountCredentials = new ServiceAccountCredentials.fromJson(_remote.remoteConfig.getString("GDRIVE"));
+        final accountCredentials = new ServiceAccountCredentials.fromJson(
+            _remote.remoteConfig.getString("GDRIVE"));
         final scopes = ['https://www.googleapis.com/auth/drive'];
-        AutoRefreshingAuthClient gdriveAuthClient = await clientViaServiceAccount(accountCredentials, scopes);
+        AutoRefreshingAuthClient gdriveAuthClient =
+            await clientViaServiceAccount(accountCredentials, scopes);
         var drive = ga.DriveApi(gdriveAuthClient);
         // ServiceAccountCredentials
         // retrieve subject and notesmodel
@@ -144,9 +146,11 @@ class GoogleDriveService {
     try {
       log.e("File being deleted");
       // initialize http client and GDrive API
-      final accountCredentials = new ServiceAccountCredentials.fromJson(_remote.remoteConfig.getString("GDRIVE"));
+      final accountCredentials = new ServiceAccountCredentials.fromJson(
+          _remote.remoteConfig.getString("GDRIVE"));
       final scopes = ['https://www.googleapis.com/auth/drive'];
-      AutoRefreshingAuthClient gdriveAuthClient = await clientViaServiceAccount(accountCredentials, scopes);
+      AutoRefreshingAuthClient gdriveAuthClient =
+          await clientViaServiceAccount(accountCredentials, scopes);
       var drive = ga.DriveApi(gdriveAuthClient);
 
       var response = await drive.files.delete(doc.GDriveID);
@@ -195,6 +199,7 @@ class GoogleDriveService {
           ? contentLength * 1000
           : contentLength * 1000000;
       int downloadedLength = 0;
+      downloadProgress.value = 0;
       List<int> dataStore = [];
 
       //*Start the download
@@ -203,24 +208,25 @@ class GoogleDriveService {
         //TODO WAJID - downloadProgress is a value notifier, so make a loading smart widget
         // in that you can use VALUE LISTENABLE BUILDER, you can get this value notifier,
         // by calling googeDriveService from viewmodel of that loading widget,
-        // Ensure that you do not add more than one line of code of here to keep code 
+        // Ensure that you do not add more than one line of code of here to keep code
         //! Tip : Subtract the loading value by 3 or 4 since the size value we are saving of the note
         // is a bit less than actual size. Or else the loading show 100% and user will still have to wait
-        // so Loading percentage = Loading percentage - 4  <--dothis 
-        downloadProgress.value = ((downloadedLength / contentLength) * 100).round();
+        // so Loading percentage = Loading percentage - 4  <--dothis
+        downloadProgress.value =
+            ((downloadedLength / contentLength) * 100).round();
         print(downloadProgress.value);
         dataStore.insertAll(dataStore.length, data);
       }, onDone: () async {
         localFile = File(filePath);
         await localFile.writeAsBytes(dataStore);
-        _insertBookmarks(filePath,note);
-        await Future.delayed(Duration(seconds:1));
-        onDownloadedCallback(localFile.path,note);
-
+        _insertBookmarks(filePath, note);
+        await Future.delayed(Duration(seconds: 1));
+        downloadProgress.value = 0;
+        onDownloadedCallback(localFile.path, note);
       });
     } catch (e) {
       log.e(e.toString());
-      
+
       throw e;
     }
   }
@@ -377,14 +383,13 @@ class GoogleDriveService {
     int pages = document.pages.count;
     List<String> bookmarkNames = note.bookmarks.keys.toList();
     List<int> bookmarkPageNos = note.bookmarks.values.toList();
-    for( int i=0 ; i<note.bookmarks.length ; i++)
-    {
-
+    for (int i = 0; i < note.bookmarks.length; i++) {
       //Creates a document bookmark
       PdfBookmark bookmark = document.bookmarks.insert(i, bookmarkNames[i]);
 
       //Sets the destination page and location
-      bookmark.destination = PdfDestination(document.pages[bookmarkPageNos[i]], Offset(20, 20));
+      bookmark.destination =
+          PdfDestination(document.pages[bookmarkPageNos[i]], Offset(20, 20));
     }
 
     //Saves the document

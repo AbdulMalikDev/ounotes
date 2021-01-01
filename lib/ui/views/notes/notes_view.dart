@@ -68,16 +68,25 @@ class _NotesViewState extends State<NotesView>
                       children: <Widget>[
                         Container(
                           constraints: BoxConstraints(maxWidth: 180),
-                          child: Text(
-                            'Downloading...' +
-                                progress.toStringAsFixed(0) +
-                                '%',
-                            overflow: TextOverflow.clip,
-                            style: Theme.of(context)
-                                .textTheme
-                                .subtitle1
-                                .copyWith(fontSize: 15),
-                          ),
+                          child: progress < 100
+                              ? Text(
+                                  'Downloading...' +
+                                      progress.toStringAsFixed(0) +
+                                      '%',
+                                  overflow: TextOverflow.clip,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .subtitle1
+                                      .copyWith(fontSize: 15),
+                                )
+                              : Text(
+                                  'Downloading...' + '100%',
+                                  overflow: TextOverflow.clip,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .subtitle1
+                                      .copyWith(fontSize: 15),
+                                ),
                         ),
                         SizedBox(
                           height: 10,

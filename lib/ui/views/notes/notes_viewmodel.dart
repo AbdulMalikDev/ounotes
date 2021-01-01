@@ -294,7 +294,7 @@ class NotesViewModel extends BaseViewModel {
         onDownloadedCallback: (path, note) {
           setLoading(false);
           _navigationService.navigateTo(Routes.pdfScreenRoute,
-              arguments: PDFScreenArguments(pathPDF: path, doc: note));
+              arguments: PDFScreenArguments(pathPDF: path, doc: note,askBookMarks: false));
         },
       );
     } catch (e) {
@@ -354,7 +354,7 @@ class NotesViewModel extends BaseViewModel {
     // _firestoreService.incrementView(note);
     setLoading(false);
     _navigationService.navigateTo(Routes.pdfScreenRoute,
-        arguments: PDFScreenArguments(pathPDF: PDFpath));
+        arguments: PDFScreenArguments(pathPDF: PDFpath,askBookMarks: false));
   }
 
   @override

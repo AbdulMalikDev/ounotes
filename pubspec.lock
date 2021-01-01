@@ -1330,6 +1330,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "18.4.32-beta"
+  syncfusion_flutter_sliders:
+    dependency: "direct main"
+    description:
+      name: syncfusion_flutter_sliders
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "18.4.32-beta"
   synchronized:
     dependency: transitive
     description:

@@ -6,8 +6,9 @@ import 'package:url_launcher/url_launcher.dart';
 class SelectionContainer extends StatelessWidget {
   final String title;
   final Function onTap;
+  final Widget leading;
 
-  const SelectionContainer({Key key, this.title, this.onTap,}) : super(key: key);
+  const SelectionContainer({Key key, this.title, this.onTap, this.leading,}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return  Container(
@@ -23,6 +24,7 @@ class SelectionContainer extends StatelessWidget {
       ),
       child: Center(
         child: ListTile(
+          leading:leading ,
           title: Row(
             children: [
               Expanded(
