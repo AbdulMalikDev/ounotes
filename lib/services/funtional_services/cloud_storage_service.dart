@@ -3,6 +3,7 @@ import 'dart:math' as math;
 
 import 'package:FSOUNotes/app/locator.dart';
 import 'package:FSOUNotes/app/logger.dart';
+import 'package:FSOUNotes/app/router.gr.dart';
 import 'package:FSOUNotes/enums/enums.dart';
 import 'package:FSOUNotes/models/document.dart';
 import 'package:FSOUNotes/services/funtional_services/authentication_service.dart';
@@ -33,6 +34,7 @@ class CloudStorageService {
   FirestoreService _firestoreService = locator<FirestoreService>();
   DownloadService _downloadService = locator<DownloadService>();
   DialogService _dialogService = locator<DialogService>();
+  NavigationService _navigationService = locator<NavigationService>();
   Logger log = getLogger("CloudStorageService");
   final String url =
       "https://storage.googleapis.com/ou-notes.appspot.com/pdfs/";
@@ -105,8 +107,6 @@ class CloudStorageService {
     AbstractDocument note,
     String uploadFileType,
   }) async {
-    AuthenticationService _authenticationService =
-        locator<AuthenticationService>();
 
     bool result1 = await _firestoreService.areUsersAllowed();
     bool result2 =
@@ -139,7 +139,7 @@ class CloudStorageService {
         pdf = PdfDocument(inputBytes: document.readAsBytesSync(),);
       }
 
-      //*Find the size of the file and make sure it's note more than 35 MB
+      //*Find the size of the file and make sure it's not more than 35 MB
       int lengthOfDoc = isImage ? await _getLengthOfImages(document) : await document.length(); 
       final String bytes = _formatBytes2(lengthOfDoc, 2);
       final String bytesuffix = _formatBytes2Suffix(lengthOfDoc, 2);
@@ -150,12 +150,18 @@ class CloudStorageService {
         return "File size more than 35mb";
       }
       
+      //*Save file to upload
+      File fileToUpload = isImage ? null : document; 
+      if(fileToUpload==null)fileToUpload = await new File((await _localPath)+"/${DateTime.now().millisecondsSinceEpoch}").writeAsBytes(document.save());
+      
+      //*Show document to user
+      //TODO WAJID bookmarks and units covered logic will be displayed when user is taken to pdf screen, 
+      //! add it in the pdf screen, after user put info, just pop the pdf screen, it will come back to this function
+      await _navigationService.navigateTo(Routes.pdfScreenRoute,arguments: PDFScreenArguments(doc: note,pathPDF:fileToUpload.path));
+      
       //*Set info on document and upload
       String fileName = assignFileName(note);
       note.setTitle = fileName;
-      File fileToUpload = isImage ? null : document; 
-      //Store in temp file
-      if(fileToUpload==null)fileToUpload = await new File((await _localPath)+"/${DateTime.now().millisecondsSinceEpoch}").writeAsBytes(document.save());
       StorageUploadTask uploadTask = _storageReference
           .child("pdfs/${note.subjectName}/$type/$fileName")
           .putFile(fileToUpload);
