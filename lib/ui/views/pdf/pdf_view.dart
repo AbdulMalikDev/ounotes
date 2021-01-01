@@ -1,7 +1,10 @@
 import 'dart:io';
 
+import 'package:FSOUNotes/app/locator.dart';
+import 'package:FSOUNotes/enums/bottom_sheet_type.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:stacked_services/stacked_services.dart';
 
 /// PDF Viewer import
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
@@ -13,7 +16,8 @@ import 'package:FSOUNotes/models/document.dart';
 class PDFScreen extends StatefulWidget {
   final String pathPDF;
   final AbstractDocument doc;
-  PDFScreen({this.pathPDF, this.doc});
+  final bool askBookMarks;
+  PDFScreen({this.pathPDF, this.doc, @required this.askBookMarks});
 
   @override
   _PDFScreenState createState() => _PDFScreenState();
@@ -24,6 +28,7 @@ class _PDFScreenState extends State<PDFScreen> {
   final GlobalKey<SfPdfViewerState> _pdfViewerKey = GlobalKey();
   final PdfViewerController _pdfViewerController = PdfViewerController();
   final GlobalKey<SearchToolbarState> _textSearchKey = GlobalKey();
+  BottomSheetService _bottomSheetService = locator<BottomSheetService>();
   bool _showPdf;
   bool _showToolbar;
   bool _showToast;
@@ -33,6 +38,7 @@ class _PDFScreenState extends State<PDFScreen> {
   Color _copyColor;
   double _contextMenuWidth;
   double _contextMenuHeight;
+  bool _askBookMarks;
 
   @override
   void initState() {
@@ -43,6 +49,7 @@ class _PDFScreenState extends State<PDFScreen> {
     _showScrollHead = true;
     _contextMenuHeight = 48;
     _contextMenuWidth = 100;
+    _askBookMarks = widget.askBookMarks;
     super.initState();
   }
 
@@ -169,6 +176,22 @@ class _PDFScreenState extends State<PDFScreen> {
     bool isLandscape =
         MediaQuery.of(context).orientation == Orientation.landscape;
     return Scaffold(
+      floatingActionButton: widget.askBookMarks
+          ? Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: FloatingActionButton(
+                child:const Icon(Icons.add),
+                onPressed: () async {
+                  SheetResponse response =
+                      await _bottomSheetService.showCustomSheet(
+                    variant: BottomSheetType.bookMarks,
+                    title: "",
+                  );
+                },
+                backgroundColor: Theme.of(context).accentColor,
+              ),
+            )
+          : null,
       appBar: isLandscape
           ? null
           : AppBar(
@@ -219,8 +242,7 @@ class _PDFScreenState extends State<PDFScreen> {
         builder: (context, snapshot) {
           if (_showPdf) {
             return SfPdfViewerTheme(
-              data:
-                  SfPdfViewerThemeData(),
+              data: SfPdfViewerThemeData(),
               child: WillPopScope(
                 onWillPop: () async {
                   setState(() {
@@ -469,7 +491,7 @@ class ToolbarState extends State<Toolbar> {
         widget.onTap?.call('Toolbar');
       },
       child: Container(
-          margin:EdgeInsets.only(top:35),
+          margin: EdgeInsets.only(top: 35),
           padding: EdgeInsets.only(left: 16.0, right: 16.0),
           height: 56,
           child: Row(
@@ -509,9 +531,9 @@ class ToolbarState extends State<Toolbar> {
                     width: 75,
                     child: FittedBox(
                       fit: BoxFit.fitWidth,
-                                          child: Row(children: [
+                      child: Row(children: [
                         Padding(
-                          padding: const EdgeInsets.only(right:2.0,bottom:1),
+                          padding: const EdgeInsets.only(right: 2.0, bottom: 1),
                           child: Flexible(
                             child: paginationTextField(context),
                           ),
@@ -616,8 +638,8 @@ class ToolbarState extends State<Toolbar> {
                           size: 24,
                         ),
                         onPressed: () {
-                                //TODO MALIK include share logic
-                              },
+                          //TODO MALIK include share logic
+                        },
                         tooltip: widget.showTooltip ? 'Search' : null,
                       ),
                     ))
@@ -631,8 +653,8 @@ class ToolbarState extends State<Toolbar> {
   Widget paginationTextField(BuildContext context) {
     return ConstrainedBox(
       constraints: BoxConstraints(minWidth: 20),
-          child: IntrinsicWidth(
-            child: TextField(
+      child: IntrinsicWidth(
+        child: TextField(
           style: TextStyle(color: _color),
           enableInteractiveSelection: false,
           keyboardType: TextInputType.number,

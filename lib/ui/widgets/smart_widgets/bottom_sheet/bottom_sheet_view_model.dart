@@ -1,14 +1,42 @@
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
+import 'package:syncfusion_flutter_sliders/sliders.dart';
 
 class BottomSheetViewModel extends BaseViewModel {
   String errorText;
 
   bool _ischecked = false;
+  bool _isNextPressed = false;
+
+  double _value=1;
+
+  double get value => _value;
+
+
+  set setValue(double value) {
+    _value = value;
+    notifyListeners();
+  }
+
+  bool get isNextPressed => _isNextPressed;
+
+  set setIsNextPressed(bool isNextPressed) {
+    _isNextPressed = isNextPressed;
+    notifyListeners();
+  }
+
+  SfRangeValues _sfValues;
+
+  SfRangeValues get sfValues => _sfValues;
+
+  set setSfValues(SfRangeValues values) {
+    _sfValues = values;
+    notifyListeners();
+  }
 
   bool get ischecked => _ischecked;
 
-   void changeCheckMark(bool val) {
+  void changeCheckMark(bool val) {
     _ischecked = val;
     notifyListeners();
   }

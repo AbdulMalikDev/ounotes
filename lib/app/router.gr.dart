@@ -135,13 +135,15 @@ class Router extends RouterBase {
           settings: settings,
         );
       case Routes.pdfScreenRoute:
-        if (hasInvalidArgs<PDFScreenArguments>(args)) {
+        if (hasInvalidArgs<PDFScreenArguments>(args, isRequired: true)) {
           return misTypedArgsRoute<PDFScreenArguments>(args);
         }
-        final typedArgs = args as PDFScreenArguments ?? PDFScreenArguments();
+        final typedArgs = args as PDFScreenArguments;
         return MaterialPageRoute<dynamic>(
-          builder: (context) =>
-              PDFScreen(pathPDF: typedArgs.pathPDF, doc: typedArgs.doc),
+          builder: (context) => PDFScreen(
+              pathPDF: typedArgs.pathPDF,
+              doc: typedArgs.doc,
+              askBookMarks: typedArgs.askBookMarks),
           settings: settings,
         );
       case Routes.notesViewRoute:
@@ -376,7 +378,8 @@ class AllDocumentsViewArguments {
 class PDFScreenArguments {
   final String pathPDF;
   final AbstractDocument doc;
-  PDFScreenArguments({this.pathPDF, this.doc});
+  final bool askBookMarks;
+  PDFScreenArguments({this.pathPDF, this.doc, @required this.askBookMarks});
 }
 
 //NotesView arguments holder class

@@ -158,7 +158,7 @@ class CloudStorageService {
       log.e(note.toJson(),fileToUpload.path);
       //TODO WAJID bookmarks and units covered logic will be displayed when user is taken to pdf screen, 
       //! add it in the pdf screen, after user put info, just pop the pdf screen, it will come back to this function
-      await _navigationService.navigateTo(Routes.pdfScreenRoute,arguments: PDFScreenArguments(doc: note,pathPDF:fileToUpload.path));
+      await _navigationService.navigateTo(Routes.pdfScreenRoute,arguments: PDFScreenArguments(doc: note,pathPDF:fileToUpload.path,askBookMarks: true));
       
       //*Set info on document and upload
       String fileName = assignFileName(note);

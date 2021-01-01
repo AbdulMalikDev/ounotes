@@ -2,13 +2,12 @@ import 'package:FSOUNotes/AppTheme/AppStateNotifier.dart';
 import 'package:FSOUNotes/misc/constants.dart';
 import 'package:FSOUNotes/models/subject.dart';
 import 'package:FSOUNotes/ui/widgets/smart_widgets/generic_subject_tile/generic_subject_tile_view.dart';
-import 'package:FSOUNotes/ui/widgets/smart_widgets/user_subject_list/user_subject_list_view.dart';
 import 'package:expansion_tile_card/expansion_tile_card.dart';
 import 'package:flutter/material.dart';
 
 class SimilarSubjectTile extends StatelessWidget {
   final List<Subject> similarSubjects;
-  String title = "SIMILAR SUBJECTS";
+  final String title = "SIMILAR SUBJECTS";
   SimilarSubjectTile({@required this.similarSubjects});
   @override
   Widget build(BuildContext context) {

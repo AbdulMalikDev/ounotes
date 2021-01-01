@@ -3,4 +3,5 @@ enum BottomSheetType{
   floating2,
   confirm,
   filledStacks,
+  bookMarks,
 }
