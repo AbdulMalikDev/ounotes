@@ -12,91 +12,93 @@ class UserStatsView extends StatelessWidget {
   Widget build(BuildContext context) {
     return ViewModelBuilder<UserStatsViewModel>.reactive(
       builder: (context, model, child) => Scaffold(
-        body: Padding(
-          padding: const EdgeInsets.all(18.0),
-          child: ListView(
-            children: [
-              Container(
-                height: MediaQuery.of(context).size.height * 0.4,
-                child: Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        "Semester",
-                        style: Theme.of(context).textTheme.headline5,
+        body: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(18.0),
+            child: ListView(
+              children: [
+                Container(
+                  height: MediaQuery.of(context).size.height * 0.4,
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          "Semester",
+                          style: Theme.of(context).textTheme.headline5,
+                        ),
                       ),
-                    ),
-                    Expanded(
-                      child: SemVerticalBarLabelChart(
-                        animate: false,
-                        semesters: model.semesters,
+                      Expanded(
+                        child: SemVerticalBarLabelChart(
+                          animate: false,
+                          semesters: model.semesters,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-              SizedBox(
-                height: 50,
-              ),
-              Container(
-                height: MediaQuery.of(context).size.height * 0.23,
-                child: Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        "College",
-                        style: Theme.of(context).textTheme.headline5,
-                      ),
-                    ),
-                    Expanded(
-                      child: CollegePieOutsideLabelChart(
-                        animate: false,
-                        college: model.colleges,
-                      ),
-                    ),
-                  ],
+                SizedBox(
+                  height: 50,
                 ),
-              ),
-              SizedBox(height: 20),
-              Container(
-                height: MediaQuery.of(context).size.height * 0.35,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: model.colleges
-                      .map(
-                        (entry) => Text(
-                            "${model.clgs[entry.collegeName]}: ${entry.noOfStudents}"),
-                      )
-                      .toList(),
-                ),
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              Container(
-                height: MediaQuery.of(context).size.height * 0.27,
-                child: Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        "Branch",
-                        style: Theme.of(context).textTheme.headline5,
+                Container(
+                  height: MediaQuery.of(context).size.height * 0.23,
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          "College",
+                          style: Theme.of(context).textTheme.headline5,
+                        ),
                       ),
-                    ),
-                    Expanded(
-                      child: BranchPieOutsideLabelChart(
-                        animate: false,
-                        br: model.branches,
+                      Expanded(
+                        child: CollegePieOutsideLabelChart(
+                          animate: false,
+                          college: model.colleges,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-            ],
+                SizedBox(height: 20),
+                Container(
+                  height: MediaQuery.of(context).size.height * 0.35,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: model.colleges
+                        .map(
+                          (entry) => Text(
+                              "${model.clgs[entry.collegeName]}: ${entry.noOfStudents}"),
+                        )
+                        .toList(),
+                  ),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                Container(
+                  height: MediaQuery.of(context).size.height * 0.27,
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          "Branch",
+                          style: Theme.of(context).textTheme.headline5,
+                        ),
+                      ),
+                      Expanded(
+                        child: BranchPieOutsideLabelChart(
+                          animate: false,
+                          br: model.branches,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

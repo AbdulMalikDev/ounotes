@@ -47,7 +47,7 @@ class NotesViewModel extends BaseViewModel {
       new ValueNotifier(new List<Widget>());
 
   FirestoreService _firestoreService = locator<FirestoreService>();
-  GoogleDriveService _googleDriveService = locator<GoogleDriveService>(); 
+  GoogleDriveService _googleDriveService = locator<GoogleDriveService>();
   AdmobService _admobService = locator<AdmobService>();
   RemoteConfigService _remoteConfigService = locator<RemoteConfigService>();
   NavigationService _navigationService = locator<NavigationService>();
@@ -78,6 +78,9 @@ class NotesViewModel extends BaseViewModel {
   bool get loading => isloading;
   Box box;
   ValueNotifier<List<Vote>> get userVotesBySub => _voteService.votesBySub;
+
+  ValueNotifier<int> get downloadProgress =>
+      _googleDriveService.downloadProgress;
 
   setLoading(bool val) {
     isloading = val;
@@ -110,13 +113,21 @@ class NotesViewModel extends BaseViewModel {
     bool notesForNotificationDisplay = false;
     log.e(box.get("pinnedNotes"));
     // box.delete("pinnedNotes");
-    Map<String, Map<String, DateTime>> pinnedNotes = {"empty": {"a": DateTime.now()}};
-    if(box.get("pinnedNotes") != null){
+    Map<String, Map<String, DateTime>> pinnedNotes = {
+      "empty": {"a": DateTime.now()}
+    };
+    if (box.get("pinnedNotes") != null) {
       Map notesMap = box.get("pinnedNotes");
       notesMap = notesMap.map((key, value) {
-        if(value.isEmpty){value = {"a": DateTime.now()};}
-        pinnedNotes.addEntries([MapEntry<String,Map<String, DateTime>>(key as String, new Map<String,DateTime>.from(value))]);
-        return MapEntry<String,Map<String, DateTime>>(key as String, new Map<String,DateTime>.from(value));
+        if (value.isEmpty) {
+          value = {"a": DateTime.now()};
+        }
+        pinnedNotes.addEntries([
+          MapEntry<String, Map<String, DateTime>>(
+              key as String, new Map<String, DateTime>.from(value))
+        ]);
+        return MapEntry<String, Map<String, DateTime>>(
+            key as String, new Map<String, DateTime>.from(value));
       });
       // log.e(pinnedNotes);
     }
@@ -237,7 +248,7 @@ class NotesViewModel extends BaseViewModel {
       secondaryButtonTitle: 'Open In App',
     );
     log.i("openDoc BottomSheetResponse ");
-    if(response == null)return;
+    if (response == null) return;
     if (!response.confirmed ?? false) {
       return;
     }
@@ -250,8 +261,7 @@ class NotesViewModel extends BaseViewModel {
 
       SheetResponse response2 = await _bottomSheetService.showBottomSheet(
         title: "Settings Saved !",
-        description:
-            "You can change this anytime in settings screen.",
+        description: "You can change this anytime in settings screen.",
       );
 
       if (response2.confirmed) {
@@ -275,9 +285,25 @@ class NotesViewModel extends BaseViewModel {
   }
 
   void navigateToWebView(Note note) {
-    _googleDriveService.downloadFile(note: note, onDownloadedCallback: (path,note){
-          _navigationService.navigateTo(Routes.pdfScreenRoute,arguments: PDFScreenArguments(pathPDF: path,doc: note));
-        });
+    try {
+      _googleDriveService.downloadFile(
+        note: note,
+        startDownload: () {
+          setLoading(true);
+        },
+        onDownloadedCallback: (path, note) {
+          setLoading(false);
+          _navigationService.navigateTo(Routes.pdfScreenRoute,
+              arguments: PDFScreenArguments(pathPDF: path, doc: note));
+        },
+      );
+    } catch (e) {
+      setLoading(false);
+      Fluttertoast.showToast(
+          msg: "An error Occurred while downloading pdf..." +
+              "Please check you internet connection and try again later");
+      return;
+    }
   }
 
   void navigateBack() {
@@ -302,7 +328,7 @@ class NotesViewModel extends BaseViewModel {
     return _subjectsService.getSimilarSubjects(subjectName);
   }
 
-   //download doc on tap
+  //download doc on tap
   void onTap({
     String notesName,
     String subName,

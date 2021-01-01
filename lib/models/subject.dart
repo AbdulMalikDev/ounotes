@@ -9,7 +9,6 @@ class Subject {
   Map<String, List<String>> branchToSem;
   bool userSubject = false;
   CourseType courseType;
-
   SubjectType subjectType;
 
   // GDrive data
