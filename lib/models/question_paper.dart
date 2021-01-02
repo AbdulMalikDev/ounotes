@@ -67,7 +67,7 @@ class QuestionPaper extends AbstractDocument{
     branch       = data['branch'] ?? "";
     id           = data['id']?.toString() ?? "";
     isDownloaded = data['isDownloaded'] ?? false;
-    path         = Document.QuestionPapers;
+    path         = Enum.getDocumentFromString(data['path']) ?? Document.QuestionPapers;
     uploader_id  = data["uploader_id"];
     year         = data["year"].toString() ?? "";
     type         = Constants.questionPapers;
@@ -107,6 +107,7 @@ class QuestionPaper extends AbstractDocument{
       if(GDriveID!=null)"GDriveID":GDriveID,
       if(GDriveQuestionPaperFolderID!=null)"GDriveNotesFolderID":GDriveQuestionPaperFolderID,
       if(pages!=null)"pages":pages,
+      if(path!=null)"path"                              : path.toString(),
       
     };
   }

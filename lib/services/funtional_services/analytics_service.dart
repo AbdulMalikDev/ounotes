@@ -38,7 +38,7 @@ class AnalyticsService{
       if (addInNotificationService && (parameters!=null)){
         OneSignal.shared.sendTags(parameters);
       }
-    } on Exception catch (e) {
+    } catch (e) {
           log.e("Exception in logging event ${e.toString()}");
     }
   }

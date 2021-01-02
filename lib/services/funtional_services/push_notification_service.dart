@@ -52,10 +52,11 @@ class PushNotificationService{
     bool navigate            = (message["data"]["navigate"] ?? "false") == "true" ? true : false ;
     String notesID           = message["data"]["notesID"];
     String notificationEvent = message["data"]["notificationEvent"];
+    bool isDocInReview       = message["data"]["review"] == "true";
 
     switch(notificationEvent){
       case Constants.notificationEventNotesUpload:
-        _handleNotesUpload(title,body,subjectName,navigate,notesID);
+        _handleNotesUpload(title,body,subjectName,navigate,notesID,isDocInReview);
         break;
 
       default:
@@ -64,7 +65,7 @@ class PushNotificationService{
     
   }
 
-  _handleNotesUpload(String title,String body,String subjectName,bool navigate,String notesID) async {
+  _handleNotesUpload(String title,String body,String subjectName,bool navigate,String notesID,bool isDocInReview) async {
     if(title==null || body == null || subjectName == null)return;
     SheetResponse wantToCheckOutNotification = await _bottomSheetService.showCustomSheet(
       variant: BottomSheetType.filledStacks,
@@ -74,7 +75,11 @@ class PushNotificationService{
       secondaryButtonTitle: "Later"
     );
     bool shouldNavigate = navigate && (wantToCheckOutNotification?.confirmed ?? false);
-    if(shouldNavigate)_navigationService.navigateTo(Routes.allDocumentsViewRoute,arguments: AllDocumentsViewArguments(subjectName: subjectName,newDocIDUploaded: notesID));
+    if(shouldNavigate){
+      isDocInReview
+      ? _navigationService.navigateTo(Routes.adminViewRoute)
+      : _navigationService.navigateTo(Routes.allDocumentsViewRoute,arguments: AllDocumentsViewArguments(subjectName: subjectName,newDocIDUploaded: notesID));
+    }
   }
 
   // ignore: non_constant_identifier_names

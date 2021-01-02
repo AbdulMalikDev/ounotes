@@ -28,6 +28,7 @@ Logger log = getLogger("UploadLogViewModel");
 class UploadLogViewModel extends FutureViewModel{
  FirestoreService _firestoreService = locator<FirestoreService>();
  DialogService _dialogService = locator<DialogService>();
+ BottomSheetService _bottomSheetService = locator<BottomSheetService>();
  AuthenticationService _authenticationService = locator<AuthenticationService>();
  AnalyticsService _analyticsService = locator<AnalyticsService>();
  SharedPreferencesService _sharedPreferencesService = locator<SharedPreferencesService>();
@@ -75,22 +76,26 @@ class UploadLogViewModel extends FutureViewModel{
   
   void uploadDocument(UploadLog logItem) async {
     setBusy(true);
-    GoogleDriveService _googleDriveService = locator<GoogleDriveService>();
-    if (logItem.type == Constants.links)
-    {
-      _dialogService.showDialog(title: "ERROR" , description: "This is a link Bruh.");
-      setBusy(false);
-      return;
+    try {
+
+      GoogleDriveService _googleDriveService = locator<GoogleDriveService>();
+      dynamic doc = await _firestoreService.getDocumentById(logItem.subjectName,logItem.id,Constants.getDocFromConstant(logItem.type));
+      if(doc == null){await _dialogService.showDialog(title:"Oops",description: "Can't find this document");setBusy(false);return;}
+    
+      if (logItem.type == Constants.links){
+        if(doc.uploaded == true){await _dialogService.showDialog(title: "ERROR" , description: "ALREADY UPLOADED");setBusy(false);return;}
+        doc.uploaded = true;
+        await _firestoreService.updateDocument(doc, Document.Links);
+      }else{
+
+        if(doc.GDriveLink != null){await _dialogService.showDialog(title: "ERROR" , description: "ALREADY UPLOADED");setBusy(false);return;}
+        String result = await _googleDriveService.processFile(doc: doc, document:Constants.getDocFromConstant(logItem.type) , addToGdrive: true);
+        _dialogService.showDialog(title: "OUTPUT" , description: result);
+      }
+
+    }catch (e) {
+      _bottomSheetService.showBottomSheet(title: "OOPS",description: e.toString(),);
     }
-    dynamic doc = await _firestoreService.getDocumentById(logItem.subjectName,logItem.id,Constants.getDocFromConstant(logItem.type));
-    if(doc.GDriveLink != null){await _dialogService.showDialog(title: "ERROR" , description: "ALREADY UPLOADED");setBusy(false);return;}
-    String result = await _googleDriveService.processFile(doc: doc, document:Constants.getDocFromConstant(logItem.type) , addToGdrive: true);
-    User user = await _sharedPreferencesService.getUser();
-    user.incrementAcceptedUploads();
-    user.addToUploadedDocuments(logItem.id);
-    log.e(user.numOfAcceptedUploads);
-    _firestoreService.updateUserInFirebase(user);
-    _dialogService.showDialog(title: "OUTPUT" , description: result);
     setBusy(false);
   }
 
@@ -127,18 +132,7 @@ class UploadLogViewModel extends FutureViewModel{
   
     void _deleteDocument(UploadLog logItem) async {
       Subject sub = _subjectsService.getSubjectByName(logItem.subjectName);
-      NotesTileViewModel notesTileViewModel = NotesTileViewModel();
-      log.e(logItem.type);
-      if (logItem.type == Constants.questionPapers)
-      {
-        QuestionPaper questionPaper = await _firestoreService.getQuestionPaperById(sub.id,logItem.id);
-        notesTileViewModel.delete(questionPaper);
-      }else if(logItem.type == Constants.syllabus){
-        Syllabus syllabus = await _firestoreService.getSyllabusById(sub.id,logItem.id);
-        notesTileViewModel.delete(syllabus);
-      }else if(logItem.type == Constants.links){
-        Link link = await _firestoreService.deleteLinkById(sub.id,logItem.id);
-      }
+      await _firestoreService.deleteLinkById(sub.id,logItem.id);
     }
 
   Future<String> getUploadStatus(UploadLog logItem) async {

@@ -155,6 +155,7 @@ class CloudStorageService {
       if(fileToUpload==null)fileToUpload = await new File((await _localPath)+"/${DateTime.now().millisecondsSinceEpoch}").writeAsBytes(document.save());
       
       //*Show document to user
+      log.e(note.toJson(),fileToUpload.path);
       //TODO WAJID bookmarks and units covered logic will be displayed when user is taken to pdf screen, 
       //! add it in the pdf screen, after user put info, just pop the pdf screen, it will come back to this function
       await _navigationService.navigateTo(Routes.pdfScreenRoute,arguments: PDFScreenArguments(doc: note,pathPDF:fileToUpload.path,askBookMarks: true));
@@ -252,6 +253,7 @@ class CloudStorageService {
       //Delete from firebase if not added to Gdrive
       if (!addedToGdrive)
       {
+          log.i("Deleting from firebase");
           await _firestoreService.deleteDocument(doc);
       }
       StorageReference docRef = _storageReference
