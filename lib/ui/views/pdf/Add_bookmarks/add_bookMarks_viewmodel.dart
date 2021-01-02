@@ -3,12 +3,9 @@ import 'package:FSOUNotes/models/notes.dart';
 import 'package:FSOUNotes/services/state_services/subjects_service.dart';
 import 'package:hive/hive.dart';
 import 'package:stacked/stacked.dart';
-import 'package:stacked_services/stacked_services.dart';
 import 'package:syncfusion_flutter_sliders/sliders.dart';
 
-class BottomSheetViewModel extends BaseViewModel {
-  String errorText;
-  bool _ischecked = false;
+class BookMarkBottomSheetViewModel extends BaseViewModel {
   bool _isNextPressed = false;
   Note _note;
   SubjectsService _subjectsService = locator<SubjectsService>();
@@ -16,9 +13,9 @@ class BottomSheetViewModel extends BaseViewModel {
 
   Map<int, bool> _units = {
     1: false,
-    2: false,
+    2: true,
     3: false,
-    4: false,
+    4: true,
     5: false,
   };
 
@@ -33,6 +30,21 @@ class BottomSheetViewModel extends BaseViewModel {
   };
 
   Map<int, String> get unitTitles => _unitTitles;
+
+  setUnitTitles(
+    int index,
+    String val,
+  ) {
+    _unitTitles[index] = val;
+    notifyListeners();
+  }
+  setUnitPageNos(
+    int index,
+    String val,
+  ) {
+    _unitPageNos[index] = val;
+    notifyListeners();
+  }
 
   Map<int, String> _unitPageNos = {
     1: "",
@@ -61,7 +73,7 @@ class BottomSheetViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  SfRangeValues _sfValues = SfRangeValues(1.0, 2.0);
+  SfRangeValues _sfValues = SfRangeValues(2.0, 4.0);
 
   SfRangeValues get sfValues => _sfValues;
 
@@ -78,30 +90,27 @@ class BottomSheetViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  bool get ischecked => _ischecked;
-
-  void changeCheckMark(bool val) {
-    _ischecked = val;
-    notifyListeners();
-  }
-
-  init() async {
+  init(bool isInitial) async {
     setBusy(true);
     if (_subjectsService.documentHiveBox.get('bottomsheet') == null) return;
+    if (isInitial) {
+      if (_subjectsService.documentHiveBox.get("bottomsheet") != null) {
+        _subjectsService.documentHiveBox.delete("bottomsheet");
+      }
+    }
     Map<String, dynamic> bottomsheet =
         _subjectsService.documentHiveBox.get('bottomsheet');
     _isNextPressed = bottomsheet["NextPressed"];
     int start = bottomsheet["start"].toInt();
     int end = bottomsheet['end'].toInt();
-    _note = Note.fromData(bottomsheet['note'],bottomsheet['note']['firebaseId']);
-    _unitTitles = bottomsheet['unitTitles'];
-    _unitPageNos = bottomsheet['unitPageNos'];
+    _unitTitles = bottomsheet['unitTitles'] as Map<int, String>;
+    _unitPageNos = bottomsheet['unitPageNos'] as Map<int, String>;
+    log.e(_unitPageNos.toString() + "sdsdsdsd");
     _sfValues = SfRangeValues(start, end);
     for (int i = 1; i <= units.length; i++) {
       if (i >= start && i <= end) {
         units[i] = true;
-      }
-      {
+      } else {
         units[i] = false;
       }
     }
@@ -121,25 +130,10 @@ class BottomSheetViewModel extends BaseViewModel {
       "NextPressed": _isNextPressed,
       "start": _sfValues.start,
       "end": _sfValues.end,
-      "unitTitles": unitTitles,
-      "unitPageNos": unitPageNos,
+      "unitTitles": _unitTitles,
+      "unitPageNos": _unitPageNos,
       "note": _note.toJson(),
     };
     _subjectsService.documentHiveBox.put("bottomsheet", bottomsheet);
-  }
-
-  response(var func, String responseText) {
-    if (responseText.length < 5) {
-      errorText =
-          "Please explain why you are reporting this document so that admins can take appropriate action";
-      notifyListeners();
-    } else if (responseText.length > 250) {
-      errorText = "Maximum limit of 250 characters exceeded";
-      notifyListeners();
-    } else {
-      func(
-        SheetResponse(confirmed: true, responseData: responseText),
-      );
-    }
   }
 }
