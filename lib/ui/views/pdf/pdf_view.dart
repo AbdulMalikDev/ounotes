@@ -6,6 +6,7 @@ import 'package:FSOUNotes/enums/bottom_sheet_type.dart';
 import 'package:FSOUNotes/ui/widgets/dumb_widgets/pdf_view/pdf_error_dialog.dart';
 import 'package:FSOUNotes/ui/widgets/dumb_widgets/pdf_view/pdf_search_toolbar_widget.dart';
 import 'package:FSOUNotes/ui/widgets/dumb_widgets/pdf_view/pdf_toolbar_widget.dart';
+import 'package:FSOUNotes/ui/views/pdf/Add_bookmarks/add_bookMarks_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:logger/logger.dart';
@@ -55,17 +56,14 @@ class _PDFScreenState extends State<PDFScreen> {
     bool isLandscape =
         MediaQuery.of(context).orientation == Orientation.landscape;
     return Scaffold(
+      //Book marks
       floatingActionButton: widget.askBookMarks
           ? Padding(
               padding: const EdgeInsets.all(8.0),
               child: FloatingActionButton(
-                child:const Icon(Icons.add),
+                child: const Icon(Icons.add),
                 onPressed: () async {
-                  SheetResponse response =
-                      await _bottomSheetService.showCustomSheet(
-                    variant: BottomSheetType.bookMarks,
-                    title: "",
-                  );
+                  // showBottomSeetForBookMarks(false);
                 },
                 backgroundColor: Theme.of(context).accentColor,
               ),
@@ -230,6 +228,7 @@ class _PDFScreenState extends State<PDFScreen> {
   
   @override
   void initState() {
+    super.initState();
     _documentPath = 'assets/pdf/gis_succinctly.pdf';
     _showPdf = false;
     _showToolbar = true;
@@ -239,7 +238,21 @@ class _PDFScreenState extends State<PDFScreen> {
     _contextMenuWidth = 100;
     _askBookMarks = widget.askBookMarks;
     log.e(widget.pathPDF);
-    super.initState();
+    if (widget.askBookMarks) {
+      showBottomSeetForBookMarks(true);
+    }
+  }
+
+  showBottomSeetForBookMarks(bool initial) async {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (BuildContext context) => BookMarkBottomSheet(
+        note: widget.doc,
+        isInitial: initial,
+      ),
+    );
   }
 
   @override

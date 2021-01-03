@@ -1,5 +1,6 @@
-import 'dart:collection';
-
+import 'package:FSOUNotes/misc/constants.dart';
+import 'package:FSOUNotes/models/notes.dart';
+import 'package:FSOUNotes/ui/shared/app_config.dart';
 import 'package:FSOUNotes/ui/widgets/dumb_widgets/TextFieldView.dart';
 import 'package:FSOUNotes/ui/widgets/smart_widgets/bottom_sheet/bottom_sheet_view_model.dart';
 import 'package:flutter/material.dart';
@@ -24,8 +25,8 @@ void setUpBottomSheetUi() {
     BottomSheetType.filledStacks: (context, sheetRequest, completer) =>
         _FilledStacksFloatingBoxBottomSheet(
             request: sheetRequest, completer: completer),
-    BottomSheetType.bookMarks: (context, sheetRequest, completer) =>
-        BookMarkBottomSheet(request: sheetRequest, completer: completer),
+    // BottomSheetType.bookMarks: (context, sheetRequest, completer) =>
+    //     BookMarkBottomSheet(request: sheetRequest, completer: completer),
   };
 
   bottomSheetService.setCustomSheetBuilders(builders);
@@ -397,112 +398,6 @@ class _FilledStacksFloatingBoxBottomSheet extends StatelessWidget {
           )
         ],
       ),
-    );
-  }
-}
-
-class BookMarkBottomSheet extends StatelessWidget {
-  final SheetRequest request;
-  final Function(SheetResponse) completer;
-
-  BookMarkBottomSheet({
-    Key key,
-    this.request,
-    this.completer,
-  }) : super(key: key);
-  @override
-  Widget build(BuildContext context) {
-    return ViewModelBuilder<BottomSheetViewModel>.reactive(
-      viewModelBuilder: () => BottomSheetViewModel(),
-      builder: (
-        BuildContext context,
-        BottomSheetViewModel model,
-        Widget child,
-      ) {
-        return Container(
-          margin: EdgeInsets.all(25),
-          padding: EdgeInsets.all(25),
-          decoration: BoxDecoration(
-            color:Colors.grey[800],
-            borderRadius: BorderRadius.circular(15),
-          ),
-          child: !model.isNextPressed
-              ? Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    SizedBox(height: 10),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 13.0),
-                      child: Text(
-                        "How many Units are there in this pdf?",
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                    SfSlider(
-                      min: 0.0,
-                      max: 5.0,
-                      interval: 1,
-                      stepSize: 1,
-                      showTicks: true,
-                      showLabels: true,
-                      value: model.value,
-                      enableTooltip: true,
-                      activeColor: Theme.of(context).primaryColor,
-                      onChanged: (dynamic newValue) {
-                        model.setValue = newValue;
-                      },
-                    ),
-                    SizedBox(height: 25),
-                    Row(
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        FlatButton(
-                          onPressed: () {
-                            model.setIsNextPressed = true;
-                          },
-                          child: Text(
-                            "Next",
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          color: Theme.of(context).primaryColor,
-                        )
-                      ],
-                    )
-                  ],
-                )
-              : Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    SizedBox(height: 10),
-                    
-                    SizedBox(height: 25),
-                    Row(
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        FlatButton(
-                          onPressed: () {},
-                          child: Text(
-                            request.mainButtonTitle,
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          color: Theme.of(context).primaryColor,
-                        )
-                      ],
-                    ),
-                  ],
-                ),
-        );
-      },
     );
   }
 }
