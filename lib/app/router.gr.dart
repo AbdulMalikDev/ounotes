@@ -34,6 +34,8 @@ import 'package:FSOUNotes/models/notes.dart';
 import 'package:FSOUNotes/models/question_paper.dart';
 import 'package:FSOUNotes/models/syllabus.dart';
 import 'package:FSOUNotes/ui/views/edit/edit_view.dart';
+import 'package:FSOUNotes/ui/views/admin/upload_log/upload_log_detail/upload_log_detail_view.dart';
+import 'package:FSOUNotes/models/UploadLog.dart';
 
 abstract class Routes {
   static const splashViewRoute = '/';
@@ -58,6 +60,7 @@ abstract class Routes {
   static const adminViewRoute = '/admin-view-route';
   static const webViewWidgetRoute = '/web-view-widget-route';
   static const editViewRoute = '/edit-view-route';
+  static const uploadLogDetailViewRoute = '/upload-log-detail-view-route';
   static const all = {
     splashViewRoute,
     introViewRoute,
@@ -81,6 +84,7 @@ abstract class Routes {
     adminViewRoute,
     webViewWidgetRoute,
     editViewRoute,
+    uploadLogDetailViewRoute,
   };
 }
 
@@ -340,6 +344,16 @@ class Router extends RouterBase {
               subjectName: typedArgs.subjectName),
           settings: settings,
         );
+      case Routes.uploadLogDetailViewRoute:
+        if (hasInvalidArgs<UploadLogDetailViewArguments>(args)) {
+          return misTypedArgsRoute<UploadLogDetailViewArguments>(args);
+        }
+        final typedArgs = args as UploadLogDetailViewArguments ??
+            UploadLogDetailViewArguments();
+        return MaterialPageRoute<dynamic>(
+          builder: (context) => UploadLogDetailView(logItem: typedArgs.logItem),
+          settings: settings,
+        );
       default:
         return unknownRoutePage(settings.name);
     }
@@ -515,4 +529,10 @@ class EditViewArguments {
       @required this.path,
       this.note,
       @required this.subjectName});
+}
+
+//UploadLogDetailView arguments holder class
+class UploadLogDetailViewArguments {
+  final UploadLog logItem;
+  UploadLogDetailViewArguments({this.logItem});
 }

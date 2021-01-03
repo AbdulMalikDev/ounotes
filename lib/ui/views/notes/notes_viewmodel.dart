@@ -29,6 +29,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:googleapis_auth/auth.dart';
 import 'package:googleapis_auth/auth_io.dart';
 import 'package:logger/logger.dart';
+import 'package:mime/mime.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
@@ -382,6 +383,7 @@ class NotesViewModel extends BaseViewModel {
         onBytesReceived: (bytesReceived, expectedContentLength) {
           if (expectedContentLength != null) {
             _progress = (bytesReceived / expectedContentLength * 100);
+            print(_progress);
             notifyListeners();
           }
         },
@@ -392,9 +394,11 @@ class NotesViewModel extends BaseViewModel {
       // if (id == null || note.id.length == 0) {
       //   note.setId = id;
       // }
-      File file = new File('$dir/$id');
-      await file.writeAsBytes(bytes);
+      File file = new File('$dir/$id.pdf');
+      file = await file.writeAsBytes(bytes);
       log.i("file path: ${file.path}");
+      String mimeStr = lookupMimeType(file.path);
+      log.e(file.uri);
       return file;
     } catch (e) {
       log.e("While retreiving Notes from Firebase STORAGE , Error occurred");

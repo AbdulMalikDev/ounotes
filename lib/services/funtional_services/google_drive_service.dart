@@ -173,6 +173,7 @@ class GoogleDriveService {
       File localFile;
       Directory tempDir = await getTemporaryDirectory();
       String filePath = "${tempDir.path}/${note.subjectId}_${note.id}";
+      log.e(filePath);
       bool doesFileExist = await _checkIfFileExists(filePath);
       if (doesFileExist) {
         onDownloadedCallback(filePath, note);
