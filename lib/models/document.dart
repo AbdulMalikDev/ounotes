@@ -22,6 +22,9 @@ abstract class AbstractDocument {
   set setId(String id) {
     this.id = id;
   }
+  set setSubjectId(int id) {
+    this.subjectId = id;
+  }
 
   set setUploaderId(String id) {
     this.uploader_id = id;

@@ -73,6 +73,8 @@ class GoogleDriveService {
     @required Document document,
   }) async {
     log.i("Uploading File from Firebase Storage to Google Drive");
+    log.i(doc);
+    log.i(document);
     try {
       log.e("Should this be added to GDrive : $addToGdrive");
       if (addToGdrive) {
@@ -97,7 +99,8 @@ class GoogleDriveService {
         File file = await notesViewModel.downloadFile(
             notesName: doc.title,
             subName: doc.subjectName,
-            type: Constants.getConstantFromDoc(document));
+            type: Constants.getConstantFromDoc(document),
+            doc: doc);
         log.e(file);
         // Upload File To GDrive
         fileToUpload.parents = [subjectSubFolderID];
@@ -121,7 +124,7 @@ class GoogleDriveService {
         log.w(doc.toJson());
 
         // update in firestore with GDrive Link
-        _firestoreService.updateDocument(doc, document);
+        await _firestoreService.updateDocument(doc, document);
       }
 
       // if accidentally added to GDrive delete it from there too

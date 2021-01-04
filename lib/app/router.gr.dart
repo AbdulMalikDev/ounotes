@@ -36,6 +36,7 @@ import 'package:FSOUNotes/models/syllabus.dart';
 import 'package:FSOUNotes/ui/views/edit/edit_view.dart';
 import 'package:FSOUNotes/ui/views/admin/upload_log/upload_log_detail/upload_log_detail_view.dart';
 import 'package:FSOUNotes/models/UploadLog.dart';
+import 'package:FSOUNotes/ui/views/admin/upload_log/upload_log_detail/upload_log_edit/upload_log_edit_view.dart';
 
 abstract class Routes {
   static const splashViewRoute = '/';
@@ -61,6 +62,7 @@ abstract class Routes {
   static const webViewWidgetRoute = '/web-view-widget-route';
   static const editViewRoute = '/edit-view-route';
   static const uploadLogDetailViewRoute = '/upload-log-detail-view-route';
+  static const uploadLogEditViewRoute = '/upload-log-edit-view-route';
   static const all = {
     splashViewRoute,
     introViewRoute,
@@ -85,6 +87,7 @@ abstract class Routes {
     webViewWidgetRoute,
     editViewRoute,
     uploadLogDetailViewRoute,
+    uploadLogEditViewRoute,
   };
 }
 
@@ -354,6 +357,17 @@ class Router extends RouterBase {
           builder: (context) => UploadLogDetailView(logItem: typedArgs.logItem),
           settings: settings,
         );
+      case Routes.uploadLogEditViewRoute:
+        if (hasInvalidArgs<UploadLogEditViewArguments>(args)) {
+          return misTypedArgsRoute<UploadLogEditViewArguments>(args);
+        }
+        final typedArgs =
+            args as UploadLogEditViewArguments ?? UploadLogEditViewArguments();
+        return MaterialPageRoute<dynamic>(
+          builder: (context) => UploadLogEditView(
+              uploadLog: typedArgs.uploadLog, key: typedArgs.key),
+          settings: settings,
+        );
       default:
         return unknownRoutePage(settings.name);
     }
@@ -535,4 +549,11 @@ class EditViewArguments {
 class UploadLogDetailViewArguments {
   final UploadLog logItem;
   UploadLogDetailViewArguments({this.logItem});
+}
+
+//UploadLogEditView arguments holder class
+class UploadLogEditViewArguments {
+  final UploadLog uploadLog;
+  final Key key;
+  UploadLogEditViewArguments({this.uploadLog, this.key});
 }

@@ -1,8 +1,10 @@
 import 'package:FSOUNotes/app/locator.dart';
 import 'package:FSOUNotes/app/logger.dart';
+import 'package:FSOUNotes/app/router.gr.dart';
 import 'package:FSOUNotes/enums/constants.dart';
 import 'package:FSOUNotes/enums/enums.dart';
 import 'package:FSOUNotes/models/UploadLog.dart';
+import 'package:FSOUNotes/models/document.dart';
 import 'package:FSOUNotes/models/link.dart';
 import 'package:FSOUNotes/models/subject.dart';
 import 'package:FSOUNotes/models/user.dart';
@@ -22,6 +24,7 @@ class UploadLogDetailViewModel extends FutureViewModel{
  FirestoreService _firestoreService = locator<FirestoreService>();
  DialogService _dialogService = locator<DialogService>();
  BottomSheetService _bottomSheetService = locator<BottomSheetService>();
+ NavigationService _navigationService = locator<NavigationService>();
  AuthenticationService _authenticationService = locator<AuthenticationService>();
  AnalyticsService _analyticsService = locator<AnalyticsService>();
  SharedPreferencesService _sharedPreferencesService = locator<SharedPreferencesService>();
@@ -48,10 +51,11 @@ class UploadLogDetailViewModel extends FutureViewModel{
     if(dialogResult.confirmed)await _firestoreService.deleteUploadLog(report);
   }
 
-  void viewDocument(UploadLog logItem) {
+  void viewDocument(UploadLog logItem) async {
       setBusy(true);
       NotesViewModel notesViewModel = NotesViewModel();
-
+      AbstractDocument doc = await _firestoreService.getDocumentById(logItem.subjectName, logItem.id, Constants.getDocFromConstant(logItem.type));
+      log.e(doc?.path);
       if (logItem.type == Constants.links){
         _showLink(logItem);
       }else{
@@ -60,6 +64,7 @@ class UploadLogDetailViewModel extends FutureViewModel{
         notesName: logItem.fileName, 
         subName: logItem.subjectName,
         type: logItem.type,
+        doc: doc,
       );
 
       }
@@ -113,6 +118,7 @@ class UploadLogDetailViewModel extends FutureViewModel{
       String result = await _googleDriveService.processFile(doc: doc, document:Constants.getDocFromConstant(logItem.type) , addToGdrive: false);
       _dialogService.showDialog(title: "OUTPUT" , description: result);
     }
+    deleteLogItem(logItem);
     setBusy(false);
 
     }
@@ -157,6 +163,10 @@ class UploadLogDetailViewModel extends FutureViewModel{
         _firestoreService.updateUserInFirebase(user);
       }
     }
+  }
+
+  void navigateToEditScreen(UploadLog logItem) {
+    _navigationService.navigateTo(Routes.uploadLogEditViewRoute,arguments:UploadLogEditViewArguments(uploadLog: logItem));
   }
 
   //  void accept(UploadLog uploadLog) async {

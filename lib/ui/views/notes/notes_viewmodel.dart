@@ -334,6 +334,7 @@ class NotesViewModel extends BaseViewModel {
     String notesName,
     String subName,
     String type,
+    AbstractDocument doc,
   }) async {
     _progress = 0;
     notifyListeners();
@@ -342,6 +343,7 @@ class NotesViewModel extends BaseViewModel {
       notesName: notesName,
       subName: subName,
       type: type,
+      doc:doc,
     );
     String PDFpath = file.path;
     log.e(file.path);
@@ -358,7 +360,7 @@ class NotesViewModel extends BaseViewModel {
         arguments: PDFScreenArguments(pathPDF: PDFpath,askBookMarks: false));
   }
 
-  @override
+  // @override
   // Future futureToRun() =>fetchNotes();
 
   // old download logic for firebase
@@ -367,6 +369,7 @@ class NotesViewModel extends BaseViewModel {
     String subName,
     String type,
     String id,
+    AbstractDocument doc,
   }) async {
     log.i("notesName : $notesName");
     log.i("Subject Name : $subName");
@@ -374,6 +377,8 @@ class NotesViewModel extends BaseViewModel {
     try {
       String fileUrl =
           "https://storage.googleapis.com/ou-notes.appspot.com/pdfs/$subName/$type/$notesName";
+      if(doc!=null)fileUrl = doc.url;
+      log.e(doc.url);
       log.i(Uri.parse(fileUrl));
       var request = await HttpClient().getUrl(Uri.parse(fileUrl));
       var response = await request.close();

@@ -12,7 +12,11 @@ class Strings{
   static const fcm_token_permission_main_button = "YES !";
   static const fcm_token_permission_secondary_button = "NEVER";
 
+
+
   //uploadLogDetailView.dart
+  static String upload_log_adminmsg_notification_title = "✉️ Message from OU Notes Admin ✨";
+  static String upload_log_adminmsg_notification_body = "";
   static String upload_log_accept_notification_title(uploadLog) => "Thank you for uploading ${uploadLog.uploader_name ?? ''} !!";
   static String upload_log_accept_notification_body(uploadLog) => "We have reviewed the document you have uploaded \" ${uploadLog.fileName} \" in the \" ${uploadLog.subjectName} \" subject and it is LIVE ! Thank you again for making OU Notes a better place and helping all of us !";
   static String upload_log_deny_notification_title(uploadLog) => "Thank you for uploading ${uploadLog.uploader_name ?? ''} !!";

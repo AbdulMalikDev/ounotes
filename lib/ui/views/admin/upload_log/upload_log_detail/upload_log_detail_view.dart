@@ -158,39 +158,56 @@ class UploadLogDetailView extends StatelessWidget {
                                         builder: (context, AsyncSnapshot<User> snapshot) {
                                           if (snapshot.hasData)
                                           {
-                                          User user =  snapshot.data;
-                                          return Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              RichText(
-                                                text: TextSpan(
-                                                  style: DefaultTextStyle.of(context).style,
-                                                  children: <TextSpan>[
-                                                    TextSpan(text: 'Uploads : ',style: theme.textTheme.subtitle1
-                                                  .copyWith(fontSize: 18,fontWeight: FontWeight.bold),),
-                                                    TextSpan(text: user?.numOfUploads?.toString() ?? "NONE"),
-                                                  ],
-                                                ),
-                                              ),
-                                              SizedBox(height: 10),
-                                              RichText(
+                                            User user =  snapshot.data;
+                                            return Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                RichText(
                                                   text: TextSpan(
                                                     style: DefaultTextStyle.of(context).style,
                                                     children: <TextSpan>[
-                                                      TextSpan(text: 'Accepted Uploads : ',style: theme.textTheme.subtitle1
+                                                      TextSpan(text: 'Uploads : ',style: theme.textTheme.subtitle1
                                                     .copyWith(fontSize: 18,fontWeight: FontWeight.bold),),
-                                                      TextSpan(text: user?.numOfAcceptedUploads?.toString() ?? "NONE"),
+                                                      TextSpan(text: user?.numOfUploads?.toString() ?? "NONE"),
                                                     ],
                                                   ),
                                                 ),
-                                            ],
-                                          );
+                                                SizedBox(height: 10),
+                                                RichText(
+                                                    text: TextSpan(
+                                                      style: DefaultTextStyle.of(context).style,
+                                                      children: <TextSpan>[
+                                                        TextSpan(text: 'Accepted Uploads : ',style: theme.textTheme.subtitle1
+                                                      .copyWith(fontSize: 18,fontWeight: FontWeight.bold),),
+                                                        TextSpan(text: user?.numOfAcceptedUploads?.toString() ?? "NONE"),
+                                                      ],
+                                                    ),
+                                                  ),
+                                              ],
+                                            );
                                           }else{
                                             return Text("EMPTY");
                                           }
                                         }
                                       ),
                                       SizedBox(height: 20,),
+                                      Row(
+                                        children: [
+                                          Expanded(
+                                              child: Padding(
+                                                padding: const EdgeInsets.symmetric(horizontal:8.0),
+                                                child: RaisedButton(
+                                                color: Colors.teal,
+                                                child: Text("EDIT",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),),
+                                                onPressed: () {
+                                                  model.navigateToEditScreen(logItem);
+                                                },
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      // SizedBox(height: 20,),
                                       Row(
                                         children: [
                                           Expanded(
@@ -275,6 +292,23 @@ class UploadLogDetailView extends StatelessWidget {
                                               )),
                                         ],
                                       ),
+                                      Row(
+                                        children: [
+                                          Expanded(
+                                              child: Padding(
+                                                padding: const EdgeInsets.symmetric(horizontal:8.0),
+                                                child: RaisedButton(
+                                                color: Colors.teal,
+                                                child: Text("MESSAGE",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),),
+                                                onPressed: () {
+                                                  notificationTitleController.text = Strings.upload_log_adminmsg_notification_title;
+                                                  notificationBodyController.text = Strings.upload_log_adminmsg_notification_body;
+                                                },
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                       SizedBox(height: 25),
                                       Container(
                                         margin: const EdgeInsets.symmetric(horizontal: 10),
@@ -320,11 +354,24 @@ class UploadLogDetailView extends StatelessWidget {
                                           ),
                                         ],
                                       ),
+                                      Row(
+                                        children: [
+                                          Expanded(
+                                              child: Padding(
+                                                padding: const EdgeInsets.symmetric(horizontal:8.0),
+                                                child: RaisedButton(
+                                                color: Colors.red,
+                                                child: Text("DELETE",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),),
+                                                onPressed: () async {
+                                                  await model.deleteLogItem(logItem);
+                                                },
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ],
                                   ),
-                                  onTap: () async {
-                                    await model.deleteLogItem(logItem);
-                                  },
                                 ),
                               ),
                             ),

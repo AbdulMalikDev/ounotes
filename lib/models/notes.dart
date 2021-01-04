@@ -53,7 +53,29 @@ class Note extends AbstractDocument {
     this.subjectId,
   });
 
-  Note.fromData(Map<String, dynamic> data , String documentID) {
+  Note.clone(Note note):
+    this(
+      subjectName        : note.subjectName,
+      title              : note.title,
+      type               : note.type,
+      author             : note.author,
+      size               : note.size,
+      view               : note.view,
+      url                : note.url,
+      uploadDate         : note.uploadDate,
+      isDownloaded       : note.isDownloaded,
+      path               : note.path,
+      GDriveID           : note.GDriveID,
+      GDriveLink         : note.GDriveLink,
+      GDriveNotesFolderID: note.GDriveNotesFolderID,
+      firebaseId         : note.firebaseId,
+      id                 : note.id,
+      uploader_id        : note.uploader_id,
+      subjectId          : note.subjectId,
+    );
+  
+
+  Note.fromData(Map<String, dynamic> data , [String documentID]) {
     
     title               = data['title'];
     subjectName         = data['subjectName'];
@@ -71,7 +93,7 @@ class Note extends AbstractDocument {
     GDriveLink          = data['GDriveLink'] ?? null;
     GDriveID            = data['GDriveID'] ?? null;
     GDriveNotesFolderID = data['GDriveNotesFolderID'] ?? null;
-    firebaseId          = documentID;
+    firebaseId          = documentID ?? id;
     pages               = data["pages"];
     subjectId           = data["subjectId"];
     bookmarks           = data["bookmarks"] == null ? {} : new Map<String, int>.from(data["bookmarks"]);
@@ -79,25 +101,25 @@ class Note extends AbstractDocument {
 
   Map<String, dynamic> toJson() {
     return {
-         "title"                                        : title,
-         "subjectName"                                  : subjectName,
-         "author"                                       : author,
-         "view"                                         : view,
-         "url"                                          : url,
-         "uploadDate"                                   : uploadDate,
-         "id"                                           : id,
-         "isDownloaded"                                 : isDownloaded ?? false,
-         "votes"                                        : votes,
-         "size"                                         : size,
-         "uploader_id"                                  : uploader_id,
-      if(GDriveLink!=null)"GDriveLink"                  : GDriveLink,
-      if(GDriveID!=null)"GDriveID"                      : GDriveID,
-      if(GDriveNotesFolderID!=null)"GDriveNotesFolderID": GDriveNotesFolderID,
-      if(pages!=null)"pages"                            : pages,
-      if(bookmarks!=null)"bookmarks"                    : bookmarks,
-      if(path!=null)"path"                              : path.toString(),
-         "firebaseId"                                   : firebaseId ?? "",
-         "subjectId"                                    : subjectId,
+            "title"                                        : title,
+            "subjectName"                                  : subjectName,
+            "author"                                       : author,
+         if(view!=null) "view"                             : view,
+         if(url!=null) "url"                               : url,
+         if(uploadDate!=null) "uploadDate"                 : uploadDate,
+         if(id!=null)"id"                                  : id,
+         if(isDownloaded!=null)"isDownloaded"              : isDownloaded ?? false,
+         if(votes!=null)"votes"                            : votes,
+         if(size!=null)"size"                              : size,
+         if(uploader_id!=null)"uploader_id"                : uploader_id,
+         if(GDriveLink!=null)"GDriveLink"                  : GDriveLink,
+         if(GDriveID!=null)"GDriveID"                      : GDriveID,
+         if(GDriveNotesFolderID!=null)"GDriveNotesFolderID": GDriveNotesFolderID,
+         if(pages!=null)"pages"                            : pages,
+         if(bookmarks!=null)"bookmarks"                    : bookmarks,
+         if(path!=null)"path"                              : path.toString(),
+         if(firebaseId!=null) "firebaseId"                 : firebaseId ?? "",
+         if(subjectId!=null)"subjectId"                    : subjectId,
     };
   }
 
@@ -155,6 +177,6 @@ class Note extends AbstractDocument {
   }
 
   DateTime _parseUploadDate(date) {
-    return DateTime.parse(date.toDate().toString());
+    return DateTime.parse(date?.toDate()?.toString() ?? DateTime.now().toString());
   }
 }

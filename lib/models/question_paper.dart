@@ -56,29 +56,48 @@ class QuestionPaper extends AbstractDocument{
     this.subjectId,
   });
 
+  QuestionPaper.clone(QuestionPaper questionPaper):
+    this(
+      subjectName                : questionPaper.subjectName,
+      title                      : questionPaper.title,
+      type                       : questionPaper.type,
+      branch                     : questionPaper.branch,
+      size                       : questionPaper.size,
+      year                       : questionPaper.year,
+      url                        : questionPaper.url,
+      uploadDate                 : questionPaper.uploadDate,
+      isDownloaded               : questionPaper.isDownloaded,
+      path                       : questionPaper.path,
+      GDriveID                   : questionPaper.GDriveID,
+      GDriveLink                 : questionPaper.GDriveLink,
+      GDriveQuestionPaperFolderID: questionPaper.GDriveQuestionPaperFolderID,
+      id                         : questionPaper.id,
+      uploader_id                : questionPaper.uploader_id,
+      subjectId                  : questionPaper.subjectId,
+    );
+
   
   QuestionPaper.fromData(Map<String,dynamic> data){
     try
     {
 
-    title        = data["title"] ?? data["year"].toString() ?? "";
-    subjectName  = data['subjectName'] ?? "";
-    url          = data['url'] ?? "";
-    branch       = data['branch'] ?? "";
-    id           = data['id']?.toString() ?? "";
-    isDownloaded = data['isDownloaded'] ?? false;
-    path         = Enum.getDocumentFromString(data['path']) ?? Document.QuestionPapers;
-    uploader_id  = data["uploader_id"];
-    year         = data["year"].toString() ?? "";
-    type         = Constants.questionPapers;
-    subjectId = data["subjectId"];
-    GDriveID     = data["GDriveID"]; 
-    GDriveLink   = data["GDriveLink"];
-    GDriveQuestionPaperFolderID   = data["GDriveQuestionPaperFolderID"];
-    pages = data["pages"];
+      title        = data["title"] ?? data["year"].toString() ?? "";
+      subjectName  = data['subjectName'] ?? "";
+      url          = data['url'] ?? "";
+      branch       = data['branch'] ?? "";
+      id           = data['id']?.toString() ?? "";
+      isDownloaded = data['isDownloaded'] ?? false;
+      path         = Enum.getDocumentFromString(data['path']) ?? Document.QuestionPapers;
+      uploader_id  = data["uploader_id"];
+      year         = data["year"].toString() ?? "";
+      type         = Constants.questionPapers;
+      subjectId = data["subjectId"];
+      GDriveID     = data["GDriveID"]; 
+      GDriveLink   = data["GDriveLink"];
+      GDriveQuestionPaperFolderID   = data["GDriveQuestionPaperFolderID"];
+      pages = data["pages"];
    
-    }catch(e)
-    {
+    }catch(e){
        //log.e("message");
       String error;
       if(e is PlatformException)error = e.message;
@@ -93,21 +112,21 @@ class QuestionPaper extends AbstractDocument{
   
   Map<String,dynamic> toJson() {
     return {
-      "year"        : year,
-      "branch"      : branch,
-      "subjectName" : subjectName,
-      "url"         : url,
-      "uploadDate"  : uploadDate,
-      "id"          : id,
-      "title"       : title,
-      "uploader_id" : uploader_id,
-      "isDownloaded": isDownloaded ?? false,
-      "subjectId" : subjectId,
-      if(GDriveLink!=null)"GDriveLink":GDriveLink,
-      if(GDriveID!=null)"GDriveID":GDriveID,
-      if(GDriveQuestionPaperFolderID!=null)"GDriveNotesFolderID":GDriveQuestionPaperFolderID,
-      if(pages!=null)"pages":pages,
-      if(path!=null)"path"                              : path.toString(),
+      if(year!=null)"year"                                      : year,
+      if(branch!=null)"branch"                                  : branch,
+      if(subjectName!=null)"subjectName"                        : subjectName,
+      if(url!=null)"url"                                        : url,
+      if(uploadDate!=null)"uploadDate"                          : uploadDate,
+      if(id!=null)"id"                                          : id,
+      if(title!=null)"title"                                    : title,
+      if(uploader_id!=null)"uploader_id"                        : uploader_id,
+      if(isDownloaded!=null)"isDownloaded"                      : isDownloaded ?? false,
+      if(subjectId!=null)"subjectId"                            : subjectId,
+      if(GDriveLink!=null)"GDriveLink"                          : GDriveLink,
+      if(GDriveID!=null)"GDriveID"                              : GDriveID,
+      if(GDriveQuestionPaperFolderID!=null)"GDriveNotesFolderID": GDriveQuestionPaperFolderID,
+      if(pages!=null)"pages"                                    : pages,
+      if(path!=null)"path"                                      : path.toString(),
       
     };
   }
