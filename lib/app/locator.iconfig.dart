@@ -10,7 +10,6 @@ import 'package:FSOUNotes/services/funtional_services/app_info_service.dart';
 import 'package:FSOUNotes/AppTheme/AppStateNotifier.dart';
 import 'package:FSOUNotes/services/funtional_services/authentication_service.dart';
 import 'package:FSOUNotes/services/funtional_services/third_party_services_module.dart';
-import 'package:FSOUNotes/services/state_services/bookmark_service.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'package:FSOUNotes/services/funtional_services/cloud_storage_service.dart';
 import 'package:FSOUNotes/services/funtional_services/crashlytics_service.dart';
@@ -67,7 +66,6 @@ void $initGetIt(GetIt g, {String environment}) {
   g.registerLazySingleton<SubjectsService>(() => SubjectsService());
   g.registerLazySingleton<SyllabusService>(() => SyllabusService());
   g.registerLazySingleton<VoteService>(() => VoteService(),);
-  g.registerLazySingleton<BookMarkService>(() => BookMarkService(),);
 }
 
 class _$ThirdPartyServicesModule extends ThirdPartyServicesModule {
