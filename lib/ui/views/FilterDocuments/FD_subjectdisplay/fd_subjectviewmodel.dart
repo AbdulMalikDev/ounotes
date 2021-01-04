@@ -14,6 +14,10 @@ class FDSubjectViewModel extends BaseViewModel {
         _subjectsService.allSubjects.value;
 
     for (int i = 0; i < allsubs.length; i++) {
+      if(allsubs[i].branchToSem == null){
+        print(allsubs[i].name + " is null");
+        continue;
+      }
       if (allsubs[i].branchToSem.keys.contains(branch)) {
         if (allsubs[i]
             .branchToSem[branch]

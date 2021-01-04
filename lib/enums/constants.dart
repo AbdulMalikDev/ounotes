@@ -223,6 +223,9 @@ class Constants {
       case Constants.syllabus:
         return Document.Syllabus;
         break;
+      case Constants.links:
+        return Document.Links;
+        break;
       default:
         break;
     }

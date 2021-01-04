@@ -64,7 +64,7 @@ class Syllabus extends AbstractDocument{
     url          = data['url'];
     id           = data['id'].toString() ?? "";
     isDownloaded = data['isDownloaded'] ?? false;
-    path         = Document.Syllabus;
+    path         = Enum.getDocumentFromString(data['path']) ?? Document.Syllabus;
     semester     = data["semester"];
     branch       = data["branch"];
     uploader_id  = data["uploader_id"];
@@ -104,6 +104,7 @@ class Syllabus extends AbstractDocument{
       if(GDriveID!=null)"GDriveID":GDriveID,
       if(GDriveSyllabusFolderID!=null)"GDriveNotesFolderID":GDriveSyllabusFolderID,
       if(pages!=null)"pages":pages,
+      if(path!=null)"path"                              : path.toString(),
     };
   }
 

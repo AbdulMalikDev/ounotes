@@ -1,6 +1,7 @@
 
 import 'package:FSOUNotes/AppTheme/AppStateNotifier.dart';
 import 'package:FSOUNotes/AppTheme/AppTheme.dart';
+import 'package:FSOUNotes/models/subject.dart';
 import 'package:FSOUNotes/services/funtional_services/remote_config_service.dart';
 import 'package:FSOUNotes/services/funtional_services/crashlytics_service.dart';
 import 'package:FSOUNotes/ui/widgets/smart_widgets/bottom_sheet/bottom_sheet_ui_view.dart';
@@ -54,17 +55,17 @@ void main() async {
   //     stackTrace: details.stack,
   //   );
   // };
-  runApp(MyApp());
-  // runZonedGuarded(
-  //   () => runApp(MyApp()),
-  //   (error, stackTrace) async {
-  //     await _crashlyticsService.sentryClient.captureException(
-  //       exception: error,
-  //       stackTrace: stackTrace,
-  //     );
-  //   },
-  // );
-}
+    runApp(MyApp());
+    // runZonedGuarded(
+    //   () => runApp(MyApp()),
+    //   (error, stackTrace) async {
+    //     await _crashlyticsService.sentryClient.captureException(
+    //       exception: error,
+    //       stackTrace: stackTrace,
+    //     );
+    //   },
+    // );
+  }
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application
