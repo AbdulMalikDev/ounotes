@@ -5,6 +5,8 @@ import 'package:FSOUNotes/ui/views/Settings/settings_view.dart';
 import 'package:FSOUNotes/ui/views/about_us/privacy_policy/privacy_policyview.dart';
 import 'package:FSOUNotes/ui/views/about_us/privacy_policy/terms_and_conditionview.dart';
 import 'package:FSOUNotes/ui/views/admin/admin_view.dart';
+import 'package:FSOUNotes/ui/views/admin/upload_log/upload_log_detail/upload_log_detail_view.dart';
+import 'package:FSOUNotes/ui/views/admin/upload_log/upload_log_detail/upload_log_edit/upload_log_edit_view.dart';
 import 'package:FSOUNotes/ui/views/all_documents/all_documents_view.dart';
 import 'package:FSOUNotes/ui/views/downloads/Downloads_view.dart';
 import 'package:FSOUNotes/ui/views/edit/edit_view.dart';
@@ -47,4 +49,6 @@ class $Router {
   AdminView adminViewRoute;
   WebViewWidget webViewWidgetRoute;
   EditView editViewRoute;
+  UploadLogDetailView uploadLogDetailViewRoute;
+  UploadLogEditView uploadLogEditViewRoute;
 }

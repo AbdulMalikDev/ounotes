@@ -4,7 +4,7 @@ class User{
   final String createdAt;
   final String semester;
   final String branch;
-  final String college;
+  String college;
   final String id;
   final String photoUrl;
 

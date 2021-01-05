@@ -10,11 +10,9 @@ class UploadLogView extends StatefulWidget {
   _UploadLogViewState createState() => _UploadLogViewState();
 }
 
-class _UploadLogViewState extends State<UploadLogView>
-    with AutomaticKeepAliveClientMixin {
+class _UploadLogViewState extends State<UploadLogView> {
   @override
   Widget build(BuildContext context) {
-    super.build(context);
     var theme = Theme.of(context);
     return ViewModelBuilder<UploadLogViewModel>.reactive(
       builder: (context, model, child) => Scaffold(
@@ -30,6 +28,9 @@ class _UploadLogViewState extends State<UploadLogView>
                 //mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
+                  SizedBox(
+                    height: 24,
+                  ),
                   model.isBusy
                       ? Container(
                           child: Center(
@@ -54,46 +55,61 @@ class _UploadLogViewState extends State<UploadLogView>
                                   title: Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: <Widget>[
-                                      Text(
-                                        "File Name : " + logItem.fileName,
-                                        style: theme.textTheme.subtitle1
-                                            .copyWith(fontSize: 18),
+                                      // Text(
+                                      //   "File Name : " + logItem.fileName,
+                                      //   style: theme.textTheme.subtitle1
+                                      //       .copyWith(fontSize: 18),
+                                      // ),
+                                      RichText(
+                                          text: TextSpan(
+                                            style: DefaultTextStyle.of(context).style,
+                                            children: <TextSpan>[
+                                              TextSpan(text: 'FileType : ',style: theme.textTheme.subtitle1
+                                            .copyWith(fontSize: 18,fontWeight: FontWeight.bold),),
+                                              TextSpan(text: logItem.type ?? "null",style: theme.textTheme.subtitle1),
+                                            ],
+                                          ),
                                       ),
-                                      Text(
-                                        "FileType : " + logItem.type,
-                                        style: theme.textTheme.subtitle1
-                                            .copyWith(fontSize: 18),
-                                      ),
-                                      Text(
-                                        "Subject Name :" + logItem.subjectName,
-                                        style: theme.textTheme.subtitle1
-                                            .copyWith(fontSize: 18),
-                                      ),
-                                      Text(
-                                        "Email of Uploader : " + logItem.email,
-                                        style: theme.textTheme.subtitle1
-                                            .copyWith(fontSize: 18),
-                                      ),
-                                      Text(
-                                        "UploadedAt : " + logItem.date.toString(),
-                                        style: theme.textTheme.subtitle1
-                                            .copyWith(fontSize: 18),
-                                      ),
-                                      Text(
-                                        "Size : " + logItem.size ?? "0",
-                                        style: theme.textTheme.subtitle1
-                                            .copyWith(fontSize: 18),
-                                      ),
+                                      RichText(
+                                            text: TextSpan(
+                                              style: DefaultTextStyle.of(context).style,
+                                              children: <TextSpan>[
+                                                TextSpan(text: 'Subject Name : ',style: theme.textTheme.subtitle1
+                                              .copyWith(fontSize: 18,fontWeight: FontWeight.bold),),
+                                                TextSpan(text: logItem.subjectName ?? "null",style: theme.textTheme.subtitle1),
+                                              ],
+                                            ),
+                                          ),
+                                      // Text(
+                                      //   "Email of Uploader : " + logItem.email,
+                                      //   style: theme.textTheme.subtitle1
+                                      //       .copyWith(fontSize: 18),
+                                      // ),
+                                      // Text(
+                                      //   "UploadedAt : " + logItem.date.toString(),
+                                      //   style: theme.textTheme.subtitle1
+                                      //       .copyWith(fontSize: 18),
+                                      // ),
+                                      // Text(
+                                      //   "Size : " + logItem.size ?? "0",
+                                      //   style: theme.textTheme.subtitle1
+                                      //       .copyWith(fontSize: 18),
+                                      // ),
                                       FutureBuilder(
                                         future: model.getUploadStatus(logItem),
                                         builder: (context, AsyncSnapshot<String> snapshot) {
                                           if (snapshot.hasData)
                                           {
-                                          return Text(
-                                            "Upload Status : " + snapshot.data ?? "0",
-                                            style: theme.textTheme.subtitle1
-                                                .copyWith(fontSize: 18),
-                                          );
+                                            return RichText(
+                                              text: TextSpan(
+                                                style: DefaultTextStyle.of(context).style,
+                                                children: <TextSpan>[
+                                                  TextSpan(text: 'Upload Status : ',style: theme.textTheme.subtitle1
+                                                .copyWith(fontSize: 18,fontWeight: FontWeight.bold),),
+                                                  TextSpan(text: snapshot.data ?? "0"),
+                                                ],
+                                              ),
+                                            );
                                           }else{
                                             return Text("EMPTY");
                                           }
@@ -104,95 +120,100 @@ class _UploadLogViewState extends State<UploadLogView>
                                         builder: (context, AsyncSnapshot<String> snapshot) {
                                           if (snapshot.hasData)
                                           {
-                                          return Text(
-                                            "Notification Status : " + snapshot.data ?? "NONE",
-                                            style: theme.textTheme.subtitle1
-                                                .copyWith(fontSize: 18),
-                                          );
+                                          return RichText(
+                                              text: TextSpan(
+                                                style: DefaultTextStyle.of(context).style,
+                                                children: <TextSpan>[
+                                                  TextSpan(text: 'Notification Status : ',style: theme.textTheme.subtitle1
+                                                .copyWith(fontSize: 18,fontWeight: FontWeight.bold),),
+                                                  TextSpan(text: snapshot.data ?? "NONE"),
+                                                ],
+                                              ),
+                                            );
                                           }else{
                                             return Text("EMPTY");
                                           }
                                         }
                                       ),
-                                      SizedBox(height: 20,),
-                                      Row(
-                                        children: [
-                                          Expanded(
-                                              child: Padding(
-                                                padding: const EdgeInsets.all(8.0),
-                                                child: RaisedButton(
-                                                color: Colors.teal,
-                                            child: Text("View",style: TextStyle(color: Colors.white),),
-                                            onPressed: () {
-                                              model.viewDocument(logItem);
-                                            },
-                                          ),
-                                              )),
-                                          Expanded(
-                                              child: Padding(
-                                                padding: const EdgeInsets.all(8.0),
-                                                child: RaisedButton(
-                                                color: Colors.blue[700],
-                                            child: Text("Upload",style: TextStyle(color: Colors.white),),
-                                            onPressed: () {
-                                              model.uploadDocument(logItem);
-                                            },
-                                          ),
-                                              )),
-                                          Expanded(
-                                              child: Padding(
-                                                padding: const EdgeInsets.all(8.0),
-                                                child: RaisedButton(
-                                                color: Colors.red,
-                                            child: FittedBox(child: Text("DELETE",style: TextStyle(color: Colors.white),)),
-                                            onPressed: () {
-                                              model.deleteDocument(logItem);
-                                            },
-                                          ),
-                                              )),
-                                        ],
-                                      ),
-                                      Row(
-                                        children: [
-                                          Expanded(
-                                              child: Padding(
-                                                padding: const EdgeInsets.all(8.0),
-                                                child: RaisedButton(
-                                                color: Colors.teal,
-                                            child: FittedBox(child: Text("ACCEPT",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),)),
-                                            onPressed: () {
-                                              model.accept(logItem);
-                                            },
-                                          ),
-                                              )),
-                                          Expanded(
-                                              child: Padding(
-                                                padding: const EdgeInsets.all(8.0),
-                                                child: RaisedButton(
-                                                color: Colors.blue[700],
-                                            child: Text("DENY",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),),
-                                            onPressed: () {
-                                              model.deny(logItem);
-                                            },
-                                          ),
-                                              )),
-                                          Expanded(
-                                              child: Padding(
-                                                padding: const EdgeInsets.all(8.0),
-                                                child: RaisedButton(
-                                                color: Colors.red,
-                                            child: FittedBox(child: Text("BAN",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),)),
-                                            onPressed: () {
-                                              model.ban(logItem);
-                                            },
-                                          ),
-                                              )),
-                                        ],
-                                      ),
+                                      // SizedBox(height: 10,),
+                                      // Row(
+                                      //   children: [
+                                      //     Expanded(
+                                      //         child: Padding(
+                                      //           padding: const EdgeInsets.all(8.0),
+                                      //           child: RaisedButton(
+                                      //           color: Colors.teal,
+                                      //       child: Text("View",style: TextStyle(color: Colors.white),),
+                                      //       onPressed: () {
+                                      //         model.viewDocument(logItem);
+                                      //       },
+                                      //     ),
+                                      //         )),
+                                      //     Expanded(
+                                      //         child: Padding(
+                                      //           padding: const EdgeInsets.all(8.0),
+                                      //           child: RaisedButton(
+                                      //           color: Colors.blue[700],
+                                      //       child: Text("Upload",style: TextStyle(color: Colors.white),),
+                                      //       onPressed: () {
+                                      //         model.uploadDocument(logItem);
+                                      //       },
+                                      //     ),
+                                      //         )),
+                                      //     Expanded(
+                                      //         child: Padding(
+                                      //           padding: const EdgeInsets.all(8.0),
+                                      //           child: RaisedButton(
+                                      //           color: Colors.red,
+                                      //       child: FittedBox(child: Text("DELETE",style: TextStyle(color: Colors.white),)),
+                                      //       onPressed: () {
+                                      //         model.deleteDocument(logItem);
+                                      //       },
+                                      //     ),
+                                      //         )),
+                                      //   ],
+                                      // ),
+                                      // Row(
+                                      //   children: [
+                                      //     Expanded(
+                                      //         child: Padding(
+                                      //           padding: const EdgeInsets.all(8.0),
+                                      //           child: RaisedButton(
+                                      //           color: Colors.teal,
+                                      //       child: FittedBox(child: Text("ACCEPT",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),)),
+                                      //       onPressed: () {
+                                      //         model.accept(logItem);
+                                      //       },
+                                      //     ),
+                                      //         )),
+                                      //     Expanded(
+                                      //         child: Padding(
+                                      //           padding: const EdgeInsets.all(8.0),
+                                      //           child: RaisedButton(
+                                      //           color: Colors.blue[700],
+                                      //       child: Text("DENY",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),),
+                                      //       onPressed: () {
+                                      //         model.deny(logItem);
+                                      //       },
+                                      //     ),
+                                      //         )),
+                                      //     Expanded(
+                                      //         child: Padding(
+                                      //           padding: const EdgeInsets.all(8.0),
+                                      //           child: RaisedButton(
+                                      //           color: Colors.red,
+                                      //       child: FittedBox(child: Text("BAN",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),)),
+                                      //       onPressed: () {
+                                      //         model.ban(logItem);
+                                      //       },
+                                      //     ),
+                                      //         )),
+                                      //   ],
+                                      // ),
                                     ],
                                   ),
                                   onTap: () async {
-                                    await model.deleteLogItem(logItem);
+                                    await model.navigateToUploadLogDetailView(logItem);
                                   },
                                 ),
                               ),

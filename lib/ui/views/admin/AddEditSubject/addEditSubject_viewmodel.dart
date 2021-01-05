@@ -49,8 +49,8 @@ class AddEditSubjectViewModel extends BaseViewModel {
         buildAndGetDropDownMenuItems2(SubjectType.values);
     _selectedSemester = _dropDownMenuItemsofsemester[0].value;
     _selectedBranch = _dropDownMenuItemsofBranch[0].value;
-    _selectedCourseType = _dropDownMenuItemsofCourseType[0].value.toString();
     _selectedSubjectType = _dropDownMenuItemsofSubjectType[0].value.toString();
+    _selectedCourseType = _dropDownMenuItemsofCourseType[0].value.toString();
   }
 
   List<DropdownMenuItem<String>> buildAndGetDropDownMenuItems(List items) {
@@ -180,7 +180,7 @@ class AddEditSubjectViewModel extends BaseViewModel {
       courseType: courseType,
       subjectType: subjectType,
     );
-    _firestoreService.addSubject(sub);
+    // _firestoreService.addSubject(sub);
   }
 
   editSubject(
@@ -199,6 +199,6 @@ class AddEditSubjectViewModel extends BaseViewModel {
       "subjectType": _selectedSubjectType,
       "courseType": _selectedCourseType
     };
-    _firestoreService.updateSubjectInFirebase(sub);
+    // _firestoreService.updateSubjectInFirebase(sub);
   }
 }

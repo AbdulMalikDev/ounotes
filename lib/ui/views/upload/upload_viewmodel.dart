@@ -213,6 +213,8 @@ class UploadViewModel extends BaseViewModel {
       case Document.None:
       case Document.Drawer:
       case Document.UploadLog:
+      case Document.Random:
+
       case Document.Report:
         break;
       case Document.UploadLog:

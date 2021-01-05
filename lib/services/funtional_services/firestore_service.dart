@@ -88,6 +88,7 @@ class FirestoreService {
       case Document.Report:
       case Document.UploadLog:
       case Document.Drawer:
+      case Document.Random:
         break;
     }
   }
@@ -110,6 +111,7 @@ class FirestoreService {
       case Document.Report:
       case Document.UploadLog:
       case Document.Drawer:
+      case Document.Random:
         break;
     }
   }
@@ -304,7 +306,7 @@ class FirestoreService {
       await ref.document(note.id).setData(note.toJson());
       await _uploadLogCollectionReference
           .document(note.id)
-          .setData(_createUploadLog(note, user));
+          .setData(await createUploadLog(note, user));
     } catch (e) {
       log.e("Document id : ${note.id}");
       log.e("Document Subject Name : ${note.subjectName}");
@@ -550,19 +552,20 @@ class FirestoreService {
   //   }
   // }
 
-  Map<String, dynamic> _createUploadLog(AbstractDocument note, User user) {
+  Future<Map<String, dynamic>> createUploadLog(AbstractDocument note, [User user]) async {
     AuthenticationService _authenticationService =
         locator<AuthenticationService>();
+    User user = await _authenticationService.getUser();
     Map<String, dynamic> uploadLog = {
-      "uploader_name": user.username,
-      "uploader_id": user.id,
-      "id": note.id,
-      "subjectName": note.subjectName,
-      "type": note.type,
-      "fileName": note.title,
-      "uploadedAt": DateTime.now(),
-      "email": _authenticationService.user.email,
-      "size": note.size,
+      if(user.username!=null)"uploader_name"            : user.username,
+      if(user.id!=null)"uploader_id"                    : user.id,
+      if(note.id!=null)"id"                             : note.id,
+      if(note.subjectName!=null)"subjectName"           : note.subjectName,
+      if(note.type!=null)"type"                         : note.type,
+      if(note.title!=null)"fileName"                    : note.title,
+      "uploadedAt"                                      : DateTime.now(),
+      if(_authenticationService.user.email!=null)"email": _authenticationService.user.email,
+      if(note.size!=null)"size"                         : note.size,
     };
     _analyticsService.sendNotification(
         isAdmin: true,
@@ -701,13 +704,13 @@ class FirestoreService {
     }
   }
 
-  updateUploadLogInFirebase(UploadLog note) async {
-    log.e(note.id);
+  updateUploadLogInFirebase(Map note) async {
+    log.e(note["id"]);
 
     try {
       await _uploadLogCollectionReference
-          .document(note.id)
-          .setData(note.toJson());
+          .document(note["id"])
+          .setData(note,merge: true);
     } on Exception catch (e) {
       log.e(e.toString());
     }
@@ -717,7 +720,7 @@ class FirestoreService {
     log.e(note.id);
 
     try {
-      await _reportCollectionReference.document(note.id).setData(note.toJson());
+      await _reportCollectionReference.document(note.id).setData(note.toJson(),merge: true);
     } on Exception catch (e) {
       log.e(e.toString());
     }
@@ -803,11 +806,14 @@ class FirestoreService {
   }
 
   Future<User> getUserById(String id) async {
+    log.e("User id : " + id);
     DocumentSnapshot doc = await _usersCollectionReference.document(id).get();
     return User.fromData(doc.data);
   }
 
-  deleteLinkById(int subId, String id) async {
+  Future<UploadLog> getUploadLogById(String id) async => UploadLog.fromData((await _uploadLogCollectionReference.document(id).get()).data);
+
+  deleteLinkById(int subId,String id) async {
     // await _subjectsCollectionReference
     //       .document(subId.toString())
     //       .collection(Constants.firebase_links)
@@ -868,7 +874,8 @@ class FirestoreService {
     }
   }
 
-  getDocumentById(String subjectName, String id, Document document) async {
+  getDocumentById(String subjectName,String id, Document document) async {
+    if(id == null){log.e("getDocumentById called with null id");return;}
     SubjectsService _subjectsService = locator<SubjectsService>();
     Subject subject = _subjectsService.getSubjectByName(subjectName);
     switch (document) {
@@ -883,6 +890,35 @@ class FirestoreService {
         break;
       case Document.Links:
         return await this.getLinkById(subject.id, id);
+        break;
+      case Document.UploadLog:
+        return await this.getUploadLogById(id);
+        break;
+      default:
+        break;
+    }
+  }
+
+  deleteTempDocumentById(String id, Document document) async {
+    if(id == null){log.e("getDocumentById called with null id");return;}
+    switch (document) {
+      case Document.Notes:
+        return await _notesCollectionReference.document(id).delete();
+        break;
+      case Document.QuestionPapers:
+        return await _questionPapersCollectionReference.document(id).delete();
+        break;
+      case Document.Syllabus:
+        return await _syllabusCollectionReference.document(id).delete();
+        break;
+      case Document.Links:
+        return await _linksCollectionReference.document(id).delete();
+        break;
+      case Document.UploadLog:
+        return await _uploadLogCollectionReference.document(id).delete();
+        break;
+    case Document.Report:
+        return await _reportCollectionReference.document(id).delete();
         break;
       default:
         break;

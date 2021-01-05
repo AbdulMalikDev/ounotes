@@ -54,6 +54,26 @@ class Syllabus extends AbstractDocument{
     this.subjectId,
   });
 
+   Syllabus.clone(Syllabus syllabus):
+    this(
+      subjectName                : syllabus.subjectName,
+      title                      : syllabus.title,
+      type                       : syllabus.type,
+      branch                     : syllabus.branch,
+      size                       : syllabus.size,
+      year                       : syllabus.year,
+      url                        : syllabus.url,
+      uploadDate                 : syllabus.uploadDate,
+      isDownloaded               : syllabus.isDownloaded,
+      path                       : syllabus.path,
+      GDriveID                   : syllabus.GDriveID,
+      GDriveLink                 : syllabus.GDriveLink,
+      GDriveSyllabusFolderID: syllabus.GDriveSyllabusFolderID,
+      id                         : syllabus.id,
+      uploader_id                : syllabus.uploader_id,
+      subjectId                  : syllabus.subjectId,
+    );
+
   
   Syllabus.fromData(Map<String,dynamic> data){
 
@@ -89,22 +109,22 @@ class Syllabus extends AbstractDocument{
   
   Map<String,dynamic> toJson() {
     return {
-      "title"       : title,
-      "subjectName" : subjectName,
-      "url"         : url,
-      "uploadDate"  : uploadDate,
-      "id"          : id,
-      "isDownloaded": isDownloaded ?? false,
-      "semester"    : semester,
-      "branch"      : branch,
-      "year"        : year,
-      "uploader_id" : uploader_id,
-      "subjectId" : subjectId,
-      if(GDriveLink!=null)"GDriveLink":GDriveLink,
-      if(GDriveID!=null)"GDriveID":GDriveID,
-      if(GDriveSyllabusFolderID!=null)"GDriveNotesFolderID":GDriveSyllabusFolderID,
-      if(pages!=null)"pages":pages,
-      if(path!=null)"path"                              : path.toString(),
+      if(title!=null)"title"                               : title,
+      if(subjectName!=null)"subjectName"                   : subjectName,
+      if(url!=null)"url"                                   : url,
+      if(uploadDate!=null)"uploadDate"                     : uploadDate,
+      if(id!=null)"id"                                     : id,
+      if(isDownloaded!=null) "isDownloaded"                : isDownloaded ?? false,
+      if(semester!=null) "semester"                        : semester,
+      if(branch!=null)"branch"                             : branch,
+      if(year!=null)"year"                                 : year,
+      if(uploader_id!=null)"uploader_id"                   : uploader_id,
+      if(subjectId!=null)"subjectId"                       : subjectId,
+      if(GDriveLink!=null)"GDriveLink"                     : GDriveLink,
+      if(GDriveID!=null)"GDriveID"                         : GDriveID,
+      if(GDriveSyllabusFolderID!=null)"GDriveNotesFolderID": GDriveSyllabusFolderID,
+      if(pages!=null)"pages"                               : pages,
+      if(path!=null)"path"                                 : path.toString(),
     };
   }
 

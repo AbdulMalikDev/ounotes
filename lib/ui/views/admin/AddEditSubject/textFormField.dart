@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 class TextFormFieldView extends StatelessWidget {
   final String heading;
   final String hintText;
+  final bool isLargeTextField;
   final TextEditingController controller;
   final String Function(String) validator;
   final TextInputType textInputType;
@@ -19,6 +20,7 @@ class TextFormFieldView extends StatelessWidget {
     this.textInputType = TextInputType.emailAddress,
     this.onChanged,
     this.initialValue,
+    this.isLargeTextField = false,
   }) : super(key: key);
 
   @override
@@ -37,6 +39,7 @@ class TextFormFieldView extends StatelessWidget {
           padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
           height: 90,
           child: TextFormField(
+            maxLines: isLargeTextField ? null : 1,
             initialValue: initialValue,
             controller: controller,
             keyboardType: textInputType,

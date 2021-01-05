@@ -13,6 +13,7 @@ enum Document {
   UploadLog,
   Report,
   None,
+  Random,
 }
 
 enum Menu {

@@ -3,6 +3,7 @@ import 'package:FSOUNotes/app/locator.dart';
 import 'package:FSOUNotes/app/logger.dart';
 import 'package:FSOUNotes/app/router.gr.dart';
 import 'package:FSOUNotes/misc/helper.dart';
+import 'package:FSOUNotes/models/document.dart';
 import 'package:FSOUNotes/models/download.dart';
 import 'package:FSOUNotes/models/notes.dart';
 import 'package:FSOUNotes/models/subject.dart';
@@ -22,6 +23,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:logger/logger.dart';
+import 'package:mime/mime.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
@@ -289,6 +291,7 @@ class NotesViewModel extends BaseViewModel {
     String notesName,
     String subName,
     String type,
+    AbstractDocument doc,
   }) async {
     _progress = 0;
     notifyListeners();
@@ -297,6 +300,7 @@ class NotesViewModel extends BaseViewModel {
       notesName: notesName,
       subName: subName,
       type: type,
+      doc:doc,
     );
     String PDFpath = file.path;
     log.e(file.path);
@@ -312,12 +316,16 @@ class NotesViewModel extends BaseViewModel {
         arguments: PDFScreenArguments(pathPDF: PDFpath, askBookMarks: false));
   }
 
+  // @override
+  // Future futureToRun() =>fetchNotes();
+
   // old download logic for firebase
   downloadFile({
     String notesName,
     String subName,
     String type,
     String id,
+    AbstractDocument doc,
   }) async {
     log.i("notesName : $notesName");
     log.i("Subject Name : $subName");
@@ -325,6 +333,8 @@ class NotesViewModel extends BaseViewModel {
     try {
       String fileUrl =
           "https://storage.googleapis.com/ou-notes.appspot.com/pdfs/$subName/$type/$notesName";
+      if(doc!=null)fileUrl = doc.url;
+      log.e(doc.url);
       log.i(Uri.parse(fileUrl));
       var request = await HttpClient().getUrl(Uri.parse(fileUrl));
       var response = await request.close();
@@ -334,15 +344,21 @@ class NotesViewModel extends BaseViewModel {
         onBytesReceived: (bytesReceived, expectedContentLength) {
           if (expectedContentLength != null) {
             _progress = (bytesReceived / expectedContentLength * 100);
+            print(_progress);
             notifyListeners();
           }
         },
       );
       String dir = (await getApplicationDocumentsDirectory()).path;
       String id = newCuid();
-      File file = new File('$dir/$id');
-      await file.writeAsBytes(bytes);
+      // if (id == null || note.id.length == 0) {
+      //   note.setId = id;
+      // }
+      File file = new File('$dir/$id.pdf');
+      file = await file.writeAsBytes(bytes);
       log.i("file path: ${file.path}");
+      String mimeStr = lookupMimeType(file.path);
+      log.e(file.uri);
       return file;
     } catch (e) {
       log.e("While retreiving Notes from Firebase STORAGE , Error occurred");

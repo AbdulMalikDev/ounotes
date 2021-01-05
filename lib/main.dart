@@ -1,7 +1,10 @@
 import 'package:FSOUNotes/AppTheme/AppStateNotifier.dart';
 import 'package:FSOUNotes/AppTheme/AppTheme.dart';
+import 'package:FSOUNotes/models/subject.dart';
+import 'package:FSOUNotes/models/user.dart' as userModel;
 import 'package:FSOUNotes/services/funtional_services/remote_config_service.dart';
 import 'package:FSOUNotes/services/funtional_services/crashlytics_service.dart';
+import 'package:FSOUNotes/services/services_info.dart';
 import 'package:FSOUNotes/ui/widgets/smart_widgets/bottom_sheet/bottom_sheet_ui_view.dart';
 import 'package:feature_discovery/feature_discovery.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
@@ -20,7 +23,7 @@ import 'package:stacked_services/stacked_services.dart';
 import 'app/logger.dart';
 import 'app/router.gr.dart' as router;
 import 'package:sentry/sentry.dart';
-
+import 'enums/constants.dart';
 import 'models/download.dart';
 
 Logger log = getLogger("main");
@@ -57,6 +60,7 @@ void main() async {
   //     stackTrace: details.stack,
   //   );
   // };
+  // await dothis();
   runApp(MyApp());
   // runZonedGuarded(
   //   () => runApp(MyApp()),
@@ -67,7 +71,35 @@ void main() async {
   //     );
   //   },
   // );
-}
+  }
+
+  // dothis() async {
+      // QuerySnapshot users = await Firestore.instance.collection("users").orderBy("id").getDocuments();
+      // log.e(users.documents.length);
+      // for (int i=0 ; i<users.documents.length ; i++){
+      //   try {
+      //     DocumentSnapshot doc = users.documents[i];
+      //     userModel.User user = userModel.User.fromData(doc.data);
+      //     if(user.college == "Swathi Institute of Technology & Science."){
+      //       user.college = "Swathi Institute of Technology & Science";
+      //     }
+      //     if(user.college==null || user.semester == null || user.branch==null){continue;}
+      //     await Firestore.instance.collection("users").document(Constants.userStats).updateData({
+      //       "total_users": FieldValue.increment(1),
+      //       user.college : FieldValue.increment(1),
+      //       user.semester: FieldValue.increment(1),
+      //       user.branch  : FieldValue.increment(1),
+      //     });
+      //     log.e(i);
+      //     log.e(user.college);
+      //     log.e(user.semester);
+      //     log.e(user.branch);
+      //     await Future.delayed(Duration(microseconds: 10));
+      //   }catch (e) {
+      //     log.e(e.toString());
+      //   }
+      // }
+  // }
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application
@@ -108,6 +140,4 @@ class MyApp extends StatelessWidget {
   }
 }
 
-// OneSignal.shared.setNotificationOpenedHandler((OSNotificationOpenedResult result) {
-//   // will be called whenever a notification is opened/button pressed.
-// });
+

@@ -19,6 +19,18 @@ class Link extends AbstractDocument{
 
   Link({this.subjectName, this.title, this.description, this.linkUrl, this.id, this.path,this.uploader_id,this.subjectId,this.uploaded=false});
 
+  Link.clone(Link syllabus):
+    this(
+      subjectName: syllabus.subjectName,
+      subjectId  : syllabus.subjectId,
+      title      : syllabus.title,
+      description: syllabus.description,
+      linkUrl    : syllabus.linkUrl,
+      uploaded   : syllabus.uploaded,
+      path       : syllabus.path,
+      id         : syllabus.id,
+      uploader_id: syllabus.uploader_id,
+    );
 
   Link.fromData(Map<String,dynamic> data)
   {
@@ -49,15 +61,15 @@ class Link extends AbstractDocument{
   Map<String, dynamic> toJson() {
     return 
     {
-    "subjectName" : subjectName,
-    "title"       : title,
-    "description" : description,
-    "url"         : linkUrl,
-    "id"          : id,
-    "subjectId" : subjectId,
-    "uploader_id" : uploader_id,
-    "uploaded" : uploaded,
-    if(path!=null)"path"                              : path.toString(),
+    if(subjectName!=null)"subjectName": subjectName,
+    if(title!=null) "title"           : title,
+    if(description!=null)"description": description,
+    if(url!=null)"url"                : linkUrl,
+    if(id!=null)"id"                  : id,
+    if(subjectId!=null)"subjectId"    : subjectId,
+    if(uploader_id!=null)"uploader_id": uploader_id,
+    if(uploaded!=null)"uploaded"      : uploaded,
+    if(path!=null)"path"              : path.toString(),
     };
   }
 

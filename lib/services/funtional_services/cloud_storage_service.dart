@@ -48,6 +48,8 @@ class CloudStorageService {
     try {
       String fileUrl =
           "https://storage.googleapis.com/ou-notes.appspot.com/pdfs/$subName/$type/$notesName";
+      if(note!=null && note.url!=null)fileUrl = note.url;
+      log.e(note?.url);
       log.i(Uri.parse(fileUrl));
       //final filename = fileUrl.substring(url.lastIndexOf("/") + 1);
       var request = await HttpClient().getUrl(Uri.parse(fileUrl));
@@ -215,6 +217,7 @@ class CloudStorageService {
       case Document.Report:
       case Document.UploadLog:
       case Document.Drawer:
+      case Document.Random:
         return null;
         break;
     }
