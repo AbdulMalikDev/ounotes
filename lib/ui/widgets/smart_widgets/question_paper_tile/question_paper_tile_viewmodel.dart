@@ -2,19 +2,16 @@ import 'package:FSOUNotes/app/router.gr.dart';
 import 'package:FSOUNotes/enums/constants.dart';
 import 'package:FSOUNotes/enums/enums.dart';
 import 'package:FSOUNotes/models/document.dart';
-import 'package:FSOUNotes/services/funtional_services/cloud_storage_service.dart';
 import 'package:FSOUNotes/services/funtional_services/google_drive_service.dart';
 import 'package:stacked/stacked.dart';
 import 'package:FSOUNotes/app/locator.dart';
 import 'package:FSOUNotes/models/report.dart';
 import 'package:FSOUNotes/services/funtional_services/authentication_service.dart';
 import 'package:FSOUNotes/services/funtional_services/firestore_service.dart';
-import 'package:FSOUNotes/services/funtional_services/sharedpref_service.dart';
 import 'package:FSOUNotes/services/state_services/report_service.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:stacked_services/stacked_services.dart';
-import 'package:FSOUNotes/models/download.dart';
 import 'package:FSOUNotes/models/question_paper.dart';
 import 'package:FSOUNotes/models/user.dart';
 import 'package:FSOUNotes/enums/bottom_sheet_type.dart';
@@ -27,11 +24,8 @@ class QuestionPaperTileViewModel extends BaseViewModel {
   FirestoreService _firestoreService = locator<FirestoreService>();
   AuthenticationService _authenticationService =
       locator<AuthenticationService>();
-  SharedPreferencesService _sharedPreferencesService =
-      locator<SharedPreferencesService>();
   ReportsService _reportsService = locator<ReportsService>();
   DialogService _dialogService = locator<DialogService>();
-  CloudStorageService _cloudStorageService = locator<CloudStorageService>();
   GoogleDriveService _googleDriveService = locator<GoogleDriveService>();
   NavigationService _navigationService = locator<NavigationService>();
   BottomSheetService _bottomSheetService = locator<BottomSheetService>();
@@ -39,15 +33,6 @@ class QuestionPaperTileViewModel extends BaseViewModel {
   bool get isAdmin => _authenticationService.user.isAdmin;
   bool _isQPdownloaded = false;
   bool get isQPdownloaded => _isQPdownloaded;
-
-  checkIfQpIsDownloaded(List<Download> downloadedQpbySub,QuestionPaper questionPaper) {
-    for (int j = 0; j < downloadedQpbySub.length; j++) {
-      if (downloadedQpbySub[j].filename == questionPaper.title) {
-        _isQPdownloaded = true;
-        notifyListeners();
-      }
-    }
-  }
 
   void reportNote(
       {@required AbstractDocument doc}) async {

@@ -13,13 +13,6 @@ class DBService {
         version: 1,
         //we create all the tables in oncreate
         onCreate: (db, version) => _createDb(db),
-      //   onUpgrade: (db, oldVersion, newVersion) {
-      //     if (oldVersion == 1) {
-      //     //we update existing tables or create new table in db
-      //       _createTableUserVotedSubjects(db);
-      //     }
-      //   },
-      //  onDowngrade: onDatabaseDowngradeDelete
         );
   }
    void _createDb(Database db) {

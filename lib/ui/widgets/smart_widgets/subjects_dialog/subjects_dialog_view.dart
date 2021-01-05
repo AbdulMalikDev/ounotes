@@ -1,7 +1,6 @@
 import 'package:FSOUNotes/models/subject.dart';
 import 'package:FSOUNotes/ui/shared/app_config.dart';
 import 'package:FSOUNotes/ui/widgets/smart_widgets/subjects_dialog/subjects_dialog_viewmodel.dart';
-import 'package:dynamic_text_highlighting/dynamic_text_highlighting.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 import 'package:substring_highlight/substring_highlight.dart';
@@ -126,23 +125,28 @@ class _SubjectsDialogViewState extends State<SubjectsDialogView> {
                                 itemCount: allSubjectsAltered.length,
                                 itemBuilder: (context, index) {
                                   Subject subject = allSubjectsAltered[index];
-                                  String subjectName = subject.name.toLowerCase();
-                                  List<String> firstLetters = subjectName
-                                                                .split(" ")
-                                                                .map((word) {if(word.isNotEmpty)return word[0];})
-                                                                .toList();                 
-                                  //handling edge case where subject name may have extra space                            
-                                  firstLetters.removeWhere((letter) => letter == null);                            
+                                  String subjectName =
+                                      subject.name.toLowerCase();
+                                  List<String> firstLetters =
+                                      subjectName.split(" ").map((word) {
+                                    if (word.isNotEmpty) return word[0];
+                                  }).toList();
+                                  //handling edge case where subject name may have extra space
+                                  firstLetters
+                                      .removeWhere((letter) => letter == null);
                                   int lettersMatched = 0;
-                                  searchKeyWord.split("").forEach((letter) { 
-                                    if(firstLetters.contains(letter))lettersMatched++;
+                                  searchKeyWord.split("").forEach((letter) {
+                                    if (firstLetters.contains(letter))
+                                      lettersMatched++;
                                   });
-                                  double matchingPercentage = (lettersMatched/searchKeyWord.length)*100;
-                                  bool subjectMatched = searchKeyWord.trim().isEmpty
-                                                        || matchingPercentage > 90 
-                                                        || subjectName.contains(searchKeyWord); 
-                                  if (!subjectMatched)
-                                    return Container();
+                                  double matchingPercentage =
+                                      (lettersMatched / searchKeyWord.length) *
+                                          100;
+                                  bool subjectMatched =
+                                      searchKeyWord.trim().isEmpty ||
+                                          matchingPercentage > 90 ||
+                                          subjectName.contains(searchKeyWord);
+                                  if (!subjectMatched) return Container();
                                   return GestureDetector(
                                     onTap: () {
                                       model.onSubjectSelected(subject);
@@ -223,10 +227,6 @@ class _SubjectsDialogViewState extends State<SubjectsDialogView> {
                               );
                             }),
                       ),
-                      // SizedBox(
-                      //   height:
-                      //       App(context).appScreenHeightWithOutSafeArea(0.001),
-                      // ),
                     ],
                   ),
                 ),

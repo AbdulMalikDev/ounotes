@@ -1,9 +1,9 @@
-import 'package:FSOUNotes/AppTheme/AppStateNotifier.dart';
 import 'package:FSOUNotes/enums/enums.dart';
 import 'package:FSOUNotes/models/subject.dart';
 import 'package:FSOUNotes/ui/widgets/smart_widgets/FilterSubjects_view/filtersubjects_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
+
 class FilterSubjectsView extends StatelessWidget {
   final Document path;
   final List<Subject> data;
@@ -19,9 +19,6 @@ class FilterSubjectsView extends StatelessWidget {
               width: MediaQuery.of(context).size.width,
               child: ListView.builder(
                   itemCount: data.length,
-                  // separatorBuilder: (context, index) => Divider(
-                  //   color: Colors.black45,
-                  // ),
                   itemBuilder: (context, index) {
                     return Container(
                       height: MediaQuery.of(context).size.height * 0.09,

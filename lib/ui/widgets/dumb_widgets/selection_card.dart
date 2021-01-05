@@ -114,21 +114,3 @@ class _SelectionCardState extends State<SelectionCard> {
     );
   }
 }
-
-// DropdownButtonHideUnderline(
-//               child: DropdownButton(
-//                 isExpanded: widget.isExpanded,
-//                 icon: Icon(
-//                   Icons.keyboard_arrow_down,
-//                   color: Theme.of(context).primaryColor,
-//                 ),
-//                 focusColor: Colors.transparent,
-//                 style: Theme.of(context)
-//                     .textTheme
-//                     .subtitle1
-//                     .copyWith(fontSize: 17),
-//                 value: widget.value,
-//                 items: widget.items,
-//                 onChanged: widget.onChange,
-//               ),
-//             ),

@@ -1,9 +1,7 @@
 import 'package:FSOUNotes/AppTheme/AppStateNotifier.dart';
-import 'package:FSOUNotes/misc/constants.dart';
 import 'package:FSOUNotes/enums/enums.dart';
 import 'package:FSOUNotes/models/link.dart';
 import 'package:expansion_tile_card/expansion_tile_card.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 

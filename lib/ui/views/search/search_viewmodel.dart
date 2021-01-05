@@ -2,19 +2,15 @@ import 'package:FSOUNotes/app/locator.dart';
 import 'package:FSOUNotes/app/logger.dart';
 import 'package:FSOUNotes/enums/enums.dart';
 import 'package:FSOUNotes/models/subject.dart';
-
 import 'package:FSOUNotes/services/state_services/subjects_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:logger/logger.dart';
 import 'package:stacked/stacked.dart';
-import 'package:stacked_services/stacked_services.dart';
 
 class SearchViewModel extends BaseViewModel {
   Logger log = getLogger("SuggestionListViewModel");
   SubjectsService _subjectsService = locator<SubjectsService>();
-  DialogService _dialogService = locator<DialogService>();
-
   String _subject = "";
 
   String get subject => _subject;

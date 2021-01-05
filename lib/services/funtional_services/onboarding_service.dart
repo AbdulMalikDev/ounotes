@@ -1,9 +1,5 @@
 import 'dart:math';
-
-import 'package:FSOUNotes/app/locator.dart';
-import 'package:FSOUNotes/services/funtional_services/sharedpref_service.dart';
 import 'package:hive/hive.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class OnboardingService{
   static const String floating_action_button_to_add_subjects = "floating_action_button_to_add_subjects";
@@ -12,7 +8,6 @@ class OnboardingService{
   static const String rate_us_to_rate_app = "rate_us_to_rate_app";
 
   static Box box = Hive.box('OUNOTES');
-  SharedPreferencesService _sharedPreferencesService = locator<SharedPreferencesService>();
 
   //Every 10 times upload prompt to be shown
   static int number_of_time_document_view_opened = 0;

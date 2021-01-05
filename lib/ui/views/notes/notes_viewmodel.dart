@@ -1,22 +1,17 @@
-import 'dart:convert';
 import 'dart:io';
 import 'package:FSOUNotes/app/locator.dart';
 import 'package:FSOUNotes/app/logger.dart';
 import 'package:FSOUNotes/app/router.gr.dart';
-import 'package:FSOUNotes/enums/constants.dart';
 import 'package:FSOUNotes/misc/helper.dart';
-import 'package:FSOUNotes/models/document.dart';
 import 'package:FSOUNotes/models/download.dart';
 import 'package:FSOUNotes/models/notes.dart';
 import 'package:FSOUNotes/models/subject.dart';
 import 'package:FSOUNotes/models/vote.dart';
 import 'package:FSOUNotes/services/funtional_services/admob_service.dart';
-import 'package:FSOUNotes/services/funtional_services/authentication_service.dart';
 import 'package:FSOUNotes/services/funtional_services/firestore_service.dart';
 import 'package:FSOUNotes/services/funtional_services/google_drive_service.dart';
 import 'package:FSOUNotes/services/funtional_services/remote_config_service.dart';
 import 'package:FSOUNotes/services/funtional_services/sharedpref_service.dart';
-import 'package:FSOUNotes/services/state_services/download_service.dart';
 import 'package:FSOUNotes/services/state_services/subjects_service.dart';
 import 'package:FSOUNotes/services/state_services/vote_service.dart';
 import 'package:FSOUNotes/enums/bottom_sheet_type.dart';
@@ -26,17 +21,12 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:googleapis_auth/auth.dart';
-import 'package:googleapis_auth/auth_io.dart';
 import 'package:logger/logger.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:hive/hive.dart';
-import 'package:googleapis/drive/v3.dart' as ga;
-import 'package:http/http.dart' as http;
-import 'package:path/path.dart' as path;
 
 class NotesViewModel extends BaseViewModel {
   Logger log = getLogger("Notes view model");
@@ -53,7 +43,6 @@ class NotesViewModel extends BaseViewModel {
   NavigationService _navigationService = locator<NavigationService>();
   SharedPreferencesService _sharedPreferencesService =
       locator<SharedPreferencesService>();
-  DownloadService _downloadService = locator<DownloadService>();
   VoteService _voteService = locator<VoteService>();
   SubjectsService _subjectsService = locator<SubjectsService>();
   BottomSheetService _bottomSheetService = locator<BottomSheetService>();
@@ -64,7 +53,6 @@ class NotesViewModel extends BaseViewModel {
   double get progress => _progress;
   String _notetitle = '';
   String get notetitle => _notetitle;
-  bool _ischecked = false;
   Note notificationNote;
   List<Widget> mainListOfNotes = [];
   List<Vote> get voteslist => userVotedNotesList;
@@ -94,7 +82,6 @@ class NotesViewModel extends BaseViewModel {
   }
 
   List<Note> get notes => _notes;
-  // _notes.addListener(() { })
 
   Future fetchNotesAndVotes(String subjectName) async {
     setBusy(true);
@@ -194,38 +181,6 @@ class NotesViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  getListOfNotesInDownloads(String subName) {
-    // List<Download> allDownloads = _downloadService.downloadlist;
-    List<Download> downloadsbysub = [];
-    // allDownloads.forEach((download) {
-    //   if (download.type == Constants.notes &&
-    //       download.subjectName.toLowerCase() == subName.toLowerCase()) {
-    //     downloadsbysub.add(download);
-    //   }
-    // });
-    return downloadsbysub;
-  }
-
-  // String filePath;
-  // Future<bool> checkNoteInDownloads(Note note) async {
-  //   await _downloadService.fetchAndSetDownloads();
-  //   List<Download> allDownloads = _downloadService.downloadlist;
-  //   allDownloads.forEach((download) {
-  //     if (download.type == Constants.notes) {
-  //       downloadedNotes.add(download);
-  //     }
-  //   });
-  //   for (int i = 0; i < downloadedNotes.length; i++) {
-  //     if (downloadedNotes[i].filename == note.title &&
-  //         downloadedNotes[i].subjectName == note.subjectName) {
-  //       filePath = downloadedNotes[i].path;
-  //       notifyListeners();
-  //       return true;
-  //     }
-  //   }
-  //   return false;
-  // }
-
   void openDoc(Note note) async {
     SharedPreferences prefs = await _sharedPreferencesService.store();
     if (prefs.containsKey("openDocChoice")) {
@@ -294,7 +249,8 @@ class NotesViewModel extends BaseViewModel {
         onDownloadedCallback: (path, note) {
           setLoading(false);
           _navigationService.navigateTo(Routes.pdfScreenRoute,
-              arguments: PDFScreenArguments(pathPDF: path, doc: note,askBookMarks: false));
+              arguments: PDFScreenArguments(
+                  pathPDF: path, doc: note, askBookMarks: false));
         },
       );
     } catch (e) {
@@ -351,14 +307,10 @@ class NotesViewModel extends BaseViewModel {
       setLoading(false);
       return;
     }
-    // _firestoreService.incrementView(note);
     setLoading(false);
     _navigationService.navigateTo(Routes.pdfScreenRoute,
-        arguments: PDFScreenArguments(pathPDF: PDFpath,askBookMarks: false));
+        arguments: PDFScreenArguments(pathPDF: PDFpath, askBookMarks: false));
   }
-
-  @override
-  // Future futureToRun() =>fetchNotes();
 
   // old download logic for firebase
   downloadFile({
@@ -386,12 +338,8 @@ class NotesViewModel extends BaseViewModel {
           }
         },
       );
-
       String dir = (await getApplicationDocumentsDirectory()).path;
       String id = newCuid();
-      // if (id == null || note.id.length == 0) {
-      //   note.setId = id;
-      // }
       File file = new File('$dir/$id');
       await file.writeAsBytes(bytes);
       log.i("file path: ${file.path}");
@@ -412,7 +360,6 @@ class NotesViewModel extends BaseViewModel {
       child: NotesTileView(
         note: note,
         votes: _voteService.votesBySub.value,
-        downloadedNotes: getListOfNotesInDownloads(note.subjectName),
         notification: notification,
         isPinned: isPinned,
         refresh: refresh,
@@ -425,6 +372,7 @@ class NotesViewModel extends BaseViewModel {
   }
 
   initialize() async {
+    await Hive.openBox("downloads");
     box = await Hive.openBox("Documents");
     _subjectsService.setBox(box);
   }

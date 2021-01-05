@@ -4,7 +4,6 @@ import 'package:FSOUNotes/enums/bottom_sheet_type.dart';
 import 'package:FSOUNotes/enums/constants.dart';
 import 'package:FSOUNotes/enums/enums.dart';
 import 'package:FSOUNotes/models/UploadLog.dart';
-import 'package:FSOUNotes/misc/course_info.dart';
 import 'package:FSOUNotes/models/document.dart';
 import 'package:FSOUNotes/models/link.dart';
 import 'package:FSOUNotes/models/notes.dart';
@@ -25,11 +24,9 @@ import 'package:FSOUNotes/services/state_services/vote_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cuid/cuid.dart';
 import 'package:FSOUNotes/ui/shared/strings.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
 import 'package:injectable/injectable.dart';
 import 'package:logger/logger.dart';
-import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 @lazySingleton
@@ -59,34 +56,33 @@ class FirestoreService {
   SyllabusService _syllabusService = locator<SyllabusService>();
   LinksService _linksService = locator<LinksService>();
   VoteService _voteServie = locator<VoteService>();
-  
 
   AnalyticsService _analyticsService = locator<AnalyticsService>();
   BottomSheetService _bottomSheetService = locator<BottomSheetService>();
   SharedPreferencesService _sharedPreferencesService =
       locator<SharedPreferencesService>();
 
-  _getCollectionReferenceAccordingToType(Document path,id) {
+  _getCollectionReferenceAccordingToType(Document path, id) {
     switch (path) {
       case Document.Notes:
         return _subjectsCollectionReference
-          .document(id.toString()) 
-          .collection(Constants.firebase_notes);
+            .document(id.toString())
+            .collection(Constants.firebase_notes);
         break;
       case Document.QuestionPapers:
         return _subjectsCollectionReference
-          .document(id.toString()) 
-          .collection(Constants.firebase_questionPapers);
+            .document(id.toString())
+            .collection(Constants.firebase_questionPapers);
         break;
       case Document.Syllabus:
         return _subjectsCollectionReference
-          .document(id.toString()) 
-          .collection(Constants.firebase_syllabus);
+            .document(id.toString())
+            .collection(Constants.firebase_syllabus);
         break;
       case Document.Links:
         return _subjectsCollectionReference
-          .document(id.toString()) 
-          .collection(Constants.firebase_links);
+            .document(id.toString())
+            .collection(Constants.firebase_links);
         break;
       case Document.None:
       case Document.Report:
@@ -132,12 +128,17 @@ class FirestoreService {
   saveUser(User user) async {
     Map<String, dynamic> data = user.toJson();
     try {
-      await _usersCollectionReference.document(data["id"]).setData(data,merge: true);
-      if(!user.isAdmin)await _usersCollectionReference.document(Constants.userStats).updateData({
-        user.college : FieldValue.increment(1),
-        user.semester : FieldValue.increment(1),
-        user.branch : FieldValue.increment(1),
-      });
+      await _usersCollectionReference
+          .document(data["id"])
+          .setData(data, merge: true);
+      if (!user.isAdmin)
+        await _usersCollectionReference
+            .document(Constants.userStats)
+            .updateData({
+          user.college: FieldValue.increment(1),
+          user.semester: FieldValue.increment(1),
+          user.branch: FieldValue.increment(1),
+        });
     } catch (e) {
       return _errorHandling(
           e, "While saving user to Firebase , Error occurred");
@@ -169,8 +170,8 @@ class FirestoreService {
       //     .orderBy('votes', descending: true)
       //     .getDocuments();
       QuerySnapshot snapshot = await _subjectsCollectionReference
-          .document(subject.id.toString()) 
-          .collection(Constants.firebase_notes) 
+          .document(subject.id.toString())
+          .collection(Constants.firebase_notes)
           .orderBy('votes', descending: true)
           .getDocuments();
       List<Note> notes = snapshot.documents
@@ -199,7 +200,7 @@ class FirestoreService {
       //     .orderBy("year", descending: true)
       //     .getDocuments();
       QuerySnapshot snapshot = await _subjectsCollectionReference
-          .document(subject.id.toString()) 
+          .document(subject.id.toString())
           .collection(Constants.firebase_questionPapers)
           .orderBy("year", descending: true)
           .getDocuments();
@@ -223,7 +224,7 @@ class FirestoreService {
       //     .where('subjectName', isEqualTo: subjectName)
       //     .getDocuments();
       QuerySnapshot snapshot = await _subjectsCollectionReference
-          .document(subject.id.toString()) 
+          .document(subject.id.toString())
           .collection(Constants.firebase_syllabus)
           .getDocuments();
       List<Syllabus> syllabus =
@@ -244,7 +245,7 @@ class FirestoreService {
       //     .where('subjectName', isEqualTo: subjectName)
       //     .getDocuments();
       QuerySnapshot snapshot = await _subjectsCollectionReference
-          .document(subject.id.toString()) 
+          .document(subject.id.toString())
           .collection(Constants.firebase_links)
           .getDocuments();
       List<Link> links =
@@ -322,8 +323,7 @@ class FirestoreService {
       String id = newCuid();
       doc.setId = id;
       doc.setUploaderId = user.id;
-      await _linksCollectionReference
-            .document(doc.id).setData(doc.toJson());
+      await _linksCollectionReference.document(doc.id).setData(doc.toJson());
       await _uploadLogCollectionReference
           .document(doc.id)
           .setData(_linkUploadLog(doc, user));
@@ -366,8 +366,12 @@ class FirestoreService {
       } else {
         await _reportCollectionReference.document(doc.id).setData(data);
       }
-      _analyticsService.logEvent(name:"REPORT",parameters:{"reason":report.reportReason??""});
-      _analyticsService.sendNotification(isAdmin: true,message: Strings.admin_document_report_notification_message,title: Strings.admin_document_report_notification_title);
+      _analyticsService.logEvent(
+          name: "REPORT", parameters: {"reason": report.reportReason ?? ""});
+      _analyticsService.sendNotification(
+          isAdmin: true,
+          message: Strings.admin_document_report_notification_message,
+          title: Strings.admin_document_report_notification_title);
     } catch (e) {
       return _errorHandling(
           e, "While uploading report to Firebase , Error occurred");
@@ -377,12 +381,12 @@ class FirestoreService {
   deleteDocument(AbstractDocument doc) async {
     log.w(doc.path);
 
-    CollectionReference ref = _getCollectionReferenceAccordingToType(doc.path,doc.subjectId);
+    CollectionReference ref =
+        _getCollectionReferenceAccordingToType(doc.path, doc.subjectId);
 
     //Before rewriting whole application , there was no real system of ids
     //In an effort to be backward compatible we had to take care of both cases
     try {
-
       if (doc.id != null) {
         log.w("Document being deleted using ID");
         if (doc.id.length > 5) {
@@ -440,10 +444,9 @@ class FirestoreService {
   // }
 
   incrementVotes(Note doc, int val) {
-    SubjectsService _subjectsService = locator<SubjectsService>();
     CollectionReference ref = _subjectsCollectionReference
-          .document(doc.subjectId.toString()) 
-          .collection(Constants.firebase_notes);
+        .document(doc.subjectId.toString())
+        .collection(Constants.firebase_notes);
     try {
       if (doc.id != null && doc.id.length > 5) {
         log.i("Document being upvoted using ID");
@@ -472,8 +475,8 @@ class FirestoreService {
 
   decrementVotes(Note doc, int val) {
     CollectionReference ref = _subjectsCollectionReference
-          .document(doc.subjectId.toString()) 
-          .collection(Constants.firebase_notes);
+        .document(doc.subjectId.toString())
+        .collection(Constants.firebase_notes);
 
     try {
       if (doc.id != null && doc.id.length > 5) {
@@ -561,7 +564,10 @@ class FirestoreService {
       "email": _authenticationService.user.email,
       "size": note.size,
     };
-    _analyticsService.sendNotification(isAdmin: true,message: Strings.admin_document_upload_notification_message,title: Strings.admin_document_upload_notification_title);
+    _analyticsService.sendNotification(
+        isAdmin: true,
+        message: Strings.admin_document_upload_notification_message,
+        title: Strings.admin_document_upload_notification_title);
     return uploadLog;
   }
 
@@ -578,8 +584,14 @@ class FirestoreService {
       "email": _authenticationService.user.email,
       "size": 0,
     };
-    _analyticsService.logEvent(name:"UPLOAD_LINK" , parameters: uploadLog , addInNotificationService:true);
-    _analyticsService.sendNotification(isAdmin: true,message: Strings.admin_document_upload_notification_message,title: Strings.admin_document_upload_notification_title);
+    _analyticsService.logEvent(
+        name: "UPLOAD_LINK",
+        parameters: uploadLog,
+        addInNotificationService: true);
+    _analyticsService.sendNotification(
+        isAdmin: true,
+        message: Strings.admin_document_upload_notification_message,
+        title: Strings.admin_document_upload_notification_title);
     return uploadLog;
   }
 
@@ -606,84 +618,83 @@ class FirestoreService {
 
   updateNoteInFirebase(Note note) async {
     try {
-      if(note.subjectId == null){
+      if (note.subjectId == null) {
         SubjectsService _subjectsService = locator<SubjectsService>();
         Subject subject = _subjectsService.getSubjectByName(note.subjectName);
         note.setSubjectId = subject.id;
       }
       log.e("Note with id ${note.id} is being updated");
       await _getCollectionReferenceAccordingToTypeForTempUpload(note.path)
-              .document(note.id)
-              .delete();
+          .document(note.id)
+          .delete();
       await _subjectsCollectionReference
-              .document(note.subjectId.toString()) 
-              .collection(Constants.firebase_notes)
-              .document(note.id)
-              .setData(note.toJson(),merge: true);
-     
+          .document(note.subjectId.toString())
+          .collection(Constants.firebase_notes)
+          .document(note.id)
+          .setData(note.toJson(), merge: true);
     } catch (e) {
       log.e(e.toString());
     }
   }
 
   updateQuestionPaperInFirebase(QuestionPaper note) async {
-    if(note.subjectId == null){
-        SubjectsService _subjectsService = locator<SubjectsService>();
-        Subject subject = _subjectsService.getSubjectByName(note.subjectName);
-        note.setSubjectId = subject.id;
-      }
+    if (note.subjectId == null) {
+      SubjectsService _subjectsService = locator<SubjectsService>();
+      Subject subject = _subjectsService.getSubjectByName(note.subjectName);
+      note.setSubjectId = subject.id;
+    }
 
     try {
       await _getCollectionReferenceAccordingToTypeForTempUpload(note.path)
-              .document(note.id)
-              .delete();
+          .document(note.id)
+          .delete();
       await _subjectsCollectionReference
-              .document(note.subjectId.toString()) 
-              .collection(Constants.firebase_questionPapers)
-              .document(note.id)
-              .setData(note.toJson(),merge: true);
+          .document(note.subjectId.toString())
+          .collection(Constants.firebase_questionPapers)
+          .document(note.id)
+          .setData(note.toJson(), merge: true);
     } on Exception catch (e) {
       log.e(e.toString());
     }
   }
 
   updateSyllabusInFirebase(Syllabus note) async {
-    if(note.subjectId == null){
-        SubjectsService _subjectsService = locator<SubjectsService>();
-        Subject subject = _subjectsService.getSubjectByName(note.subjectName);
-        note.setSubjectId = subject.id;
-      }
+    if (note.subjectId == null) {
+      SubjectsService _subjectsService = locator<SubjectsService>();
+      Subject subject = _subjectsService.getSubjectByName(note.subjectName);
+      note.setSubjectId = subject.id;
+    }
 
     try {
       await _getCollectionReferenceAccordingToTypeForTempUpload(note.path)
-              .document(note.id)
-              .delete();
+          .document(note.id)
+          .delete();
       await _subjectsCollectionReference
-              .document(note.subjectId.toString()) 
-              .collection(Constants.firebase_syllabus)
-              .document(note.id)
-              .setData(note.toJson(),merge: true);
+          .document(note.subjectId.toString())
+          .collection(Constants.firebase_syllabus)
+          .document(note.id)
+          .setData(note.toJson(), merge: true);
     } on Exception catch (e) {
       log.e(e.toString());
     }
   }
 
   updateLinkInFirebase(Link note) async {
-    if(note.subjectId == null){
-        SubjectsService _subjectsService = locator<SubjectsService>();
-        Subject subject = _subjectsService.getSubjectByName(note.subjectName);
-        note.setSubjectId = subject.id;
-      }
+    if (note.subjectId == null) {
+      SubjectsService _subjectsService = locator<SubjectsService>();
+      Subject subject = _subjectsService.getSubjectByName(note.subjectName);
+      note.setSubjectId = subject.id;
+    }
 
     try {
       await _getCollectionReferenceAccordingToTypeForTempUpload(note.path)
-              .document(note.id)
-              .delete();
+          .document(note.id)
+          .delete();
       await _subjectsCollectionReference
-              .document(note.subjectId.toString()) 
-              .collection(Constants.firebase_links)
-              .document(note.id)
-              .setData(note.toJson(),merge: true);
+          .document(note.subjectId.toString())
+          .collection(Constants.firebase_links)
+          .document(note.id)
+          .setData(note.toJson(), merge: true);
       log.e(note.toJson());
     } on Exception catch (e) {
       log.e(e.toString());
@@ -716,73 +727,78 @@ class FirestoreService {
     try {
       if (user != null) {
         log.e(user.id);
-        await _usersCollectionReference.document(user.id).setData(user.toJson(),merge: true);
-        if(updateLocally){_sharedPreferencesService.saveUserLocally(user);}
-
-      }else{log.e("User is Null, not found in Local Storage");}
+        await _usersCollectionReference
+            .document(user.id)
+            .setData(user.toJson(), merge: true);
+        if (updateLocally) {
+          _sharedPreferencesService.saveUserLocally(user);
+        }
+      } else {
+        log.e("User is Null, not found in Local Storage");
+      }
     } on Exception catch (e) {
       log.e(e.toString());
     }
   }
 
-  Future<Note> getNoteById(int subId,String id) async {
+  Future<Note> getNoteById(int subId, String id) async {
     // DocumentSnapshot doc = await _subjectsCollectionReference
-    //       .document(subId.toString()) 
+    //       .document(subId.toString())
     //       .collection(Constants.firebase_notes)
     //       .document(id).get();
-    QuerySnapshot docSnaps = await Firestore.instance 
-          .collectionGroup(Constants.firebase_notes)
-          .where("id",isEqualTo:id)
-          .getDocuments();
+    QuerySnapshot docSnaps = await Firestore.instance
+        .collectionGroup(Constants.firebase_notes)
+        .where("id", isEqualTo: id)
+        .getDocuments();
     List<DocumentSnapshot> docs = docSnaps.documents;
-    if(docs.isEmpty)return null;
-    DocumentSnapshot doc = docs[docs.length-1];
-    if(!doc.exists)return null;
+    if (docs.isEmpty) return null;
+    DocumentSnapshot doc = docs[docs.length - 1];
+    if (!doc.exists) return null;
     return Note.fromData(doc.data, doc.documentID);
   }
 
-  Future<Link> getLinkById(int subId,String id) async {
+  Future<Link> getLinkById(int subId, String id) async {
     // DocumentSnapshot doc = await _subjectsCollectionReference
-    //       .document(subId.toString()) 
+    //       .document(subId.toString())
     //       .collection(Constants.firebase_links)
     //       .document(id).get();
-    QuerySnapshot docSnaps = await Firestore.instance 
-          .collectionGroup(Constants.firebase_links)
-          .where("id",isEqualTo:id)
-          .getDocuments();
+    QuerySnapshot docSnaps = await Firestore.instance
+        .collectionGroup(Constants.firebase_links)
+        .where("id", isEqualTo: id)
+        .getDocuments();
     List<DocumentSnapshot> docs = docSnaps.documents;
-    if(docs.isEmpty)return null;
-    DocumentSnapshot doc = docs[docs.length-1];
+    if (docs.isEmpty) return null;
+    DocumentSnapshot doc = docs[docs.length - 1];
     return Link.fromData(doc.data);
   }
 
-  Future<QuestionPaper> getQuestionPaperById(int subId,String id) async {
-  //  DocumentSnapshot doc = await _subjectsCollectionReference
-  //         .document(subId.toString()) 
-  //         .collection(Constants.firebase_questionPapers)
-  //         .document(id).get();
-   QuerySnapshot docSnaps = await Firestore.instance 
-          .collectionGroup(Constants.firebase_questionPapers)
-          .where("id",isEqualTo:id)
-          .getDocuments();
+  Future<QuestionPaper> getQuestionPaperById(int subId, String id) async {
+    //  DocumentSnapshot doc = await _subjectsCollectionReference
+    //         .document(subId.toString())
+    //         .collection(Constants.firebase_questionPapers)
+    //         .document(id).get();
+    QuerySnapshot docSnaps = await Firestore.instance
+        .collectionGroup(Constants.firebase_questionPapers)
+        .where("id", isEqualTo: id)
+        .getDocuments();
     List<DocumentSnapshot> docs = docSnaps.documents;
-    if(docs.isEmpty)return null;
-    DocumentSnapshot doc = docs[docs.length-1];
+    if (docs.isEmpty) return null;
+    DocumentSnapshot doc = docs[docs.length - 1];
     return QuestionPaper.fromData(doc.data);
   }
 
-  Future<Syllabus> getSyllabusById(int subId,String id) async {
+  Future<Syllabus> getSyllabusById(int subId, String id) async {
     // DocumentSnapshot doc = await _subjectsCollectionReference
-    //       .document(subId.toString()) 
+    //       .document(subId.toString())
     //       .collection(Constants.firebase_syllabus)
     //       .document(id).get();
-    QuerySnapshot docSnaps = await Firestore.instance 
-          .collectionGroup(Constants.firebase_syllabus)
-          .where("id",isEqualTo:id)
-          .getDocuments();
+    QuerySnapshot docSnaps = await Firestore.instance
+        .collectionGroup(Constants.firebase_syllabus)
+        .where("id", isEqualTo: id)
+        .getDocuments();
     List<DocumentSnapshot> docs = docSnaps.documents;
-    if(docs.isEmpty)return null;
-    DocumentSnapshot doc = docs[docs.length-1];
+    if (docs.isEmpty) return null;
+    DocumentSnapshot doc = docs[docs.length - 1];
     return Syllabus.fromData(doc.data);
   }
 
@@ -791,35 +807,37 @@ class FirestoreService {
     return User.fromData(doc.data);
   }
 
-  deleteLinkById(int subId,String id) async {
+  deleteLinkById(int subId, String id) async {
     // await _subjectsCollectionReference
-    //       .document(subId.toString()) 
+    //       .document(subId.toString())
     //       .collection(Constants.firebase_links)
     //       .document(id)
     //       .delete();
-    QuerySnapshot docSnaps = await Firestore.instance 
-          .collectionGroup(Constants.firebase_links)
-          .where("id",isEqualTo:id)
-          .getDocuments();
+    QuerySnapshot docSnaps = await Firestore.instance
+        .collectionGroup(Constants.firebase_links)
+        .where("id", isEqualTo: id)
+        .getDocuments();
     List<DocumentSnapshot> docs = docSnaps.documents;
-    if(docs.isEmpty)return null;
-    docs.forEach((doc) { doc.reference.delete(); });
+    if (docs.isEmpty) return null;
+    docs.forEach((doc) {
+      doc.reference.delete();
+    });
     await _uploadLogCollectionReference.document(id).delete();
     await _reportCollectionReference.document(id).delete();
     return null;
   }
 
-  deleteNoteById(int subId,String id) async {
+  deleteNoteById(int subId, String id) async {
     // await _subjectsCollectionReference
-    //       .document(subId.toString()) 
+    //       .document(subId.toString())
     //       .collection(Constants.firebase_notes)
     //       .document(id)
     //       .delete();
     await _subjectsCollectionReference
-              .document(subId.toString()) 
-              .collection(Constants.firebase_notes)
-              .document(id)
-              .delete();
+        .document(subId.toString())
+        .collection(Constants.firebase_notes)
+        .document(id)
+        .delete();
     await _uploadLogCollectionReference.document(id).delete();
     await _reportCollectionReference.document(id).delete();
     return null;
@@ -850,21 +868,21 @@ class FirestoreService {
     }
   }
 
-  getDocumentById(String subjectName,String id, Document document) async {
+  getDocumentById(String subjectName, String id, Document document) async {
     SubjectsService _subjectsService = locator<SubjectsService>();
     Subject subject = _subjectsService.getSubjectByName(subjectName);
     switch (document) {
       case Document.Notes:
-        return await this.getNoteById(subject.id,id);
+        return await this.getNoteById(subject.id, id);
         break;
       case Document.QuestionPapers:
-        return await this.getQuestionPaperById(subject.id,id);
+        return await this.getQuestionPaperById(subject.id, id);
         break;
       case Document.Syllabus:
-        return await this.getSyllabusById(subject.id,id);
+        return await this.getSyllabusById(subject.id, id);
         break;
       case Document.Links:
-        return await this.getLinkById(subject.id,id);
+        return await this.getLinkById(subject.id, id);
         break;
       default:
         break;
@@ -888,39 +906,70 @@ class FirestoreService {
   }
 
   // Handling subjects
-  Future<bool> destroySubject(String subjectName,int subjectId) async {
+  Future<bool> destroySubject(String subjectName, int subjectId) async {
     //Warn
-    log.e("Warning this will delete all Notes,QPapers and syllabi having subject name ${subjectName}");
-    SheetResponse response = await _bottomSheetService.showCustomSheet(variant:BottomSheetType.filledStacks,title: "Sure?",description:"Warning this will delete all Notes,QPapers and syllabi having subject name that was entered",mainButtonTitle: "ok",secondaryButtonTitle: "no");
-    if (response==null || !response.confirmed){return false;}
+    log.e(
+        "Warning this will delete all Notes,QPapers and syllabi having subject name ${subjectName}");
+    SheetResponse response = await _bottomSheetService.showCustomSheet(
+        variant: BottomSheetType.filledStacks,
+        title: "Sure?",
+        description:
+            "Warning this will delete all Notes,QPapers and syllabi having subject name that was entered",
+        mainButtonTitle: "ok",
+        secondaryButtonTitle: "no");
+    if (response == null || !response.confirmed) {
+      return false;
+    }
 
     //Delete subject
     try {
-
       await deleteSubjectById(subjectId);
-      QuerySnapshot noteDocs     = await _subjectsCollectionReference.document(subjectId.toString()).collection(Constants.firebase_notes).getDocuments();
-      QuerySnapshot qPaperDocs   = await _subjectsCollectionReference.document(subjectId.toString()).collection(Constants.firebase_questionPapers).getDocuments();
-      QuerySnapshot syllabusDocs = await _subjectsCollectionReference.document(subjectId.toString()).collection(Constants.firebase_syllabus).getDocuments();
-      QuerySnapshot linksDocs    = await _subjectsCollectionReference.document(subjectId.toString()).collection(Constants.firebase_links).getDocuments();
-      
-      noteDocs.documents.forEach((DocumentSnapshot doc)     { doc.reference.delete(); });
-      qPaperDocs.documents.forEach((DocumentSnapshot doc)   { doc.reference.delete(); });
-      syllabusDocs.documents.forEach((DocumentSnapshot doc) { doc.reference.delete(); });
-      linksDocs.documents.forEach((DocumentSnapshot doc)    { doc.reference.delete(); });
+      QuerySnapshot noteDocs = await _subjectsCollectionReference
+          .document(subjectId.toString())
+          .collection(Constants.firebase_notes)
+          .getDocuments();
+      QuerySnapshot qPaperDocs = await _subjectsCollectionReference
+          .document(subjectId.toString())
+          .collection(Constants.firebase_questionPapers)
+          .getDocuments();
+      QuerySnapshot syllabusDocs = await _subjectsCollectionReference
+          .document(subjectId.toString())
+          .collection(Constants.firebase_syllabus)
+          .getDocuments();
+      QuerySnapshot linksDocs = await _subjectsCollectionReference
+          .document(subjectId.toString())
+          .collection(Constants.firebase_links)
+          .getDocuments();
+
+      noteDocs.documents.forEach((DocumentSnapshot doc) {
+        doc.reference.delete();
+      });
+      qPaperDocs.documents.forEach((DocumentSnapshot doc) {
+        doc.reference.delete();
+      });
+      syllabusDocs.documents.forEach((DocumentSnapshot doc) {
+        doc.reference.delete();
+      });
+      linksDocs.documents.forEach((DocumentSnapshot doc) {
+        doc.reference.delete();
+      });
 
       return true;
-    }catch (e) {
+    } catch (e) {
       log.e(e.toString());
+      return false;
     }
   }
 
-  deleteSubjectById(int id)async{
+  deleteSubjectById(int id) async {
     await _subjectsCollectionReference.document(id.toString()).delete();
   }
 
   addSubject(Subject subject) async {
     try {
-      await _subjectsCollectionReference.document(subject.id.toString()).setData(subject.toJson());
+      await _subjectsCollectionReference
+          .document(subject.id.toString())
+          .setData(subject.toJson());
     } catch (e) {
       log.e(e.toString());
     }
@@ -928,8 +977,9 @@ class FirestoreService {
   }
 
   Future<Subject> getSubjectByName(String subjectName) async {
-    QuerySnapshot docs = await _subjectsCollectionReference.where("name",isEqualTo:subjectName).getDocuments();
+    QuerySnapshot docs = await _subjectsCollectionReference
+        .where("name", isEqualTo: subjectName)
+        .getDocuments();
     return Subject.fromData(docs.documents[0].data);
   }
-  
 }

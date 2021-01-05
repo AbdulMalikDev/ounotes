@@ -28,14 +28,9 @@ class DrawerHeaderView extends StatelessWidget {
               //color: Colors.yellow,
               child: Row(
                 children: <Widget>[
-                  // Container(
-                  //   height: 30,
-                  //   width: 40,
-                  //   child: Image(
-                  //     image: AssetImage('assets/images/OU_Logo.jpg'),
-                  //   ),
-                  // ),
-                  SizedBox(width: 10,),
+                  SizedBox(
+                    width: 10,
+                  ),
                   Text(
                     'OU Notes',
                     textAlign: TextAlign.left,
@@ -47,13 +42,9 @@ class DrawerHeaderView extends StatelessWidget {
                 ],
               ),
             ),
-            //SizedBox(height: screenHeightWithoutSafeArea * 0.0125),
             Container(
-              //color: Colors.yellow,
-              //  alignment: Alignment.centerRight,
               height: App(context).appHeight(0.14),
               width: App(context).appWidth(0.3),
-              //padding: EdgeInsets.only(left: 20),
               child: ClipRect(
                 child: Align(
                   alignment: Alignment.topCenter,

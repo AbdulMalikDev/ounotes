@@ -115,7 +115,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   auto_route_generator: null
-
+  hive_generator: ^0.8.2
   build_runner: null
   flutter_launcher_icons: "^0.7.3"
   injectable_generator: null

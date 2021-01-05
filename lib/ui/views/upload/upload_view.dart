@@ -26,447 +26,353 @@ class UploadView extends StatefulWidget {
 
 class _UploadViewState extends State<UploadView> {
   final TextEditingController textFieldController1 = TextEditingController();
-
   final TextEditingController textFieldController2 = TextEditingController();
-
   final TextEditingController textFieldController3 = TextEditingController();
-
   final TextEditingController controllerOfSub = TextEditingController();
-
   final TextEditingController controllerOfYear = TextEditingController();
-
   final TextEditingController controllerOfYear2 = TextEditingController();
-
   final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<UploadViewModel>.reactive(
-        onModelReady: (model) {
-          model.initialise(widget.path);
-          if (widget.subjectName != null) {
-            controllerOfSub.text = widget.subjectName;
-          }
-        },
-        builder: (context, model, child) => Scaffold(
-              body: Container(
-                child: GestureDetector(
-                  onTap: () => FocusScope.of(context).unfocus(),
-                  child: Stack(
-                    children: <Widget>[
-                      Container(
-                        height: double.infinity,
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
-                            colors: [
-                              Color(0xFF73AEF5),
-                              Color(0xFF61A4F1),
-                              Color(0xFF478DE0),
-                              Color(0xFF398AE5),
-                            ],
-                            stops: [0.1, 0.4, 0.7, 0.9],
-                          ),
-                        ),
-                      ),
-                      model.isBusy
-                          ? Center(
-                              child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
+      onModelReady: (model) {
+        model.initialise(widget.path);
+        if (widget.subjectName != null) {
+          controllerOfSub.text = widget.subjectName;
+        }
+      },
+      builder: (context, model, child) => Scaffold(
+        body: Container(
+          child: GestureDetector(
+            onTap: () => FocusScope.of(context).unfocus(),
+            child: Stack(
+              children: <Widget>[
+                Container(
+                  height: double.infinity,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        Color(0xFF73AEF5),
+                        Color(0xFF61A4F1),
+                        Color(0xFF478DE0),
+                        Color(0xFF398AE5),
+                      ],
+                      stops: [0.1, 0.4, 0.7, 0.9],
+                    ),
+                  ),
+                ),
+                model.isBusy
+                    ? Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            CircularProgressIndicator(
+                              strokeWidth: 5,
+                              valueColor: AlwaysStoppedAnimation(Colors.white),
+                            ),
+                            SizedBox(
+                              height: 20,
+                            ),
+                            Column(
                               children: <Widget>[
-                                CircularProgressIndicator(
-                                  strokeWidth: 5,
-                                  valueColor:
-                                      AlwaysStoppedAnimation(Colors.white),
+                                Text(
+                                  "Please wait...",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 20,
+                                  ),
                                 ),
                                 SizedBox(
                                   height: 20,
                                 ),
-                                Column(
-                                  children: <Widget>[
-                                    Text(
-                                      "Please wait...",
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 20,
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: 20,
-                                    ),
-                                    Text(
-                                      "Large files may take some time...",
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 17,
-                                      ),
-                                    )
-                                  ],
+                                Text(
+                                  "Large files may take some time...",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 17,
+                                  ),
                                 )
                               ],
-                            ))
-                          : Form(
-                              key:this._formKey,
-                              child: Container(
-                                height: double.infinity,
-                                child: SingleChildScrollView(
-                                  physics: AlwaysScrollableScrollPhysics(),
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: 40.0,
-                                    vertical: 80.0,
-                                  ),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: <Widget>[
-                                      SizedBox(height: 30),
-                                      Text(
-                                        "UPLOAD ${model.document.toUpperCase()}",
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          letterSpacing: -0.03,
-                                          fontFamily: 'Montserrat',
-                                          fontSize: 30.0,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      SizedBox(height: 50.0),
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: <Widget>[
-                                          Text(
-                                            "Enter Subject Name",
-                                            style: Constants.kLabelStyle,
-                                          ),
-                                          SizedBox(height: 10.0),
-                                          Card(
-                                            color: Colors.transparent,
-                                            child: Container(
-                                              decoration:
-                                                  Constants.kBoxDecorationStyle,
-                                              height: 60,
-                                              child: TypeAheadFormField(
-                                                textFieldConfiguration:
-                                                    TextFieldConfiguration(
-                                                  controller: controllerOfSub,
-                                                  decoration: InputDecoration(
-                                                    border: InputBorder.none,
-                                                    contentPadding:
-                                                        EdgeInsets.only(
-                                                            top: 15.0),
-                                                    prefixIcon: Icon(
-                                                      Icons.arrow_forward_ios,
-                                                      color: Colors.blue,
-                                                    ),
-                                                    hintText:
-                                                        "Indian Constitution ...",
-                                                    hintStyle:
-                                                        Constants.kLabelStyle,
-                                                  ),
-                                                  style: TextStyle(
-                                                    color: Colors.black,
-                                                    letterSpacing: -0.03,
-                                                    fontFamily: 'Montserrat',
-                                                  ),
-                                                ),
-                                                suggestionsCallback: (pattern) {
-                                                  return model.getSuggestions(pattern) as List<String>;
-                                                  // return ["s"];
-                                                },
-                                                itemBuilder:
-                                                    (context, suggestion) {
-                                                  return ListTile(
-                                                    title: Text(
-                                                      suggestion,
-                                                      style: Theme.of(context)
-                                                          .textTheme
-                                                          .subtitle1
-                                                          .copyWith(
-                                                              fontSize: 15),
-                                                    ),
-                                                  );
-                                                },
-                                                transitionBuilder: (context,
-                                                    suggestionsBox,
-                                                    controller) {
-                                                  return suggestionsBox;
-                                                },
-                                                onSuggestionSelected:
-                                                    (suggestion) {
-                                                  this.controllerOfSub.text =
-                                                      suggestion;
-                                                },
-                                                errorBuilder:
-                                                    (BuildContext context,
-                                                            Object error) =>
-                                                        Text(
-                                                  '$error',
-                                                  style: TextStyle(
-                                                      color: Theme.of(context)
-                                                          .errorColor),
-                                                ),
-                                                validator: (value) {
-                                                  if (value.isEmpty) {
-                                                    return 'Please select a subjectname';
-                                                  } else if (value.length < 3 ||
-                                                      !model
-                                                          .getAllSubjectsList()
-                                                          .contains(value))
-                                                    return "Please enter a valid subject name";
-                                                  return null;
-                                                },
-                                              ),
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            height: 30,
-                                          ),
-                                        ],
-                                      ),
-                                      widget.textFieldsMap == Constants.Syllabus
-                                          ? Column(
-                                              children: <Widget>[
-                                                Center(
-                                                  child: Container(
-                                                    decoration: Constants
-                                                        .kBoxDecorationStyle,
-                                                    height: App(context)
-                                                        .appHeight(0.12),
-                                                    width: double.infinity,
-                                                    margin: const EdgeInsets
-                                                            .symmetric(
-                                                        vertical: 10),
-                                                    padding: const EdgeInsets
-                                                            .symmetric(
-                                                        vertical: 10),
-                                                    child: Column(
-                                                      children: <Widget>[
-                                                        Text(
-                                                          "Select Semester",
-                                                          style: TextStyle(
-                                                              color:
-                                                                  Colors.black,
-                                                              fontSize: 18),
-                                                        ),
-                                                        SizedBox(
-                                                          height: 3,
-                                                        ),
-                                                        Expanded(
-                                                          child: Container(
-                                                            child: DropdownButton(
-                                                                elevation: 15,
-                                                                iconEnabledColor:
-                                                                    Colors
-                                                                        .black,
-                                                                value:
-                                                                    model.sem,
-                                                                items: model
-                                                                    .dropdownofsem,
-                                                                onChanged: model
-                                                                    .changedDropDownItemOfSemester,
-                                                                style: TextStyle(
-                                                                    color: Colors
-                                                                        .black,
-                                                                    fontSize:
-                                                                        18),
-                                                                dropdownColor:
-                                                                    Colors
-                                                                        .white),
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ),
-                                                SizedBox(
-                                                  height: 20,
-                                                ),
-                                                Container(
-                                                  decoration: Constants
-                                                      .kBoxDecorationStyle,
-                                                  height: App(context)
-                                                      .appHeight(0.12),
-                                                  width: double.infinity,
-                                                  margin: const EdgeInsets
-                                                      .symmetric(vertical: 10),
-                                                  padding: const EdgeInsets
-                                                      .symmetric(vertical: 10),
-                                                  child: Column(
-                                                    children: <Widget>[
-                                                      Text(
-                                                        "Select Branch",
-                                                        style: TextStyle(
-                                                            color: Colors.black,
-                                                            fontSize: 18),
-                                                      ),
-                                                      SizedBox(
-                                                        height: 3,
-                                                      ),
-                                                      Expanded(
-                                                        child: Container(
-                                                          child: DropdownButton(
-                                                              iconEnabledColor:
-                                                                  Colors.black,
-                                                              focusColor: Colors
-                                                                  .transparent,
-                                                              value: model.br,
-                                                              items: model
-                                                                  .dropdownofbr,
-                                                              onChanged: model
-                                                                  .changedDropDownItemOfBranch,
-                                                              style: TextStyle(
-                                                                  color: Colors
-                                                                      .black,
-                                                                  fontSize: 18),
-                                                              dropdownColor:
-                                                                  Colors.white),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                                SizedBox(
-                                                  height: 30,
-                                                ),
-                                                buildYearWidget(
-                                                    model.typeofyear,
-                                                    model.dropdownofyear,
-                                                    model
-                                                        .changedDropDownItemOfYear),
-                                              ],
-                                            )
-                                          : widget.textFieldsMap ==
-                                                  Constants.QuestionPaper
-                                              ? Column(
-                                                  children: <Widget>[
-                                                    buildYearWidget(
-                                                        model.typeofyear,
-                                                        model.dropdownofyear,
-                                                        model
-                                                            .changedDropDownItemOfYear),
-                                                    SizedBox(
-                                                      height: 30.0,
-                                                    ),
-                                                    Container(
-                                                      decoration: Constants
-                                                          .kBoxDecorationStyle,
-                                                      height: App(context)
-                                                          .appHeight(0.12),
-                                                      width: double.infinity,
-                                                      margin: const EdgeInsets
-                                                              .symmetric(
-                                                          vertical: 10),
-                                                      padding: const EdgeInsets
-                                                              .symmetric(
-                                                          vertical: 10),
-                                                      child: Column(
-                                                        children: <Widget>[
-                                                          Text(
-                                                            "Select Branch",
-                                                            style: TextStyle(
-                                                                color: Colors
-                                                                    .black,
-                                                                fontSize: 18),
-                                                          ),
-                                                          SizedBox(
-                                                            height: 3,
-                                                          ),
-                                                          Expanded(
-                                                            child: Container(
-                                                              height: App(
-                                                                      context)
-                                                                  .appScreenHeightWithOutSafeArea(
-                                                                      0.085),
-                                                              child: DropdownButton(
-                                                                  iconEnabledColor:
-                                                                      Colors
-                                                                          .black,
-                                                                  focusColor: Colors
-                                                                      .transparent,
-                                                                  value:
-                                                                      model.br,
-                                                                  items: model
-                                                                      .dropdownofbr,
-                                                                  onChanged: model
-                                                                      .changedDropDownItemOfBranch,
-                                                                  style: TextStyle(
-                                                                      color: Colors
-                                                                          .black,
-                                                                      fontSize:
-                                                                          18),
-                                                                  dropdownColor:
-                                                                      Colors
-                                                                          .white),
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  ],
-                                                )
-                                              : Column(
-                                                  children: <Widget>[
-                                                    TextFieldView(
-                                                        heading: widget
-                                                                .textFieldsMap[
-                                                            "TextFieldHeading1"],
-                                                        labelText: widget
-                                                                .textFieldsMap[
-                                                            "TextFieldHeadingLabel1"],
-                                                        textFieldController:
-                                                            textFieldController1),
-                                                    SizedBox(
-                                                      height: 30.0,
-                                                    ),
-                                                    if (widget.textFieldsMap[
-                                                            "TextFieldHeading2"] !=
-                                                        null)
-                                                      TextFieldView(
-                                                          heading: widget
-                                                                  .textFieldsMap[
-                                                              "TextFieldHeading2"],
-                                                          labelText: widget
-                                                                  .textFieldsMap[
-                                                              "TextFieldHeadingLabel2"],
-                                                          textFieldController:
-                                                              textFieldController2),
-                                                    SizedBox(
-                                                      height: 30.0,
-                                                    ),
-                                                    if (widget.textFieldsMap[
-                                                            "TextFieldHeading3"] !=
-                                                        null)
-                                                      TextFieldView(
-                                                          heading: widget
-                                                                  .textFieldsMap[
-                                                              "TextFieldHeading3"],
-                                                          labelText: widget
-                                                                  .textFieldsMap[
-                                                              "TextFieldHeadingLabel3"],
-                                                          textFieldController:
-                                                              textFieldController3),
-                                                  ],
-                                                ),
-                                      SizedBox(
-                                        height: 20,
-                                      ),
-                                      uploadButtonWidget(model)
-                                    ],
+                            )
+                          ],
+                        ),
+                      )
+                    : Form(
+                        key: this._formKey,
+                        child: Container(
+                          height: double.infinity,
+                          child: SingleChildScrollView(
+                            physics: AlwaysScrollableScrollPhysics(),
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 40.0,
+                              vertical: 80.0,
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                SizedBox(height: 30),
+                                Text(
+                                  "UPLOAD ${model.document.toUpperCase()}",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    letterSpacing: -0.03,
+                                    fontFamily: 'Montserrat',
+                                    fontSize: 30.0,
+                                    fontWeight: FontWeight.bold,
                                   ),
                                 ),
-                              ),
-                            )
-                    ],
-                  ),
-                ),
-              ),
+                                SizedBox(height: 50.0),
+                                subjectNameField(model),
+                                widget.textFieldsMap == Constants.Syllabus
+                                    ? buildSyllabusEntries(model)
+                                    : widget.textFieldsMap ==
+                                            Constants.QuestionPaper
+                                        ? buildQuestionPaperEntries(model)
+                                        : buildLinkEntries(model),
+                                SizedBox(
+                                  height: 20,
+                                ),
+                                uploadButtonWidget(model)
+                              ],
+                            ),
+                          ),
+                        ),
+                      )
+              ],
             ),
-        viewModelBuilder: () => UploadViewModel());
+          ),
+        ),
+      ),
+      viewModelBuilder: () => UploadViewModel(),
+    );
   }
 
-  Widget subjectEntry(UploadViewModel model) {}
+  Widget subjectNameField(UploadViewModel model) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text(
+          "Enter Subject Name",
+          style: Constants.kLabelStyle,
+        ),
+        SizedBox(height: 10.0),
+        Card(
+          color: Colors.transparent,
+          child: Container(
+            decoration: Constants.kBoxDecorationStyle,
+            height: 60,
+            child: TypeAheadFormField(
+              textFieldConfiguration: TextFieldConfiguration(
+                controller: controllerOfSub,
+                decoration: InputDecoration(
+                  border: InputBorder.none,
+                  contentPadding: EdgeInsets.only(top: 15.0),
+                  prefixIcon: Icon(
+                    Icons.arrow_forward_ios,
+                    color: Colors.blue,
+                  ),
+                  hintText: "Indian Constitution ...",
+                  hintStyle: Constants.kLabelStyle,
+                ),
+                style: TextStyle(
+                  color: Colors.black,
+                  letterSpacing: -0.03,
+                  fontFamily: 'Montserrat',
+                ),
+              ),
+              suggestionsCallback: (pattern) {
+                return model.getSuggestions(pattern);
+                // return ["s"];
+              },
+              itemBuilder: (context, suggestion) {
+                return ListTile(
+                  title: Text(
+                    suggestion,
+                    style: Theme.of(context)
+                        .textTheme
+                        .subtitle1
+                        .copyWith(fontSize: 15),
+                  ),
+                );
+              },
+              transitionBuilder: (context, suggestionsBox, controller) {
+                return suggestionsBox;
+              },
+              onSuggestionSelected: (suggestion) {
+                this.controllerOfSub.text = suggestion;
+              },
+              errorBuilder: (BuildContext context, Object error) => Text(
+                '$error',
+                style: TextStyle(color: Theme.of(context).errorColor),
+              ),
+              validator: (value) {
+                if (value.isEmpty) {
+                  return 'Please select a subjectname';
+                } else if (value.length < 3 ||
+                    !model.getAllSubjectsList().contains(value))
+                  return "Please enter a valid subject name";
+                return null;
+              },
+            ),
+          ),
+        ),
+        SizedBox(
+          height: 30,
+        ),
+      ],
+    );
+  }
+
+  Widget buildSyllabusEntries(UploadViewModel model) {
+    return Column(
+      children: <Widget>[
+        Center(
+          child: Container(
+            decoration: Constants.kBoxDecorationStyle,
+            height: App(context).appHeight(0.12),
+            width: double.infinity,
+            margin: const EdgeInsets.symmetric(vertical: 10),
+            padding: const EdgeInsets.symmetric(vertical: 10),
+            child: Column(
+              children: <Widget>[
+                Text(
+                  "Select Semester",
+                  style: TextStyle(color: Colors.black, fontSize: 18),
+                ),
+                SizedBox(
+                  height: 3,
+                ),
+                Expanded(
+                  child: Container(
+                    child: DropdownButton(
+                        elevation: 15,
+                        iconEnabledColor: Colors.black,
+                        value: model.sem,
+                        items: model.dropdownofsem,
+                        onChanged: model.changedDropDownItemOfSemester,
+                        style: TextStyle(color: Colors.black, fontSize: 18),
+                        dropdownColor: Colors.white),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        SizedBox(
+          height: 20,
+        ),
+        Container(
+          decoration: Constants.kBoxDecorationStyle,
+          height: App(context).appHeight(0.12),
+          width: double.infinity,
+          margin: const EdgeInsets.symmetric(vertical: 10),
+          padding: const EdgeInsets.symmetric(vertical: 10),
+          child: Column(
+            children: <Widget>[
+              Text(
+                "Select Branch",
+                style: TextStyle(color: Colors.black, fontSize: 18),
+              ),
+              SizedBox(
+                height: 3,
+              ),
+              Expanded(
+                child: Container(
+                  child: DropdownButton(
+                      iconEnabledColor: Colors.black,
+                      focusColor: Colors.transparent,
+                      value: model.br,
+                      items: model.dropdownofbr,
+                      onChanged: model.changedDropDownItemOfBranch,
+                      style: TextStyle(color: Colors.black, fontSize: 18),
+                      dropdownColor: Colors.white),
+                ),
+              ),
+            ],
+          ),
+        ),
+        SizedBox(
+          height: 30,
+        ),
+        buildYearWidget(model.typeofyear, model.dropdownofyear,
+            model.changedDropDownItemOfYear),
+      ],
+    );
+  }
+
+  Widget buildQuestionPaperEntries(UploadViewModel model) {
+    return Column(
+      children: <Widget>[
+        buildYearWidget(model.typeofyear, model.dropdownofyear,
+            model.changedDropDownItemOfYear),
+        SizedBox(
+          height: 30.0,
+        ),
+        Container(
+          decoration: Constants.kBoxDecorationStyle,
+          height: App(context).appHeight(0.12),
+          width: double.infinity,
+          margin: const EdgeInsets.symmetric(vertical: 10),
+          padding: const EdgeInsets.symmetric(vertical: 10),
+          child: Column(
+            children: <Widget>[
+              Text(
+                "Select Branch",
+                style: TextStyle(color: Colors.black, fontSize: 18),
+              ),
+              SizedBox(
+                height: 3,
+              ),
+              Expanded(
+                child: Container(
+                  height: App(context).appScreenHeightWithOutSafeArea(0.085),
+                  child: DropdownButton(
+                      iconEnabledColor: Colors.black,
+                      focusColor: Colors.transparent,
+                      value: model.br,
+                      items: model.dropdownofbr,
+                      onChanged: model.changedDropDownItemOfBranch,
+                      style: TextStyle(color: Colors.black, fontSize: 18),
+                      dropdownColor: Colors.white),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget buildLinkEntries(UploadViewModel model) {
+    return Column(
+      children: <Widget>[
+        TextFieldView(
+            heading: widget.textFieldsMap["TextFieldHeading1"],
+            labelText: widget.textFieldsMap["TextFieldHeadingLabel1"],
+            textFieldController: textFieldController1),
+        SizedBox(
+          height: 30.0,
+        ),
+        if (widget.textFieldsMap["TextFieldHeading2"] != null)
+          TextFieldView(
+              heading: widget.textFieldsMap["TextFieldHeading2"],
+              labelText: widget.textFieldsMap["TextFieldHeadingLabel2"],
+              textFieldController: textFieldController2),
+        SizedBox(
+          height: 30.0,
+        ),
+        if (widget.textFieldsMap["TextFieldHeading3"] != null)
+          TextFieldView(
+              heading: widget.textFieldsMap["TextFieldHeading3"],
+              labelText: widget.textFieldsMap["TextFieldHeadingLabel3"],
+              textFieldController: textFieldController3),
+      ],
+    );
+  }
 
   Widget uploadButtonWidget(UploadViewModel model) {
     return Column(children: [
@@ -543,7 +449,6 @@ class _UploadViewState extends State<UploadView> {
       SizedBox(
         height: 10,
       ),
-      // if (!widget.swipe)
       SaveButtonView(
         onTap: () async {
           if (!_formKey.currentState.validate()) {

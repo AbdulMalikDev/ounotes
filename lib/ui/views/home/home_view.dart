@@ -1,12 +1,6 @@
-import 'package:FSOUNotes/app/locator.dart';
 import 'package:FSOUNotes/app/logger.dart';
 import 'package:FSOUNotes/enums/enums.dart';
-import 'package:FSOUNotes/misc/course_info.dart';
 import 'package:FSOUNotes/misc/helper.dart';
-import 'package:FSOUNotes/models/subject.dart';
-import 'package:FSOUNotes/services/funtional_services/authentication_service.dart';
-import 'package:FSOUNotes/services/funtional_services/firestore_service.dart';
-import 'package:FSOUNotes/services/funtional_services/google_drive_service.dart';
 import 'package:FSOUNotes/services/funtional_services/onboarding_service.dart';
 import 'package:FSOUNotes/ui/views/home/home_viewmodel.dart';
 import 'package:FSOUNotes/ui/views/search/search_view.dart';
@@ -16,11 +10,11 @@ import 'package:FSOUNotes/ui/widgets/smart_widgets/subjects_dialog/subjects_dial
 import 'package:FSOUNotes/ui/widgets/smart_widgets/user_subject_list/user_subject_list_view.dart';
 import 'package:feature_discovery/feature_discovery.dart';
 import 'package:flutter/material.dart';
-import 'package:googleapis/drive/v3.dart' as ga;
 import 'package:logger/logger.dart';
 import 'package:pimp_my_button/pimp_my_button.dart';
 import 'package:rate_my_app/rate_my_app.dart';
 import 'package:stacked/stacked.dart';
+
 Logger log = getLogger("HomeView");
 
 class HomeView extends StatelessWidget {
@@ -38,6 +32,7 @@ class HomeView extends StatelessWidget {
         model.showRateMyAppDialog(context);
         model.updateDialog(shouldShowUpdateDialog, versionDetails);
         model.showIntroDialog(context);
+        model.showTelgramDialog(context);
       },
       builder: (context, model, child) => WillPopScope(
         onWillPop: () => Helper.showWillPopDialog(context: context),
@@ -132,9 +127,7 @@ class HomeView extends StatelessWidget {
               ),
             ),
           ),
-          onInitialized: (context, rateMyApp) {
-            
-          },
+          onInitialized: (context, rateMyApp) {},
         ),
       ),
       viewModelBuilder: () => HomeViewModel(),
@@ -149,10 +142,10 @@ class HomeView extends StatelessWidget {
   //   CourseInfo.aallsubjects.forEach((sub)=>ids.add(sub.id));
   //   for(int i=1 ; i<=378 ; i++){
   //     if(ids.contains(i)){
-  //       Subject mainSub = CourseInfo.aallsubjects.firstWhere((sub)=>sub.id==i,orElse: ()=>null); 
+  //       Subject mainSub = CourseInfo.aallsubjects.firstWhere((sub)=>sub.id==i,orElse: ()=>null);
   //       if(mainSub!=null)mainSubs.add(mainSub);
   //     }else{
-  //       Subject commentedOutSub = CourseInfo.allOldSubjects.firstWhere((sub)=>sub.id==i,orElse: ()=>null); 
+  //       Subject commentedOutSub = CourseInfo.allOldSubjects.firstWhere((sub)=>sub.id==i,orElse: ()=>null);
   //       if(commentedOutSub!=null)commentedOut.add(commentedOutSub);
   //     }
   //   }
@@ -169,7 +162,7 @@ class HomeView extends StatelessWidget {
   // print("Main Subjects : " + mainNames.length.toString());
   // print("\n");
   // print("Commented Out Subjects : " + commentedOut.length.toString());
-  // List<Subject> duplicateSubject = []; 
+  // List<Subject> duplicateSubject = [];
   // commentedOutNames.forEach((commentedOutName){
   //   bool dupExist = mainNames.contains(commentedOutName);
   //   if(dupExist){
@@ -182,12 +175,12 @@ class HomeView extends StatelessWidget {
   // print("Duplicate Subjects : " + duplicateSubject.length.toString());
   // List<String> duplicateSubjectNames = duplicateSubject.map((e) => e.name).toList();
   // print(duplicateSubjectNames);
-  // //Duplicate subjects already handled so need of any deletion, 
+  // //Duplicate subjects already handled so need of any deletion,
   // //only need of new subject upload + delete of useless ones
   // //* There are 378 subjects
   // try {
   //   for( int i=1 ; i<379 ; i++){
-      
+
   //     // There is a subject linked to each number
   //     // It is either to be deleted or updated
   //     if(ids.contains(i)){
@@ -216,7 +209,7 @@ class HomeView extends StatelessWidget {
   //     }
   //   }
   // }catch (e) {
-  //         print(e.toString());                  
+  //         print(e.toString());
   // }
 
   // void _deleteExistenceOfSubject(String subjectName,FirestoreService _firestore,int id) async {
@@ -445,26 +438,26 @@ class HomeView extends StatelessWidget {
 //    var AuthHeaders = await _authenticationService.refreshSignInCredentials();
 //    var client = GoogleHttpClient(AuthHeaders);
 //    var drive = ga.DriveApi(client);
-  //
-  //  ga.File fileMetadata = ga.File();
-  // fileMetadata.name = "ounotes";
-  // fileMetadata.mimeType = "application/vnd.google-apps.folder";
-  // var responsed = await drive.files.create(fileMetadata);
-  // print("response file id: ${responsed.id}");
+//
+//  ga.File fileMetadata = ga.File();
+// fileMetadata.name = "ounotes";
+// fileMetadata.mimeType = "application/vnd.google-apps.folder";
+// var responsed = await drive.files.create(fileMetadata);
+// print("response file id: ${responsed.id}");
 
-  // ga.File fileMetadataq = ga.File();
-  // fileMetadataq.name = "something";
-  // fileMetadataq.mimeType = "application/vnd.google-apps.folder";
-  // fileMetadataq.parents = ["${responsed.id}"];
-  // var responsedq = await drive.files.create(fileMetadata);
-  // print("response file id: ${responsedq.id}");
+// ga.File fileMetadataq = ga.File();
+// fileMetadataq.name = "something";
+// fileMetadataq.mimeType = "application/vnd.google-apps.folder";
+// fileMetadataq.parents = ["${responsed.id}"];
+// var responsedq = await drive.files.create(fileMetadata);
+// print("response file id: ${responsedq.id}");
 // // print("s");
-  // var PDF_FOLDER = await drive.files.create(
-  //                 ga.File()
-  //                   ..name = "PDFs_NEW"
-  //                 // Optional if you want to create subfolder
-  //                   ..mimeType = 'application/vnd.google-apps.folder',  // this defines its folder
-  //               );
+// var PDF_FOLDER = await drive.files.create(
+//                 ga.File()
+//                   ..name = "PDFs_NEW"
+//                 // Optional if you want to create subfolder
+//                   ..mimeType = 'application/vnd.google-apps.folder',  // this defines its folder
+//               );
 //   print("Getting all subjects....");
 //   List<Subject> allSubjects = model.allSubjects.value;
 //   allSubjects.sort((a,b)=>a.name.compareTo(b.name));
@@ -541,15 +534,15 @@ class HomeView extends StatelessWidget {
 //                   await localFile.writeAsBytes(dataStore);
 //                   print("Task Done");
 
-      //file downloaded
+//file downloaded
 //    //TODO STEP 2 UPLOAD IT ON GOOGLE DRIVE
-      //Make new GDrive file
+//Make new GDrive file
 //       ga.File fileToUpload = ga.File();
-      //Add new contents
+//Add new contents
 //       fileToUpload.name = note.title;
 //       fileToUpload.copyRequiresWriterPermission = true;
 //       fileToUpload.parents = [subject.gdriveNotesFolderID];
-      //upload to drive
+//upload to drive
 //       var response;
 //       try {
 //           response = await drive.files.create(

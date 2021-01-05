@@ -1,11 +1,7 @@
-import 'dart:io';
 
-import 'package:FSOUNotes/app/locator.dart';
-import 'package:FSOUNotes/enums/bottom_sheet_type.dart';
 import 'package:FSOUNotes/ui/views/pdf/Add_bookmarks/add_bookMarks_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:stacked_services/stacked_services.dart';
 
 /// PDF Viewer import
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
@@ -29,7 +25,6 @@ class _PDFScreenState extends State<PDFScreen> {
   final GlobalKey<SfPdfViewerState> _pdfViewerKey = GlobalKey();
   final PdfViewerController _pdfViewerController = PdfViewerController();
   final GlobalKey<SearchToolbarState> _textSearchKey = GlobalKey();
-  BottomSheetService _bottomSheetService = locator<BottomSheetService>();
   bool _showPdf;
   bool _showToolbar;
   bool _showToast;
@@ -39,19 +34,17 @@ class _PDFScreenState extends State<PDFScreen> {
   Color _copyColor;
   double _contextMenuWidth;
   double _contextMenuHeight;
-  bool _askBookMarks;
 
   @override
   void initState() {
     super.initState();
-    _documentPath = 'assets/pdf/gis_succinctly.pdf';
+   // _documentPath = 'assets/pdf/gis_succinctly.pdf';
     _showPdf = false;
     _showToolbar = true;
     _showToast = false;
     _showScrollHead = true;
     _contextMenuHeight = 48;
     _contextMenuWidth = 100;
-    _askBookMarks = widget.askBookMarks;
 
     if (widget.askBookMarks) {
       showBottomSeetForBookMarks(true);

@@ -338,15 +338,6 @@ class UploadViewModel extends BaseViewModel {
             msg: "An error occurred...please try again later");
       } else if (result == "upload successful") {
         setBusy(false);
-        // Fluttertoast.showToast(
-        //     msg: "Document Uploaded ! Thank you !",
-        //     toastLength: Toast.LENGTH_SHORT,
-        //     gravity: ToastGravity.CENTER,
-        //     timeInSecForIosWeb: 1,
-        //     backgroundColor: Colors.greenAccent,
-        //     textColor: Colors.black,
-        //     fontSize: 16.0);
-
         showDialog(
             context: context,
             builder: (BuildContext context) {
@@ -402,8 +393,6 @@ class UploadViewModel extends BaseViewModel {
                 ],
               );
             });
-        // Future.delayed(Duration(seconds: 2)).then((value) => _navigationService
-        //     .popUntil((route) => route.settings.name == Routes.homeViewRoute));
       } else if (result == 'file is not pdf') {
         await showDialog(
             context: context,
@@ -488,7 +477,6 @@ class UploadViewModel extends BaseViewModel {
             });
         setBusy(false);
       }
-      setBusy(false);
     } else {
       Link link = doc;
       bool isValidURL = Uri.parse(link.linkUrl).isAbsolute;

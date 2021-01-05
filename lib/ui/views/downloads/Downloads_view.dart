@@ -1,10 +1,12 @@
+import 'package:FSOUNotes/AppTheme/AppStateNotifier.dart';
+import 'package:FSOUNotes/enums/constants.dart';
+import 'package:FSOUNotes/models/download.dart';
 import 'package:FSOUNotes/ui/shared/app_config.dart';
 import 'package:FSOUNotes/ui/views/downloads/Downloads_viewmodel.dart';
-import 'package:FSOUNotes/ui/views/downloads/QuestionPapers/Downloadedqp_view.dart';
-import 'package:FSOUNotes/ui/views/downloads/Syllabus/Downloadedsyllabus_view.dart';
-import 'package:FSOUNotes/ui/views/downloads/notes/Downloadednotes_view.dart';
-import 'package:FSOUNotes/ui/widgets/dumb_widgets/progress.dart';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
 import 'package:stacked/stacked.dart';
 
@@ -15,86 +17,68 @@ class DownLoadView extends StatefulWidget {
   _DownLoadViewState createState() => _DownLoadViewState();
 }
 
-class _DownLoadViewState extends State<DownLoadView>
-    with SingleTickerProviderStateMixin, WidgetsBindingObserver {
-  TabController _tabController;
-
-  @override
-  void initState() {
-    super.initState();
-    _tabController = new TabController(vsync: this, length: 3);
-  }
-
-  @override
-  void dispose() {
-    _tabController.dispose();
-    super.dispose();
-  }
-
+class _DownLoadViewState extends State<DownLoadView> {
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<DownLoadViewModel>.reactive(
-      onModelReady: (model) => model.fetchListOfDownloads(),
-      builder: (context, model, child) => DefaultTabController(
-        length: 3,
-        child: Scaffold(
-          appBar: AppBar(
-            iconTheme: IconThemeData(color: Colors.white),
-            title: Text('My Downloads',
-                style: Theme.of(context).appBarTheme.textTheme.headline6),
-            leading: IconButton(
-              icon: Icon(
-                Icons.arrow_back,
-              ),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
+      builder: (context, model, child) => Scaffold(
+        appBar: AppBar(
+          iconTheme: IconThemeData(color: Colors.white),
+          title: Text('My Downloads',
+              style: Theme.of(context).appBarTheme.textTheme.headline6),
+          leading: IconButton(
+            icon: Icon(
+              Icons.arrow_back,
             ),
-            bottom: TabBar(
-              isScrollable: true,
-              controller: _tabController,
-              indicatorColor: Theme.of(context).accentColor,
-              labelColor: Colors.amber,
-              unselectedLabelColor: Colors.white,
-              tabs: <Widget>[
-                Tab(
-                  text: "NOTES",
-                  icon: Icon(Icons.description),
-                ),
-                Tab(
-                  text: "Question Papers",
-                  icon: Icon(Icons.note),
-                ),
-                Tab(
-                  text: "Syllabus",
-                  icon: Icon(Icons.event_note),
-                ),
-              ],
-            ),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
           ),
-          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-          body: model.isBusy
-              ? circularProgress()
-              : model.downloadList.length == 0
-                  ? TabBarView(
-                      controller: _tabController,
-                      children: <Widget>[
-                        noDownloadsOverlay(context),
-                        noDownloadsOverlay(context),
-                        noDownloadsOverlay(context),
-                      ],
-                    )
-                  : TabBarView(
-                      controller: _tabController,
-                      children: <Widget>[
-                        DownloadedNotesView(),
-                        DownloadedQuestionPaperView(),
-                        DownloadedSyllabusView(),
-                      ],
-                    ),
         ),
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        body: buildDownloadList(model),
       ),
       viewModelBuilder: () => DownLoadViewModel(),
+    );
+  }
+
+  Widget buildDownloadList(DownLoadViewModel model) {
+    return ValueListenableBuilder(
+      valueListenable: Hive.box('downloads').listenable(),
+      builder: (context, donwloadsBox, widget) {
+        return ListView.builder(
+          itemCount: donwloadsBox.length,
+          itemBuilder: (context, index) {
+            final download = donwloadsBox.getAt(index) as Download;
+            return GestureDetector(
+              onTap: () {
+                model.navigateToPDFScreen(download);
+              },
+              child: FractionallySizedBox(
+                widthFactor: 0.99,
+                child: Container(
+                  margin: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                  decoration: AppStateNotifier.isDarkModeOn
+                      ? Constants.mdecoration.copyWith(
+                          color: Theme.of(context).colorScheme.background,
+                          boxShadow: [],
+                        )
+                      : Constants.mdecoration.copyWith(
+                          color: Theme.of(context).colorScheme.background,
+                        ),
+                  child: DownloadListTile(
+                    download: download,
+                    index: index,
+                    onDeletePressed: () {
+                      model.deleteDownload(index, download.path);
+                    },
+                  ),
+                ),
+              ),
+            );
+          },
+        );
+      },
     );
   }
 }
@@ -107,8 +91,8 @@ Widget noDownloadsOverlay(BuildContext context) {
         child: Lottie.asset('assets/lottie/learn.json'),
       ),
       Positioned(
-        top: App(context).appHeight(0.52),
-        left: 50,
+        top: App(context).appHeight(0.55),
+        left: 60,
         right: 50,
         child: Text(
           "Your downloads will appear here",
@@ -117,4 +101,178 @@ Widget noDownloadsOverlay(BuildContext context) {
       ),
     ],
   );
+}
+
+class DownloadListTile extends StatelessWidget {
+  final Download download;
+  final int index;
+  final Function onDeletePressed;
+
+  const DownloadListTile(
+      {Key key, this.download, this.index, this.onDeletePressed})
+      : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    final primary = Theme.of(context).colorScheme.onPrimary;
+    final secondary = Theme.of(context).colorScheme.secondary;
+    final String title =
+        download.title != null ? download.title.toUpperCase() : "title";
+    final String author =
+        download.author != null ? download.author.toUpperCase() : "author";
+    final date = download.uploadDate;
+    var format = new DateFormat("dd/MM/yy");
+    var dateString = format.format(date);
+    final int view = download.view;
+    final String size = download.size.toString();
+    var theme = Theme.of(context);
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: <Widget>[
+        FittedBox(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              IconButton(
+                padding: EdgeInsets.zero,
+                icon: Icon(
+                  Icons.delete,
+                  size: 30,
+                  color: theme.primaryColor,
+                ),
+                onPressed: onDeletePressed,
+              ),
+              SizedBox(
+                width: 10,
+              ),
+              Column(
+                children: <Widget>[
+                  Container(
+                    margin: EdgeInsets.only(right: 25),
+                    height: App(context).appScreenHeightWithOutSafeArea(0.11),
+                    width: App(context).appScreenWidthWithOutSafeArea(0.2),
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: AssetImage(
+                          'assets/images/pdf.png',
+                        ),
+                        // colorFilter: ColorFilter.mode(
+                        //     Colors.black.withOpacity(0.1), BlendMode.dstATop),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: 10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: <Widget>[
+                        Container(
+                          child: Row(
+                            children: <Widget>[
+                              Container(
+                                constraints: BoxConstraints(maxWidth: 180),
+                                child: Text(
+                                  title,
+                                  overflow: TextOverflow.clip,
+                                  style: TextStyle(
+                                      color: primary,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18),
+                                ),
+                              ),
+                              SizedBox(
+                                width: 10,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 6,
+                    ),
+                    Row(
+                      children: <Widget>[
+                        Icon(
+                          Icons.person,
+                          color: secondary,
+                          size: 20,
+                        ),
+                        SizedBox(
+                          width: 5,
+                        ),
+                        Text("Author :$author",
+                            style: TextStyle(
+                                color: primary,
+                                fontSize: 13,
+                                letterSpacing: .3)),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 6,
+                    ),
+                    Row(
+                      children: <Widget>[
+                        Icon(
+                          Icons.calendar_today,
+                          color: secondary,
+                          size: 20,
+                        ),
+                        SizedBox(
+                          width: 5,
+                        ),
+                        Text("Upload Date :$dateString",
+                            style: TextStyle(
+                                color: primary,
+                                fontSize: 13,
+                                letterSpacing: .3)),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 6,
+                    ),
+                    Row(
+                      children: <Widget>[
+                        Icon(
+                          Icons.remove_red_eye,
+                          color: secondary,
+                          size: 20,
+                        ),
+                        SizedBox(
+                          width: 5,
+                        ),
+                        Text(
+                          view.toString(),
+                          style: TextStyle(
+                              color: primary, fontSize: 13, letterSpacing: .3),
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Text(
+                          size,
+                          style: TextStyle(
+                              color: primary, fontSize: 13, letterSpacing: .3),
+                        ),
+                        SizedBox(
+                          width: 15,
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
 }

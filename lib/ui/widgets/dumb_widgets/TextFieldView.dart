@@ -1,6 +1,5 @@
 import 'package:FSOUNotes/misc/constants.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
 
 class TextFieldView extends StatelessWidget {
   final String heading;

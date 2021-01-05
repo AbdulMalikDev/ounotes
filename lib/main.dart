@@ -1,7 +1,5 @@
-
 import 'package:FSOUNotes/AppTheme/AppStateNotifier.dart';
 import 'package:FSOUNotes/AppTheme/AppTheme.dart';
-import 'package:FSOUNotes/models/subject.dart';
 import 'package:FSOUNotes/services/funtional_services/remote_config_service.dart';
 import 'package:FSOUNotes/services/funtional_services/crashlytics_service.dart';
 import 'package:FSOUNotes/ui/widgets/smart_widgets/bottom_sheet/bottom_sheet_ui_view.dart';
@@ -23,6 +21,8 @@ import 'app/logger.dart';
 import 'app/router.gr.dart' as router;
 import 'package:sentry/sentry.dart';
 
+import 'models/download.dart';
+
 Logger log = getLogger("main");
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -34,13 +34,15 @@ void main() async {
   final appDir = await getApplicationDocumentsDirectory();
   Hive.init(appDir.path);
   await Hive.openBox("OUNOTES");
+  Hive.registerAdapter(DownloadAdapter());
   RemoteConfigService _remoteConfigService = locator<RemoteConfigService>();
   CrashlyticsService _crashlyticsService = locator<CrashlyticsService>();
   await _remoteConfigService.init();
   //Sentry provides crash reporting
   _crashlyticsService.sentryClient = SentryClient(
       dsn: _remoteConfigService.remoteConfig.getString('SentryKey'));
-  OneSignal.shared.setNotificationOpenedHandler((OSNotificationOpenedResult result) {});
+  OneSignal.shared
+      .setNotificationOpenedHandler((OSNotificationOpenedResult result) {});
   OneSignal.shared
       .init(_remoteConfigService.remoteConfig.getString('ONESIGNAL_KEY'));
   OneSignal.shared
@@ -55,17 +57,17 @@ void main() async {
   //     stackTrace: details.stack,
   //   );
   // };
-    runApp(MyApp());
-    // runZonedGuarded(
-    //   () => runApp(MyApp()),
-    //   (error, stackTrace) async {
-    //     await _crashlyticsService.sentryClient.captureException(
-    //       exception: error,
-    //       stackTrace: stackTrace,
-    //     );
-    //   },
-    // );
-  }
+  runApp(MyApp());
+  // runZonedGuarded(
+  //   () => runApp(MyApp()),
+  //   (error, stackTrace) async {
+  //     await _crashlyticsService.sentryClient.captureException(
+  //       exception: error,
+  //       stackTrace: stackTrace,
+  //     );
+  //   },
+  // );
+}
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application

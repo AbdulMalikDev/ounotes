@@ -1,5 +1,4 @@
 import 'package:FSOUNotes/enums/enums.dart';
-import 'package:FSOUNotes/ui/shared/app_config.dart';
 import 'package:FSOUNotes/ui/views/FilterDocuments/FD_DocumentDisplay/fd_documentviewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';

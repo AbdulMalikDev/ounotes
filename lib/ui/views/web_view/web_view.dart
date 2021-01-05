@@ -29,8 +29,6 @@ class _WebViewWidgetState extends State<WebViewWidget> {
   // Instance of WebView plugin
   final flutterWebViewPlugin = FlutterWebviewPlugin();
 
-  // On destroy stream
-  StreamSubscription _onDestroy;
 
   // On urlChanged stream
   StreamSubscription<String> _onUrlChanged;

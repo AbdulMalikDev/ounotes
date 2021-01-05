@@ -140,12 +140,6 @@ class QuestionPaper extends AbstractDocument{
     this.path = path;
   }
 
-  DateTime _parseUploadDate(date)
-  {
-    
-      return DateTime.parse(date.toDate().toString());
-  }
-
    @override
   set setTitle(String value){this.title = value;}
 

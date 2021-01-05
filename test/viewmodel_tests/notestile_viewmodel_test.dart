@@ -1,5 +1,4 @@
-import 'package:FSOUNotes/ui/views/notes/notes_viewmodel.dart';
-import 'package:FSOUNotes/ui/widgets/smart_widgets/notes_tile/notes_tile_viewmodel.dart';
+
 import 'package:flutter_test/flutter_test.dart';
 
 import '../setup/test_helpers.dart';

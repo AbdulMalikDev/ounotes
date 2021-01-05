@@ -1,4 +1,5 @@
 import 'package:FSOUNotes/services/funtional_services/onboarding_service.dart';
+import 'package:FSOUNotes/ui/shared/app_config.dart';
 import 'package:FSOUNotes/ui/views/all_documents/all_documents_viewmodel.dart';
 import 'package:FSOUNotes/ui/views/links/links_view.dart';
 import 'package:FSOUNotes/ui/views/notes/notes_view.dart';
@@ -14,7 +15,8 @@ class AllDocumentsView extends StatefulWidget {
   final String subjectName;
   final String path;
   final String newDocIDUploaded;
-  AllDocumentsView({@required this.subjectName, this.path,this.newDocIDUploaded});
+  AllDocumentsView(
+      {@required this.subjectName, this.path, this.newDocIDUploaded});
   @override
   _AllDocumentsViewState createState() => _AllDocumentsViewState();
 }
@@ -25,8 +27,7 @@ class _AllDocumentsViewState extends State<AllDocumentsView>
   Intro intro;
   List<String> uploadPromptInfo;
   _AllDocumentsViewState() {
-    if(OnboardingService.getNumberOfTimesDocumentViewOpened() % 10 == 0)
-    {
+    if (OnboardingService.getNumberOfTimesDocumentViewOpened() % 10 == 0) {
       uploadPromptInfo = OnboardingService.getUploadPrompt();
       print(uploadPromptInfo[0]);
       intro = Intro(
@@ -57,7 +58,7 @@ class _AllDocumentsViewState extends State<AllDocumentsView>
               length: 4,
               child: WillPopScope(
                 onWillPop: () async {
-                  if(intro!=null)intro.dispose();
+                  if (intro != null) intro.dispose();
                   return true;
                 },
                 child: Scaffold(
@@ -87,22 +88,48 @@ class _AllDocumentsViewState extends State<AllDocumentsView>
                           ),
                           title: RichText(
                             text: TextSpan(
-                              text: ' Resources',
+                              text: model
+                                  .getSubjectNameAcronym(widget.subjectName),
                               style: Theme.of(context)
                                   .textTheme
                                   .subtitle1
                                   .copyWith(
                                     color: Colors.white,
-                                    fontSize: 16,
+                                    fontSize: 15,
                                     fontWeight: FontWeight.bold,
                                   ),
                             ),
                           ),
                           actions: <Widget>[
                             Container(
-                              margin: EdgeInsets.all(10),
+                              width: App(context).appWidth(0.24),
+                              margin: EdgeInsets.symmetric(
+                                  horizontal: 5, vertical: 10),
                               child: RaisedButton(
-                                key: intro==null?null:intro.keys[0],
+                                color: Colors.amber,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20)),
+                                child: FittedBox(
+                                  child: Text(
+                                    "Downloads",
+                                    style: TextStyle(
+                                      color: Colors.red,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                ),
+                                onPressed: () {
+                                  model.navigateToDownloadScreen();
+                                },
+                              ),
+                            ),
+                            Container(
+                              margin: EdgeInsets.symmetric(
+                                  horizontal: 5, vertical: 10),
+                              width: App(context).appWidth(0.3),
+                              child: RaisedButton(
+                                key: intro == null ? null : intro.keys[0],
                                 color: Colors.amber,
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(20)),
@@ -124,7 +151,7 @@ class _AllDocumentsViewState extends State<AllDocumentsView>
                                   model.onUploadButtonPressed();
                                 },
                               ),
-                            )
+                            ),
                           ],
                           leading: IconButton(
                             icon: Icon(

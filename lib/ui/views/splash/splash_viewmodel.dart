@@ -1,17 +1,12 @@
 import 'package:FSOUNotes/app/locator.dart';
 import 'package:FSOUNotes/app/logger.dart';
 import 'package:FSOUNotes/app/router.gr.dart';
-import 'package:FSOUNotes/app/router.dart';
-import 'package:FSOUNotes/enums/bottom_sheet_type.dart';
-import 'package:FSOUNotes/services/funtional_services/analytics_service.dart';
 import 'package:FSOUNotes/services/funtional_services/app_info_service.dart';
-import 'package:FSOUNotes/services/funtional_services/authentication_service.dart';
 import 'package:FSOUNotes/services/funtional_services/push_notification_service.dart';
 import 'package:FSOUNotes/services/funtional_services/remote_config_service.dart';
 import 'package:FSOUNotes/services/funtional_services/sharedpref_service.dart';
 import 'package:FSOUNotes/services/state_services/subjects_service.dart';
 import 'package:logger/logger.dart';
-import 'package:open_appstore/open_appstore.dart';
 import 'package:package_info/package_info.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
@@ -19,9 +14,6 @@ import 'package:stacked_services/stacked_services.dart';
 Logger log = getLogger("SplashViewModel");
 
 class SplashViewModel extends FutureViewModel {
-  AuthenticationService _authenticationService =
-      locator<AuthenticationService>();
-  BottomSheetService _bottomSheetService = locator<BottomSheetService>();
   RemoteConfigService _remoteConfigService = locator<RemoteConfigService>();
   NavigationService _navigationService = locator<NavigationService>();
   SharedPreferencesService _sharedPreferencesService =

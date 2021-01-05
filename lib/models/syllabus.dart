@@ -142,12 +142,6 @@ class Syllabus extends AbstractDocument{
     this.url = url;
   }
 
-  DateTime _parseUploadDate(date)
-  {
-    
-      return DateTime.parse(date.toDate().toString());
-  }
-
   setGdriveDownloadLink(String url){
     this.GDriveLink = url;
   }

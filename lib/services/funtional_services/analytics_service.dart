@@ -1,18 +1,14 @@
 
 
 import 'dart:convert';
-
 import 'package:FSOUNotes/app/locator.dart';
 import 'package:FSOUNotes/app/logger.dart';
 import 'package:FSOUNotes/services/funtional_services/remote_config_service.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:injectable/injectable.dart';
 import 'package:logger/logger.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:http/http.dart' as http;
-import 'dart:io';
-
 import 'package:stacked_services/stacked_services.dart';
 
 Logger log = getLogger("AnalyticsService");
