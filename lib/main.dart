@@ -3,14 +3,19 @@ import 'package:FSOUNotes/AppTheme/AppStateNotifier.dart';
 import 'package:FSOUNotes/AppTheme/AppTheme.dart';
 import 'package:FSOUNotes/models/subject.dart';
 import 'package:FSOUNotes/models/user.dart' as userModel;
+import 'package:FSOUNotes/services/funtional_services/authentication_service.dart';
 import 'package:FSOUNotes/services/funtional_services/remote_config_service.dart';
+import 'package:FSOUNotes/services/funtional_services/notification_service.dart';
 import 'package:FSOUNotes/services/funtional_services/crashlytics_service.dart';
+import 'package:FSOUNotes/services/funtional_services/in_app_payment_service.dart';
 import 'package:FSOUNotes/services/services_info.dart';
 import 'package:FSOUNotes/ui/widgets/smart_widgets/bottom_sheet/bottom_sheet_ui_view.dart';
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:feature_discovery/feature_discovery.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:hive/hive.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:path_provider/path_provider.dart';
@@ -21,11 +26,10 @@ import 'package:wiredash/wiredash.dart';
 import './app/locator.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
-import 'package:stacked_services/stacked_services.dart';
 import 'app/logger.dart';
+import 'package:stacked_services/stacked_services.dart';
 import 'app/router.gr.dart' as router;
 import 'package:sentry/sentry.dart';
-
 import 'enums/constants.dart';
 
 Logger log = getLogger("main");
@@ -41,6 +45,9 @@ void main() async {
   await Hive.openBox("OUNOTES");
   RemoteConfigService _remoteConfigService = locator<RemoteConfigService>();
   CrashlyticsService _crashlyticsService = locator<CrashlyticsService>();
+  InAppPaymentService _inAppPaymentService= locator<InAppPaymentService>();
+  NotificationService _notificationService= locator<NotificationService>();
+  await _inAppPaymentService.fetchData();
   await _remoteConfigService.init();
   //Sentry provides crash reporting
   _crashlyticsService.sentryClient = SentryClient(
@@ -55,6 +62,12 @@ void main() async {
   Logger.level = Level.verbose;
   SharedPreferences prefs = await SharedPreferences.getInstance();
   AppStateNotifier.isDarkModeOn = prefs.getBool('isdarkmodeon') ?? false;
+  await FlutterDownloader.initialize(
+    debug: true // optional: set false to disable printing logs to console
+  );
+  await _notificationService.init();
+
+
   //TODO DevChecklist - Uncomment for error handling
   // FlutterError.onError = (details, {bool forceReport = false}) {
   //   _crashlyticsService.sentryClient.captureException(
@@ -86,7 +99,7 @@ void main() async {
           log.e(offerings.current);
           log.e(offerings.current.availablePackages);
         }
-      } on PlatformException catch (e) {
+      } catch (e) {
           // optional error handling
           log.e(e.toString());
       }

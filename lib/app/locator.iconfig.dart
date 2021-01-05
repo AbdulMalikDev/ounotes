@@ -19,8 +19,10 @@ import 'package:FSOUNotes/services/state_services/download_service.dart';
 import 'package:FSOUNotes/utils/file_picker_service.dart';
 import 'package:FSOUNotes/services/funtional_services/firestore_service.dart';
 import 'package:FSOUNotes/services/funtional_services/google_drive_service.dart';
+import 'package:FSOUNotes/services/funtional_services/in_app_payment_service.dart';
 import 'package:FSOUNotes/services/state_services/links_service.dart';
 import 'package:FSOUNotes/services/state_services/notes_service.dart';
+import 'package:FSOUNotes/services/funtional_services/notification_service.dart';
 import 'package:FSOUNotes/utils/permission_handler.dart';
 import 'package:FSOUNotes/services/funtional_services/push_notification_service.dart';
 import 'package:FSOUNotes/services/state_services/question_paper_service.dart';
@@ -51,10 +53,12 @@ void $initGetIt(GetIt g, {String environment}) {
   g.registerLazySingleton<FilePickerService>(() => FilePickerService());
   g.registerLazySingleton<FirestoreService>(() => FirestoreService());
   g.registerLazySingleton<GoogleDriveService>(() => GoogleDriveService());
+  g.registerLazySingleton<InAppPaymentService>(() => InAppPaymentService());
   g.registerLazySingleton<LinksService>(() => LinksService());
   g.registerLazySingleton<NavigationService>(
       () => thirdPartyServicesModule.navigationService);
   g.registerLazySingleton<NotesService>(() => NotesService());
+  g.registerLazySingleton<NotificationService>(() => NotificationService());
   g.registerLazySingleton<PermissionHandler>(() => PermissionHandler());
   g.registerLazySingleton<PushNotificationService>(
       () => PushNotificationService());

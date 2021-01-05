@@ -20,6 +20,8 @@ import 'package:FSOUNotes/services/state_services/download_service.dart';
 import 'package:FSOUNotes/services/state_services/subjects_service.dart';
 import 'package:FSOUNotes/services/state_services/vote_service.dart';
 import 'package:FSOUNotes/enums/bottom_sheet_type.dart';
+import 'package:FSOUNotes/services/funtional_services/in_app_payment_service.dart';
+import 'package:FSOUNotes/services/funtional_services/notification_service.dart';
 import 'package:FSOUNotes/ui/widgets/smart_widgets/notes_tile/notes_tile_view.dart';
 import 'package:cuid/cuid.dart';
 import 'package:flutter/foundation.dart';
@@ -35,6 +37,7 @@ import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:hive/hive.dart';
+import 'package:open_file/open_file.dart';
 import 'package:googleapis/drive/v3.dart' as ga;
 import 'package:http/http.dart' as http;
 import 'package:path/path.dart' as path;
@@ -58,9 +61,11 @@ class NotesViewModel extends BaseViewModel {
   VoteService _voteService = locator<VoteService>();
   SubjectsService _subjectsService = locator<SubjectsService>();
   BottomSheetService _bottomSheetService = locator<BottomSheetService>();
+  InAppPaymentService _inAppPaymentService = locator<InAppPaymentService>();
+  NotificationService _notificationService = locator<NotificationService>();
 
   double _progress = 0;
-
+  bool isProMember = false;
   String newDocIDUploaded;
   double get progress => _progress;
   String _notetitle = '';
@@ -330,7 +335,7 @@ class NotesViewModel extends BaseViewModel {
   }
 
   //download doc on tap
-  void onTap({
+  onTap({
     String notesName,
     String subName,
     String type,
@@ -425,6 +430,7 @@ class NotesViewModel extends BaseViewModel {
         notification: notification,
         isPinned: isPinned,
         refresh: refresh,
+        onDownloadCallback:handleDownloadPurchase,
       ),
       onTap: () {
         incrementViewForAd();
@@ -436,5 +442,34 @@ class NotesViewModel extends BaseViewModel {
   initialize() async {
     box = await Hive.openBox("Documents");
     _subjectsService.setBox(box);
+  }
+
+  void handleDownloadPurchase({Note note}) async {
+    await _inAppPaymentService.purchaseDownloadPackage();
+    isProMember = _inAppPaymentService.isPro;
+    if(isProMember){
+      log.e("Download started");
+      await _googleDriveService.downloadPuchasedPdf
+      (
+        note:note,
+        startDownload: () {
+          setLoading(true);
+        },
+        onDownloadedCallback: (path,fileName) async {
+          setLoading(false);
+          //TODO MALIK make a model for this since making map everytime is not convenient and error prone
+          await _notificationService.dispatchLocalNotification(NotificationService.download_purchase_notify, {
+              "title":fileName + " Downloaded !",
+              "body" : "PDF File has been downloaded in the downloads folder. Thank you for using the OU Notes app.",
+              "payload": {"path" : path},
+            });
+          },
+          //TODO WAJID MAKE NEW SCREEN CALLED DOWNLOADED SCREEN OR SOMETHING
+          //! Navigate to downloaded screen, and keep one button in center named "OPEN FILE"
+          //! AND IN ON PRESSED JUST PUT THIS => [ OpenFile.open(payload["path"]); ]
+          //! IF USER PRESS THAT IT WILL OPEN THE FILE FOR HIM TO SEE.
+      );
+      isProMember = false;
+    }
   }
 }

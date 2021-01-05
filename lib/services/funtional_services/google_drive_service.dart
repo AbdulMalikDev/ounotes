@@ -17,6 +17,8 @@ import 'package:FSOUNotes/app/logger.dart';
 import 'package:FSOUNotes/enums/constants.dart';
 import 'package:FSOUNotes/enums/enums.dart';
 import 'package:FSOUNotes/models/document.dart';
+import 'package:flutter_downloader/flutter_downloader.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:syncfusion_flutter_pdf/pdf.dart';
 import 'package:FSOUNotes/models/notes.dart';
 import 'package:FSOUNotes/models/question_paper.dart';
@@ -210,13 +212,6 @@ class GoogleDriveService {
       //*Start the download
       file.stream.listen((data) {
         downloadedLength += data.length;
-        //TODO WAJID - downloadProgress is a value notifier, so make a loading smart widget
-        // in that you can use VALUE LISTENABLE BUILDER, you can get this value notifier,
-        // by calling googeDriveService from viewmodel of that loading widget,
-        // Ensure that you do not add more than one line of code of here to keep code
-        //! Tip : Subtract the loading value by 3 or 4 since the size value we are saving of the note
-        // is a bit less than actual size. Or else the loading show 100% and user will still have to wait
-        // so Loading percentage = Loading percentage - 4  <--dothis
         downloadProgress.value =
             ((downloadedLength / contentLength) * 100).round();
         print(downloadProgress.value);
@@ -234,6 +229,59 @@ class GoogleDriveService {
 
       throw e;
     }
+  }
+
+  Future downloadPuchasedPdf({
+    Note note,
+    Function(String,String) onDownloadedCallback,
+    Function startDownload
+  }) async {
+
+    PermissionStatus status = await Permission.storage.request();
+    log.e(status.isGranted);
+
+    startDownload();
+
+    //*Google Drive Set Up
+     final accountCredentials = new ServiceAccountCredentials.fromJson(
+          _remote.remoteConfig.getString("GDRIVE"));
+      final scopes = ['https://www.googleapis.com/auth/drive'];
+      AutoRefreshingAuthClient gdriveAuthClient =
+          await clientViaServiceAccount(accountCredentials, scopes);
+      var drive = ga.DriveApi(gdriveAuthClient);
+      //*Download file
+       String fileID = note.GDriveID;
+      ga.Media file = await drive.files
+          .get(fileID, downloadOptions: ga.DownloadOptions.FullMedia);
+      
+      String fileName = "${note.subjectName}_${note.title}.pdf";
+      String filePath = "/storage/emulated/0/Download/" + fileName;
+
+      //*Figure out size from note.size property to show proper loading indicator
+      File localFile;
+      double contentLength = double.parse(note.size.split(" ")[0]);
+      contentLength = note.size.split(" ")[1] == 'KB'
+          ? contentLength * 1000
+          : contentLength * 1000000;
+      int downloadedLength = 0;
+      downloadProgress.value = 0;
+      List<int> dataStore = [];
+
+      //*Start the download
+      file.stream.listen((data) {
+        downloadedLength += data.length;
+        downloadProgress.value =
+            ((downloadedLength / contentLength) * 100).round();
+        print("loading.. : " + downloadProgress.value.toString());
+        dataStore.insertAll(dataStore.length, data);
+      }, onDone: () async {
+        localFile = File(filePath);
+        await localFile.writeAsBytes(dataStore);
+        await Future.delayed(Duration(seconds: 1));
+        downloadProgress.value = 0;
+        onDownloadedCallback(localFile.path,fileName);
+        log.e("DOWNLOAD DONE");
+      });
   }
 
   Future<Subject> createSubjectFolders(Subject subject) async {
@@ -407,6 +455,7 @@ class GoogleDriveService {
     //Disposes the document
     document.dispose();
   }
+
 }
 
 class GoogleHttpClient extends IOClient {

@@ -22,7 +22,8 @@ class UploadLogDetailView extends StatelessWidget {
           child: Container(
             child: SingleChildScrollView(
               child: 
-              model.isBusy ? Center(child:CircularProgressIndicator())
+              model.isBusy 
+              ? Center(child:CircularProgressIndicator())
               : Column(
                 //mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -216,8 +217,8 @@ class UploadLogDetailView extends StatelessWidget {
                                                 child: RaisedButton(
                                                 color: Colors.teal,
                                             child: Text("VIEW",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),),
-                                            onPressed: () {
-                                              model.viewDocument(logItem);
+                                            onPressed: ()async {
+                                              await model.viewDocument(logItem);
                                             },
                                           ),
                                               )),
@@ -228,8 +229,8 @@ class UploadLogDetailView extends StatelessWidget {
                                                   child: RaisedButton(
                                                   color: Colors.blue[700],
                                             child: Text("UPLOAD",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),),
-                                            onPressed: () {
-                                                model.uploadDocument(logItem);
+                                            onPressed: () async {
+                                                await model.uploadDocument(logItem);
                                             },
                                           ),
                                                 ),

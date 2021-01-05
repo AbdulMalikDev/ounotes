@@ -22,6 +22,7 @@ class NotesTileView extends StatelessWidget {
   final bool notification;
   final bool isPinned;
   final Function refresh;
+  final Function({Note note}) onDownloadCallback;
 
   const NotesTileView({
     Key key,
@@ -30,7 +31,8 @@ class NotesTileView extends StatelessWidget {
     this.downloadedNotes,
     this.notification = false,
     this.isPinned = false,
-    this.refresh,
+    this.refresh, 
+    this.onDownloadCallback,
   }) : super(key: key);
 
   @override
@@ -91,6 +93,7 @@ class NotesTileView extends StatelessWidget {
                               size: size,
                               model: model,
                               isPinned: isPinned,
+                              onDownloadCallback:onDownloadCallback,
                             ),
                           )
                         : NotesColumnWidget(
@@ -106,6 +109,7 @@ class NotesTileView extends StatelessWidget {
                             size: size,
                             model: model,
                             isPinned: isPinned,
+                            onDownloadCallback:onDownloadCallback,
                           ),
                   ),
           );
@@ -129,6 +133,7 @@ class NotesColumnWidget extends StatelessWidget {
     @required this.model,
     @required this.isPinned,
     @required this.refresh,
+    this.onDownloadCallback,
   }) : super(key: key);
 
   final String title;
@@ -143,6 +148,7 @@ class NotesColumnWidget extends StatelessWidget {
   final NotesTileViewModel model;
   final bool isPinned;
   final Function refresh;
+  final Function({Note note}) onDownloadCallback;
 
   @override
   Widget build(BuildContext context) {
@@ -210,6 +216,9 @@ class NotesColumnWidget extends StatelessWidget {
                                       size: 18,
                                     )
                                   : SizedBox(),
+                              IconButton(icon: Icon(Icons.download_outlined), onPressed: (){
+                                onDownloadCallback(note: note);
+                              }),
                               // model.isnotedownloaded
                               //     ? Icon(
                               //         Icons.done_all,

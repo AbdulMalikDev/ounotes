@@ -14,7 +14,7 @@ description: A new Flutter project.
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 2.1.0+35
+version: 2.1.0+36
 
 environment:
   sdk: ">=2.9.0 <3.0.0"
@@ -52,7 +52,6 @@ dependencies:
   flutter_secure_storage: ^3.3.1+1
   flutter_typeahead: ^1.8.1
   flutter_webview_plugin: ^0.3.11
-  flutter_inappwebview: ^4.0.0+4
   image_picker: ^0.6.7+2
   in_app_review: ^1.0.3
   intl: ^0.16.1
@@ -72,7 +71,9 @@ dependencies:
   syncfusion_flutter_pdfviewer: ^18.4.32-beta
   syncfusion_flutter_pdf: ^18.4.32-beta
   syncfusion_flutter_sliders: ^18.4.32-beta
-  bitmap: ^0.0.6
+  flutter_downloader: ^1.5.2
+  open_file: ^3.0.3
+  
 
   # Architecture related packages
   flutter_hooks: null
@@ -80,12 +81,14 @@ dependencies:
   get_it: null
   injectable: null
   observable_ish: null
-  shared_preferences: ^0.5.7+3
   hive: ^1.4.4+1
   hive_flutter: ^0.3.1
   stacked: 1.6.0
   stacked_hooks: 0.1.1+3
   stacked_services: ^0.6.0+1
+  shared_preferences: ^0.5.7+3
+  purchases_flutter: ^2.0.0
+  awesome_notifications: any
 
   # firebase/google packages
   cloud_firestore: ^0.13.7
@@ -103,7 +106,7 @@ dependencies:
   onesignal_flutter: ^2.6.1
   sentry: ">=3.0.0 <4.0.0"
   wiredash: ^0.4.0
-  purchases_flutter: ^2.0.0
+  adcolony: ^2.0.6
 
   # Miscellaneous Packages
   async: ^2.0.8
@@ -114,7 +117,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   auto_route_generator: null
-
+  hive_generator: ^0.8.2
   build_runner: null
   flutter_launcher_icons: "^0.7.3"
   injectable_generator: null
