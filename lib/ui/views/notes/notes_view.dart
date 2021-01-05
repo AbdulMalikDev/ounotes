@@ -1,11 +1,6 @@
-import 'package:FSOUNotes/models/notes.dart';
 import 'package:FSOUNotes/ui/shared/app_config.dart';
 import 'package:FSOUNotes/ui/widgets/dumb_widgets/progress.dart';
 import 'package:FSOUNotes/ui/widgets/dumb_widgets/similar_subjects_tile.dart';
-import 'package:FSOUNotes/ui/widgets/smart_widgets/notes_tile/notes_tile_view.dart';
-// import 'package:adcolony/adcolony.dart';
-// import 'package:adcolony/banner.dart';
-import 'package:firebase_admob/firebase_admob.dart';
 import 'package:flutter/material.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:stacked/stacked.dart';
@@ -127,8 +122,6 @@ class _NotesViewState extends State<NotesView>
                           ? SingleChildScrollView(
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.start,
-                                // crossAxisAlignment: CrossAxisAlignment.s,
-                                // mainAxisSize: MainAxisSize.min,
                                 children: <Widget>[
                                   SimilarSubjectTile(
                                     similarSubjects: model
@@ -211,56 +204,3 @@ class _NotesViewState extends State<NotesView>
     }
   }
 }
-
-// Legacy code
-
-// progressIndicator: Center(
-//   child: Container(
-//     padding: EdgeInsets.all(10),
-//     height: 100,
-//     width: 300,
-//     color: Theme.of(context).scaffoldBackgroundColor,
-//     child: Row(
-//       mainAxisAlignment: MainAxisAlignment.center,
-//       crossAxisAlignment: CrossAxisAlignment.center,
-//       children: <Widget>[
-//         circularProgress(),
-//         SizedBox(
-//           width: 20,
-//         ),
-//         Column(
-//           crossAxisAlignment: CrossAxisAlignment.start,
-//           mainAxisAlignment: MainAxisAlignment.center,
-//           children: <Widget>[
-//             Container(
-//               constraints: BoxConstraints(maxWidth: 180),
-//               child: Text(
-//                   'Downloading...' +
-//                       model.progress.toStringAsFixed(0) +
-//                       '%',
-//                   overflow: TextOverflow.clip,
-//                   style: Theme.of(context)
-//                       .textTheme
-//                       .subtitle1
-//                       .copyWith(fontSize: 18)),
-//             ),
-//             SizedBox(
-//               height: 10,
-//             ),
-//             Container(
-//               constraints: BoxConstraints(maxWidth: 180),
-//               child: Text(
-//                 'Large files may take some time...',
-//                 overflow: TextOverflow.clip,
-//                 style: Theme.of(context)
-//                     .textTheme
-//                     .subtitle1
-//                     .copyWith(fontSize: 14),
-//               ),
-//             )
-//           ],
-//         ),
-//       ],
-//     ),
-//   ),
-// ),

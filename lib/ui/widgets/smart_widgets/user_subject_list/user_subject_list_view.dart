@@ -37,7 +37,6 @@ class UserSubjectListView extends StatelessWidget {
                         model.removeSubject(subject);
                       },
                       background: Container(
-                        //margin: EdgeInsets.symmetric(horizontal:10),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(15.0),
                           color: Colors.red,
@@ -64,13 +63,9 @@ class UserSubjectListView extends StatelessWidget {
                       ),
                       child: Center(
                         child: Container(
-                        //  padding: const EdgeInsets.all(10),
-                          // color: Colors.yellow,
                           child: Center(
                             child: ListTile(
                               title: Container(
-                                //color: Colors.blue,
-                                // constraints: BoxConstraints(maxWidth: 200),
                                 child: Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceAround,
@@ -119,8 +114,11 @@ class UserSubjectListView extends StatelessWidget {
                                     backgroundColor:
                                         Theme.of(context).primaryColor,
                                     child: Text(
-                                      subject.name.substring(0, 1).toUpperCase(),
-                                      style: theme.appBarTheme.textTheme.headline6
+                                      subject.name
+                                          .substring(0, 1)
+                                          .toUpperCase(),
+                                      style: theme
+                                          .appBarTheme.textTheme.headline6
                                           .copyWith(
                                               fontSize: 17,
                                               fontWeight: FontWeight.normal),

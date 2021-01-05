@@ -10,6 +10,4 @@ class WebViewModel extends BaseViewModel{
     await _dialogService.showDialog(title: "WARNING" , description: "Notes cannot be downloaded.");
     _navigationService.popRepeated(1);
   }
-
-
 }

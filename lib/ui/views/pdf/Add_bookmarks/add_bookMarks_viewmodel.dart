@@ -10,7 +10,7 @@ class BookMarkBottomSheetViewModel extends BaseViewModel {
   Note _note;
   SubjectsService _subjectsService = locator<SubjectsService>();
   Box box;
-
+  SfRangeValues _sfValues = SfRangeValues(2.0, 4.0);
   Map<int, bool> _units = {
     1: false,
     2: true,
@@ -18,9 +18,6 @@ class BookMarkBottomSheetViewModel extends BaseViewModel {
     4: true,
     5: false,
   };
-
-  Map<int, bool> get units => _units;
-
   Map<int, String> _unitTitles = {
     1: "Unit 1",
     2: "Unit 2",
@@ -28,8 +25,14 @@ class BookMarkBottomSheetViewModel extends BaseViewModel {
     4: "Unit 4",
     5: "Unit 5",
   };
-
-  Map<int, String> get unitTitles => _unitTitles;
+  Map<int, String> _unitPageNos = {
+    1: "",
+    2: "",
+    3: "",
+    4: "",
+    5: "",
+  };
+  Map<String, int> _bookmarks = {};
 
   setUnitTitles(
     int index,
@@ -38,6 +41,7 @@ class BookMarkBottomSheetViewModel extends BaseViewModel {
     _unitTitles[index] = val;
     notifyListeners();
   }
+
   setUnitPageNos(
     int index,
     String val,
@@ -46,36 +50,14 @@ class BookMarkBottomSheetViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  Map<int, String> _unitPageNos = {
-    1: "",
-    2: "",
-    3: "",
-    4: "",
-    5: "",
-  };
-
-  Map<int, String> get unitPageNos => _unitPageNos;
-
-  Map<String, int> _bookmarks = {};
-
-  Map<String, int> get bookmarks => _bookmarks;
-
-  Note get note => _note;
-
   set setNote(Note note) {
     _note = note;
   }
-
-  bool get isNextPressed => _isNextPressed;
 
   set setIsNextPressed(bool isNextPressed) {
     _isNextPressed = isNextPressed;
     notifyListeners();
   }
-
-  SfRangeValues _sfValues = SfRangeValues(2.0, 4.0);
-
-  SfRangeValues get sfValues => _sfValues;
 
   set setSfValues(SfRangeValues values) {
     for (int i = 1; i <= _units.length; i++) {
@@ -89,6 +71,14 @@ class BookMarkBottomSheetViewModel extends BaseViewModel {
     _sfValues = values;
     notifyListeners();
   }
+
+  Map<int, bool> get units => _units;
+  Map<int, String> get unitTitles => _unitTitles;
+  Map<int, String> get unitPageNos => _unitPageNos;
+  Map<String, int> get bookmarks => _bookmarks;
+  Note get note => _note;
+  bool get isNextPressed => _isNextPressed;
+  SfRangeValues get sfValues => _sfValues;
 
   init(bool isInitial) async {
     setBusy(true);
@@ -105,7 +95,7 @@ class BookMarkBottomSheetViewModel extends BaseViewModel {
     int end = bottomsheet['end'].toInt();
     _unitTitles = bottomsheet['unitTitles'] as Map<int, String>;
     _unitPageNos = bottomsheet['unitPageNos'] as Map<int, String>;
-    log.e(_unitPageNos.toString() + "sdsdsdsd");
+    log.i(_unitPageNos.toString() + "sdsdsdsd");
     _sfValues = SfRangeValues(start, end);
     for (int i = 1; i <= units.length; i++) {
       if (i >= start && i <= end) {
@@ -132,7 +122,6 @@ class BookMarkBottomSheetViewModel extends BaseViewModel {
       "end": _sfValues.end,
       "unitTitles": _unitTitles,
       "unitPageNos": _unitPageNos,
-      "note": _note.toJson(),
     };
     _subjectsService.documentHiveBox.put("bottomsheet", bottomsheet);
   }

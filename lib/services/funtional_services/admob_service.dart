@@ -2,7 +2,7 @@
 import 'package:FSOUNotes/app/locator.dart';
 import 'package:FSOUNotes/services/funtional_services/remote_config_service.dart';
 import 'package:FSOUNotes/services/funtional_services/onboarding_service.dart';
-import 'package:flutter/material.dart';
+import 'package:adcolony/adcolony.dart';
 import 'package:injectable/injectable.dart';
 import 'package:firebase_admob/firebase_admob.dart';
 import 'package:logger/logger.dart';

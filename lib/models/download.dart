@@ -1,25 +1,36 @@
-import 'package:flutter/foundation.dart';
+import 'package:hive/hive.dart';
+part 'download.g.dart';
 
-class Download {
-  String id;
-  String path;
-  String filename;
-  String subjectName;
-  String year;
-  String title;
-  String sem;
-  String branch;
-  String type;
+@HiveType(typeId: 0)
+class Download extends HiveObject {
+  @HiveField(0)
+  final String id;
+  @HiveField(1)
+  final String path;
+  @HiveField(2)
+  final String title;
+  @HiveField(3)
+  final String subjectName;
+  @HiveField(4)
+  final String author;
+  @HiveField(5)
+  final int view;
+  @HiveField(6)
+  final int pages;
+  @HiveField(7)
+  final String size;
+  @HiveField(8)
+  final DateTime uploadDate;
 
   Download(
-      {this.branch,
-      this.sem,
-      this.year,
-      this.id,
-      this.path,
-      this.filename,
-      this.subjectName,
-      this.type,
-      @required title,
-      });
+    this.id,
+    this.path,
+    this.title,
+    this.subjectName,
+    this.author,
+    this.view,
+    this.pages,
+    this.size,
+    this.uploadDate,
+  );
 }

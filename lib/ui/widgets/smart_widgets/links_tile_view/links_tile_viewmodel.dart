@@ -3,13 +3,11 @@ import 'package:FSOUNotes/enums/constants.dart';
 import 'package:FSOUNotes/enums/enums.dart';
 import 'package:FSOUNotes/models/document.dart';
 import 'package:FSOUNotes/models/link.dart';
-import 'package:FSOUNotes/services/funtional_services/cloud_storage_service.dart';
 import 'package:stacked/stacked.dart';
 import 'package:FSOUNotes/app/locator.dart';
 import 'package:FSOUNotes/models/report.dart';
 import 'package:FSOUNotes/services/funtional_services/authentication_service.dart';
 import 'package:FSOUNotes/services/funtional_services/firestore_service.dart';
-import 'package:FSOUNotes/services/funtional_services/sharedpref_service.dart';
 import 'package:FSOUNotes/services/state_services/report_service.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -24,10 +22,7 @@ class LinksTileViewModel extends BaseViewModel {
   FirestoreService _firestoreService = locator<FirestoreService>();
   AuthenticationService _authenticationService =
       locator<AuthenticationService>();
-  SharedPreferencesService _sharedPreferencesService =
-      locator<SharedPreferencesService>();
   ReportsService _reportsService = locator<ReportsService>();
-  CloudStorageService _cloudStorageService = locator<CloudStorageService>();
   DialogService _dialogService = locator<DialogService>();
   NavigationService _navigationService = locator<NavigationService>();
   BottomSheetService _bottomSheetService = locator<BottomSheetService>();

@@ -24,8 +24,6 @@ class QuestionPaperTileView extends StatelessWidget {
     final primary = Theme.of(context).colorScheme.onPrimary;
     var theme = Theme.of(context);
     return ViewModelBuilder<QuestionPaperTileViewModel>.reactive(
-        onModelReady: (model) =>
-            model.checkIfQpIsDownloaded(downloadedQp, note),
         builder: (context, model, child) => FractionallySizedBox(
               widthFactor: 0.99,
               child: Container(

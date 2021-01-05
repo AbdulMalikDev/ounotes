@@ -17,7 +17,6 @@ class _AdminSubjectListViewState extends State<AdminSubjectListView> {
   String searchKeyWord = "";
   @override
   Widget build(BuildContext context) {
-    // var theme=Theme.of
     return ViewModelBuilder<AdminSubjectListViewModel>.reactive(
       viewModelBuilder: () => AdminSubjectListViewModel(),
       builder: (

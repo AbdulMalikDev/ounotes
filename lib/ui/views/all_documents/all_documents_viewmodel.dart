@@ -11,7 +11,6 @@ class AllDocumentsViewModel extends BaseViewModel {
   SharedPreferencesService _sharedPreferencesService =
       locator<SharedPreferencesService>();
   BottomSheetService _bottomSheetService = locator<BottomSheetService>();
-
   String _subjectName;
 
   String getSubjectNameAcronym(String subName) {
@@ -48,8 +47,6 @@ class AllDocumentsViewModel extends BaseViewModel {
   }
 
   handleStartup(BuildContext context) async {
-    //permission for storage not needed
-    // await _permissionHandler.askPermission();
     bool shouldShow = await _sharedPreferencesService.shouldIShowIntroDialog();
     if (shouldShow) {
       await _bottomSheetService.showBottomSheet(
@@ -64,5 +61,9 @@ class AllDocumentsViewModel extends BaseViewModel {
           description:
               "Looks like you're offline ! please connect to the internet to access latest the documents.");
     }
+  }
+
+  navigateToDownloadScreen() {
+    _navigationService.navigateTo(Routes.downLoadView);
   }
 }

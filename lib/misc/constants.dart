@@ -182,6 +182,7 @@ class Constants {
       case Document.Drawer:
       case Document.UploadLog:
       case Document.Report:
+      case Document.Random:
         return "";
         break;
     }

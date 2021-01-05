@@ -1,7 +1,6 @@
 import 'package:FSOUNotes/misc/constants.dart';
 import 'package:FSOUNotes/ui/shared/app_config.dart';
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class SelectionContainer extends StatelessWidget {
   final String title;

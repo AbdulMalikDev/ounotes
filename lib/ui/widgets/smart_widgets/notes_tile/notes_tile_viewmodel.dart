@@ -3,7 +3,6 @@ import 'package:FSOUNotes/app/router.gr.dart';
 import 'package:FSOUNotes/enums/enums.dart';
 import 'package:FSOUNotes/misc/constants.dart';
 import 'package:FSOUNotes/models/document.dart';
-import 'package:FSOUNotes/models/download.dart';
 import 'package:FSOUNotes/models/notes.dart';
 import 'package:FSOUNotes/models/report.dart';
 import 'package:FSOUNotes/models/vote.dart';
@@ -11,8 +10,6 @@ import 'package:FSOUNotes/services/funtional_services/authentication_service.dar
 import 'package:FSOUNotes/services/funtional_services/cloud_storage_service.dart';
 import 'package:FSOUNotes/services/funtional_services/firestore_service.dart';
 import 'package:FSOUNotes/services/funtional_services/google_drive_service.dart';
-
-import 'package:FSOUNotes/services/funtional_services/sharedpref_service.dart';
 import 'package:FSOUNotes/services/funtional_services/admob_service.dart';
 import 'package:FSOUNotes/services/state_services/report_service.dart';
 import 'package:FSOUNotes/services/state_services/vote_service.dart';
@@ -35,8 +32,6 @@ class NotesTileViewModel extends BaseViewModel {
   AdmobService _admobService = locator<AdmobService>();
   AuthenticationService _authenticationService =
       locator<AuthenticationService>();
-  SharedPreferencesService _sharedPreferencesService =
-      locator<SharedPreferencesService>();
   ReportsService _reportsService = locator<ReportsService>();
   DialogService _dialogService = locator<DialogService>();
   CloudStorageService _cloudStorageService = locator<CloudStorageService>();
@@ -59,7 +54,6 @@ class NotesTileViewModel extends BaseViewModel {
 
   Map<String, int> get numberOfVotes => _voteService.numberOfVotes;
 
-
   handleVotes(String vote, String votedon, Note note) {
     //if the user has pressed on same vote again then make the vote to none and update it in db
     if (vote == votedon) {
@@ -73,14 +67,12 @@ class NotesTileViewModel extends BaseViewModel {
       }
       _voteService.removeVote(note.title);
     } else {
-      //if not then check if he upvoted or downvoted
-      //if upvoted then increment the votes
-      //check if vote was none or not
+      //check if user is voting the note for the first time or he is changing the already voted note
       bool wasvotenone = false;
       if (votedon == Constants.upvote) {
         if (_vote == Constants.none) wasvotenone = true;
         _vote = Constants.upvote;
-        //if vote was none then incementvote by once
+        //if vote was none then user is voting for first time,incementvote by once
         if (wasvotenone) {
           _firestoreService.incrementVotes(note, 1);
           incrementvotes(note.title, 1);
@@ -144,29 +136,8 @@ class NotesTileViewModel extends BaseViewModel {
     );
   }
 
-  // getSnapShotOfVotes(Note note) {
-  //   return _firestoreService.getSnapShotOfVotes(note);
-  // }
-
-  // getListOfVoteBySub(String subname) {
-  //   votesbySub.forEach((vote) {
-  //     if (vote.subname.toLowerCase() == subname.toLowerCase()) {
-  //       votesbySub.add(vote);
-  //     }
-  //   });
-  // }
-
-  checkIfUserVotedAndDownloadedNote(
-      {int voteval,
-      List<Vote> votesbySub,
-      List<Download> downloadedNotebySub,
-      Note note}) {
+  checkIfUserVotedNote({int voteval, List<Vote> votesbySub, Note note}) {
     setBusy(true);
-    for (int j = 0; j < downloadedNotebySub.length; j++) {
-      if (downloadedNotebySub[j].filename == note.title) {
-        _isnotedownloaded = true;
-      }
-    }
     for (int i = 0; i < votesbySub.length; i++) {
       if (note.title.toLowerCase() == votesbySub[i].notesName.toLowerCase()) {
         log.i("checking if user voted");
@@ -198,7 +169,7 @@ class NotesTileViewModel extends BaseViewModel {
       mainButtonTitle: 'Report',
       secondaryButtonTitle: 'Go Back',
     );
-    if(reportResponse == null)return;
+    if (reportResponse == null) return;
     if (!reportResponse.confirmed) {
       setBusy(false);
       return;
@@ -313,19 +284,27 @@ class NotesTileViewModel extends BaseViewModel {
     }
   }
 
-  void pinNotes(Note note,Function refresh) {
-
+  void pinNotes(Note note, Function refresh) {
     //Initialize and fetch pinned notes
-    Map<String, Map<String, DateTime>> pinnedNotes = {"empty": {"a": DateTime.now()}};
-    if(_subjectService.documentHiveBox.get("pinnedNotes") != null){
+    Map<String, Map<String, DateTime>> pinnedNotes = {
+      "empty": {"a": DateTime.now()}
+    };
+    if (_subjectService.documentHiveBox.get("pinnedNotes") != null) {
       Map notesMap = _subjectService.documentHiveBox.get("pinnedNotes");
       notesMap = notesMap.map((key, value) {
-        if(value.isEmpty){value = {"a": DateTime.now()};}
-        pinnedNotes.addEntries([MapEntry<String,Map<String, DateTime>>(key as String, new Map<String,DateTime>.from(value))]);
-        return MapEntry<String,Map<String, DateTime>>(key as String, new Map<String,DateTime>.from(value));
+        if (value.isEmpty) {
+          value = {"a": DateTime.now()};
+        }
+        pinnedNotes.addEntries([
+          MapEntry<String, Map<String, DateTime>>(
+              key as String, new Map<String, DateTime>.from(value))
+        ]);
+        return MapEntry<String, Map<String, DateTime>>(
+            key as String, new Map<String, DateTime>.from(value));
       });
     }
-    Map<String,DateTime> subjectPinnedNotes = pinnedNotes[note.subjectName] ?? {};
+    Map<String, DateTime> subjectPinnedNotes =
+        pinnedNotes[note.subjectName] ?? {};
 
     //add the pinned notes
     subjectPinnedNotes[note.id.toString()] = DateTime.now();
@@ -336,26 +315,34 @@ class NotesTileViewModel extends BaseViewModel {
       (value) => subjectPinnedNotes,
       ifAbsent: () => subjectPinnedNotes,
     );
-    _subjectService.documentHiveBox.put("pinnedNotes",pinnedNotes);
+    _subjectService.documentHiveBox.put("pinnedNotes", pinnedNotes);
 
     //Notify UI
     refresh(note.subjectName);
   }
 
-  void unpinNotes(Note note,Function refresh) {
-    Map<String, Map<String, DateTime>> pinnedNotes = {"empty": {"a": DateTime.now()}};
+  void unpinNotes(Note note, Function refresh) {
+    Map<String, Map<String, DateTime>> pinnedNotes = {
+      "empty": {"a": DateTime.now()}
+    };
     //Initialize and fetch pinned notes
-    if(_subjectService.documentHiveBox.get("pinnedNotes") == null)return;
+    if (_subjectService.documentHiveBox.get("pinnedNotes") == null) return;
 
     Map notesMap = _subjectService.documentHiveBox.get("pinnedNotes");
     notesMap = notesMap.map((key, value) {
-      if(value.isEmpty){value = {"a": DateTime.now()};}
-      pinnedNotes.addEntries([MapEntry<String,Map<String, DateTime>>(key as String, new Map<String,DateTime>.from(value))]);
-      return MapEntry<String,Map<String, DateTime>>(key as String, new Map<String,DateTime>.from(value));
+      if (value.isEmpty) {
+        value = {"a": DateTime.now()};
+      }
+      pinnedNotes.addEntries([
+        MapEntry<String, Map<String, DateTime>>(
+            key as String, new Map<String, DateTime>.from(value))
+      ]);
+      return MapEntry<String, Map<String, DateTime>>(
+          key as String, new Map<String, DateTime>.from(value));
     });
-  
-    Map<String,DateTime> subjectPinnedNotes = pinnedNotes[note.subjectName];
-    if(subjectPinnedNotes == null || subjectPinnedNotes.isEmpty)return;
+
+    Map<String, DateTime> subjectPinnedNotes = pinnedNotes[note.subjectName];
+    if (subjectPinnedNotes == null || subjectPinnedNotes.isEmpty) return;
 
     //remove pinned notes
     subjectPinnedNotes.remove(note.id);
@@ -366,8 +353,8 @@ class NotesTileViewModel extends BaseViewModel {
       (value) => subjectPinnedNotes,
       ifAbsent: () => subjectPinnedNotes,
     );
-    _subjectService.documentHiveBox.put("pinnedNotes",pinnedNotes);
-    
+    _subjectService.documentHiveBox.put("pinnedNotes", pinnedNotes);
+
     //notify UI for update
     refresh(note.subjectName);
   }

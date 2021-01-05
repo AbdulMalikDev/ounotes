@@ -62,13 +62,6 @@ class UploadSelectionView extends StatelessWidget {
                                 ),
                               ),
                               SizedBox(height: 30.0),
-                              // SizedBox(
-                              //   height: 30.0,
-                              // ),
-                              // SizedBox(
-                              //   height: 10,
-                              // ),
-                              // if (!widget.swipe)
                               SaveButtonView(
                                 onTap: model.navigateToNotes,
                                 text: "NOTES",
@@ -76,7 +69,6 @@ class UploadSelectionView extends StatelessWidget {
                               SizedBox(
                                 height: 10,
                               ),
-                              // if (!widget.swipe)
                               SaveButtonView(
                                 onTap: model.navigateToQuestionPapers,
                                 text: "QUESTION PAPERS",
@@ -84,7 +76,6 @@ class UploadSelectionView extends StatelessWidget {
                               SizedBox(
                                 height: 10,
                               ),
-                              // if (!widget.swipe)
                               SaveButtonView(
                                 onTap: model.navigateToSyllabus,
                                 text: "SYLLABUS",
@@ -92,7 +83,6 @@ class UploadSelectionView extends StatelessWidget {
                               SizedBox(
                                 height: 10,
                               ),
-                              // if (!widget.swipe)
                               SaveButtonView(
                                 onTap: model.navigateToLinks,
                                 text: "LINKS",

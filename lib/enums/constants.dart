@@ -142,6 +142,8 @@ class Constants {
         break;
       case Document.None:
       case Document.Drawer:
+      case Document.Random:
+
         return "";
         break;
     }

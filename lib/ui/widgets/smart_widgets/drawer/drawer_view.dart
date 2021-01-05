@@ -13,9 +13,7 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import 'package:share/share.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:stacked/stacked.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:wiredash/wiredash.dart';
-import 'package:rate_my_app/rate_my_app.dart';
 
 class DrawerView extends StatefulWidget {
   @override
@@ -25,8 +23,6 @@ class DrawerView extends StatefulWidget {
 class _DrawerViewState extends State<DrawerView> {
   Intro intro;
   List<Map<String, String>> drawerPrompts;
-  RateMyApp _rateMyApp = RateMyApp();
-
   _DrawerViewState() {
     drawerPrompts = OnboardingService.drawerPrompts;
 
@@ -122,14 +118,11 @@ class _DrawerViewState extends State<DrawerView> {
                               Document.Drawer),
                           // ListTile(
                           //     leading: SizedBox(
-                          //       height: 30,
-                          //       width: 40,
-                          //       child: ClipRRect(
-                          //           child: Image.asset(
-                          //               "assets/images/donate-icon.png")
-                          //           //)
-                          //           ),
-                          //     ),
+                          //         height: 30,
+                          //         width: 40,
+                          //         child: ClipRRect(
+                          //             child: Image.asset(
+                          //                 "assets/images/donate-icon.png"))),
                           //     title: Text(
                           //       "Donate",
                           //       style: subtitle1,
@@ -161,17 +154,14 @@ class _DrawerViewState extends State<DrawerView> {
                                     : Colors.grey[700],
                               ),
                               onTap: () async {
-                                // OpenAppstore.launch(
-                                //     androidAppId: 'com.notes.ounotes',
-                                //     iOSAppId: 'com.notes.ounotes');
                                 model.showRateMyAppDialog(context);
                               }),
-                          // NavItem(
-                          //     Icons.arrow_drop_down_circle,
-                          //     "My Downloads",
-                          //     subtitle1,
-                          //     model.navigateToDownloadScreen,
-                          //     Document.None),
+                          NavItem(
+                              Icons.arrow_drop_down_circle,
+                              "My Downloads",
+                              subtitle1,
+                              model.navigateToDownloadScreen,
+                              Document.None),
                           ListTile(
                             key: intro.keys[2],
                             leading: Icon(
@@ -213,7 +203,6 @@ class _DrawerViewState extends State<DrawerView> {
                                 subtitle1,
                                 model.navigateToAdminUploadScreen,
                                 Document.Drawer),
-
                           Divider(color: Colors.grey.shade600),
                           Row(children: <Widget>[
                             SizedBox(width: 20),
@@ -276,11 +265,25 @@ class _DrawerViewState extends State<DrawerView> {
                           ),
                           NavItem(Icons.import_contacts, "About Us", subtitle1,
                               model.navigateToAboutUsScreen, Document.None),
-                          SizedBox(
-                            height: 50,
+
+                          ListTile(
+                            leading: Icon(
+                              Icons.logout,
+                              color: Theme.of(context).iconTheme.color,
+                            ),
+                            title: Text(
+                              "Log out",
+                              style: subtitle1,
+                            ),
+                            onTap: () {
+                              model.handleSignOut(context);
+                            },
                           ),
                         ],
                       ),
+                    ),
+                    SizedBox(
+                      height: 50,
                     ),
                   ],
                 ),

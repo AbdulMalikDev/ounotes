@@ -1,8 +1,5 @@
 import 'package:FSOUNotes/app/logger.dart';
-import 'package:FSOUNotes/models/notes.dart';
-import 'package:FSOUNotes/models/question_paper.dart';
 import 'package:FSOUNotes/models/syllabus.dart';
-import 'package:FSOUNotes/services/funtional_services/cloud_storage_service.dart';
 import 'package:injectable/injectable.dart';
 import 'package:logger/logger.dart';
 

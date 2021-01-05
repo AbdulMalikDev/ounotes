@@ -14,6 +14,7 @@ import 'package:FSOUNotes/services/funtional_services/sharedpref_service.dart';
 class SettingsViewModel extends BaseViewModel {
   AuthenticationService _authenticationService =
       locator<AuthenticationService>();
+  DialogService _dialogService = locator<DialogService>();
   NavigationService _navigationService = locator<NavigationService>();
   SharedPreferencesService _sharedPreferencesService =
       locator<SharedPreferencesService>();
@@ -77,81 +78,25 @@ class SettingsViewModel extends BaseViewModel {
     _analyticsService.logEvent(name: "TELEGRAM_VISIT");
   }
 
-  handleSignOut(BuildContext context) async {
-    // DialogResponse dialogResult = await _dialogService.showConfirmationDialog(
-    //   title: "Change Profile Data",
-    //   description:
-    //       "In Order to change your data,you just need to sign-in again using your Gmail id",
-    //   cancelTitle: "GO BACK",
-    //   confirmationTitle: "PROCEED",
-    // );
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
-          ),
-          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-          title: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              Expanded(
-                child: Text(
-                  "Are you sure?",
-                  style: Theme.of(context)
-                      .textTheme
-                      .headline6
-                      .copyWith(fontSize: 20),
-                  overflow: TextOverflow.clip,
-                ),
-              ),
-            ],
-          ),
-          actions: <Widget>[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                FlatButton(
-                  child: Text(
-                    "GO BACK",
-                    style: Theme.of(context)
-                        .textTheme
-                        .subtitle1
-                        .copyWith(fontSize: 15),
-                  ),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
-                FlatButton(
-                  child: Text(
-                    "PROCEED",
-                    style: Theme.of(context)
-                        .textTheme
-                        .subtitle1
-                        .copyWith(fontSize: 15),
-                  ),
-                  onPressed: () async {
-                    Navigator.of(context).pop();
-                    setBusy(true);
-                    await _authenticationService.handleSignOut().then((value) {
-                      if (value ?? true) {
-                        _navigationService.navigateTo(Routes.introViewRoute);
-                      } else
-                        Fluttertoast.showToast(
-                            msg: "Sign Out failed ,please try again later");
-                    });
-                    setBusy(false);
-                    notifyListeners();
-                  },
-                ),
-              ],
-            ),
-          ],
-        );
-      },
+  handleSignOut() async {
+    DialogResponse dialogResult = await _dialogService.showConfirmationDialog(
+      title: "Change Profile Data",
+      description:
+          "In Order to change your data,you just need to sign-in again using your Gmail id",
+      cancelTitle: "GO BACK",
+      confirmationTitle: "PROCEED",
     );
-    // if (dialogResult.confirmed) {}
+    if (dialogResult.confirmed) {
+      setBusy(true);
+      await _authenticationService.handleSignOut().then((value) {
+        if (value) {
+          _navigationService.navigateTo(Routes.introViewRoute);
+        } else
+          Fluttertoast.showToast(
+              msg: "Sign Out failed ,please try again later");
+      });
+      setBusy(false);
+      notifyListeners();
+    }
   }
 }

@@ -138,17 +138,6 @@ class _ReportViewState extends State<ReportView>
                                               },
                                             ),
                                           )),
-                                          // Expanded(
-                                          //     child: Padding(
-                                          //       padding: const EdgeInsets.all(8.0),
-                                          //       child: RaisedButton(
-                                          //       color: Colors.blue[700],
-                                          //   child: Text("DELETE",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),),
-                                          //   onPressed: () {
-                                          //     model.deny(report);
-                                          //   },
-                                          // ),
-                                          //     )),
                                           Expanded(
                                               child: Padding(
                                             padding: const EdgeInsets.all(8.0),

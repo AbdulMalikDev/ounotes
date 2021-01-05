@@ -1,10 +1,7 @@
-import 'package:FSOUNotes/misc/constants.dart';
 import 'package:FSOUNotes/models/syllabus.dart';
 import 'package:FSOUNotes/ui/views/syllabus/syllabus_viewmodel.dart';
-import 'package:FSOUNotes/ui/widgets/dumb_widgets/progress.dart';
 import 'package:FSOUNotes/ui/widgets/smart_widgets/syllabus_tile.dart/syllabus_tile_view.dart';
 import 'package:flutter/material.dart';
-import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:stacked/stacked.dart';
 
 class SyllabusView extends StatefulWidget {
@@ -37,13 +34,8 @@ class _SyllabusViewState extends State<SyllabusView>
                   Container(
                     padding: EdgeInsets.only(top: 10),
                     height: widget.path != null
-                        ? model.isloading
-                            ? MediaQuery.of(context).size.height * 0.84 //chota
-                            : MediaQuery.of(context).size.height * 0.86 //bada
-                        : model.isloading
-                            ? MediaQuery.of(context).size.height * 0.68 //chota
-                            : MediaQuery.of(context).size.height * 0.73, //bada
-
+                        ? MediaQuery.of(context).size.height * 0.86
+                        : MediaQuery.of(context).size.height * 0.73,
                     width: double.infinity,
                     child: model.isBusy
                         ? Center(
@@ -102,9 +94,6 @@ class _SyllabusViewState extends State<SyllabusView>
                                       child: SyllabusTileView(
                                         syllabus: syllabus,
                                         index: index,
-                                        downloadedsyllabus:
-                                            model.getListOfSyllabusInDownloads(
-                                                widget.subjectName),
                                       ),
                                       onTap: () {
                                         model.openDoc(context, syllabus);

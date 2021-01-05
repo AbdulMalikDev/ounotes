@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:FSOUNotes/app/locator.dart';
 import 'package:FSOUNotes/app/logger.dart';
-import 'package:FSOUNotes/enums/enums.dart';
 import 'package:FSOUNotes/models/notes_view.dart';
 import 'package:FSOUNotes/models/report.dart';
 import 'package:FSOUNotes/models/user.dart';
