@@ -2,7 +2,6 @@
 import 'package:FSOUNotes/app/locator.dart';
 import 'package:FSOUNotes/services/funtional_services/remote_config_service.dart';
 import 'package:FSOUNotes/services/funtional_services/onboarding_service.dart';
-import 'package:adcolony/adcolony.dart';
 import 'package:flutter/material.dart';
 import 'package:injectable/injectable.dart';
 import 'package:firebase_admob/firebase_admob.dart';
@@ -81,17 +80,17 @@ class AdmobService{
       ..show(anchorType: AnchorType.bottom);
   }
 
-  listener(AdColonyAdListener event) {
-    print(event);
-    if (event == AdColonyAdListener.onRequestFilled) AdColony.show();
-  }
+  // listener(AdColonyAdListener event) {
+  //   print(event);
+  //   if (event == AdColonyAdListener.onRequestFilled) AdColony.show();
+  // }
   showNotesViewInterstitialAd(){
-    final zones = [_remote.remoteConfig.getString('ADCOLONY_ZONE_INTERSTITIAL')];
-    AdColony.request(zones[0], listener);
-    // if(notes_view_interstitial_ad == null ){notes_view_interstitial_ad = this.getNotesViewInterstitialAd();}
-    // notes_view_interstitial_ad
-    //   ..load()
-    //   ..show();
+    // final zones = [_remote.remoteConfig.getString('ADCOLONY_ZONE_INTERSTITIAL')];
+    // AdColony.request(zones[0], listener);
+    if(notes_view_interstitial_ad == null ){notes_view_interstitial_ad = this.getNotesViewInterstitialAd();}
+    notes_view_interstitial_ad
+      ..load()
+      ..show();
 
   }
 

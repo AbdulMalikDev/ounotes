@@ -15,13 +15,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "7.0.0"
-  adcolony:
-    dependency: "direct main"
-    description:
-      name: adcolony
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.0.6"
   analyzer:
     dependency: transitive
     description:
@@ -71,6 +64,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.2.1"
+  bitmap:
+    dependency: "direct main"
+    description:
+      name: bitmap
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.6"
   boolean_selector:
     dependency: transitive
     description:
@@ -1052,6 +1052,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.1.5"
+  purchases_flutter:
+    dependency: "direct main"
+    description:
+      name: purchases_flutter
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.0"
   quiver:
     dependency: transitive
     description:

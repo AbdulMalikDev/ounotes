@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:math' as math;
+import 'dart:ui' as ui;
 
 import 'package:FSOUNotes/app/locator.dart';
 import 'package:FSOUNotes/app/logger.dart';
@@ -126,23 +127,27 @@ class CloudStorageService {
     try {
       //*Select file and sanitize extension
       PdfDocument pdf;
+      String tempPath = (await _localPath)+"/${DateTime.now().millisecondsSinceEpoch}";
       //Not defining type since it could be List of files or just one file
       final document = await _filePickerService.selectFile(uploadFileType:uploadFileType);
       if(document==null)return "File is null";
       bool isImage = (document.runtimeType.toString() == "List<File>");
+      log.e("isImage : " + isImage.toString());
       String docPath = isImage ? document[0].path : document.path; 
       String mimeStr = lookupMimeType(docPath);
+      log.e(mimeStr);
       var fileType = mimeStr.split('/').last;
       if (!['pdf','jpg','jpeg','png'].contains(fileType)) {
         return 'file is not compatible. Please make sure you uploaded a PDF';
       }else if(['jpg','jpeg','png'].contains(fileType)){
-        pdf = _convertImageToPdf(document);
+        pdf = await _convertImageToPdf(document,tempPath);
       }else{
         pdf = PdfDocument(inputBytes: document.readAsBytesSync(),);
       }
 
       //*Find the size of the file and make sure it's not more than 35 MB
-      int lengthOfDoc = isImage ? await _getLengthOfImages(document) : await document.length(); 
+      int lengthOfDoc = isImage ? await _getLengthOfImages(document) : await document.length();
+      log.e("lengthOfDoc : "+lengthOfDoc.toString()); 
       final String bytes = _formatBytes2(lengthOfDoc, 2);
       final String bytesuffix = _formatBytes2Suffix(lengthOfDoc, 2);
       log.i("suffix of size" + bytesuffix);
@@ -154,12 +159,10 @@ class CloudStorageService {
       
       //*Save file to upload
       File fileToUpload = isImage ? null : document; 
-      if(fileToUpload==null)fileToUpload = await new File((await _localPath)+"/${DateTime.now().millisecondsSinceEpoch}").writeAsBytes(document.save());
-      
+      if(fileToUpload==null)fileToUpload = File(tempPath);
+      // await Future.delayed(Duration(seconds: 5));
       //*Show document to user
       log.e(note.toJson(),fileToUpload.path);
-      //TODO WAJID bookmarks and units covered logic will be displayed when user is taken to pdf screen, 
-      //! add it in the pdf screen, after user put info, just pop the pdf screen, it will come back to this function
       await _navigationService.navigateTo(Routes.pdfScreenRoute,arguments: PDFScreenArguments(doc: note,pathPDF:fileToUpload.path,askBookMarks: true));
       
       //*Set info on document and upload
@@ -279,31 +282,45 @@ class CloudStorageService {
     return error;
   }
 
-  PdfDocument _convertImageToPdf(List<File> documents) {
-    //Create a new PDF document
-    PdfDocument document = PdfDocument();
+  Future<PdfDocument> _convertImageToPdf(List<File> documents,String tempPath) async {
 
-    documents.forEach((file) { 
+    try{
 
-      //Adds a page to the document
-      PdfPage page = document.pages.add();
+      //Create a new PDF document
+      PdfDocument document = PdfDocument();
 
-      //Draw the image
-      page.graphics.drawImage(
-          PdfBitmap(file.readAsBytesSync()),
-          Rect.fromLTWH(0, 0, page.getClientSize().width, page.getClientSize().height)
-      );
-    
-    });
+      for (File file in documents){
 
-    return document;
+        //Adds a page to the document
+        PdfPage page = document.pages.add();
+
+        ui.Image image = await decodeImageFromList(file.readAsBytesSync());
+        log.e(image.height);
+        log.e(image.width);
+  
+        //Draw the image
+        page.graphics.drawImage(
+            PdfBitmap(file.readAsBytesSync()),
+            Rect.fromLTWH(0, 0, page.getClientSize().width, page.getClientSize().height)
+        );
+
+      }
+
+      File(tempPath).writeAsBytes(document.save());
+
+      return document;
+
+    }catch(e){
+      log.e(e.toString());
+      return null;
+    }
   }
 
-  _getLengthOfImages(List<File> documents) async {
+  Future<int> _getLengthOfImages(List<File> documents) async {
     int totalLength = 0;
-    documents.forEach((doc) async {
+    for( File doc in documents){
       totalLength += (await doc.length());
-    });
+    }
     return totalLength;
   }
 }

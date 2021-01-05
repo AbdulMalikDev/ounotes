@@ -14,6 +14,7 @@ import 'package:flutter/services.dart';
 import 'package:hive/hive.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:purchases_flutter/purchases_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stacked/stacked.dart';
 import 'package:wiredash/wiredash.dart';
@@ -49,6 +50,8 @@ void main() async {
       .init(_remoteConfigService.remoteConfig.getString('ONESIGNAL_KEY'));
   OneSignal.shared
       .setInFocusDisplayType(OSNotificationDisplayType.notification);
+  Purchases.setup(_remoteConfigService.remoteConfig.getString('IN_APP')); 
+  Purchases.setDebugLogsEnabled(true);   
   Logger.level = Level.verbose;
   SharedPreferences prefs = await SharedPreferences.getInstance();
   AppStateNotifier.isDarkModeOn = prefs.getBool('isdarkmodeon') ?? false;
@@ -59,7 +62,7 @@ void main() async {
   //     stackTrace: details.stack,
   //   );
   // };
-  // await dothis();
+  await dothis();
   runApp(MyApp());
   // runZonedGuarded(
   //   () => runApp(MyApp()),
@@ -72,7 +75,33 @@ void main() async {
   // );
   }
 
-  // dothis() async {
+  dothis() async {
+      try {
+        PurchaserInfo purchaserInfo = await Purchases.getPurchaserInfo();
+        final isPro = purchaserInfo.entitlements.active.containsKey("pdf_downloader");
+        log.e(isPro);
+        Offerings offerings = await Purchases.getOfferings();
+        if (offerings.current != null) {
+          // Display current offering with offerings.current
+          log.e(offerings.current);
+          log.e(offerings.current.availablePackages);
+        }
+      } on PlatformException catch (e) {
+          // optional error handling
+          log.e(e.toString());
+      }
+      // try {
+      //   PurchaserInfo purchaserInfo = await Purchases.purchasePackage(package);
+      //   var isPro = purchaserInfo.entitlements.all["my_entitlement_identifier"].isActive;
+      //   if (isPro) {
+      //     // Unlock that great "pro" content
+      //   }
+      // } on PlatformException catch (e) {
+      //   var errorCode = PurchasesErrorHelper.getErrorCode(e);
+      //   if (errorCode != PurchasesErrorCode.purchaseCancelledError) {
+      //     showError(e);             
+      //   }
+      // }
       // QuerySnapshot users = await Firestore.instance.collection("users").orderBy("id").getDocuments();
       // log.e(users.documents.length);
       // for (int i=0 ; i<users.documents.length ; i++){
@@ -98,7 +127,7 @@ void main() async {
       //     log.e(e.toString());
       //   }
       // }
-  // }
+  }
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application

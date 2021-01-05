@@ -14,7 +14,7 @@ description: A new Flutter project.
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 2.1.0+34
+version: 2.1.0+35
 
 environment:
   sdk: ">=2.9.0 <3.0.0"
@@ -22,7 +22,6 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
 
   # UI / Widget Packages
   pimp_my_button: ^1.0.0
@@ -73,6 +72,7 @@ dependencies:
   syncfusion_flutter_pdfviewer: ^18.4.32-beta
   syncfusion_flutter_pdf: ^18.4.32-beta
   syncfusion_flutter_sliders: ^18.4.32-beta
+  bitmap: ^0.0.6
 
   # Architecture related packages
   flutter_hooks: null
@@ -103,14 +103,12 @@ dependencies:
   onesignal_flutter: ^2.6.1
   sentry: ">=3.0.0 <4.0.0"
   wiredash: ^0.4.0
-  adcolony: ^2.0.6
+  purchases_flutter: ^2.0.0
 
   # Miscellaneous Packages
   async: ^2.0.8
   http: ^0.12.0+2
   mime: ^0.9.6+3
-
-  
 
 dev_dependencies:
   flutter_test:
