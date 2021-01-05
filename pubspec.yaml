@@ -53,7 +53,6 @@ dependencies:
   flutter_secure_storage: ^3.3.1+1
   flutter_typeahead: ^1.8.1
   flutter_webview_plugin: ^0.3.11
-  flutter_inappwebview: ^4.0.0+4
   image_picker: ^0.6.7+2
   in_app_review: ^1.0.3
   intl: ^0.16.1
@@ -116,7 +115,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   auto_route_generator: null
-
+  hive_generator: ^0.8.2
   build_runner: null
   flutter_launcher_icons: "^0.7.3"
   injectable_generator: null

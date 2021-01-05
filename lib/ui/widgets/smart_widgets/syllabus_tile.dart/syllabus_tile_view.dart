@@ -25,8 +25,6 @@ class SyllabusTileView extends StatelessWidget {
     final String semester = syllabus.semester;
     final String branch = syllabus.branch?.toUpperCase() ?? "";
     return ViewModelBuilder<SyllabusTileViewModel>.reactive(
-        onModelReady: (model) =>
-            model.checkIfSyllabusIsDownloaded(downloadedsyllabus, syllabus),
         builder: (context, model, child) => FractionallySizedBox(
               widthFactor: 0.99,
               child: Container(
@@ -60,8 +58,6 @@ class SyllabusTileView extends StatelessWidget {
                               image: AssetImage(
                                 'assets/images/pdf.png',
                               ),
-                              // colorFilter: ColorFilter.mode(
-                              //     Colors.black.withOpacity(0.1), BlendMode.dstATop),
                             ),
                           ),
                         ),

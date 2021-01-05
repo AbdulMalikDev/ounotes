@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:FSOUNotes/app/locator.dart';
 import 'package:FSOUNotes/app/logger.dart';
-import 'package:FSOUNotes/misc/course_info.dart';
 import 'package:FSOUNotes/models/subject.dart';
 import 'package:FSOUNotes/services/funtional_services/firestore_service.dart';
 import 'package:FSOUNotes/services/funtional_services/google_drive_service.dart';
@@ -10,7 +9,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:injectable/injectable.dart';
 import 'package:logger/logger.dart';
-import 'package:observable_ish/list/list.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:hive/hive.dart';
 
@@ -106,7 +104,6 @@ class SubjectsService with ChangeNotifier {
     _allSubjects.value = [];
     _userSubjects.value = [];
     List<Subject> subjectObjects = [];
-    var allsubjects;
     //*Try-catch block for retreiving All Subjects
     try {
       //Check if stored in local Storage and retreive

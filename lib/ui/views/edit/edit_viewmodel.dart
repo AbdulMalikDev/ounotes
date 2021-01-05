@@ -10,26 +10,18 @@ import 'package:FSOUNotes/models/question_paper.dart';
 import 'package:FSOUNotes/models/syllabus.dart';
 import 'package:FSOUNotes/enums/enums.dart';
 import 'package:FSOUNotes/misc/course_info.dart';
-import 'package:FSOUNotes/services/funtional_services/cloud_storage_service.dart';
 import 'package:FSOUNotes/services/funtional_services/firestore_service.dart';
 import 'package:FSOUNotes/services/state_services/subjects_service.dart';
-import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
-import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 
-class EditViewModel extends BaseViewModel{
-
+class EditViewModel extends BaseViewModel {
   Logger log = getLogger("UploadViewModel");
-  CloudStorageService _cloudStorageService = locator<CloudStorageService>();
   FirestoreService _firestoreService = locator<FirestoreService>();
   NavigationService _navigationService = locator<NavigationService>();
-  DialogService _dialogService = locator<DialogService>();
   SubjectsService _subjectsService = locator<SubjectsService>();
 
-
   List<DropdownMenuItem<String>> _dropDownMenuItemsofsemester;
-
   List<DropdownMenuItem<String>> _dropDownMenuItemsofBranch;
   List<DropdownMenuItem<String>> _dropDownMenuItemForTypeYear;
   bool _ischecked = false;
@@ -44,7 +36,6 @@ class EditViewModel extends BaseViewModel{
   String _selectedSemester;
   String _selectedBranch;
   String _selectedyeartype;
-
   String _year = '2020';
 
   String get year => _year;
@@ -117,10 +108,10 @@ class EditViewModel extends BaseViewModel{
     notifyListeners();
   }
 
-    void changeCheckMark(bool val) {
-      _ischecked = val;
-      notifyListeners();
-    }
+  void changeCheckMark(bool val) {
+    _ischecked = val;
+    notifyListeners();
+  }
 
   navigatetoPrivacyPolicy() {
     _navigationService.navigateTo(Routes.privacyPolicyView);
@@ -130,8 +121,8 @@ class EditViewModel extends BaseViewModel{
     _navigationService.navigateTo(Routes.termsAndConditionView);
   }
 
-  Future handleUpdate(String text1, String text2, String text3,String text4, Document path,
-    String subjectName, BuildContext context , document) async {
+  Future handleUpdate(String text1, String text2, String text3, String text4,
+      Document path, String subjectName, BuildContext context, document) async {
     //* For all 4 upload screens , there are different text fields and
     //* their value may be different while uploading , so i have used switch case to
     //* handle all 4 situations
@@ -161,7 +152,7 @@ class EditViewModel extends BaseViewModel{
           size: note.size,
           uploader_id: note.uploader_id,
           url: note.url,
-          votes: int.parse(text4), 
+          votes: int.parse(text4),
         );
         break;
       case Document.QuestionPapers:
@@ -176,7 +167,7 @@ class EditViewModel extends BaseViewModel{
           type: type,
           GDriveID: paper.GDriveID,
           GDriveLink: paper.GDriveLink,
-          GDriveQuestionPaperFolderID:paper.GDriveQuestionPaperFolderID,
+          GDriveQuestionPaperFolderID: paper.GDriveQuestionPaperFolderID,
           id: paper.id,
           isDownloaded: paper.isDownloaded,
           note: paper.note,
@@ -206,7 +197,7 @@ class EditViewModel extends BaseViewModel{
           size: paper.size,
           uploadDate: paper.uploadDate,
           uploader_id: paper.uploader_id,
-          url: paper.url, 
+          url: paper.url,
         );
         break;
       case Document.Links:
@@ -230,10 +221,8 @@ class EditViewModel extends BaseViewModel{
         break;
     }
 
-      _firestoreService.updateDocument(doc, path);
-      setBusy(false);
-      _navigationService.popRepeated(1);
-    }
-
-  
+    _firestoreService.updateDocument(doc, path);
+    setBusy(false);
+    _navigationService.popRepeated(1);
+  }
 }

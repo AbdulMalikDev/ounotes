@@ -34,13 +34,8 @@ class _QuestionPapersViewState extends State<QuestionPapersView>
                   Container(
                     padding: EdgeInsets.only(top: 10),
                     height: widget.path != null
-                        ? model.isloading
-                            ? MediaQuery.of(context).size.height * 0.84 //chota
-                            : MediaQuery.of(context).size.height * 0.86 //bada
-                        : model.isloading
-                            ? MediaQuery.of(context).size.height * 0.68 //chota
-                            : MediaQuery.of(context).size.height * 0.73, //bada
-
+                        ? MediaQuery.of(context).size.height * 0.86
+                        : MediaQuery.of(context).size.height * 0.73,
                     width: double.infinity,
                     child: model.isBusy
                         ? Center(
@@ -104,7 +99,7 @@ class _QuestionPapersViewState extends State<QuestionPapersView>
                                       downloadedQp: [],
                                     ),
                                     onTap: () {
-                                      model.openDoc(context, questionPaper);
+                                      model.onTap(context, questionPaper);
                                     },
                                   );
                                 },

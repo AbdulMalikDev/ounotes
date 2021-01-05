@@ -1,33 +1,21 @@
-import 'dart:convert';
 import 'dart:io';
-import 'dart:math' as math;
+import 'package:FSOUNotes/models/download.dart';
 import 'package:FSOUNotes/services/funtional_services/authentication_service.dart';
 import 'package:FSOUNotes/services/funtional_services/cloud_storage_service.dart';
-import 'package:FSOUNotes/services/funtional_services/db_service.dart';
 import 'package:FSOUNotes/services/funtional_services/firestore_service.dart';
 import 'package:FSOUNotes/services/funtional_services/remote_config_service.dart';
-import 'package:FSOUNotes/services/funtional_services/sharedpref_service.dart';
 import 'package:FSOUNotes/services/state_services/download_service.dart';
-import 'package:FSOUNotes/services/state_services/notes_service.dart';
-import 'package:FSOUNotes/services/state_services/question_paper_service.dart';
 import 'package:FSOUNotes/services/state_services/subjects_service.dart';
-import 'package:FSOUNotes/services/state_services/syllabus_service.dart';
 import 'package:FSOUNotes/app/locator.dart';
 import 'package:FSOUNotes/app/logger.dart';
 import 'package:FSOUNotes/enums/constants.dart';
 import 'package:FSOUNotes/enums/enums.dart';
-import 'package:FSOUNotes/models/document.dart';
 import 'package:syncfusion_flutter_pdf/pdf.dart';
 import 'package:FSOUNotes/models/notes.dart';
 import 'package:FSOUNotes/models/question_paper.dart';
 import 'package:FSOUNotes/models/subject.dart';
 import 'package:FSOUNotes/models/syllabus.dart';
-import 'package:FSOUNotes/ui/views/home/home_view.dart';
 import 'package:FSOUNotes/ui/views/notes/notes_viewmodel.dart';
-import 'package:FSOUNotes/utils/file_picker_service.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:cuid/cuid.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -37,32 +25,21 @@ import 'package:googleapis_auth/auth_io.dart';
 import 'package:http/io_client.dart';
 import 'package:injectable/injectable.dart';
 import 'package:logger/logger.dart';
-import 'package:mime/mime.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:stacked_services/stacked_services.dart';
 import 'package:googleapis/drive/v3.dart' as ga;
 import 'package:http/http.dart' as http;
-import 'package:path/path.dart' as path;
 
 Logger log = getLogger("GoogleDriveService");
 
 @lazySingleton
 class GoogleDriveService {
-  FilePickerService _filePickerService = locator<FilePickerService>();
   RemoteConfigService _remoteConfigService = locator<RemoteConfigService>();
   AuthenticationService _authenticationService =
       locator<AuthenticationService>();
   SubjectsService _subjectsService = locator<SubjectsService>();
-  NotesService _notesService = locator<NotesService>();
-  QuestionPaperService _questionPaperService = locator<QuestionPaperService>();
-  SyllabusService _syllabusService = locator<SyllabusService>();
   FirestoreService _firestoreService = locator<FirestoreService>();
   CloudStorageService _cloudStorageService = locator<CloudStorageService>();
   DownloadService _downloadService = locator<DownloadService>();
-  DialogService _dialogService = locator<DialogService>();
-  SharedPreferencesService _sharedPreferencesService =
-      locator<SharedPreferencesService>();
   RemoteConfigService _remote = locator<RemoteConfigService>();
 
   ValueNotifier<int> downloadProgress = new ValueNotifier(0);
@@ -132,12 +109,11 @@ class GoogleDriveService {
       if (!addToGdrive &&
           (doc.GDriveLink != null && doc.GDriveLink.length != 0)) {
         log.w("File being deleted from GDrive");
-        result = await this.deleteFile(doc:doc);
-      }else{
+        result = await this.deleteFile(doc: doc);
+      } else {
         // Delete it from Firebase Storage
-        _cloudStorageService.deleteDocument(doc,addedToGdrive:addToGdrive);
+        _cloudStorageService.deleteDocument(doc, addedToGdrive: addToGdrive);
       }
-
 
       return addToGdrive ? "upload successful" : result ?? "delete successful";
     } catch (e) {
@@ -225,6 +201,18 @@ class GoogleDriveService {
         localFile = File(filePath);
         await localFile.writeAsBytes(dataStore);
         _insertBookmarks(filePath, note);
+        Download downloadObject = Download(
+          note.id,
+          filePath,
+          note.title,
+          note.subjectName,
+          note.author,
+          note.view,
+          note.pages,
+          note.size,
+          note.uploadDate,
+        );
+        _downloadService.addDownload(download: downloadObject);
         await Future.delayed(Duration(seconds: 1));
         downloadProgress.value = 0;
         onDownloadedCallback(localFile.path, note);
@@ -333,6 +321,7 @@ class GoogleDriveService {
       default:
         break;
     }
+    return null;
   }
 
   _setLinkToDocument(dynamic doc, String gDrive_URL, String id,

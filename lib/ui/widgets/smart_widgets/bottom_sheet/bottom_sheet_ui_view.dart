@@ -1,6 +1,4 @@
-import 'package:FSOUNotes/misc/constants.dart';
-import 'package:FSOUNotes/models/notes.dart';
-import 'package:FSOUNotes/ui/shared/app_config.dart';
+
 import 'package:FSOUNotes/ui/widgets/dumb_widgets/TextFieldView.dart';
 import 'package:FSOUNotes/ui/widgets/smart_widgets/bottom_sheet/bottom_sheet_view_model.dart';
 import 'package:flutter/material.dart';
@@ -8,8 +6,6 @@ import 'package:FSOUNotes/app/locator.dart';
 import 'package:FSOUNotes/enums/bottom_sheet_type.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
-import 'package:syncfusion_flutter_sliders/sliders.dart';
-import 'package:syncfusion_flutter_core/theme.dart';
 
 void setUpBottomSheetUi() {
   final bottomSheetService = locator<BottomSheetService>();
@@ -25,8 +21,6 @@ void setUpBottomSheetUi() {
     BottomSheetType.filledStacks: (context, sheetRequest, completer) =>
         _FilledStacksFloatingBoxBottomSheet(
             request: sheetRequest, completer: completer),
-    // BottomSheetType.bookMarks: (context, sheetRequest, completer) =>
-    //     BookMarkBottomSheet(request: sheetRequest, completer: completer),
   };
 
   bottomSheetService.setCustomSheetBuilders(builders);
@@ -307,9 +301,9 @@ class _FilledStacksFloatingBoxBottomSheet extends StatelessWidget {
     this.request,
     this.completer,
   }) : super(key: key);
-  bool isFileUploadSheet = false;
   @override
   Widget build(BuildContext context) {
+  bool isFileUploadSheet = false;
     if (request.customData != null &&
         request.customData.runtimeType.toString() ==
             "_InternalLinkedHashMap<String, bool>") {

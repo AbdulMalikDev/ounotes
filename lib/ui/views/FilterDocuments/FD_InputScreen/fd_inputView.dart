@@ -132,11 +132,6 @@ class FDInputView extends StatelessWidget {
                     onPressed: () {
                       model.onTap(path);
                     },
-                    // onPressed: () => Navigator.of(context).pushNamed(
-                    //   FilterDocumentSubjectDisplay.routeName,
-                    //   arguments:
-                    //       FilterSubject(_selectedSemester, _selectedBranch, path),
-                    // ),
                     textColor: Colors.white,
                     color: Colors.teal,
                     padding: const EdgeInsets.symmetric(

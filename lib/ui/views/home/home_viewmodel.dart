@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'dart:math';
-
 import 'package:FSOUNotes/app/locator.dart';
 import 'package:FSOUNotes/enums/bottom_sheet_type.dart';
 import 'package:FSOUNotes/models/notes.dart';
@@ -9,6 +8,7 @@ import 'package:FSOUNotes/models/subject.dart';
 import 'package:FSOUNotes/models/syllabus.dart';
 import 'package:FSOUNotes/services/funtional_services/admob_service.dart';
 import 'package:FSOUNotes/services/funtional_services/analytics_service.dart';
+import 'package:FSOUNotes/services/funtional_services/email_service.dart';
 import 'package:FSOUNotes/services/funtional_services/firestore_service.dart';
 import 'package:FSOUNotes/services/funtional_services/onboarding_service.dart';
 import 'package:FSOUNotes/services/funtional_services/sharedpref_service.dart';
@@ -22,7 +22,6 @@ import 'package:rate_my_app/rate_my_app.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:wiredash/wiredash.dart';
 import 'package:FSOUNotes/services/funtional_services/app_info_service.dart';
 import 'package:FSOUNotes/models/user.dart';
 import 'package:package_info/package_info.dart';
@@ -120,6 +119,14 @@ class HomeViewModel extends BaseViewModel {
     }
   }
 
+  dispatchEmail() async {
+    await EmailService.emailFunc(
+      subject: "OU Notes Feedback",
+      body:
+          "[if you are facing errors please attach Screen Shots or Screen Recordings]",
+    );
+  }
+
   RateMyApp rateMyApp = RateMyApp(
     preferencesPrefix: 'rateMyApp_',
     minDays: 0, // Show rate popup on first day of install,
@@ -151,17 +158,7 @@ class HomeViewModel extends BaseViewModel {
                       (stars == null ? '0' : stars.round().toString()) +
                       ' star(s) !');
                   if (stars < 3) {
-                    // model.dispatchEmail();
-                    await getPackageInfo();
-                    Wiredash.of(context).setBuildProperties(
-                      buildNumber: packageInfo.version,
-                      buildVersion: packageInfo.buildNumber,
-                    );
-                    Wiredash.of(context).setUserProperties(
-                      userEmail: await getUserEmail(),
-                      userId: await getUserId(),
-                    );
-                    Wiredash.of(context).show();
+                    dispatchEmail();
                   } else {
                     OpenAppstore.launch(
                         androidAppId: 'com.notes.ounotes',

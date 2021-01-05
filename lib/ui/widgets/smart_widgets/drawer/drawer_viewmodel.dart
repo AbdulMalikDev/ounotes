@@ -5,7 +5,6 @@ import 'package:FSOUNotes/app/logger.dart';
 import 'package:FSOUNotes/app/router.gr.dart';
 import 'package:FSOUNotes/enums/enums.dart';
 import 'package:FSOUNotes/models/user.dart';
-import 'package:FSOUNotes/services/funtional_services/analytics_service.dart';
 import 'package:FSOUNotes/services/funtional_services/app_info_service.dart';
 import 'package:FSOUNotes/services/funtional_services/authentication_service.dart';
 import 'package:FSOUNotes/services/funtional_services/email_service.dart';
@@ -14,12 +13,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_intro/flutter_intro.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:logger/logger.dart';
 import 'package:package_info/package_info.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
-import 'package:wiredash/wiredash.dart';
 import 'package:rate_my_app/rate_my_app.dart';
 import 'package:open_appstore/open_appstore.dart';
 
@@ -67,62 +66,51 @@ class DrawerViewModel extends BaseViewModel {
   showRateMyAppDialog(BuildContext context) {
     rateMyApp.init().then(
       (_) {
-        rateMyApp.showStarRateDialog(
-          context,
-          title: 'Rate this app', // The dialog title.
-          message:
-              'You like this app ? Then take a little bit of your time to leave a rating :', // The dialog message.
-          // contentBuilder: (context, defaultContent) => content, // This one allows you to change the default dialog content.
-          actionsBuilder: (context, stars) {
-            // Triggered when the user updates the star rating.
-            return [
-              // Return a list of actions (that will be shown at the bottom of the dialog).
-              FlatButton(
-                child: Text('OK'),
-                onPressed: () async {
-                  print('Thanks for the ' +
-                      (stars == null ? '0' : stars.round().toString()) +
-                      ' star(s) !');
-                  Navigator.pop<RateMyAppDialogButton>(
-                      context, RateMyAppDialogButton.rate);
-                  if (stars < 4) {
-                    // model.dispatchEmail();
-                    await getPackageInfo();
-                    Wiredash.of(context).setBuildProperties(
-                      buildNumber: packageInfo.version,
-                      buildVersion: packageInfo.buildNumber,
-                    );
-                    Wiredash.of(context).setUserProperties(
-                      userEmail: await getUserEmail(),
-                      userId: await getUserId(),
-                    );
-                    Wiredash.of(context).show();
-                  } else {
-                    OpenAppstore.launch(
-                        androidAppId: 'com.notes.ounotes',
-                        iOSAppId: 'com.notes.ounotes');
-                  }
-                  // This allows to mimic the behavior of the default "Rate" button. See "Advanced > Broadcasting events" for more information :
-                  // await rateMyApp
-                  //     .callEvent(RateMyAppEventType.rateButtonPressed);
-                },
-              ),
-            ];
-          },
-          ignoreNativeDialog: Platform
-              .isAndroid, // Set to false if you want to show the Apple's native app rating dialog on iOS or Google's native app rating dialog (depends on the current Platform).
-          dialogStyle: DialogStyle(
-            // Custom dialog styles.
-            titleAlign: TextAlign.center,
-            messageAlign: TextAlign.center,
-            messagePadding: EdgeInsets.only(bottom: 20),
-          ),
-          starRatingOptions:
-              StarRatingOptions(), // Custom star bar rating options.
-          onDismissed: (){
-            
-          } // Called when the user dismissed the dialog (either by taping outside or by pressing the "back" button).
-        );
+        rateMyApp.showStarRateDialog(context,
+            title: 'Rate this app', // The dialog title.
+            message:
+                'You like this app ? Then take a little bit of your time to leave a rating :', // The dialog message.
+            // contentBuilder: (context, defaultContent) => content, // This one allows you to change the default dialog content.
+            actionsBuilder: (context, stars) {
+          // Triggered when the user updates the star rating.
+          return [
+            // Return a list of actions (that will be shown at the bottom of the dialog).
+            FlatButton(
+              child: Text('OK'),
+              onPressed: () async {
+                print('Thanks for the ' +
+                    (stars == null ? '0' : stars.round().toString()) +
+                    ' star(s) !');
+                Navigator.pop<RateMyAppDialogButton>(
+                    context, RateMyAppDialogButton.rate);
+                if (stars < 4) {
+                  dispatchEmail();
+                } else {
+                  OpenAppstore.launch(
+                      androidAppId: 'com.notes.ounotes',
+                      iOSAppId: 'com.notes.ounotes');
+                }
+                // This allows to mimic the behavior of the default "Rate" button. See "Advanced > Broadcasting events" for more information :
+                await rateMyApp.callEvent(RateMyAppEventType.rateButtonPressed);
+                Navigator.pop<RateMyAppDialogButton>(
+                    context, RateMyAppDialogButton.rate);
+              },
+            ),
+          ];
+        },
+            ignoreNativeDialog: Platform
+                .isAndroid, // Set to false if you want to show the Apple's native app rating dialog on iOS or Google's native app rating dialog (depends on the current Platform).
+            dialogStyle: DialogStyle(
+              // Custom dialog styles.
+              titleAlign: TextAlign.center,
+              messageAlign: TextAlign.center,
+              messagePadding: EdgeInsets.only(bottom: 20),
+            ),
+            starRatingOptions:
+                StarRatingOptions(), // Custom star bar rating options.
+            onDismissed:
+                () {} // Called when the user dismissed the dialog (either by taping outside or by pressing the "back" button).
+            );
       },
     );
   }
@@ -168,7 +156,6 @@ class DrawerViewModel extends BaseViewModel {
         arguments: FDInputViewArguments(path: path));
   }
 
- 
   Future<String> getUserEmail() async =>
       await _getUser().then((user) => user.email);
 
@@ -177,6 +164,76 @@ class DrawerViewModel extends BaseViewModel {
   Future<User> _getUser() async {
     if (user == null) user = await _authenticationService.getUser();
     return user;
+  }
+
+  handleSignOut(BuildContext context) async {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          title: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Expanded(
+                child: Text(
+                  "Are you sure, you want to logout?",
+                  style: Theme.of(context)
+                      .textTheme
+                      .headline6
+                      .copyWith(fontSize: 20),
+                  overflow: TextOverflow.clip,
+                ),
+              ),
+            ],
+          ),
+          actions: <Widget>[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                FlatButton(
+                  child: Text(
+                    "GO BACK",
+                    style: Theme.of(context)
+                        .textTheme
+                        .subtitle1
+                        .copyWith(fontSize: 15),
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+                FlatButton(
+                  child: Text(
+                    "PROCEED",
+                    style: Theme.of(context)
+                        .textTheme
+                        .subtitle1
+                        .copyWith(fontSize: 15),
+                  ),
+                  onPressed: () async {
+                    Navigator.of(context).pop();
+                    setBusy(true);
+                    await _authenticationService.handleSignOut().then((value) {
+                      if (value ?? true) {
+                        _navigationService.navigateTo(Routes.introViewRoute);
+                      } else
+                        Fluttertoast.showToast(
+                            msg: "Sign Out failed ,please try again later");
+                    });
+                    setBusy(false);
+                    notifyListeners();
+                  },
+                ),
+              ],
+            ),
+          ],
+        );
+      },
+    );
   }
 
   showIntro(Intro intro, BuildContext context) async {

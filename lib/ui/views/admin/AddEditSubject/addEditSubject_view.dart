@@ -1,4 +1,3 @@
-import 'package:FSOUNotes/enums/enums.dart';
 import 'package:FSOUNotes/misc/constants.dart';
 import 'package:FSOUNotes/models/subject.dart';
 import 'package:FSOUNotes/ui/shared/app_config.dart';

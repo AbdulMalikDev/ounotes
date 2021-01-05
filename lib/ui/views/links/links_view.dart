@@ -1,10 +1,7 @@
-import 'package:FSOUNotes/misc/constants.dart';
 import 'package:FSOUNotes/models/link.dart';
-import 'package:FSOUNotes/ui/widgets/dumb_widgets/progress.dart';
 import 'package:FSOUNotes/ui/widgets/smart_widgets/links_tile_view/links_tile_view.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
-
 import 'links_viewmodel.dart';
 
 class LinksView extends StatefulWidget {
@@ -32,24 +29,13 @@ class _LinksViewState extends State<LinksView>
                 width: MediaQuery.of(context).size.width,
                 child: Column(
                   children: <Widget>[
-                    model.isloading
-                        ? linearProgress()
-                        : SizedBox(height: 0, width: 0),
                     Stack(
                       children: <Widget>[
                         Container(
                           padding: EdgeInsets.only(top: 10),
                           height: widget.path != null
-                              ? model.isloading
-                                  ? MediaQuery.of(context).size.height *
-                                      0.84 //chota
-                                  : MediaQuery.of(context).size.height *
-                                      0.86 //bada
-                              : model.isloading
-                                  ? MediaQuery.of(context).size.height *
-                                      0.68 //chota
-                                  : MediaQuery.of(context).size.height *
-                                      0.73, //bada
+                              ? MediaQuery.of(context).size.height * 0.86
+                              : MediaQuery.of(context).size.height * 0.73,
                           width: double.infinity,
                           child: model.isBusy
                               ? Center(
@@ -106,11 +92,12 @@ class _LinksViewState extends State<LinksView>
                                           (BuildContext context, int index) {
                                         Link link = model.linksList[index];
                                         return InkWell(
-                                            child: LinksTileView(
-                                              link: link,
-                                              index: index,
-                                            ),
-                                            onTap: () {});
+                                          child: LinksTileView(
+                                            link: link,
+                                            index: index,
+                                          ),
+                                          onTap: () {},
+                                        );
                                       },
                                     ),
                         )

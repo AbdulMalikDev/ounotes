@@ -1,3 +1,4 @@
+
 import 'dart:io';
 
 import 'package:FSOUNotes/app/locator.dart';
@@ -38,7 +39,6 @@ class _PDFScreenState extends State<PDFScreen> {
   final GlobalKey<SfPdfViewerState> _pdfViewerKey = GlobalKey();
   final PdfViewerController _pdfViewerController = PdfViewerController();
   final GlobalKey<SearchToolbarState> _textSearchKey = GlobalKey();
-  BottomSheetService _bottomSheetService = locator<BottomSheetService>();
   bool _showPdf;
   bool _showToolbar;
   bool _showToast;
@@ -48,7 +48,6 @@ class _PDFScreenState extends State<PDFScreen> {
   Color _copyColor;
   double _contextMenuWidth;
   double _contextMenuHeight;
-  bool _askBookMarks;
 
   @override
   Widget build(BuildContext context) {
@@ -236,7 +235,6 @@ class _PDFScreenState extends State<PDFScreen> {
     _showScrollHead = true;
     _contextMenuHeight = 48;
     _contextMenuWidth = 100;
-    _askBookMarks = widget.askBookMarks;
     log.e(widget.pathPDF);
     if (widget.askBookMarks) {
       showBottomSeetForBookMarks(true);

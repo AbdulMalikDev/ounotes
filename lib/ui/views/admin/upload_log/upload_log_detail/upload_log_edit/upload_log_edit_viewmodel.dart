@@ -1,6 +1,5 @@
 import 'package:FSOUNotes/app/locator.dart';
 import 'package:FSOUNotes/app/logger.dart';
-import 'package:FSOUNotes/enums/bottom_sheet_type.dart';
 import 'package:FSOUNotes/enums/constants.dart';
 import 'package:FSOUNotes/enums/enums.dart';
 import 'package:FSOUNotes/misc/course_info.dart';
@@ -17,10 +16,10 @@ import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
-Logger log =  getLogger("UploadLogEditViewModel");
 
-class UploadLogEditViewModel extends BaseViewModel{
+Logger log = getLogger("UploadLogEditViewModel");
 
+class UploadLogEditViewModel extends BaseViewModel {
   SubjectsService _subjectsService = locator<SubjectsService>();
   FirestoreService _firestoreService = locator<FirestoreService>();
   BottomSheetService _bottomSheetService = locator<BottomSheetService>();
@@ -42,8 +41,8 @@ class UploadLogEditViewModel extends BaseViewModel{
   Document get documentEnum => _documentEnum;
   AbstractDocument get doc => _doc;
 
-  set selectedSemester(String value) => _selectedSemester = value; 
-  set selectedBranch(String value) => _selectedBranch = value; 
+  set selectedSemester(String value) => _selectedSemester = value;
+  set selectedBranch(String value) => _selectedBranch = value;
 
   List<DropdownMenuItem<String>> get dropdownofsem =>
       _dropDownMenuItemsofsemester;
@@ -63,7 +62,8 @@ class UploadLogEditViewModel extends BaseViewModel{
     _selectedBranch = _dropDownMenuItemsofBranch[0].value;
     _documentEnum = Constants.getDocFromConstant(uploadLog.type);
     _selecteddocumentType = _documentEnum.toString();
-    _doc = await _firestoreService.getDocumentById(uploadLog.subjectName, uploadLog.id, _documentEnum);
+    _doc = await _firestoreService.getDocumentById(
+        uploadLog.subjectName, uploadLog.id, _documentEnum);
     return await Future.value(true);
   }
 
@@ -128,17 +128,18 @@ class UploadLogEditViewModel extends BaseViewModel{
     return subList;
   }
 
-  void onSubmit
-  (
-    TextEditingController subjectNameController, 
-    TextEditingController titleController, 
-    TextEditingController authorController, 
-    TextEditingController yearController
-  ) async
-  {
+  void onSubmit(
+      TextEditingController subjectNameController,
+      TextEditingController titleController,
+      TextEditingController authorController,
+      TextEditingController yearController) async {
     setBusy(true);
-    Subject subject = _subjectsService.getSubjectByName(subjectNameController.text);
-    AbstractDocument docUploaded = await _firestoreService.getDocumentById(uploadLog.subjectName, uploadLog.id, Constants.getDocFromConstant(uploadLog.type));
+    Subject subject =
+        _subjectsService.getSubjectByName(subjectNameController.text);
+    AbstractDocument docUploaded = await _firestoreService.getDocumentById(
+        uploadLog.subjectName,
+        uploadLog.id,
+        Constants.getDocFromConstant(uploadLog.type));
     AbstractDocument doc;
     switch (_documentEnum) {
       case Document.Notes:
@@ -154,7 +155,7 @@ class UploadLogEditViewModel extends BaseViewModel{
           view: 0,
           votes: 0,
           uploadDate: DateTime.now(),
-          url:docUploaded.url,
+          url: docUploaded.url,
         );
         log.e(doc.toJson());
         break;
@@ -170,7 +171,7 @@ class UploadLogEditViewModel extends BaseViewModel{
           size: uploadLog.size,
           uploader_id: uploadLog.uploader_id,
           uploadDate: DateTime.now(),
-          url:docUploaded.url,
+          url: docUploaded.url,
         );
         log.e(doc.toJson());
         break;
@@ -187,7 +188,7 @@ class UploadLogEditViewModel extends BaseViewModel{
           size: uploadLog.size,
           uploader_id: uploadLog.uploader_id,
           uploadDate: DateTime.now(),
-          url:docUploaded.url,
+          url: docUploaded.url,
         );
         log.e(doc.toJson());
         break;
@@ -207,26 +208,32 @@ class UploadLogEditViewModel extends BaseViewModel{
       case Document.Report:
       case Document.UploadLog:
       case Document.Report:
+      case Document.Random:
         break;
     }
     if (doc.path != Document.Links) {
-      SheetResponse response = await _bottomSheetService.showBottomSheet(title: "Are you sure you want to update?",description: "",);
+      SheetResponse response = await _bottomSheetService.showBottomSheet(
+        title: "Are you sure you want to update?",
+        description: "",
+      );
       log.e(response?.confirmed);
-      if (response == null || (response!=null && !response.confirmed)){
+      if (response == null || (response != null && !response.confirmed)) {
         setBusy(false);
         return;
       }
       //Delete old firestore objects
-      await _firestoreService.deleteTempDocumentById(uploadLog.id, Constants.getDocFromConstant(uploadLog.type));
-      await _firestoreService.deleteTempDocumentById(uploadLog.id, Document.UploadLog);
+      await _firestoreService.deleteTempDocumentById(
+          uploadLog.id, Constants.getDocFromConstant(uploadLog.type));
+      await _firestoreService.deleteTempDocumentById(
+          uploadLog.id, Document.UploadLog);
       //Upload new objects
-      if(doc.path != Document.Links)await _firestoreService.saveNotes(doc);
-      else await _firestoreService.saveLink(doc); 
+      if (doc.path != Document.Links)
+        await _firestoreService.saveNotes(doc);
+      else
+        await _firestoreService.saveLink(doc);
       log.e(_documentEnum);
-      log.e(doc.toJson());  
+      log.e(doc.toJson());
     }
     setBusy(false);
-}
-
-
+  }
 }

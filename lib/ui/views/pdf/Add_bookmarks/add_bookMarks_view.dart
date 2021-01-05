@@ -1,4 +1,3 @@
-import 'package:FSOUNotes/app/router.gr.dart';
 import 'package:FSOUNotes/misc/constants.dart';
 import 'package:FSOUNotes/models/notes.dart';
 import 'package:FSOUNotes/ui/shared/app_config.dart';
@@ -206,7 +205,8 @@ class _BookMarkBottomSheetState extends State<BookMarkBottomSheet> {
                                         (String val) {
                                           model.unitPageNos[1] = val;
                                           model.saveDataLocally();
-                                        })
+                                        },
+                                      )
                                     : Container(),
                                 model.units[2]
                                     ? bookMarkEntry(

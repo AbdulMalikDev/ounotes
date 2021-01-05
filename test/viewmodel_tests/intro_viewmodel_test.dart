@@ -17,9 +17,9 @@ void main() {
     test('When called, should attempt to sign in the user', () async  {
         await ConfigReader.initialize();
         var authService = getAndRegisterAuthenticationServiceMock();
-        var dialogService = getAndRegisterDialogServiceMock(isUserConfirmedDialog: true);
-        var navService = getAndRegisterNavigationServiceMock();
-        var model = IntroViewModel();
+        // var dialogService = getAndRegisterDialogServiceMock(isUserConfirmedDialog: true);
+        // var navService = getAndRegisterNavigationServiceMock();
+        // var model = IntroViewModel();
         // model.changedDropDownItemOfBranch(TestData.branch);
         // model.changedDropDownItemOfCollege(TestData.college);
         // model.changedDropDownItemOfSemester(TestData.semester);

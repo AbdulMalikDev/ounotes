@@ -256,21 +256,24 @@ class _SettingsViewState extends State<SettingsView> {
                           ),
                         ),
                       ),
-                      SizedBox(height: 15,),
+                      SizedBox(
+                        height: 15,
+                      ),
                       Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 100),
-                        height: 50,
+                        width: MediaQuery.of(context).size.width / 1.7,
+                        height: MediaQuery.of(context).size.height * 0.06,
+                        margin: const EdgeInsets.symmetric(horizontal:70),
                         child: FlatButton(
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(25),
                           ),
                           child: Text(
-                            "Log out",
+                            "CHANGE INFORMATION",
                             style: TextStyle(color: Colors.white),
                           ),
                           color: Theme.of(context).primaryColor,
                           onPressed: () {
-                            model.handleSignOut(context);
+                            model.handleSignOut();
                           },
                         ),
                       ),

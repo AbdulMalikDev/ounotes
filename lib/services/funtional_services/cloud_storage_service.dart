@@ -6,9 +6,7 @@ import 'package:FSOUNotes/app/logger.dart';
 import 'package:FSOUNotes/app/router.gr.dart';
 import 'package:FSOUNotes/enums/enums.dart';
 import 'package:FSOUNotes/models/document.dart';
-import 'package:FSOUNotes/services/funtional_services/authentication_service.dart';
 import 'package:FSOUNotes/services/funtional_services/firestore_service.dart';
-import 'package:FSOUNotes/services/state_services/download_service.dart';
 import 'package:FSOUNotes/services/state_services/notes_service.dart';
 import 'package:FSOUNotes/services/state_services/question_paper_service.dart';
 import 'package:FSOUNotes/services/state_services/syllabus_service.dart';
@@ -32,15 +30,11 @@ class CloudStorageService {
   QuestionPaperService _questionPaperService = locator<QuestionPaperService>();
   SyllabusService _syllabusService = locator<SyllabusService>();
   FirestoreService _firestoreService = locator<FirestoreService>();
-  DownloadService _downloadService = locator<DownloadService>();
-  DialogService _dialogService = locator<DialogService>();
   NavigationService _navigationService = locator<NavigationService>();
   Logger log = getLogger("CloudStorageService");
   final String url =
       "https://storage.googleapis.com/ou-notes.appspot.com/pdfs/";
   StorageReference _storageReference = FirebaseStorage.instance.ref();
-  StorageUploadTask _storageUploadTask;
-  StorageTaskSnapshot _storageTaskSnapshot;
 
   downloadFile({
     String notesName,
@@ -223,6 +217,7 @@ class CloudStorageService {
       case Document.Report:
       case Document.UploadLog:
       case Document.Drawer:
+      case Document.Random:
         return null;
         break;
     }
