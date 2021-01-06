@@ -39,10 +39,8 @@ class NotesTileViewModel extends BaseViewModel {
   BottomSheetService _bottomSheetService = locator<BottomSheetService>();
   VoteService _voteService = locator<VoteService>();
   SubjectsService _subjectService = locator<SubjectsService>();
-  
 
   bool _hasalreadyvoted = false;
-  
 
   bool get hasalreadyvoted => _hasalreadyvoted;
   String _vote = Constants.none;
@@ -53,6 +51,15 @@ class NotesTileViewModel extends BaseViewModel {
   AdmobService get admobService => _admobService;
 
   Map<String, int> get numberOfVotes => _voteService.numberOfVotes;
+
+  downloadNote() async {
+    SheetResponse response = await _bottomSheetService.showCustomSheet(
+      variant: BottomSheetType.downloadPdf,
+      title: "Download PDF",
+    );
+
+    if (response.confirmed) {}
+  }
 
   handleVotes(String vote, String votedon, Note note) {
     //if the user has pressed on same vote again then make the vote to none and update it in db
@@ -358,6 +365,4 @@ class NotesTileViewModel extends BaseViewModel {
     //notify UI for update
     refresh(note.subjectName);
   }
-
-  
 }

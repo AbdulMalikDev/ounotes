@@ -37,6 +37,8 @@ import 'package:FSOUNotes/ui/views/edit/edit_view.dart';
 import 'package:FSOUNotes/ui/views/admin/upload_log/upload_log_detail/upload_log_detail_view.dart';
 import 'package:FSOUNotes/models/UploadLog.dart';
 import 'package:FSOUNotes/ui/views/admin/upload_log/upload_log_detail/upload_log_edit/upload_log_edit_view.dart';
+import 'package:FSOUNotes/ui/widgets/smart_widgets/watch_ad/watch_ad_view.dart';
+import 'package:FSOUNotes/ui/widgets/smart_widgets/thank_you_page/thank_you_view.dart';
 
 abstract class Routes {
   static const splashViewRoute = '/';
@@ -63,6 +65,8 @@ abstract class Routes {
   static const editViewRoute = '/edit-view-route';
   static const uploadLogDetailViewRoute = '/upload-log-detail-view-route';
   static const uploadLogEditViewRoute = '/upload-log-edit-view-route';
+  static const watchAdToContinueView = '/watch-ad-to-continue-view';
+  static const thankYouView = '/thank-you-view';
   static const all = {
     splashViewRoute,
     introViewRoute,
@@ -88,6 +92,8 @@ abstract class Routes {
     editViewRoute,
     uploadLogDetailViewRoute,
     uploadLogEditViewRoute,
+    watchAdToContinueView,
+    thankYouView,
   };
 }
 
@@ -366,6 +372,16 @@ class Router extends RouterBase {
         return MaterialPageRoute<dynamic>(
           builder: (context) => UploadLogEditView(
               uploadLog: typedArgs.uploadLog, key: typedArgs.key),
+          settings: settings,
+        );
+      case Routes.watchAdToContinueView:
+        return MaterialPageRoute<dynamic>(
+          builder: (context) => WatchAdToContinueView(),
+          settings: settings,
+        );
+      case Routes.thankYouView:
+        return MaterialPageRoute<dynamic>(
+          builder: (context) => ThankYouView(),
           settings: settings,
         );
       default:

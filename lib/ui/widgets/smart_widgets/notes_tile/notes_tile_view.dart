@@ -28,7 +28,7 @@ class NotesTileView extends StatelessWidget {
     this.votes,
     this.notification = false,
     this.isPinned = false,
-    this.refresh, 
+    this.refresh,
     this.onDownloadCallback,
   }) : super(key: key);
 
@@ -87,7 +87,7 @@ class NotesTileView extends StatelessWidget {
                               size: size,
                               model: model,
                               isPinned: isPinned,
-                              onDownloadCallback:onDownloadCallback,
+                              onDownloadCallback: onDownloadCallback,
                             ),
                           )
                         : NotesColumnWidget(
@@ -103,7 +103,7 @@ class NotesTileView extends StatelessWidget {
                             size: size,
                             model: model,
                             isPinned: isPinned,
-                            onDownloadCallback:onDownloadCallback,
+                            onDownloadCallback: onDownloadCallback,
                           ),
                   ),
           );
@@ -266,16 +266,6 @@ class NotesColumnWidget extends StatelessWidget {
                                       size: 18,
                                     )
                                   : SizedBox(),
-                              IconButton(icon: Icon(Icons.download_outlined), onPressed: (){
-                                onDownloadCallback(note: note);
-                              }),
-                              // model.isnotedownloaded
-                              //     ? Icon(
-                              //         Icons.done_all,
-                              //         color: theme.iconTheme.color,
-                              //         size: 18,
-                              //       )
-                              //     : SizedBox(),
                             ],
                           ),
                         ),
@@ -286,7 +276,9 @@ class NotesColumnWidget extends StatelessWidget {
                             color: theme.primaryColor,
                           ),
                           onPressed: () {
-                            //TODO Malik implement download function
+                            //TODO malik call onDownloadCallback after user clicked downlaod now button in the bottom sheet
+                            model.downloadNote();
+                          //  onDownloadCallback(note: note);
                           },
                         ),
                         Flexible(

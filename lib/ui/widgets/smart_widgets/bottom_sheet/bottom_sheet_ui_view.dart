@@ -1,9 +1,10 @@
-
+import 'package:FSOUNotes/ui/shared/app_config.dart';
 import 'package:FSOUNotes/ui/widgets/dumb_widgets/TextFieldView.dart';
 import 'package:FSOUNotes/ui/widgets/smart_widgets/bottom_sheet/bottom_sheet_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:FSOUNotes/app/locator.dart';
 import 'package:FSOUNotes/enums/bottom_sheet_type.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 
@@ -21,6 +22,10 @@ void setUpBottomSheetUi() {
     BottomSheetType.filledStacks: (context, sheetRequest, completer) =>
         _FilledStacksFloatingBoxBottomSheet(
             request: sheetRequest, completer: completer),
+    BottomSheetType.premium: (context, sheetRequest, completer) =>
+        PremiumBottomSheet(request: sheetRequest, completer: completer),
+    BottomSheetType.downloadPdf: (context, sheetRequest, completer) =>
+        DownloadPdfBottomSheet(request: sheetRequest, completer: completer),
   };
 
   bottomSheetService.setCustomSheetBuilders(builders);
@@ -303,7 +308,7 @@ class _FilledStacksFloatingBoxBottomSheet extends StatelessWidget {
   }) : super(key: key);
   @override
   Widget build(BuildContext context) {
-  bool isFileUploadSheet = false;
+    bool isFileUploadSheet = false;
     if (request.customData != null &&
         request.customData.runtimeType.toString() ==
             "_InternalLinkedHashMap<String, bool>") {
@@ -394,4 +399,272 @@ class _FilledStacksFloatingBoxBottomSheet extends StatelessWidget {
       ),
     );
   }
+}
+
+class PremiumBottomSheet extends StatelessWidget {
+  final SheetRequest request;
+  final Function(SheetResponse) completer;
+  PremiumBottomSheet({
+    Key key,
+    this.request,
+    this.completer,
+  }) : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.all(25),
+      padding: EdgeInsets.all(25),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(15),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 13.0),
+                child: Text(
+                  request.title,
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.grey[900],
+                  ),
+                ),
+              ),
+              SizedBox(
+                width: 10,
+              ),
+              Icon(
+                MdiIcons.crown,
+                color: Colors.amber,
+                size: 30,
+              ),
+            ],
+          ),
+          SizedBox(height: 25),
+          Text(
+            "₹150",
+            style: TextStyle(
+              fontSize: 30,
+              fontWeight: FontWeight.bold,
+              color: Colors.amber,
+            ),
+          ),
+          Text(
+            "per year",
+            style: TextStyle(
+              fontSize: 15,
+              fontWeight: FontWeight.bold,
+              color: Colors.grey,
+            ),
+          ),
+          SizedBox(
+            height: 20,
+          ),
+          Container(
+            height: 2,
+            width: App(context).appWidth(0.6),
+            color: Colors.amber,
+          ),
+          SizedBox(
+            height: 30,
+          ),
+          buildPremiumOffer(
+            "No Annoying Ads",
+            Icon(
+              Icons.highlight_off,
+              color: Colors.red,
+            ),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          buildPremiumOffer(
+            "Save and Read Offline",
+            Icon(
+              Icons.import_contacts,
+              color: Colors.teal,
+            ),
+          ),
+          SizedBox(
+            height: 40,
+          ),
+          FractionallySizedBox(
+            widthFactor: 0.5,
+            child: Container(
+              height: 40,
+              child: RaisedButton(
+                onPressed: () {},
+                textColor: Colors.white,
+                color: Colors.amber.shade500,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30),
+                ),
+                child: new Text(
+                  "Buy now",
+                  style: TextStyle(fontSize: 15),
+                ),
+              ),
+            ),
+          ),
+          SizedBox(
+            height: 20,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class DownloadPdfBottomSheet extends StatelessWidget {
+  final SheetRequest request;
+  final Function(SheetResponse) completer;
+  DownloadPdfBottomSheet({
+    Key key,
+    this.request,
+    this.completer,
+  }) : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.all(25),
+      padding: EdgeInsets.all(25),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(15),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 13.0),
+                child: Text(
+                  request.title,
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.grey[900],
+                  ),
+                ),
+              ),
+              SizedBox(
+                width: 10,
+              ),
+              Icon(
+                MdiIcons.crown,
+                color: Colors.amber,
+                size: 30,
+              ),
+            ],
+          ),
+          SizedBox(height: 25),
+          Text(
+            "₹10",
+            style: TextStyle(
+              fontSize: 30,
+              fontWeight: FontWeight.bold,
+              color: Colors.amber,
+            ),
+          ),
+          Text(
+            "per download",
+            style: TextStyle(
+              fontSize: 15,
+              fontWeight: FontWeight.bold,
+              color: Colors.grey,
+            ),
+          ),
+          SizedBox(
+            height: 20,
+          ),
+          Container(
+            height: 2,
+            width: App(context).appWidth(0.6),
+            color: Colors.amber,
+          ),
+          SizedBox(
+            height: 30,
+          ),
+          Text(
+            "Why are we charging ₹10 per download?",
+            style: TextStyle(
+              fontSize: 15,
+              fontWeight: FontWeight.w500,
+              color: Colors.black,
+            ),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          //TODO malik answer this question
+          Text(
+            "Because we have to pay for cloud storage",
+            style: TextStyle(
+              fontSize: 15,
+              fontWeight: FontWeight.w300,
+              color: Colors.black,
+            ),
+          ),
+          SizedBox(
+            height: 40,
+          ),
+          FractionallySizedBox(
+            widthFactor: 0.6,
+            child: Container(
+              height: 40,
+              child: RaisedButton(
+                onPressed: () {},
+                textColor: Colors.white,
+                color: Colors.amber.shade500,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30),
+                ),
+                child: new Text(
+                  "Download now",
+                  style: TextStyle(fontSize: 15),
+                ),
+              ),
+            ),
+          ),
+          SizedBox(
+            height: 20,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+Widget buildPremiumOffer(String offer, Icon widget) {
+  return Row(
+    mainAxisAlignment: MainAxisAlignment.center,
+    crossAxisAlignment: CrossAxisAlignment.center,
+    children: [
+      widget,
+      SizedBox(
+        width: 20,
+      ),
+      Text(
+        "$offer",
+        style: TextStyle(
+          fontSize: 15,
+          fontWeight: FontWeight.w500,
+          color: Colors.black,
+        ),
+      ),
+    ],
+  );
 }

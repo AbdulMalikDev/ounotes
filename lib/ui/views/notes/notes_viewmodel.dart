@@ -72,7 +72,6 @@ class NotesViewModel extends BaseViewModel {
   bool get loading => isloading;
   Box box;
   ValueNotifier<List<Vote>> get userVotesBySub => _voteService.votesBySub;
-
   ValueNotifier<int> get downloadProgress =>
       _googleDriveService.downloadProgress;
 
@@ -245,20 +244,21 @@ class NotesViewModel extends BaseViewModel {
     }
   }
 
-  void navigateToWebView(Note note) {
+  void navigateToWebView(Note note) async {
     try {
-      _googleDriveService.downloadFile(
-        note: note,
-        startDownload: () {
-          setLoading(true);
-        },
-        onDownloadedCallback: (path, note) {
-          setLoading(false);
-          _navigationService.navigateTo(Routes.pdfScreenRoute,
-              arguments: PDFScreenArguments(
-                  pathPDF: path, doc: note, askBookMarks: false));
-        },
-      );
+      // _googleDriveService.downloadFile(
+      //   note: note,
+      //   startDownload: () {
+      //     setLoading(true);
+      //   },
+      //   onDownloadedCallback: (path, note) {
+      //     setLoading(false);
+      //     _navigationService.navigateTo(Routes.pdfScreenRoute,
+      //         arguments: PDFScreenArguments(
+      //             pathPDF: path, doc: note, askBookMarks: false));
+      //   },
+      // );
+      _navigationService.navigateTo(Routes.watchAdToContinueView);
     } catch (e) {
       setLoading(false);
       Fluttertoast.showToast(
@@ -304,7 +304,7 @@ class NotesViewModel extends BaseViewModel {
       notesName: notesName,
       subName: subName,
       type: type,
-      doc:doc,
+      doc: doc,
     );
     String PDFpath = file.path;
     log.e(file.path);
@@ -337,7 +337,7 @@ class NotesViewModel extends BaseViewModel {
     try {
       String fileUrl =
           "https://storage.googleapis.com/ou-notes.appspot.com/pdfs/$subName/$type/$notesName";
-      if(doc!=null)fileUrl = doc.url;
+      if (doc != null) fileUrl = doc.url;
       log.e(doc.url);
       log.i(Uri.parse(fileUrl));
       var request = await HttpClient().getUrl(Uri.parse(fileUrl));
@@ -383,7 +383,7 @@ class NotesViewModel extends BaseViewModel {
         notification: notification,
         isPinned: isPinned,
         refresh: refresh,
-        onDownloadCallback:handleDownloadPurchase,
+        onDownloadCallback: handleDownloadPurchase,
       ),
       onTap: () {
         incrementViewForAd();
@@ -401,27 +401,32 @@ class NotesViewModel extends BaseViewModel {
   void handleDownloadPurchase({Note note}) async {
     await _inAppPaymentService.purchaseDownloadPackage();
     isProMember = _inAppPaymentService.isPro;
-    if(isProMember){
+    if (isProMember) {
       log.e("Download started");
-      await _googleDriveService.downloadPuchasedPdf
-      (
-        note:note,
+      await _googleDriveService.downloadPuchasedPdf(
+        note: note,
         startDownload: () {
           setLoading(true);
         },
-        onDownloadedCallback: (path,fileName) async {
+        onDownloadedCallback: (path, fileName) async {
           setLoading(false);
           //TODO MALIK make a model for this since making map everytime is not convenient and error prone
-          await _notificationService.dispatchLocalNotification(NotificationService.download_purchase_notify, {
-              "title":fileName + " Downloaded !",
-              "body" : "PDF File has been downloaded in the downloads folder. Thank you for using the OU Notes app.",
-              "payload": {"path" : path},
-            });
-          },
-          //TODO WAJID MAKE NEW SCREEN CALLED DOWNLOADED SCREEN OR SOMETHING
-          //! Navigate to downloaded screen, and keep one button in center named "OPEN FILE"
-          //! AND IN ON PRESSED JUST PUT THIS => [ OpenFile.open(payload["path"]); ]
-          //! IF USER PRESS THAT IT WILL OPEN THE FILE FOR HIM TO SEE.
+          await _notificationService.dispatchLocalNotification(
+              NotificationService.download_purchase_notify, {
+            "title": fileName + " Downloaded !",
+            "body":
+                "PDF File has been downloaded in the downloads folder. Thank you for using the OU Notes app.",
+            "payload": {"path": path},
+          });
+
+          //TODO malik add argument in the thank you page and pass path of the file
+
+          _navigationService.navigateTo(Routes.thankYouView);
+        },
+        //TODO WAJID MAKE NEW SCREEN CALLED DOWNLOADED SCREEN OR SOMETHING
+        //! Navigate to downloaded screen, and keep one button in center named "OPEN FILE"
+        //! AND IN ON PRESSED JUST PUT THIS => [ OpenFile.open(payload["path"]); ]
+        //! IF USER PRESS THAT IT WILL OPEN THE FILE FOR HIM TO SEE.
       );
       isProMember = false;
     }

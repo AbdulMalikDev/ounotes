@@ -9,10 +9,11 @@ import 'package:FSOUNotes/services/funtional_services/analytics_service.dart';
 import 'package:FSOUNotes/services/funtional_services/app_info_service.dart';
 import 'package:FSOUNotes/AppTheme/AppStateNotifier.dart';
 import 'package:FSOUNotes/services/funtional_services/authentication_service.dart';
+import 'package:FSOUNotes/services/funtional_services/third_party_services_module.dart';
+import 'package:stacked_services/stacked_services.dart';
 import 'package:FSOUNotes/services/funtional_services/cloud_storage_service.dart';
 import 'package:FSOUNotes/services/funtional_services/crashlytics_service.dart';
 import 'package:FSOUNotes/services/funtional_services/db_service.dart';
-import 'package:FSOUNotes/services/funtional_services/third_party_services_module.dart';
 import 'package:FSOUNotes/services/state_services/download_service.dart';
 import 'package:FSOUNotes/utils/file_picker_service.dart';
 import 'package:FSOUNotes/services/funtional_services/firestore_service.dart';
@@ -31,7 +32,6 @@ import 'package:FSOUNotes/services/state_services/subjects_service.dart';
 import 'package:FSOUNotes/services/state_services/syllabus_service.dart';
 import 'package:FSOUNotes/services/state_services/vote_service.dart';
 import 'package:get_it/get_it.dart';
-import 'package:stacked_services/stacked_services.dart';
 
 void $initGetIt(GetIt g, {String environment}) {
   final thirdPartyServicesModule = _$ThirdPartyServicesModule();
