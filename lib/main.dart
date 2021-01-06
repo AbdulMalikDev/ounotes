@@ -3,6 +3,7 @@ import 'package:FSOUNotes/AppTheme/AppTheme.dart';
 import 'package:FSOUNotes/models/subject.dart';
 import 'package:FSOUNotes/models/user.dart' as userModel;
 import 'package:FSOUNotes/services/funtional_services/authentication_service.dart';
+import 'package:FSOUNotes/services/funtional_services/google_in_app_payment_service.dart';
 import 'package:FSOUNotes/services/funtional_services/remote_config_service.dart';
 import 'package:FSOUNotes/services/funtional_services/notification_service.dart';
 import 'package:FSOUNotes/services/funtional_services/crashlytics_service.dart';
@@ -18,7 +19,8 @@ import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:hive/hive.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:purchases_flutter/purchases_flutter.dart';
+// import 'package:purchases_flutter/purchases_flutter.dart';
+import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stacked/stacked.dart';
 import 'package:wiredash/wiredash.dart';
@@ -46,9 +48,10 @@ void main() async {
   Hive.registerAdapter(DownloadAdapter());
   RemoteConfigService _remoteConfigService = locator<RemoteConfigService>();
   CrashlyticsService _crashlyticsService = locator<CrashlyticsService>();
-  InAppPaymentService _inAppPaymentService= locator<InAppPaymentService>();
+  // InAppPaymentService _inAppPaymentService= locator<InAppPaymentService>();
   NotificationService _notificationService= locator<NotificationService>();
-  await _inAppPaymentService.fetchData();
+  GoogleInAppPaymentService _googleInAppPaymentService= locator<GoogleInAppPaymentService>();
+  // await _inAppPaymentService.fetchData();
   await _remoteConfigService.init();
   //Sentry provides crash reporting
   _crashlyticsService.sentryClient = SentryClient(
@@ -59,17 +62,12 @@ void main() async {
       .init(_remoteConfigService.remoteConfig.getString('ONESIGNAL_KEY'));
   OneSignal.shared
       .setInFocusDisplayType(OSNotificationDisplayType.notification);
-  Purchases.setup(_remoteConfigService.remoteConfig.getString('IN_APP')); 
-  Purchases.setDebugLogsEnabled(true);   
   Logger.level = Level.verbose;
   SharedPreferences prefs = await SharedPreferences.getInstance();
   AppStateNotifier.isDarkModeOn = prefs.getBool('isdarkmodeon') ?? false;
-  await FlutterDownloader.initialize(
-    debug: true // optional: set false to disable printing logs to console
-  );
   await _notificationService.init();
-
-
+  InAppPurchaseConnection.enablePendingPurchases();
+  await _googleInAppPaymentService.initialize();
   //TODO DevChecklist - Uncomment for error handling
   // FlutterError.onError = (details, {bool forceReport = false}) {
   //   _crashlyticsService.sentryClient.captureException(
@@ -77,7 +75,7 @@ void main() async {
   //     stackTrace: details.stack,
   //   );
   // };
-  await dothis();
+  // await dothis();
   runApp(MyApp());
   // runZonedGuarded(
   //   () => runApp(MyApp()),
@@ -91,21 +89,25 @@ void main() async {
   }
 
   dothis() async {
-      try {
-        PurchaserInfo purchaserInfo = await Purchases.getPurchaserInfo();
-        final isPro = purchaserInfo.entitlements.active.containsKey("pdf_downloader");
-        log.e(isPro);
-        Offerings offerings = await Purchases.getOfferings();
-        if (offerings.current != null) {
-          // Display current offering with offerings.current
-          log.e(offerings.current);
-          log.e(offerings.current.availablePackages);
-        }
-      } catch (e) {
-          // optional error handling
-          log.e(e.toString());
-      }
       // try {
+      //   PurchaserInfo purchaserInfo;
+      //   Purchases.getPurchaserInfo().asStream().listen((event) async {
+      //     purchaserInfo = event;
+      //     log.e(event?.toString());  
+      //     final isPro = purchaserInfo.entitlements.active.containsKey("pdf_downloader");
+      //     log.e(purchaserInfo.toString());
+      //     Offerings offerings = await Purchases.getOfferings();
+      //     if (offerings.current != null) {
+      //       // Display current offering with offerings.current
+      //       log.e(offerings.current);
+      //       log.e(offerings.current.availablePackages);
+      //     }
+      //   });
+      // } catch (e) {
+      //     // optional error handling
+      //     log.e(e.toString());
+      // }
+      // // try {
       //   PurchaserInfo purchaserInfo = await Purchases.purchasePackage(package);
       //   var isPro = purchaserInfo.entitlements.all["my_entitlement_identifier"].isActive;
       //   if (isPro) {

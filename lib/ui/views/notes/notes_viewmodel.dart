@@ -11,6 +11,7 @@ import 'package:FSOUNotes/models/vote.dart';
 import 'package:FSOUNotes/services/funtional_services/admob_service.dart';
 import 'package:FSOUNotes/services/funtional_services/firestore_service.dart';
 import 'package:FSOUNotes/services/funtional_services/google_drive_service.dart';
+import 'package:FSOUNotes/services/funtional_services/google_in_app_payment_service.dart';
 import 'package:FSOUNotes/services/funtional_services/remote_config_service.dart';
 import 'package:FSOUNotes/services/funtional_services/sharedpref_service.dart';
 import 'package:FSOUNotes/services/state_services/subjects_service.dart';
@@ -24,6 +25,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:logger/logger.dart';
 import 'package:mime/mime.dart';
 import 'package:path_provider/path_provider.dart';
@@ -41,7 +43,6 @@ class NotesViewModel extends BaseViewModel {
       new ValueNotifier(new List<Widget>());
 
   FirestoreService _firestoreService = locator<FirestoreService>();
-  GoogleDriveService _googleDriveService = locator<GoogleDriveService>();
   AdmobService _admobService = locator<AdmobService>();
   RemoteConfigService _remoteConfigService = locator<RemoteConfigService>();
   NavigationService _navigationService = locator<NavigationService>();
@@ -50,7 +51,8 @@ class NotesViewModel extends BaseViewModel {
   VoteService _voteService = locator<VoteService>();
   SubjectsService _subjectsService = locator<SubjectsService>();
   BottomSheetService _bottomSheetService = locator<BottomSheetService>();
-  InAppPaymentService _inAppPaymentService = locator<InAppPaymentService>();
+  GoogleInAppPaymentService _googleInAppPaymentService = locator<GoogleInAppPaymentService>();
+  GoogleDriveService _googleDriveService = locator<GoogleDriveService>();
   NotificationService _notificationService = locator<NotificationService>();
 
   double _progress = 0;
@@ -399,31 +401,11 @@ class NotesViewModel extends BaseViewModel {
   }
 
   void handleDownloadPurchase({Note note}) async {
-    await _inAppPaymentService.purchaseDownloadPackage();
-    isProMember = _inAppPaymentService.isPro;
-    if(isProMember){
-      log.e("Download started");
-      await _googleDriveService.downloadPuchasedPdf
-      (
-        note:note,
-        startDownload: () {
-          setLoading(true);
-        },
-        onDownloadedCallback: (path,fileName) async {
-          setLoading(false);
-          //TODO MALIK make a model for this since making map everytime is not convenient and error prone
-          await _notificationService.dispatchLocalNotification(NotificationService.download_purchase_notify, {
-              "title":fileName + " Downloaded !",
-              "body" : "PDF File has been downloaded in the downloads folder. Thank you for using the OU Notes app.",
-              "payload": {"path" : path},
-            });
-          },
-          //TODO WAJID MAKE NEW SCREEN CALLED DOWNLOADED SCREEN OR SOMETHING
-          //! Navigate to downloaded screen, and keep one button in center named "OPEN FILE"
-          //! AND IN ON PRESSED JUST PUT THIS => [ OpenFile.open(payload["path"]); ]
-          //! IF USER PRESS THAT IT WILL OPEN THE FILE FOR HIM TO SEE.
-      );
-      isProMember = false;
-    }
+
+    ProductDetails prod = _googleInAppPaymentService.getProduct(GoogleInAppPaymentService.pdfProductID);
+    if(prod == null){return;}
+    await _googleInAppPaymentService.buyProduct(prod,note);
+    log.e("Download started");
+    
   }
 }

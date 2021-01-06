@@ -74,6 +74,7 @@ class _PDFScreenState extends State<PDFScreen> {
       appBar: isLandscape
           ? null
           : AppBar(
+            toolbarHeight: MediaQuery.of(context).size.height * 0.075,
               flexibleSpace: FittedBox(
                 fit: BoxFit.fitWidth,
                               child: Toolbar(

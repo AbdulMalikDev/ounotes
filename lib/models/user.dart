@@ -4,9 +4,10 @@ class User{
   final String createdAt;
   final String semester;
   final String branch;
-  String college;
   final String id;
   final String photoUrl;
+  String college;
+  bool isPremiumUser;
 
   //is user signed in?
   bool isAuth;
@@ -30,7 +31,7 @@ class User{
   // FCM token
   String fcmToken;
 
-  User({this.username, this.email, this.createdAt, this.semester, this.branch, this.college,this.isAuth,this.id,this.photoUrl,this.isUserAllowedToUpload,this.googleSignInAuthHeaders,this.fcmToken});
+  User({this.username, this.email, this.createdAt, this.semester, this.branch, this.college,this.isAuth,this.id,this.photoUrl,this.isUserAllowedToUpload,this.googleSignInAuthHeaders,this.fcmToken,this.isPremiumUser});
 
   User.fromData(Map<String,dynamic> data)
   : username                  = data['Username'],
@@ -41,6 +42,7 @@ class User{
     college                   = data['College'],
     isAuth                    = data['isAuth'] ?? false,
     id                        = data['id'],
+    isPremiumUser             = data['isPremiumUser'],
     fcmToken                  = data['fcmToken'],
     photoUrl                  = data['photoUrl'],
     isAdmin                   = data['isAdmin'] ?? false,
@@ -52,25 +54,28 @@ class User{
 
   Map<String,dynamic> toJson() {
     return {
-      "Username"               : username,
-      "email"                  : email,
-      "createdAt"              : createdAt.toString(),
-      "Semester"               : semester,
-      "Branch"                 : branch, 
-      "College"                : college,
-      "isAuth"                 : isAuth ?? false,
-      "id"                     : id,
-      "photoUrl"               : photoUrl,
-      "fcmToken"               : fcmToken,
-      "isAdmin"                : isAdmin ?? false,
-      if(uploads!=null)"uploads"                : uploads,
-      if(numOfUploads!=null)"numOfUploads"           : numOfUploads,
-      if(numOfAcceptedUploads!=null)"numOfAcceptedUploads"   : numOfAcceptedUploads,
-      "isUserAllowedToUpload"  : isUserAllowedToUpload ?? true,
+         "Username"                                       : username,
+         "email"                                          : email,
+         "createdAt"                                      : createdAt.toString(),
+         "Semester"                                       : semester,
+         "Branch"                                         : branch,
+         "College"                                        : college,
+         "isAuth"                                         : isAuth ?? false,
+         "id"                                             : id,
+         "photoUrl"                                       : photoUrl,
+         "fcmToken"                                       : fcmToken,
+         "isAdmin"                                        : isAdmin ?? false,
+      if(uploads!=null)"uploads"                          : uploads,
+      if(numOfUploads!=null)"numOfUploads"                : numOfUploads,
+      if(numOfAcceptedUploads!=null)"numOfAcceptedUploads": numOfAcceptedUploads,
+      if(isPremiumUser!=null)"isPremiumUser"              : isPremiumUser,
+         "isUserAllowedToUpload"                          : isUserAllowedToUpload ?? true,
     };
   }
 
     set setAdmin(bool value){this.isAdmin = value;}
+
+    set setPremiumUser(bool value){this.isPremiumUser = value;}
 
     // "!value" because if we want to ban user (i.e send true) we need to set isUserAllowedToUpload to false
     set banUser(bool value){this.isUserAllowedToUpload = !value;}
