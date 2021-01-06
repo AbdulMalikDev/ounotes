@@ -243,18 +243,19 @@ class NotesViewModel extends BaseViewModel {
 
   void navigateToWebView(Note note) {
     try {
-      _googleDriveService.downloadFile(
-        note: note,
-        startDownload: () {
-          setLoading(true);
-        },
-        onDownloadedCallback: (path, note) {
-          setLoading(false);
-          _navigationService.navigateTo(Routes.pdfScreenRoute,
-              arguments: PDFScreenArguments(
-                  pathPDF: path, doc: note, askBookMarks: false));
-        },
-      );
+      // _googleDriveService.downloadFile(
+      //   note: note,
+      //   startDownload: () {
+      //     setLoading(true);
+      //   },
+      //   onDownloadedCallback: (path, note) {
+      //     setLoading(false);
+      //     _navigationService.navigateTo(Routes.pdfScreenRoute,
+      //         arguments: PDFScreenArguments(
+      //             pathPDF: path, doc: note, askBookMarks: false));
+      //   },
+      // );
+      _navigationService.navigateTo(Routes.watchAdToContinueView);
     } catch (e) {
       setLoading(false);
       Fluttertoast.showToast(
@@ -300,7 +301,7 @@ class NotesViewModel extends BaseViewModel {
       notesName: notesName,
       subName: subName,
       type: type,
-      doc:doc,
+      doc: doc,
     );
     String PDFpath = file.path;
     log.e(file.path);
@@ -333,7 +334,7 @@ class NotesViewModel extends BaseViewModel {
     try {
       String fileUrl =
           "https://storage.googleapis.com/ou-notes.appspot.com/pdfs/$subName/$type/$notesName";
-      if(doc!=null)fileUrl = doc.url;
+      if (doc != null) fileUrl = doc.url;
       log.e(doc.url);
       log.i(Uri.parse(fileUrl));
       var request = await HttpClient().getUrl(Uri.parse(fileUrl));

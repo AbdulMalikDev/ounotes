@@ -21,6 +21,8 @@ import 'package:FSOUNotes/ui/views/syllabus/syllabus_view.dart';
 import 'package:FSOUNotes/ui/views/upload/upload_selection/upload_selection_view.dart';
 import 'package:FSOUNotes/ui/views/upload/upload_view.dart';
 import 'package:FSOUNotes/ui/views/web_view/web_view.dart';
+import 'package:FSOUNotes/ui/widgets/smart_widgets/thank_you_page/thank_you_view.dart';
+import 'package:FSOUNotes/ui/widgets/smart_widgets/watch_ad/watch_ad_view.dart';
 import 'package:auto_route/auto_route_annotations.dart';
 import 'package:FSOUNotes/ui/views/about_us/about_us_view.dart';
 
@@ -51,4 +53,6 @@ class $Router {
   EditView editViewRoute;
   UploadLogDetailView uploadLogDetailViewRoute;
   UploadLogEditView uploadLogEditViewRoute;
+  WatchAdToContinueView watchAdToContinueView;
+  ThankYouView thankYouView;
 }
