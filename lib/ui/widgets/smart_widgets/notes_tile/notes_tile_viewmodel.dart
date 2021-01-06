@@ -16,10 +16,12 @@ import 'package:FSOUNotes/services/state_services/vote_service.dart';
 import 'package:FSOUNotes/services/state_services/subjects_service.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:purchases_flutter/purchases_flutter.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'package:FSOUNotes/models/user.dart';
 import 'package:FSOUNotes/enums/bottom_sheet_type.dart';
+
 import 'package:FSOUNotes/app/logger.dart';
 
 class NotesTileViewModel extends BaseViewModel {
@@ -37,8 +39,10 @@ class NotesTileViewModel extends BaseViewModel {
   BottomSheetService _bottomSheetService = locator<BottomSheetService>();
   VoteService _voteService = locator<VoteService>();
   SubjectsService _subjectService = locator<SubjectsService>();
+  
 
   bool _hasalreadyvoted = false;
+  
 
   bool get hasalreadyvoted => _hasalreadyvoted;
   String _vote = Constants.none;
@@ -354,4 +358,6 @@ class NotesTileViewModel extends BaseViewModel {
     //notify UI for update
     refresh(note.subjectName);
   }
+
+  
 }

@@ -51,7 +51,7 @@ class UploadLogDetailViewModel extends FutureViewModel{
     if(dialogResult.confirmed)await _firestoreService.deleteUploadLog(report);
   }
 
-  void viewDocument(UploadLog logItem) async {
+  viewDocument(UploadLog logItem) async {
       setBusy(true);
       NotesViewModel notesViewModel = NotesViewModel();
       AbstractDocument doc = await _firestoreService.getDocumentById(logItem.subjectName, logItem.id, Constants.getDocFromConstant(logItem.type));
@@ -60,7 +60,7 @@ class UploadLogDetailViewModel extends FutureViewModel{
         _showLink(logItem);
       }else{
 
-      notesViewModel.onTap(
+      await notesViewModel.onTap(
         notesName: logItem.fileName, 
         subName: logItem.subjectName,
         type: logItem.type,
@@ -72,7 +72,7 @@ class UploadLogDetailViewModel extends FutureViewModel{
   }
   
   
-  void uploadDocument(UploadLog logItem) async {
+  uploadDocument(UploadLog logItem) async {
     setBusy(true);
     try {
 

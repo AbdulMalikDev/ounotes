@@ -2,25 +2,31 @@ import 'package:FSOUNotes/AppTheme/AppStateNotifier.dart';
 import 'package:FSOUNotes/AppTheme/AppTheme.dart';
 import 'package:FSOUNotes/models/subject.dart';
 import 'package:FSOUNotes/models/user.dart' as userModel;
+import 'package:FSOUNotes/services/funtional_services/authentication_service.dart';
 import 'package:FSOUNotes/services/funtional_services/remote_config_service.dart';
+import 'package:FSOUNotes/services/funtional_services/notification_service.dart';
 import 'package:FSOUNotes/services/funtional_services/crashlytics_service.dart';
+import 'package:FSOUNotes/services/funtional_services/in_app_payment_service.dart';
 import 'package:FSOUNotes/services/services_info.dart';
 import 'package:FSOUNotes/ui/widgets/smart_widgets/bottom_sheet/bottom_sheet_ui_view.dart';
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:feature_discovery/feature_discovery.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:hive/hive.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:purchases_flutter/purchases_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stacked/stacked.dart';
 import 'package:wiredash/wiredash.dart';
 import './app/locator.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
-import 'package:stacked_services/stacked_services.dart';
 import 'app/logger.dart';
+import 'package:stacked_services/stacked_services.dart';
 import 'app/router.gr.dart' as router;
 import 'package:sentry/sentry.dart';
 import 'enums/constants.dart';
@@ -40,6 +46,9 @@ void main() async {
   Hive.registerAdapter(DownloadAdapter());
   RemoteConfigService _remoteConfigService = locator<RemoteConfigService>();
   CrashlyticsService _crashlyticsService = locator<CrashlyticsService>();
+  InAppPaymentService _inAppPaymentService= locator<InAppPaymentService>();
+  NotificationService _notificationService= locator<NotificationService>();
+  await _inAppPaymentService.fetchData();
   await _remoteConfigService.init();
   //Sentry provides crash reporting
   _crashlyticsService.sentryClient = SentryClient(
@@ -50,9 +59,17 @@ void main() async {
       .init(_remoteConfigService.remoteConfig.getString('ONESIGNAL_KEY'));
   OneSignal.shared
       .setInFocusDisplayType(OSNotificationDisplayType.notification);
+  Purchases.setup(_remoteConfigService.remoteConfig.getString('IN_APP')); 
+  Purchases.setDebugLogsEnabled(true);   
   Logger.level = Level.verbose;
   SharedPreferences prefs = await SharedPreferences.getInstance();
   AppStateNotifier.isDarkModeOn = prefs.getBool('isdarkmodeon') ?? false;
+  await FlutterDownloader.initialize(
+    debug: true // optional: set false to disable printing logs to console
+  );
+  await _notificationService.init();
+
+
   //TODO DevChecklist - Uncomment for error handling
   // FlutterError.onError = (details, {bool forceReport = false}) {
   //   _crashlyticsService.sentryClient.captureException(
@@ -60,7 +77,7 @@ void main() async {
   //     stackTrace: details.stack,
   //   );
   // };
-  // await dothis();
+  await dothis();
   runApp(MyApp());
   // runZonedGuarded(
   //   () => runApp(MyApp()),
@@ -73,7 +90,33 @@ void main() async {
   // );
   }
 
-  // dothis() async {
+  dothis() async {
+      try {
+        PurchaserInfo purchaserInfo = await Purchases.getPurchaserInfo();
+        final isPro = purchaserInfo.entitlements.active.containsKey("pdf_downloader");
+        log.e(isPro);
+        Offerings offerings = await Purchases.getOfferings();
+        if (offerings.current != null) {
+          // Display current offering with offerings.current
+          log.e(offerings.current);
+          log.e(offerings.current.availablePackages);
+        }
+      } catch (e) {
+          // optional error handling
+          log.e(e.toString());
+      }
+      // try {
+      //   PurchaserInfo purchaserInfo = await Purchases.purchasePackage(package);
+      //   var isPro = purchaserInfo.entitlements.all["my_entitlement_identifier"].isActive;
+      //   if (isPro) {
+      //     // Unlock that great "pro" content
+      //   }
+      // } on PlatformException catch (e) {
+      //   var errorCode = PurchasesErrorHelper.getErrorCode(e);
+      //   if (errorCode != PurchasesErrorCode.purchaseCancelledError) {
+      //     showError(e);             
+      //   }
+      // }
       // QuerySnapshot users = await Firestore.instance.collection("users").orderBy("id").getDocuments();
       // log.e(users.documents.length);
       // for (int i=0 ; i<users.documents.length ; i++){
@@ -99,7 +142,7 @@ void main() async {
       //     log.e(e.toString());
       //   }
       // }
-  // }
+  }
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application

@@ -4,11 +4,13 @@ import 'dart:io';
 import 'package:FSOUNotes/app/locator.dart';
 import 'package:FSOUNotes/app/logger.dart';
 import 'package:FSOUNotes/enums/bottom_sheet_type.dart';
+import 'package:FSOUNotes/misc/constants.dart';
 import 'package:FSOUNotes/ui/widgets/dumb_widgets/pdf_view/pdf_error_dialog.dart';
 import 'package:FSOUNotes/ui/widgets/dumb_widgets/pdf_view/pdf_search_toolbar_widget.dart';
 import 'package:FSOUNotes/ui/widgets/dumb_widgets/pdf_view/pdf_toolbar_widget.dart';
 import 'package:FSOUNotes/ui/views/pdf/Add_bookmarks/add_bookMarks_view.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:logger/logger.dart';
 import 'package:stacked_services/stacked_services.dart';
@@ -62,7 +64,8 @@ class _PDFScreenState extends State<PDFScreen> {
               child: FloatingActionButton(
                 child: const Icon(Icons.add),
                 onPressed: () async {
-                  // showBottomSeetForBookMarks(false);
+                  if(widget.doc.type == Constants.notes)
+                  showBottomSeetForBookMarks(false);
                 },
                 backgroundColor: Theme.of(context).accentColor,
               ),
@@ -71,41 +74,44 @@ class _PDFScreenState extends State<PDFScreen> {
       appBar: isLandscape
           ? null
           : AppBar(
-              flexibleSpace: Toolbar(
-                showTooltip: true,
-                controller: _pdfViewerController,
-                onTap: (Object toolbarItem) {
-                  if (toolbarItem.toString() != 'Bookmarks') {
-                    _checkAndCloseContextMenu();
-                    _pdfViewerController.clearSelection();
-                  }
-                  if (_pdfViewerKey.currentState.isBookmarkViewOpen) {
-                    Navigator.pop(context);
-                  }
-                  if (toolbarItem != 'Jump to the page') {
-                    final currentFocus = FocusScope.of(context);
-                    if (!currentFocus.hasPrimaryFocus) {
-                      currentFocus.requestFocus(FocusNode());
+              flexibleSpace: FittedBox(
+                fit: BoxFit.fitWidth,
+                              child: Toolbar(
+                  showTooltip: true,
+                  controller: _pdfViewerController,
+                  onTap: (Object toolbarItem) {
+                    if (toolbarItem.toString() != 'Bookmarks') {
+                      _checkAndCloseContextMenu();
+                      _pdfViewerController.clearSelection();
                     }
-                  }
-                  if (toolbarItem is Documentf) {
-                    setState(() {
-                      _documentPath = toolbarItem.path;
-                    });
-                  }
-                  if (toolbarItem.toString() == 'Bookmarks') {
-                    setState(() {
-                      _showToolbar = false;
-                    });
-                    _pdfViewerKey.currentState?.openBookmarkView();
-                  } else if (toolbarItem.toString() == 'Search') {
-                    setState(() {
-                      _showToolbar = false;
-                      _showScrollHead = false;
-                      _ensureHistoryEntry();
-                    });
-                  }
-                },
+                    if (_pdfViewerKey.currentState.isBookmarkViewOpen) {
+                      Navigator.pop(context);
+                    }
+                    if (toolbarItem != 'Jump to the page') {
+                      final currentFocus = FocusScope.of(context);
+                      if (!currentFocus.hasPrimaryFocus) {
+                        currentFocus.requestFocus(FocusNode());
+                      }
+                    }
+                    if (toolbarItem is Documentf) {
+                      setState(() {
+                        _documentPath = toolbarItem.path;
+                      });
+                    }
+                    if (toolbarItem.toString() == 'Bookmarks') {
+                      setState(() {
+                        _showToolbar = false;
+                      });
+                      _pdfViewerKey.currentState?.openBookmarkView();
+                    } else if (toolbarItem.toString() == 'Search') {
+                      setState(() {
+                        _showToolbar = false;
+                        _showScrollHead = false;
+                        _ensureHistoryEntry();
+                      });
+                    }
+                  },
+                ),
               ),
               automaticallyImplyLeading: false,
               backgroundColor:
@@ -236,9 +242,12 @@ class _PDFScreenState extends State<PDFScreen> {
     _contextMenuHeight = 48;
     _contextMenuWidth = 100;
     log.e(widget.pathPDF);
-    if (widget.askBookMarks) {
-      showBottomSeetForBookMarks(true);
-    }
+    // Schedularb
+    SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
+      if (widget.askBookMarks && widget.doc.type == Constants.notes) {
+        showBottomSeetForBookMarks(true);
+      }
+    });
   }
 
   showBottomSeetForBookMarks(bool initial) async {

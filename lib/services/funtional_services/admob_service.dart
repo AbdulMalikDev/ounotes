@@ -80,17 +80,17 @@ class AdmobService{
       ..show(anchorType: AnchorType.bottom);
   }
 
-  listener(AdColonyAdListener event) {
-    print(event);
-    if (event == AdColonyAdListener.onRequestFilled) AdColony.show();
-  }
+  // listener(AdColonyAdListener event) {
+  //   print(event);
+  //   if (event == AdColonyAdListener.onRequestFilled) AdColony.show();
+  // }
   showNotesViewInterstitialAd(){
-    final zones = [_remote.remoteConfig.getString('ADCOLONY_ZONE_INTERSTITIAL')];
-    AdColony.request(zones[0], listener);
-    // if(notes_view_interstitial_ad == null ){notes_view_interstitial_ad = this.getNotesViewInterstitialAd();}
-    // notes_view_interstitial_ad
-    //   ..load()
-    //   ..show();
+    // final zones = [_remote.remoteConfig.getString('ADCOLONY_ZONE_INTERSTITIAL')];
+    // AdColony.request(zones[0], listener);
+    if(notes_view_interstitial_ad == null ){notes_view_interstitial_ad = this.getNotesViewInterstitialAd();}
+    notes_view_interstitial_ad
+      ..load()
+      ..show();
 
   }
 
