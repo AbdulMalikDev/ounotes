@@ -32,7 +32,7 @@ class HomeView extends StatelessWidget {
         model.showRateMyAppDialog(context);
         model.updateDialog(shouldShowUpdateDialog, versionDetails);
         model.showIntroDialog(context);
-        model.showTelgramDialog(context);
+        // model.showTelgramDialog(context);
       },
       builder: (context, model, child) => WillPopScope(
         onWillPop: () => Helper.showWillPopDialog(context: context),

@@ -53,6 +53,8 @@ class $Router {
   EditView editViewRoute;
   UploadLogDetailView uploadLogDetailViewRoute;
   UploadLogEditView uploadLogEditViewRoute;
+  @MaterialRoute(fullscreenDialog: true)
   WatchAdToContinueView watchAdToContinueView;
+  @MaterialRoute(fullscreenDialog: true)
   ThankYouView thankYouView;
 }

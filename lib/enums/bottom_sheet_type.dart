@@ -4,4 +4,6 @@ enum BottomSheetType{
   confirm,
   filledStacks,
   bookMarks,
+  premium,
+  downloadPdf,
 }
