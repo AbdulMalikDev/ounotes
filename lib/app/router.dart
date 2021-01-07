@@ -23,6 +23,7 @@ import 'package:FSOUNotes/ui/views/upload/upload_view.dart';
 import 'package:FSOUNotes/ui/views/web_view/web_view.dart';
 import 'package:FSOUNotes/ui/widgets/smart_widgets/thank_you_page/thank_you_view.dart';
 import 'package:FSOUNotes/ui/widgets/smart_widgets/watch_ad/watch_ad_view.dart';
+import 'package:FSOUNotes/ui/widgets/smart_widgets/why_to_pay_for_download_page/why_to_pay_for_download.dart';
 import 'package:auto_route/auto_route_annotations.dart';
 import 'package:FSOUNotes/ui/views/about_us/about_us_view.dart';
 
@@ -57,4 +58,6 @@ class $Router {
   WatchAdToContinueView watchAdToContinueView;
   @MaterialRoute(fullscreenDialog: true)
   ThankYouView thankYouView;
+  @MaterialRoute(fullscreenDialog: true)
+  WhyToPayForDownloadView whyToPayForDownloadView;
 }
