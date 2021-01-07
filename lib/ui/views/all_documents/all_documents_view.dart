@@ -101,33 +101,33 @@ class _AllDocumentsViewState extends State<AllDocumentsView>
                             ),
                           ),
                           actions: <Widget>[
+                            // Container(
+                            //   width: App(context).appWidth(0.24),
+                            //   margin: EdgeInsets.symmetric(
+                            //       horizontal: 5, vertical: 10),
+                            //   child: RaisedButton(
+                            //     color: Colors.amber,
+                            //     shape: RoundedRectangleBorder(
+                            //         borderRadius: BorderRadius.circular(20)),
+                            //     child: FittedBox(
+                            //       child: Text(
+                            //         "Downloads",
+                            //         style: TextStyle(
+                            //           color: Colors.red,
+                            //           fontWeight: FontWeight.bold,
+                            //           fontSize: 12,
+                            //         ),
+                            //       ),
+                            //     ),
+                            //     onPressed: () {
+                            //       model.navigateToDownloadScreen();
+                            //     },
+                            //   ),
+                            // ),
                             Container(
-                              width: App(context).appWidth(0.24),
                               margin: EdgeInsets.symmetric(
                                   horizontal: 5, vertical: 10),
-                              child: RaisedButton(
-                                color: Colors.amber,
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(20)),
-                                child: FittedBox(
-                                  child: Text(
-                                    "Downloads",
-                                    style: TextStyle(
-                                      color: Colors.red,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 12,
-                                    ),
-                                  ),
-                                ),
-                                onPressed: () {
-                                  model.navigateToDownloadScreen();
-                                },
-                              ),
-                            ),
-                            Container(
-                              margin: EdgeInsets.symmetric(
-                                  horizontal: 5, vertical: 10),
-                              width: App(context).appWidth(0.3),
+                              // width: App(context).appWidth(0.3),
                               child: RaisedButton(
                                 key: intro == null ? null : intro.keys[0],
                                 color: Colors.amber,
