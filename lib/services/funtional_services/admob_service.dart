@@ -1,16 +1,23 @@
 
 import 'package:FSOUNotes/app/locator.dart';
+import 'package:FSOUNotes/app/router.gr.dart';
+import 'package:FSOUNotes/models/user.dart';
+import 'package:FSOUNotes/services/funtional_services/authentication_service.dart';
 import 'package:FSOUNotes/services/funtional_services/remote_config_service.dart';
 import 'package:FSOUNotes/services/funtional_services/onboarding_service.dart';
-import 'package:adcolony/adcolony.dart';
 import 'package:injectable/injectable.dart';
 import 'package:firebase_admob/firebase_admob.dart';
 import 'package:logger/logger.dart';
 import 'package:FSOUNotes/app/logger.dart';
+import 'package:stacked_services/stacked_services.dart';
 
 Logger log = getLogger("AdmobService");
 @lazySingleton 
 class AdmobService{
+
+  RemoteConfigService _remoteConfigService = locator<RemoteConfigService>();
+  NavigationService _navigationService = locator<NavigationService>();
+  AuthenticationService _authenticationService = locator<AuthenticationService>();
 
   RemoteConfigService _remote = locator<RemoteConfigService>();
   String get ADMOB_APP_ID => _remote.remoteConfig.getString("ADMOB_APP_ID");
@@ -22,7 +29,13 @@ class AdmobService{
 
   int _NumberOfTimeNotesOpened = 1;
   int _NumberOfAdsShown = 0;
-
+  String appId;
+  String adUnitId;
+  MobileAdTargetingInfo info;
+  bool adDue = false;
+  bool adShown = false;
+  User user;
+  
   int get NumberOfTimeNotesOpened => _NumberOfTimeNotesOpened;
   set NumberOfTimeNotesOpened(int value) => _NumberOfTimeNotesOpened = value;
 
@@ -48,67 +61,111 @@ class AdmobService{
       if(_NumberOfTimeNotesOpened==null){_NumberOfTimeNotesOpened=0;}
       if(_NumberOfAdsShown==null){_NumberOfAdsShown=0;}
       
-      bool ad =getNumberOfTimeNotesOpened() % 7 == 0;
+      bool ad = getNumberOfTimeNotesOpened() % 7 == 0;
       
       if (ad){
         
         if(_NumberOfTimeNotesOpened==null){_NumberOfTimeNotesOpened=0;}
-        incrementNumberOfTimeNotesOpened();
-        _NumberOfAdsShown++;
+        log.e("SHOW AD NOW");
+        if(!user.isPremiumUser)
+        {
+          _adFailedToBeShown();
+          // watchAdNow();
+          _NumberOfAdsShown++;
+        }
+
       }
       return ad ?? false;
 
-    } on Exception catch (e) {
+    } catch (e) {
       log.e("shouldAdBeShown - ERROR while calculating whather add should be shown ${e.toString()}");
+      log.e(e.code);
       return false;
     }
   }
 
-  
-  BannerAd getNotesViewBannerAd(){
-    return BannerAd(adUnitId:ADMOB_AD_BANNER_ID,size: AdSize.fullBanner);
+  init() async {
+    this.adDue = OnboardingService.box.get("adDue") ?? false;
+    appId = _remoteConfigService.remoteConfig.getString("ADMOB_APP_ID");
+    adUnitId = _remoteConfigService.remoteConfig.getString("ADMOB_REWARDED_AD_ID");
+    FirebaseAdMob.instance.initialize(appId: appId);
+    info = MobileAdTargetingInfo(keywords: ["Education","coding","books",],testDevices: ["5e99a12e-fa96-42f0-a42d-ece240d3bca9"]);
+    RewardedVideoAd.instance.listener =
+    (RewardedVideoAdEvent event, {String rewardType, int rewardAmount}) {
+      log.e("event" + event.toString());
+      if (event == RewardedVideoAdEvent.rewarded) {
+        log.e(rewardAmount);
+        log.e(rewardType);
+        _adSuccessfullyShown();
+      }
+      if (event == RewardedVideoAdEvent.loaded) {
+        log.e(rewardAmount);
+        log.e(rewardType);
+        if(!adShown && adDue)
+        RewardedVideoAd.instance.show()
+        .catchError((e) => log.e("error in loading again"))
+        .then((v) => log.e("Ad Loaded"));
+      }
+      if (event == RewardedVideoAdEvent.closed) {
+      RewardedVideoAd.instance
+          .load(adUnitId: RewardedVideoAd.testAdUnitId, targetingInfo: info)
+          .catchError((e) => log.e("error in loading again"))
+          .then((v) => log.e("Ad Loaded"));
+      }
+      if (event == RewardedVideoAdEvent.failedToLoad){
+        log.e("failedToLoad");
+        _adFailedToBeShown();
+      }
+    };
+    // await RewardedVideoAd.instance.load(adUnitId : adUnitId , targetingInfo: info);
+    this.user = await _authenticationService.getUser();
   }
 
-  InterstitialAd getNotesViewInterstitialAd(){
-    return InterstitialAd(adUnitId:ADMOB_AD_INTERSTITIAL_ID);
-  }
-
-  showNotesViewBanner(){
-    if(notes_view_banner_ad == null ){notes_view_banner_ad = this.getNotesViewBannerAd();}
-    notes_view_banner_ad
-      ..load()
-      ..show(anchorType: AnchorType.bottom);
-  }
-
-  // listener(AdColonyAdListener event) {
-  //   print(event);
-  //   if (event == AdColonyAdListener.onRequestFilled) AdColony.show();
-  // }
-  showNotesViewInterstitialAd(){
-    // final zones = [_remote.remoteConfig.getString('ADCOLONY_ZONE_INTERSTITIAL')];
-    // AdColony.request(zones[0], listener);
-    if(notes_view_interstitial_ad == null ){notes_view_interstitial_ad = this.getNotesViewInterstitialAd();}
-    notes_view_interstitial_ad
-      ..load()
-      ..show();
-
-  }
-
-  hideNotesViewBanner() async {
+  watchAdNow() async {
     try {
-      notes_view_banner_ad?.dispose();
-      notes_view_banner_ad = null;
-    } catch (ex) {
-      log.e("banner dispose error");
+
+      log.e(adUnitId);
+      log.e(appId);
+      bool adloaded = await RewardedVideoAd.instance.load(adUnitId : RewardedVideoAd.testAdUnitId , targetingInfo: info);
+      log.e(adloaded);
+      
+    } catch (e) {
+      log.e(e.toString());
+      log.e(e.code);
     }
   }
-  hideNotesViewInterstitialAd() async {
-    try {
-      notes_view_interstitial_ad?.dispose();
-      notes_view_interstitial_ad = null;
-    } catch (ex) {
-      log.e("Intersitial ad dispose error");
-    }
+
+  showInterstitialAd() async {
+    log.e("Showing Interstitial");
+    await getInterstitialAd()..load()..show();
+    _adSuccessfullyShown();
   }
+
+  InterstitialAd getInterstitialAd() {
+    return InterstitialAd(
+        adUnitId: InterstitialAd.testAdUnitId,
+        // adUnitId: ADMOB_AD_INTERSTITIAL_ID,
+        targetingInfo: info,
+        listener: (MobileAdEvent event) {
+        print("InterstitialAd event is $event");
+      },
+    );
+  }
+
+  _adSuccessfullyShown() {
+    adShown = true;
+    OnboardingService.box.put("adShown", adShown);
+    adDue = false;
+    OnboardingService.box.put("adDue", adDue);
+    incrementNumberOfTimeNotesOpened();
+  }
+
+  _adFailedToBeShown() {
+    adShown = false;
+    OnboardingService.box.put("adShown", adShown);
+    adDue = true;
+    OnboardingService.box.put("adDue", adDue);
+  }
+
   
 }

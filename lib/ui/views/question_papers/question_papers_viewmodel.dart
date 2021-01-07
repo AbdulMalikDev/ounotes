@@ -64,7 +64,7 @@ class QuestionPapersViewModel extends BaseViewModel {
       secondaryButtonTitle: 'Open In App',
     );
     log.i("openDoc BottomSheetResponse ");
-    if (!response.confirmed) {
+    if (!response?.confirmed ?? true) {
       return;
     }
 

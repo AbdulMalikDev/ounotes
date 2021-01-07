@@ -32,7 +32,6 @@ class _NotesViewState extends State<NotesView>
       },
       builder: (context, model, child) => WillPopScope(
         onWillPop: () {
-          model.admobService.hideNotesViewBanner();
           model.navigateBack();
           return Future.value(false);
         },
@@ -194,12 +193,8 @@ class _NotesViewState extends State<NotesView>
   _initState(NotesViewModel model) async {
     model.fetchNotesAndVotes(widget.subjectName);
     try {
-      // FirebaseAdMob.instance.initialize(appId: model.admobService.ADMOB_APP_ID);
-      // model.admobService.showNotesViewBanner();
-      if (model.admobService.shouldAdBeShown()) {
-        model.admobService.showNotesViewInterstitialAd();
-      }
-    } on Exception catch (e) {
+      model.admobService.shouldAdBeShown();
+    } catch (e) {
       print(e.toString());
     }
   }

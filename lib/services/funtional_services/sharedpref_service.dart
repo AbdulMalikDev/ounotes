@@ -35,26 +35,32 @@ class SharedPreferencesService {
   }
 
   Future<bool> isUserLoggedIn() async {
-    AuthenticationService _authenticationService =
-        locator<AuthenticationService>();
-    SharedPreferences prefs = await store();
-    //Changed 20th November to force users to sign in again to log anaytics events
-    if (!prefs.containsKey("current_user_is_logged_in")) {
-      return false;
-    } else {
-      log.i("User retreived from storage");
-      var user = User.fromData(
-          json.decode(prefs.getString("current_user_is_logged_in")));
-      if (user == null) {
+    try {
+      AuthenticationService _authenticationService =
+          locator<AuthenticationService>();
+      SharedPreferences prefs = await store();
+      //Changed 20th November to force users to sign in again to log anaytics events
+      if (!prefs.containsKey("current_user_is_logged_in")) {
         return false;
-      }
-      if (user.semester != null && user.branch != null) {
-        _authenticationService.setUser = user;
       } else {
-        return false;
+        log.i("User retreived from storage");
+        var user = User.fromData(
+            json.decode(prefs.getString("current_user_is_logged_in")));
+        if (user == null) {
+          log.e("User is null");
+          return false;
+        }
+        if (user.semester != null && user.branch != null) {
+          _authenticationService.setUser = user;
+        } else {
+          log.e("User branch semester is null");
+          return false;
+        }
+      
+        return user.isAuth;
       }
-
-      return user.isAuth;
+    } catch (e) {
+      log.e(e.toString());
     }
   }
 

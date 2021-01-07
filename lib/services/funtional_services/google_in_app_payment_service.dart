@@ -3,6 +3,7 @@ import 'dart:async';
 
 import 'package:FSOUNotes/app/locator.dart';
 import 'package:FSOUNotes/app/logger.dart';
+import 'package:FSOUNotes/app/router.gr.dart';
 import 'package:FSOUNotes/models/notes.dart';
 import 'package:FSOUNotes/models/user.dart';
 import 'package:FSOUNotes/services/funtional_services/authentication_service.dart';
@@ -14,6 +15,7 @@ import 'package:flutter/foundation.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:injectable/injectable.dart';
 import 'package:logger/logger.dart';
+import 'package:stacked_services/stacked_services.dart';
 Logger log = getLogger("GoogleInAppPaymentService");
 
 
@@ -51,6 +53,7 @@ class GoogleInAppPaymentService{
   NotificationService _notificationService = locator<NotificationService>();
   FirestoreService _firestoreService = locator<FirestoreService>();
   AuthenticationService _authenticationService = locator<AuthenticationService>();
+  NavigationService _navigationService = locator<NavigationService>();
 
   initialize() async {
     log.e("started");
@@ -81,7 +84,7 @@ class GoogleInAppPaymentService{
 
   /// Get all products available for sale
   Future<void> getProducts() async {
-    Set<String> ids = Set.from([pdfProductID]);
+    Set<String> ids = Set.from([pdfProductID,premiumProductID]);
     ProductDetailsResponse response = await _iap.queryProductDetails(ids);
 
     _products.value = response.productDetails;
@@ -119,7 +122,7 @@ class GoogleInAppPaymentService{
 
     List<PurchaseDetails> toRemove = [];
     for(PurchaseDetails purchaseItem in _purchases.value){
-      if(purchaseItem.productID == pdfProductID && purchaseItem.status == PurchaseStatus.purchased){
+      if(purchaseItem.status == PurchaseStatus.purchased){
         await completePurchase(purchaseItem);
       }
       await toRemove.add(purchaseItem);
@@ -128,11 +131,14 @@ class GoogleInAppPaymentService{
   }
 
    /// Purchase a product
-  void buyProduct(ProductDetails prod,Note note) async {
+  void buyProduct({ProductDetails prod,Note note}) async {
     final PurchaseParam purchaseParam = PurchaseParam(productDetails: prod);
     // _iap.buyNonConsumable(purchaseParam: purchaseParam);
     bool success = await _iap.buyConsumable(purchaseParam: purchaseParam, autoConsume: false);
-    if(success)OnboardingService.box.put(GoogleInAppPaymentService.pdfProductID, "${note.subjectId}_${note.id}");
+    if(success && prod.id == pdfProductID)
+    OnboardingService.box.put(GoogleInAppPaymentService.pdfProductID, "${note.subjectId}_${note.id}");
+    else if(success && prod.id == premiumProductID)
+    OnboardingService.box.put(GoogleInAppPaymentService.premiumProductID, premiumProductID);
   }
 
   /// Complete purchase and download PDF
@@ -140,7 +146,7 @@ class GoogleInAppPaymentService{
     
       if(hasPurchased(purchase.productID) != null){
         var res = await _iap.consumePurchase(purchase);
-        
+
         if(purchase.productID == pdfProductID)
         await _handlePurchasedPdfDownload();
         else if(purchase.productID == premiumProductID)
@@ -162,18 +168,30 @@ class GoogleInAppPaymentService{
       onDownloadedCallback: (path,fileName) async {
         // setLoading(false);
         await _notificationService.dispatchLocalNotification(NotificationService.download_purchase_notify, {
-            "title":fileName + " Downloaded !",
+            "title":"Downloaded " + fileName,
             "body" : "PDF File has been downloaded in the downloads folder. Thank you for using the OU Notes app.",
             "payload": {"path" : path},
-          });
-        },
+          }
+        );
+        User user = await _authenticationService.getUser();
+        user.addDownload("${this.note.subjectId}_${this.note.id}");
+        await _firestoreService.updateUserInFirebase(user,updateLocally: true);
+        _navigationService.navigateTo(Routes.thankYouView,arguments: ThankYouViewArguments(filePath: path));
+      },
     );
   }
 
   _handlePremiumPurchase() async {
+    log.e("User purchased premium");
     User user = await _authenticationService.getUser();
     user.setPremiumUser = true;
     await _firestoreService.updateUserInFirebase(user,updateLocally: true);
+    await _notificationService.dispatchLocalNotification(NotificationService.premium_purchase_notify,{
+        "title":"✨ Congratulations ! You are a premium user ! ✨",
+        "body" : "Enjoy OU Notes Ad-free and download unlimited offline Notes and save Data !",
+      }
+    );
+    _navigationService.navigateTo(Routes.thankYouView);
   }
 
   Future<Note> _getNote() async {

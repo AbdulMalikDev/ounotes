@@ -10,6 +10,7 @@ import 'package:FSOUNotes/app/locator.dart';
 import 'package:FSOUNotes/app/logger.dart';
 import 'package:FSOUNotes/enums/constants.dart';
 import 'package:FSOUNotes/enums/enums.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:syncfusion_flutter_pdf/pdf.dart';
 import 'package:FSOUNotes/models/notes.dart';
@@ -43,7 +44,7 @@ class GoogleDriveService {
   DownloadService _downloadService = locator<DownloadService>();
   RemoteConfigService _remote = locator<RemoteConfigService>();
 
-  ValueNotifier<int> downloadProgress = new ValueNotifier(0);
+  ValueNotifier<double> downloadProgress = new ValueNotifier(0);
 
   processFile({
     @required dynamic doc,
@@ -188,7 +189,7 @@ class GoogleDriveService {
       file.stream.listen((data) {
         downloadedLength += data.length;
         downloadProgress.value =
-            ((downloadedLength / contentLength) * 100).round();
+            ((downloadedLength / contentLength) * 100);
         print(downloadProgress.value);
         dataStore.insertAll(dataStore.length, data);
       }, onDone: () async {
@@ -258,10 +259,14 @@ class GoogleDriveService {
       file.stream.listen((data) {
         downloadedLength += data.length;
         downloadProgress.value =
-            ((downloadedLength / contentLength) * 100).round();
+            downloadedLength / contentLength;
         print("loading.. : " + downloadProgress.value.toString());
+        if(downloadProgress.value < 1)
+        EasyLoading.showProgress(downloadProgress.value, status: 'downloading...');
         dataStore.insertAll(dataStore.length, data);
       }, onDone: () async {
+        EasyLoading.removeAllCallbacks();
+        EasyLoading.dismiss();
         localFile = File(filePath);
         await localFile.writeAsBytes(dataStore);
         await Future.delayed(Duration(seconds: 1));

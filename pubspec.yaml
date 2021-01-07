@@ -73,6 +73,7 @@ dependencies:
   syncfusion_flutter_sliders: ^18.4.32-beta
   flutter_downloader: ^1.5.2
   open_file: ^3.0.3
+  flutter_easyloading: ^2.2.2
 
   # Architecture related packages
   flutter_hooks: null

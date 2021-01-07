@@ -2,6 +2,7 @@ import 'package:FSOUNotes/AppTheme/AppStateNotifier.dart';
 import 'package:FSOUNotes/AppTheme/AppTheme.dart';
 import 'package:FSOUNotes/models/subject.dart';
 import 'package:FSOUNotes/models/user.dart' as userModel;
+import 'package:FSOUNotes/services/funtional_services/admob_service.dart';
 import 'package:FSOUNotes/services/funtional_services/authentication_service.dart';
 import 'package:FSOUNotes/services/funtional_services/google_in_app_payment_service.dart';
 import 'package:FSOUNotes/services/funtional_services/remote_config_service.dart';
@@ -16,6 +17,7 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:hive/hive.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:path_provider/path_provider.dart';
@@ -48,11 +50,13 @@ void main() async {
   Hive.registerAdapter(DownloadAdapter());
   RemoteConfigService _remoteConfigService = locator<RemoteConfigService>();
   CrashlyticsService _crashlyticsService = locator<CrashlyticsService>();
+  AdmobService _admobService = locator<AdmobService>();
   // InAppPaymentService _inAppPaymentService= locator<InAppPaymentService>();
   NotificationService _notificationService= locator<NotificationService>();
   GoogleInAppPaymentService _googleInAppPaymentService= locator<GoogleInAppPaymentService>();
   // await _inAppPaymentService.fetchData();
   await _remoteConfigService.init();
+  await _admobService.init();
   //Sentry provides crash reporting
   _crashlyticsService.sentryClient = SentryClient(
       dsn: _remoteConfigService.remoteConfig.getString('SentryKey'));
@@ -167,6 +171,7 @@ class MyApp extends StatelessWidget {
               _remoteConfigService.remoteConfig.getString("WIREDASH_SECRET"),
           navigatorKey: locator<NavigationService>().navigatorKey,
           child: MaterialApp(
+            builder: EasyLoading.init(),
             navigatorObservers: <NavigatorObserver>[observer],
             title: 'OU Notes',
             debugShowCheckedModeBanner: false,

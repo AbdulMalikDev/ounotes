@@ -7,8 +7,10 @@ import 'package:FSOUNotes/models/document.dart';
 import 'package:FSOUNotes/models/download.dart';
 import 'package:FSOUNotes/models/notes.dart';
 import 'package:FSOUNotes/models/subject.dart';
+import 'package:FSOUNotes/models/user.dart';
 import 'package:FSOUNotes/models/vote.dart';
 import 'package:FSOUNotes/services/funtional_services/admob_service.dart';
+import 'package:FSOUNotes/services/funtional_services/authentication_service.dart';
 import 'package:FSOUNotes/services/funtional_services/firestore_service.dart';
 import 'package:FSOUNotes/services/funtional_services/google_drive_service.dart';
 import 'package:FSOUNotes/services/funtional_services/google_in_app_payment_service.dart';
@@ -44,6 +46,7 @@ class NotesViewModel extends BaseViewModel {
 
   FirestoreService _firestoreService = locator<FirestoreService>();
   AdmobService _admobService = locator<AdmobService>();
+  AuthenticationService _authenticationService = locator<AuthenticationService>();
   RemoteConfigService _remoteConfigService = locator<RemoteConfigService>();
   NavigationService _navigationService = locator<NavigationService>();
   SharedPreferencesService _sharedPreferencesService =
@@ -74,8 +77,7 @@ class NotesViewModel extends BaseViewModel {
   bool get loading => isloading;
   Box box;
   ValueNotifier<List<Vote>> get userVotesBySub => _voteService.votesBySub;
-
-  ValueNotifier<int> get downloadProgress =>
+  ValueNotifier<double> get downloadProgress =>
       _googleDriveService.downloadProgress;
 
   setLoading(bool val) {
@@ -190,6 +192,11 @@ class NotesViewModel extends BaseViewModel {
   }
 
   void openDoc(Note note) async {
+    User user = await _authenticationService.getUser();
+    if(_admobService.adDue && !user.isPremiumUser){
+      _navigationService.navigateTo(Routes.watchAdToContinueView);
+      return;
+    }
     SharedPreferences prefs = await _sharedPreferencesService.store();
     if (prefs.containsKey("openDocChoice")) {
       String button = prefs.getString("openDocChoice");
@@ -247,7 +254,7 @@ class NotesViewModel extends BaseViewModel {
     }
   }
 
-  void navigateToWebView(Note note) {
+  void navigateToWebView(Note note) async {
     try {
       _googleDriveService.downloadFile(
         note: note,
@@ -274,18 +281,9 @@ class NotesViewModel extends BaseViewModel {
     _navigationService.popRepeated(1);
   }
 
-  @override
-  void dispose() {
-    this.admobService.hideNotesViewBanner();
-    this.admobService.hideNotesViewInterstitialAd();
-    super.dispose();
-  }
-
   void incrementViewForAd() {
     this.admobService.incrementNumberOfTimeNotesOpened();
-    if (this.admobService.shouldAdBeShown()) {
-      this.admobService.showNotesViewInterstitialAd();
-    }
+    this.admobService.shouldAdBeShown();
   }
 
   List<Subject> getSimilarSubjects(String subjectName) {
@@ -306,7 +304,7 @@ class NotesViewModel extends BaseViewModel {
       notesName: notesName,
       subName: subName,
       type: type,
-      doc:doc,
+      doc: doc,
     );
     String PDFpath = file.path;
     log.e(file.path);
@@ -322,10 +320,6 @@ class NotesViewModel extends BaseViewModel {
         arguments: PDFScreenArguments(pathPDF: PDFpath, askBookMarks: false));
   }
 
-  // @override
-  // Future futureToRun() =>fetchNotes();
-
-  // old download logic for firebase
   downloadFile({
     String notesName,
     String subName,
@@ -339,7 +333,7 @@ class NotesViewModel extends BaseViewModel {
     try {
       String fileUrl =
           "https://storage.googleapis.com/ou-notes.appspot.com/pdfs/$subName/$type/$notesName";
-      if(doc!=null)fileUrl = doc.url;
+      if (doc != null) fileUrl = doc.url;
       log.e(doc.url);
       log.i(Uri.parse(fileUrl));
       var request = await HttpClient().getUrl(Uri.parse(fileUrl));
@@ -357,9 +351,6 @@ class NotesViewModel extends BaseViewModel {
       );
       String dir = (await getApplicationDocumentsDirectory()).path;
       String id = newCuid();
-      // if (id == null || note.id.length == 0) {
-      //   note.setId = id;
-      // }
       File file = new File('$dir/$id.pdf');
       file = await file.writeAsBytes(bytes);
       log.i("file path: ${file.path}");
@@ -385,7 +376,7 @@ class NotesViewModel extends BaseViewModel {
         notification: notification,
         isPinned: isPinned,
         refresh: refresh,
-        onDownloadCallback:handleDownloadPurchase,
+        onDownloadCallback: handleDownloadPurchase,
       ),
       onTap: () {
         incrementViewForAd();
@@ -403,9 +394,18 @@ class NotesViewModel extends BaseViewModel {
   void handleDownloadPurchase({Note note}) async {
 
     ProductDetails prod = _googleInAppPaymentService.getProduct(GoogleInAppPaymentService.pdfProductID);
-    if(prod == null){return;}
-    await _googleInAppPaymentService.buyProduct(prod,note);
-    log.e("Download started");
+    //Show download floating sheet
+    SheetResponse response = await _bottomSheetService.showCustomSheet(
+      variant: BottomSheetType.downloadPdf,
+      title: "Download PDF",
+      customData: {"price" : prod?.price ?? "10"}
+    );
+
+    if (response?.confirmed ?? false) {
+      if(prod == null){return;}
+      await _googleInAppPaymentService.buyProduct(prod:prod,note:note);
+      log.e("Download started");
+    }
     
   }
 }

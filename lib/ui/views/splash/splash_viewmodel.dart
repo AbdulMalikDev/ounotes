@@ -25,7 +25,6 @@ class SplashViewModel extends FutureViewModel {
   handleStartUpLogic() async {
     await _notificationService.initialise();
     var hasLoggedInUser = await _sharedPreferencesService.isUserLoggedIn();
-
     //Check if user has outdated version
     Map<String,dynamic> result = await _checkForUpdatedVersionAndShowDialog();
 
