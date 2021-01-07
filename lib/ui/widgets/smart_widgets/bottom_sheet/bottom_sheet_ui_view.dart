@@ -1,3 +1,4 @@
+import 'package:FSOUNotes/app/router.gr.dart';
 import 'package:FSOUNotes/ui/shared/app_config.dart';
 import 'package:FSOUNotes/ui/widgets/dumb_widgets/TextFieldView.dart';
 import 'package:FSOUNotes/ui/widgets/smart_widgets/bottom_sheet/bottom_sheet_view_model.dart';
@@ -609,13 +610,20 @@ class DownloadPdfBottomSheet extends StatelessWidget {
           SizedBox(
             height: 10,
           ),
-          //TODO malik answer this question
-          Text(
-            "Because we have to pay for cloud storage",
-            style: TextStyle(
-              fontSize: 15,
-              fontWeight: FontWeight.w300,
-              color: Colors.black,
+          Container(
+            height: 45,
+            child: RaisedButton(
+              textColor: Colors.white,
+              color: Colors.teal.shade500,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(30),
+              ),
+              onPressed: () {
+                Navigator.of(context).pushNamed(
+                  Routes.whyToPayForDownloadView,
+                );
+              },
+              child: Text("Know here"),
             ),
           ),
           SizedBox(

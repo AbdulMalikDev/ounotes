@@ -39,6 +39,7 @@ import 'package:FSOUNotes/models/UploadLog.dart';
 import 'package:FSOUNotes/ui/views/admin/upload_log/upload_log_detail/upload_log_edit/upload_log_edit_view.dart';
 import 'package:FSOUNotes/ui/widgets/smart_widgets/watch_ad/watch_ad_view.dart';
 import 'package:FSOUNotes/ui/widgets/smart_widgets/thank_you_page/thank_you_view.dart';
+import 'package:FSOUNotes/ui/widgets/smart_widgets/why_to_pay_for_download_page/why_to_pay_for_download.dart';
 
 abstract class Routes {
   static const splashViewRoute = '/';
@@ -67,6 +68,7 @@ abstract class Routes {
   static const uploadLogEditViewRoute = '/upload-log-edit-view-route';
   static const watchAdToContinueView = '/watch-ad-to-continue-view';
   static const thankYouView = '/thank-you-view';
+  static const whyToPayForDownloadView = '/why-to-pay-for-download-view';
   static const all = {
     splashViewRoute,
     introViewRoute,
@@ -94,6 +96,7 @@ abstract class Routes {
     uploadLogEditViewRoute,
     watchAdToContinueView,
     thankYouView,
+    whyToPayForDownloadView,
   };
 }
 
@@ -378,11 +381,19 @@ class Router extends RouterBase {
         return MaterialPageRoute<dynamic>(
           builder: (context) => WatchAdToContinueView(),
           settings: settings,
+          fullscreenDialog: true,
         );
       case Routes.thankYouView:
         return MaterialPageRoute<dynamic>(
           builder: (context) => ThankYouView(),
           settings: settings,
+          fullscreenDialog: true,
+        );
+      case Routes.whyToPayForDownloadView:
+        return MaterialPageRoute<dynamic>(
+          builder: (context) => WhyToPayForDownloadView(),
+          settings: settings,
+          fullscreenDialog: true,
         );
       default:
         return unknownRoutePage(settings.name);
