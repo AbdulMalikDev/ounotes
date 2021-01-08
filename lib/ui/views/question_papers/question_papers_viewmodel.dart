@@ -4,7 +4,9 @@ import 'package:FSOUNotes/app/router.gr.dart';
 import 'package:FSOUNotes/misc/helper.dart';
 import 'package:FSOUNotes/models/question_paper.dart';
 import 'package:FSOUNotes/services/funtional_services/firestore_service.dart';
+import 'package:FSOUNotes/ui/widgets/smart_widgets/question_paper_tile/question_paper_tile_view.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:logger/logger.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
@@ -21,27 +23,37 @@ class QuestionPapersViewModel extends BaseViewModel {
   SharedPreferencesService _sharedPreferencesService =
       locator<SharedPreferencesService>();
   BottomSheetService _bottomSheetService = locator<BottomSheetService>();
+  List<Widget> _questionPaperTiles=[];
+
+  List<Widget> get questionPaperTiles => _questionPaperTiles;
 
   List<QuestionPaper> get questionPapers => _questionPapers;
 
   Future fetchQuestionPapers(String subjectName) async {
     setBusy(true);
-    var result =
+    var questionPapers =
         await _firestoreService.loadQuestionPapersFromFirebase(subjectName);
-    if (result is String) {
-      _dialogService.showDialog(
-          title: "Error",
-          description: "Error in loading documents " + "$result");
+    if (questionPapers is String) {
+     await Fluttertoast.showToast(
+          msg:
+              "You are facing an error in loading the QuestionPapers. If you are facing this error more than once, please let us know by using the 'feedback' option in the app drawer.");
       setBusy(false);
     } else {
-      _questionPapers = result;
+      _questionPapers = questionPapers;
+    }
+
+    for (int i = 0; i < questionPapers.length; i++) {
+      QuestionPaper questionPaper = questionPapers[i];
+      if (questionPaper.GDriveLink == null) {
+        continue;
+      }
+      _questionPaperTiles.add(_addInkWellWidget(questionPaper));
     }
     notifyListeners();
     setBusy(false);
   }
 
-
-  void onTap(BuildContext context, QuestionPaper questionPaper) async {
+  void onTap(QuestionPaper questionPaper) async {
     SharedPreferences prefs = await _sharedPreferencesService.store();
 
     if (prefs.containsKey("openDocChoice")) {
@@ -58,13 +70,13 @@ class QuestionPapersViewModel extends BaseViewModel {
     SheetResponse response = await _bottomSheetService.showCustomSheet(
       variant: BottomSheetType.floating2,
       title: 'Where do you want to open the file?',
-       description:
+      description:
           "Tip : Open Notes in Google Drive app to avoid loading issues. ' Open in Browser > Google Drive Icon ' ",
       mainButtonTitle: 'Open In Browser',
       secondaryButtonTitle: 'Open In App',
     );
     log.i("openDoc BottomSheetResponse ");
-    if (!response?.confirmed ?? true) {
+    if (!response.confirmed ?? true) {
       return;
     }
 
@@ -80,18 +92,16 @@ class QuestionPapersViewModel extends BaseViewModel {
             "You can change this setting in the profile screen anytime.",
       );
       if (response2.confirmed) {
-        navigateToPDFScreen(
-            response.responseData['buttonText'], questionPaper, context);
+        navigateToPDFScreen(response.responseData['buttonText'], questionPaper);
         return;
       }
     } else {
-      navigateToPDFScreen(
-          response.responseData['buttonText'], questionPaper, context);
+      navigateToPDFScreen(response.responseData['buttonText'], questionPaper);
     }
     return;
   }
 
-  navigateToPDFScreen(String buttonText, QuestionPaper questionPaper, BuildContext context) {
+  navigateToPDFScreen(String buttonText, QuestionPaper questionPaper) {
     if (buttonText == 'Open In App') {
       navigateToWebView(questionPaper);
     } else {
@@ -105,4 +115,16 @@ class QuestionPapersViewModel extends BaseViewModel {
         arguments: WebViewWidgetArguments(questionPaper: questionPaper));
   }
 
+  Widget _addInkWellWidget(
+    QuestionPaper questionPaper,
+  ) {
+    return InkWell(
+      child: QuestionPaperTileView(
+        questionPaper: questionPaper,
+      ),
+      onTap: () {
+        onTap(questionPaper);
+      },
+    );
+  }
 }

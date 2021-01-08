@@ -6,17 +6,13 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import 'package:share/share.dart';
 import 'package:stacked/stacked.dart';
 import 'package:flutter/material.dart';
-import 'package:FSOUNotes/models/download.dart';
 import 'package:FSOUNotes/misc/constants.dart';
 
 class QuestionPaperTileView extends StatelessWidget {
-  final QuestionPaper note;
-  final int index;
-  final BuildContext ctx;
-  final List<Download> downloadedQp;
+  final QuestionPaper questionPaper;
 
   const QuestionPaperTileView(
-      {Key key, this.note, this.index, this.ctx, this.downloadedQp})
+      {Key key, this.questionPaper})
       : super(key: key);
 
   @override
@@ -92,7 +88,7 @@ class QuestionPaperTileView extends StatelessWidget {
                                                         : BoxConstraints(
                                                             maxWidth: 160),
                                                 child: Text(
-                                                  "Year :${note.year} ${note.branch}",
+                                                  "Year :${questionPaper.year} ${questionPaper.branch}",
                                                   overflow: TextOverflow.clip,
                                                   style: TextStyle(
                                                       color: primary,
@@ -114,7 +110,7 @@ class QuestionPaperTileView extends StatelessWidget {
                                             final RenderBox box =
                                                 context.findRenderObject();
                                             Share.share(
-                                                "Question Paper year: ${note.year}\n\nSubject Name: ${note.subjectName}\n\nLink:${note.GDriveLink}\n\nFind Latest Notes | Question Papers | Syllabus | Resources for Osmania University at the OU NOTES App\n\nhttps://play.google.com/store/apps/details?id=com.notes.ounotes",
+                                                "Question Paper year: ${questionPaper.year}\n\nSubject Name: ${questionPaper.subjectName}\n\nLink:${questionPaper.GDriveLink}\n\nFind Latest Notes | Question Papers | Syllabus | Resources for Osmania University at the OU NOTES App\n\nhttps://play.google.com/store/apps/details?id=com.notes.ounotes",
                                                 sharePositionOrigin:
                                                     box.localToGlobal(
                                                             Offset.zero) &
@@ -124,7 +120,7 @@ class QuestionPaperTileView extends StatelessWidget {
                                         PopupMenuButton(
                                           onSelected: (Menu selectedValue) {
                                             if (selectedValue == Menu.Report) {
-                                              model.reportNote(doc: note);
+                                              model.reportNote(doc: questionPaper);
                                             }
                                           },
                                           icon: Icon(Icons.more_vert),
@@ -172,7 +168,7 @@ class QuestionPaperTileView extends StatelessWidget {
                                           color: Colors.blue,
                                           onPressed: () async {
                                             await model
-                                                .navigateToEditView(note);
+                                                .navigateToEditView(questionPaper);
                                           },
                                         ),
                                       ),
@@ -183,7 +179,7 @@ class QuestionPaperTileView extends StatelessWidget {
                                                   color: Colors.white)),
                                           color: Colors.red,
                                           onPressed: () async {
-                                            await model.delete(note);
+                                            await model.delete(questionPaper);
                                           },
                                         ),
                                       ),

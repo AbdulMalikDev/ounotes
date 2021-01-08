@@ -66,13 +66,18 @@ class _DrawerViewState extends State<DrawerView> {
         Theme.of(context).textTheme.subtitle1.copyWith(fontSize: 16);
 
     return ViewModelBuilder<DrawerViewModel>.reactive(
-        onModelReady: (model) async => await model.showIntro(intro, context),
+        onModelReady: (model) async {
+          await model.showIntro(intro, context);
+          await model.openDownloadBox();
+        },
         builder: (context, model, child) => Container(
               width: App(context).appScreenWidthWithOutSafeArea(0.78),
               child: Drawer(
                 child: ListView(
                   children: [
-                    DrawerHeaderView(),
+                    DrawerHeaderView(
+                      isPremiumUser: model.user?.isPremiumUser ?? false,
+                    ),
                     Container(
                       color: Theme.of(context).scaffoldBackgroundColor,
                       child: Column(

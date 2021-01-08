@@ -7,14 +7,11 @@ import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:share/share.dart';
 import 'package:stacked/stacked.dart';
-import 'package:FSOUNotes/models/download.dart';
 
 class SyllabusTileView extends StatelessWidget {
   final Syllabus syllabus;
-  final int index;
-  final List<Download> downloadedsyllabus;
   const SyllabusTileView(
-      {Key key, this.syllabus, this.index, this.downloadedsyllabus})
+      {Key key, this.syllabus})
       : super(key: key);
 
   @override

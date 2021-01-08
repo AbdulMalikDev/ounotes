@@ -451,7 +451,9 @@ class PremiumBottomSheet extends StatelessWidget {
           ),
           SizedBox(height: 25),
           Text(
-            "₹" + request.customData["price"] !=null ? request.customData["price"] :  "150",
+            request.customData["price"] != null
+                ? request.customData["price"]
+                : "₹100",
             style: TextStyle(
               fontSize: 30,
               fontWeight: FontWeight.bold,
@@ -502,7 +504,7 @@ class PremiumBottomSheet extends StatelessWidget {
             child: Container(
               height: 40,
               child: RaisedButton(
-                onPressed: () =>  completer(SheetResponse(confirmed: true)),
+                onPressed: () => completer(SheetResponse(confirmed: true)),
                 textColor: Colors.white,
                 color: Colors.amber.shade500,
                 shape: RoundedRectangleBorder(
@@ -573,12 +575,9 @@ class DownloadPdfBottomSheet extends StatelessWidget {
           ),
           SizedBox(height: 25),
           Text(
-            "₹" 
-            +
-            ((request.customData!=null && 
-            request.customData["price"] !=null) 
-            ? request.customData["price"] 
-            : "10"),
+            ((request.customData != null && request.customData["price"] != null)
+                ? request.customData["price"]
+                : "₹10"),
             style: TextStyle(
               fontSize: 30,
               fontWeight: FontWeight.bold,
@@ -639,7 +638,7 @@ class DownloadPdfBottomSheet extends StatelessWidget {
             child: Container(
               height: 40,
               child: RaisedButton(
-                onPressed: () =>  completer(SheetResponse(confirmed: true)),
+                onPressed: () => completer(SheetResponse(confirmed: true)),
                 textColor: Colors.white,
                 color: Colors.amber.shade500,
                 shape: RoundedRectangleBorder(

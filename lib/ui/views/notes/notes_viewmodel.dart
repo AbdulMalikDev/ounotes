@@ -19,7 +19,6 @@ import 'package:FSOUNotes/services/funtional_services/sharedpref_service.dart';
 import 'package:FSOUNotes/services/state_services/subjects_service.dart';
 import 'package:FSOUNotes/services/state_services/vote_service.dart';
 import 'package:FSOUNotes/enums/bottom_sheet_type.dart';
-import 'package:FSOUNotes/services/funtional_services/in_app_payment_service.dart';
 import 'package:FSOUNotes/services/funtional_services/notification_service.dart';
 import 'package:FSOUNotes/ui/widgets/smart_widgets/notes_tile/notes_tile_view.dart';
 import 'package:cuid/cuid.dart';
@@ -46,7 +45,8 @@ class NotesViewModel extends BaseViewModel {
 
   FirestoreService _firestoreService = locator<FirestoreService>();
   AdmobService _admobService = locator<AdmobService>();
-  AuthenticationService _authenticationService = locator<AuthenticationService>();
+  AuthenticationService _authenticationService =
+      locator<AuthenticationService>();
   RemoteConfigService _remoteConfigService = locator<RemoteConfigService>();
   NavigationService _navigationService = locator<NavigationService>();
   SharedPreferencesService _sharedPreferencesService =
@@ -54,9 +54,9 @@ class NotesViewModel extends BaseViewModel {
   VoteService _voteService = locator<VoteService>();
   SubjectsService _subjectsService = locator<SubjectsService>();
   BottomSheetService _bottomSheetService = locator<BottomSheetService>();
-  GoogleInAppPaymentService _googleInAppPaymentService = locator<GoogleInAppPaymentService>();
+  GoogleInAppPaymentService _googleInAppPaymentService =
+      locator<GoogleInAppPaymentService>();
   GoogleDriveService _googleDriveService = locator<GoogleDriveService>();
-  NotificationService _notificationService = locator<NotificationService>();
 
   double _progress = 0;
   bool isProMember = false;
@@ -193,7 +193,8 @@ class NotesViewModel extends BaseViewModel {
 
   void openDoc(Note note) async {
     User user = await _authenticationService.getUser();
-    if(_admobService.adDue && !user.isPremiumUser){
+    if (_admobService.adDue && !user.isPremiumUser??false ||
+        _admobService.shouldAdBeShown()) {
       _navigationService.navigateTo(Routes.watchAdToContinueView);
       return;
     }
@@ -386,26 +387,25 @@ class NotesViewModel extends BaseViewModel {
   }
 
   initialize() async {
-    await Hive.openBox("downloads");
     box = await Hive.openBox("Documents");
     _subjectsService.setBox(box);
   }
 
   void handleDownloadPurchase({Note note}) async {
-
-    ProductDetails prod = _googleInAppPaymentService.getProduct(GoogleInAppPaymentService.pdfProductID);
+    ProductDetails prod = _googleInAppPaymentService
+        .getProduct(GoogleInAppPaymentService.pdfProductID);
     //Show download floating sheet
     SheetResponse response = await _bottomSheetService.showCustomSheet(
-      variant: BottomSheetType.downloadPdf,
-      title: "Download PDF",
-      customData: {"price" : prod?.price ?? "10"}
-    );
+        variant: BottomSheetType.downloadPdf,
+        title: "Download PDF",
+        customData: {"price": prod?.price ?? "10"});
 
     if (response?.confirmed ?? false) {
-      if(prod == null){return;}
-      await _googleInAppPaymentService.buyProduct(prod:prod,note:note);
+      if (prod == null) {
+        return;
+      }
+      await _googleInAppPaymentService.buyProduct(prod: prod, note: note);
       log.e("Download started");
     }
-    
   }
 }

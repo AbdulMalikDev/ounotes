@@ -1,6 +1,7 @@
-
 import 'package:FSOUNotes/app/logger.dart';
 import 'package:FSOUNotes/models/syllabus.dart';
+import 'package:FSOUNotes/ui/widgets/smart_widgets/syllabus_tile.dart/syllabus_tile_view.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:logger/logger.dart';
 import 'package:stacked/stacked.dart';
 import 'package:FSOUNotes/app/locator.dart';
@@ -11,8 +12,6 @@ import 'package:FSOUNotes/misc/helper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:FSOUNotes/services/funtional_services/sharedpref_service.dart';
 import 'package:FSOUNotes/enums/bottom_sheet_type.dart';
-
-
 import 'package:stacked_services/stacked_services.dart';
 
 class SyllabusViewModel extends BaseViewModel {
@@ -24,15 +23,38 @@ class SyllabusViewModel extends BaseViewModel {
       locator<SharedPreferencesService>();
   BottomSheetService _bottomSheetService = locator<BottomSheetService>();
 
+  List<Widget> _syllabusTiles = [];
+
+  List<Widget> get syllabusTiles => _syllabusTiles;
+
   List<Syllabus> get syllabus => _syllabus;
 
   Future fetchSyllabus(String subjectName) async {
     setBusy(true);
-    _syllabus = await _firestoreService.loadSyllabusFromFirebase(subjectName);
+    var syllabusList =
+        await _firestoreService.loadSyllabusFromFirebase(subjectName);
+    if (syllabusList is String) {
+      await Fluttertoast.showToast(
+          msg:
+              "You are facing an error in loading the Syllabus. If you are facing this error more than once, please let us know by using the 'feedback' option in the app drawer.");
+      setBusy(false);
+      return;
+    } else {
+      _syllabus = syllabusList;
+    }
+
+    for (int i = 0; i < syllabusList.length; i++) {
+      Syllabus syllabus = syllabusList[i];
+      if (syllabus.GDriveLink == null) {
+        continue;
+      }
+      _syllabusTiles.add(_addInkWellWidget(syllabus));
+    }
     notifyListeners();
     setBusy(false);
   }
-    void openDoc(BuildContext context, Syllabus syllabus) async {
+
+  void openDoc(Syllabus syllabus) async {
     SharedPreferences prefs = await _sharedPreferencesService.store();
 
     if (prefs.containsKey("openDocChoice")) {
@@ -49,7 +71,7 @@ class SyllabusViewModel extends BaseViewModel {
     SheetResponse response = await _bottomSheetService.showCustomSheet(
       variant: BottomSheetType.floating2,
       title: 'Where do you want to open the file?',
-       description:
+      description:
           "Tip : Open Notes in Google Drive app to avoid loading issues. ' Open in Browser > Google Drive Icon ' ",
       mainButtonTitle: 'Open In Browser',
       secondaryButtonTitle: 'Open In App',
@@ -71,18 +93,16 @@ class SyllabusViewModel extends BaseViewModel {
             "You can change this setting in the profile screen anytime.",
       );
       if (response2.confirmed) {
-        navigateToPDFScreen(
-            response.responseData['buttonText'], syllabus, context);
+        navigateToPDFScreen(response.responseData['buttonText'], syllabus);
         return;
       }
     } else {
-      navigateToPDFScreen(
-          response.responseData['buttonText'], syllabus, context);
+      navigateToPDFScreen(response.responseData['buttonText'], syllabus);
     }
     return;
   }
 
-  navigateToPDFScreen(String buttonText, Syllabus syllabus, BuildContext context) {
+  navigateToPDFScreen(String buttonText, Syllabus syllabus) {
     if (buttonText == 'Open In App') {
       navigateToWebView(syllabus);
     } else {
@@ -90,10 +110,21 @@ class SyllabusViewModel extends BaseViewModel {
       Helper.launchURL(syllabus.GDriveLink);
     }
   }
-  
+
   void navigateToWebView(Syllabus syllabus) {
     _navigationService.navigateTo(Routes.webViewWidgetRoute,
         arguments: WebViewWidgetArguments(syllabus: syllabus));
   }
 
+  Widget _addInkWellWidget(
+    Syllabus syllabus,
+  ) {
+    return InkWell(
+        child: SyllabusTileView(
+          syllabus: syllabus,
+        ),
+        onTap: () {
+          openDoc(syllabus);
+        });
+  }
 }

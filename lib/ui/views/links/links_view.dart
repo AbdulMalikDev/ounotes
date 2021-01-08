@@ -1,5 +1,4 @@
-import 'package:FSOUNotes/models/link.dart';
-import 'package:FSOUNotes/ui/widgets/smart_widgets/links_tile_view/links_tile_view.dart';
+import 'package:FSOUNotes/ui/shared/app_config.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 import 'links_viewmodel.dart';
@@ -23,88 +22,59 @@ class _LinksViewState extends State<LinksView>
         onModelReady: (model) => model.fetchLinks(widget.subjectName),
         builder: (context, model, child) => SingleChildScrollView(
               child: Container(
-                height: widget.path != null
-                    ? MediaQuery.of(context).size.height * 0.86
-                    : MediaQuery.of(context).size.height * 0.78,
-                width: MediaQuery.of(context).size.width,
-                child: Column(
-                  children: <Widget>[
-                    Stack(
-                      children: <Widget>[
-                        Container(
-                          padding: EdgeInsets.only(top: 10),
-                          height: widget.path != null
-                              ? MediaQuery.of(context).size.height * 0.86
-                              : MediaQuery.of(context).size.height * 0.73,
-                          width: double.infinity,
-                          child: model.isBusy
-                              ? Center(
-                                  child: CircularProgressIndicator(),
-                                )
-                              : model.linksList.length == 0
-                                  ? Center(
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: <Widget>[
-                                          Container(
-                                            height: 200,
-                                            width: 200,
-                                            child: Image.asset(
-                                                'assets/images/study4.jpg'),
-                                          ),
-                                          Text(
-                                            "Resources/Links are empty!",
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .headline6
-                                                .copyWith(
-                                                    color: Theme.of(context)
-                                                        .colorScheme
-                                                        .onSurface,
-                                                    fontWeight:
-                                                        FontWeight.w300),
-                                          ),
-                                          SizedBox(
-                                            height: 15,
-                                          ),
-                                          Text(
-                                            "why don't you upload some?",
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .headline6
-                                                .copyWith(
-                                                    color: Theme.of(context)
-                                                        .colorScheme
-                                                        .onSurface,
-                                                    fontWeight:
-                                                        FontWeight.w300),
-                                          ),
-                                        ],
-                                      ),
-                                    )
-                                  : ListView.builder(
-                                      padding: EdgeInsets.only(bottom: 150),
-                                      itemCount: model.linksList.length,
-                                      itemBuilder:
-                                          (BuildContext context, int index) {
-                                        Link link = model.linksList[index];
-                                        return InkWell(
-                                          child: LinksTileView(
-                                            link: link,
-                                            index: index,
-                                          ),
-                                          onTap: () {},
-                                        );
-                                      },
-                                    ),
-                        )
-                      ],
-                    ),
-                  ],
-                ),
+                alignment: Alignment.center,
+                padding: EdgeInsets.only(top: 10),
+                width: double.infinity,
+                child: model.isBusy
+                    ? Center(
+                        child: CircularProgressIndicator(),
+                      )
+                    : model.linksList.length == 0
+                        ? Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: <Widget>[
+                                SizedBox(
+                                  height: App(context).appHeight(0.15),
+                                ),
+                                Container(
+                                  height: 200,
+                                  width: 200,
+                                  child:
+                                      Image.asset('assets/images/study4.jpg'),
+                                ),
+                                Text(
+                                  "Resources/Links are empty!",
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .headline6
+                                      .copyWith(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onSurface,
+                                          fontWeight: FontWeight.w300),
+                                ),
+                                SizedBox(
+                                  height: 15,
+                                ),
+                                Text(
+                                  "why don't you upload some?",
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .headline6
+                                      .copyWith(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onSurface,
+                                          fontWeight: FontWeight.w300),
+                                ),
+                              ],
+                            ),
+                          )
+                        : Column(
+                            children: model.linkTiles,
+                          ),
               ),
             ),
         viewModelBuilder: () => LinksViewModel());

@@ -45,7 +45,7 @@ class AdmobService{
       }
       _NumberOfTimeNotesOpened++;
       OnboardingService.box.put("_NumberOfTimeNotesOpened", _NumberOfTimeNotesOpened);
-      print(_NumberOfTimeNotesOpened);
+      print(_NumberOfTimeNotesOpened.toString()+"this many time notes opened");
   }
 
   getNumberOfTimeNotesOpened(){
