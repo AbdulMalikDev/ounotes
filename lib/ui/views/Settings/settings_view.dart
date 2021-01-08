@@ -5,6 +5,7 @@ import 'package:FSOUNotes/ui/views/Settings/settings_viewmodel.dart';
 import 'package:FSOUNotes/ui/widgets/dumb_widgets/progress.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:stacked/stacked.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -21,6 +22,7 @@ class _SettingsViewState extends State<SettingsView> {
   TextEditingController controllerForSem = TextEditingController();
   TextEditingController controllerForBranch = TextEditingController();
   TextEditingController controllerForCollege = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
@@ -70,8 +72,24 @@ class _SettingsViewState extends State<SettingsView> {
                             SizedBox(
                               height: 10,
                             ),
-                            Text(model.user?.username ?? '',
-                                style: theme.textTheme.headline6),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(model.user?.username ?? '',
+                                    style: theme.textTheme.headline6),
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                model.user?.isPremiumUser??false
+                                    ? 
+                                Icon(
+                                        MdiIcons.crown,
+                                        size: 30,
+                                        color: Colors.amber,
+                                      )
+                                    : Container(),
+                              ],
+                            )
                           ],
                         ),
                       ),
@@ -262,7 +280,7 @@ class _SettingsViewState extends State<SettingsView> {
                       Container(
                         width: MediaQuery.of(context).size.width / 1.7,
                         height: MediaQuery.of(context).size.height * 0.06,
-                        margin: const EdgeInsets.symmetric(horizontal:70),
+                        margin: const EdgeInsets.symmetric(horizontal: 70),
                         child: FlatButton(
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(25),

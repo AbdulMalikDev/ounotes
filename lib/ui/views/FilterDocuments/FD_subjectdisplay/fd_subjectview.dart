@@ -43,7 +43,6 @@ class FDSubjectView extends StatelessWidget {
             )),
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         body: Container(
-          height: App(context).appScreenHeightWithOutSafeArea(0.88),
           child: FilterSubjectsView(
             path: path,
             data: model.subjectBySemAndBr,

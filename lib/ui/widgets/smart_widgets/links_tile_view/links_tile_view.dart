@@ -9,9 +9,8 @@ import 'links_tile_viewmodel.dart';
 
 class LinksTileView extends StatelessWidget {
   final Link link;
-  final int index;
 
-  const LinksTileView({Key key, this.link, this.index}) : super(key: key);
+  const LinksTileView({Key key, this.link}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

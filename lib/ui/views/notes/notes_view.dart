@@ -46,7 +46,7 @@ class _NotesViewState extends State<NotesView>
                   borderRadius: BorderRadius.circular(30),
                 ),
                 padding: EdgeInsets.all(10),
-                height: App(context).appHeight(0.13),
+                height: App(context).appHeight(0.15),
                 width: App(context).appWidth(0.85),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -95,6 +95,20 @@ class _NotesViewState extends State<NotesView>
                                 .subtitle1
                                 .copyWith(fontSize: 12),
                           ),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Container(
+                          constraints: BoxConstraints(maxWidth: 180),
+                          child: Text(
+                            'Access downloads from Drawer > My Downloads',
+                            overflow: TextOverflow.clip,
+                            style: Theme.of(context)
+                                .textTheme
+                                .subtitle1
+                                .copyWith(fontSize: 12),
+                          ),
                         )
                       ],
                     ),
@@ -109,69 +123,65 @@ class _NotesViewState extends State<NotesView>
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Container(
-                  height: widget.path != null
-                      ? MediaQuery.of(context).size.height * 0.88
-                      : MediaQuery.of(context).size.height * 0.75,
-                  width: double.infinity,
                   child: model.isBusy
                       ? Center(
                           child: CircularProgressIndicator(),
                         )
                       : model.notes.length == 0
-                          ? SingleChildScrollView(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: <Widget>[
-                                  SimilarSubjectTile(
-                                    similarSubjects: model
-                                        .getSimilarSubjects(widget.subjectName),
-                                  ),
-                                  Image.asset(
-                                    'assets/images/study1.jpg',
-                                    alignment: Alignment.center,
-                                    width: 300,
-                                    height: 300,
-                                  ),
-                                  Text(
-                                    "Notes are empty!",
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .headline6
-                                        .copyWith(
-                                            color: Theme.of(context)
-                                                .colorScheme
-                                                .onSurface,
-                                            fontWeight: FontWeight.w300),
-                                  ),
-                                  SizedBox(
-                                    height: 15,
-                                  ),
-                                  Text(
-                                    "why don't you upload some?",
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .headline6
-                                        .copyWith(
-                                            color: Theme.of(context)
-                                                .colorScheme
-                                                .onSurface,
-                                            fontWeight: FontWeight.w300),
-                                  ),
-                                ],
-                              ),
+                          ? Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: <Widget>[
+                                SimilarSubjectTile(
+                                  similarSubjects: model
+                                      .getSimilarSubjects(widget.subjectName),
+                                ),
+                                Image.asset(
+                                  'assets/images/student_reading.jpg',
+                                  alignment: Alignment.center,
+                                  width: 300,
+                                  height: 300,
+                                ),
+                                Text(
+                                  "Notes are empty!",
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .headline6
+                                      .copyWith(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onSurface,
+                                          fontWeight: FontWeight.w300),
+                                ),
+                                SizedBox(
+                                  height: 15,
+                                ),
+                                Text(
+                                  "why don't you upload some?",
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .headline6
+                                      .copyWith(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onSurface,
+                                          fontWeight: FontWeight.w300),
+                                ),
+                              ],
                             )
                           : ValueListenableBuilder(
                               valueListenable: model.notesTiles,
                               builder: (BuildContext context,
                                   List<Widget> value, Widget child) {
-                                return ListView(
-                                  padding: EdgeInsets.only(bottom: 150),
+                                return Column(
                                   children: value +
                                       [
                                         SimilarSubjectTile(
                                           similarSubjects:
                                               model.getSimilarSubjects(
                                                   widget.subjectName),
+                                        ),
+                                        SizedBox(
+                                          height: 30,
                                         ),
                                       ],
                                 );

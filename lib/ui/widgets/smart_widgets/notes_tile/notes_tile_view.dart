@@ -244,16 +244,16 @@ class NotesColumnWidget extends StatelessWidget {
                           child: Row(
                             children: <Widget>[
                               Container(
-                                constraints: model.isnotedownloaded
-                                    ? BoxConstraints(maxWidth: 140)
-                                    : BoxConstraints(maxWidth: 160),
+                                constraints: isPinned
+                                    ? BoxConstraints(maxWidth: 130)
+                                    : BoxConstraints(maxWidth: 150),
                                 child: Text(
                                   title,
                                   overflow: TextOverflow.clip,
                                   style: TextStyle(
-                                      color: primary,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 18,
+                                    color: primary,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 18,
                                   ),
                                 ),
                               ),
@@ -277,7 +277,7 @@ class NotesColumnWidget extends StatelessWidget {
                             color: theme.primaryColor,
                           ),
                           onPressed: () {
-                            onDownloadCallback(note:note);
+                            onDownloadCallback(note: note);
                           },
                         ),
                         Flexible(

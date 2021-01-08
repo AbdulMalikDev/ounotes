@@ -1,8 +1,10 @@
 import 'package:FSOUNotes/ui/shared/app_config.dart';
 import 'package:flutter/material.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 class DrawerHeaderView extends StatelessWidget {
-  const DrawerHeaderView({Key key}) : super(key: key);
+  final bool isPremiumUser;
+  const DrawerHeaderView({Key key, this.isPremiumUser}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -31,14 +33,28 @@ class DrawerHeaderView extends StatelessWidget {
                   SizedBox(
                     width: 10,
                   ),
-                  Text(
-                    'OU Notes',
-                    textAlign: TextAlign.left,
-                    style: Theme.of(context)
-                        .textTheme
-                        .headline6
-                        .copyWith(fontSize: 25),
-                  ),
+                  Row(
+                    children: [
+                      Text(
+                        'OU Notes',
+                        textAlign: TextAlign.left,
+                        style: Theme.of(context)
+                            .textTheme
+                            .headline6
+                            .copyWith(fontSize: 25),
+                      ),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      isPremiumUser
+                          ? Icon(
+                              MdiIcons.crown,
+                              size: 30,
+                              color: Colors.amber,
+                            )
+                          : Container(),
+                    ],
+                  )
                 ],
               ),
             ),

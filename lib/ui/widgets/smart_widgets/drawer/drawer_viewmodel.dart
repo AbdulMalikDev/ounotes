@@ -14,6 +14,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_intro/flutter_intro.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:hive/hive.dart';
 import 'package:logger/logger.dart';
 import 'package:package_info/package_info.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -33,7 +34,10 @@ class DrawerViewModel extends BaseViewModel {
   AuthenticationService _authenticationService =
       locator<AuthenticationService>();
 
-  User user;
+  User _user;
+
+  User get user => _user;
+
   PackageInfo packageInfo;
 
   getPackageInfo() async {
@@ -162,8 +166,8 @@ class DrawerViewModel extends BaseViewModel {
   Future<String> getUserId() async => await _getUser().then((user) => user.id);
 
   Future<User> _getUser() async {
-    if (user == null) user = await _authenticationService.getUser();
-    return user;
+    if (_user == null) this._user = await _authenticationService.getUser();
+    return _user;
   }
 
   handleSignOut(BuildContext context) async {
@@ -236,7 +240,13 @@ class DrawerViewModel extends BaseViewModel {
     );
   }
 
+  openDownloadBox() async {
+    await Hive.openBox("downloads");
+  }
+
   showIntro(Intro intro, BuildContext context) async {
+    await _getUser();
+
     if (intro == null) {
       log.e("intro is null");
       return;

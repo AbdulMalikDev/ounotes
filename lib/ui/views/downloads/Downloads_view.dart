@@ -1,5 +1,5 @@
 import 'package:FSOUNotes/AppTheme/AppStateNotifier.dart';
-import 'package:FSOUNotes/enums/constants.dart';
+import 'package:FSOUNotes/misc/constants.dart';
 import 'package:FSOUNotes/models/download.dart';
 import 'package:FSOUNotes/ui/shared/app_config.dart';
 import 'package:FSOUNotes/ui/views/downloads/Downloads_viewmodel.dart';
@@ -8,6 +8,7 @@ import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:stacked/stacked.dart';
 
 class DownLoadView extends StatefulWidget {
@@ -21,6 +22,9 @@ class _DownLoadViewState extends State<DownLoadView> {
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<DownLoadViewModel>.reactive(
+      onModelReady: (model) {
+        model.getUser();
+      },
       builder: (context, model, child) => Scaffold(
         appBar: AppBar(
           iconTheme: IconThemeData(color: Colors.white),
@@ -43,42 +47,113 @@ class _DownLoadViewState extends State<DownLoadView> {
   }
 
   Widget buildDownloadList(DownLoadViewModel model) {
-    return ValueListenableBuilder(
-      valueListenable: Hive.box('downloads').listenable(),
-      builder: (context, donwloadsBox, widget) {
-        return ListView.builder(
-          itemCount: donwloadsBox.length,
-          itemBuilder: (context, index) {
-            final download = donwloadsBox.getAt(index) as Download;
-            return GestureDetector(
-              onTap: () {
-                model.navigateToPDFScreen(download);
-              },
-              child: FractionallySizedBox(
-                widthFactor: 0.99,
-                child: Container(
-                  margin: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                  decoration: AppStateNotifier.isDarkModeOn
-                      ? Constants.mdecoration.copyWith(
-                          color: Theme.of(context).colorScheme.background,
-                          boxShadow: [],
-                        )
-                      : Constants.mdecoration.copyWith(
-                          color: Theme.of(context).colorScheme.background,
-                        ),
-                  child: DownloadListTile(
-                    download: download,
-                    index: index,
-                    onDeletePressed: () {
-                      model.deleteDownload(index, download.path);
+    return Column(
+      children: [
+        ValueListenableBuilder(
+          valueListenable: Hive.box('downloads').listenable(),
+          builder: (context, donwloadsBox, widget) {
+            return Container(
+              height: model.user?.isPremiumUser ?? false
+                  ? App(context).appHeight(1)
+                  : App(context).appHeight(0.18)*donwloadsBox.length,
+              child: ListView.builder(
+                itemCount: donwloadsBox.length,
+                itemBuilder: (context, index) {
+                  final download = donwloadsBox.getAt(index) as Download;
+                  return GestureDetector(
+                    onTap: () {
+                      model.navigateToPDFScreen(download);
                     },
-                  ),
-                ),
+                    child: FractionallySizedBox(
+                      widthFactor: 0.99,
+                      child: Container(
+                        margin:
+                            EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                        decoration: AppStateNotifier.isDarkModeOn
+                            ? Constants.mdecoration.copyWith(
+                                color: Theme.of(context).colorScheme.background,
+                                boxShadow: [],
+                              )
+                            : Constants.mdecoration.copyWith(
+                                color: Theme.of(context).colorScheme.background,
+                              ),
+                        child: DownloadListTile(
+                          download: download,
+                          index: index,
+                          onDeletePressed: () {
+                            model.deleteDownload(index, download.path);
+                          },
+                        ),
+                      ),
+                    ),
+                  );
+                },
               ),
             );
           },
-        );
-      },
+        ),
+        model.user?.isPremiumUser ?? false
+            ? Container()
+            : Container(
+                decoration: Constants.mdecoration,
+                padding: const EdgeInsets.all(10),
+                margin: const EdgeInsets.all(10),
+                child: Column(
+                  children: [
+                    Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 15),
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        "Note:",
+                        style: Theme.of(context)
+                            .textTheme
+                            .headline6
+                            .copyWith(color: primary),
+                      ),
+                    ),
+                    Container(
+                      margin: const EdgeInsets.symmetric(
+                          horizontal: 15, vertical: 10),
+                      decoration: BoxDecoration(),
+                      child: Text(
+                        "Only 3 notes can be stored offline in the app. Unlock unlimited offline downloads in the app by becoming a Pro Member.",
+                        style: Theme.of(context)
+                            .textTheme
+                            .subtitle1
+                            .copyWith(color: primary),
+                      ),
+                    ),
+                    Container(
+                      height: 40,
+                      margin: const EdgeInsets.all(10),
+                      width: App(context).appWidth(0.45),
+                      child: RaisedButton(
+                        textColor: Colors.white,
+                        color: Colors.teal.shade500,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                        onPressed: () {
+                          model.buyPremium();
+                        },
+                        child: Row(
+                          children: [
+                            Text("Buy Premium"),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Icon(
+                              MdiIcons.crown,
+                              color: Colors.amber,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              )
+      ],
     );
   }
 }

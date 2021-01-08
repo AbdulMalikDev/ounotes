@@ -53,6 +53,43 @@ class SimilarSubjectTile extends StatelessWidget {
             thickness: 1.0,
             height: 1.0,
           ),
+          Container(
+            decoration: Constants.mdecoration,
+            padding: const EdgeInsets.all(10),
+            margin: const EdgeInsets.symmetric(
+              horizontal: 16.0,
+              vertical: 8.0,
+            ),
+            child: Column(
+              children: [
+                Container(
+                  margin: const EdgeInsets.symmetric(
+                    horizontal: 15,
+                  ),
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    "Note:",
+                    style: Theme.of(context)
+                        .textTheme
+                        .headline6
+                        .copyWith(color: primary),
+                  ),
+                ),
+                Container(
+                  margin:
+                      const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                  decoration: BoxDecoration(),
+                  child: Text(
+                    "These subjects are recommended based on similarity with the subject name.",
+                    style: Theme.of(context)
+                        .textTheme
+                        .subtitle1
+                        .copyWith(color: primary),
+                  ),
+                ),
+              ],
+            ),
+          ),
           Align(
             alignment: Alignment.centerLeft,
             child: Padding(

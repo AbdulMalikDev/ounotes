@@ -21,26 +21,6 @@ class _AdminViewState extends State<AdminView>
         onModelReady: (model) {},
         builder: (context, model, child) => Scaffold(
               backgroundColor: theme.scaffoldBackgroundColor,
-              // appBar: AppBar(
-              //   iconTheme: IconThemeData(color: Colors.white),
-              //   title: RichText(
-              //     text: TextSpan(
-              //       text: ' ',
-              //       style: TextStyle(
-              //           color: Colors.white,
-              //           fontSize: 20,
-              //           fontWeight: FontWeight.normal),
-              //     ),
-              //   ),
-              //   leading: IconButton(
-              //     icon: Icon(
-              //       Icons.arrow_back_ios,
-              //     ),
-              //     onPressed: () {
-              //       Navigator.of(context).pop();
-              //     },
-              //   ),
-              // ),
               body: SafeArea(
                 child: SingleChildScrollView(
                   child: Column(
@@ -66,9 +46,11 @@ class _AdminViewState extends State<AdminView>
                           ),
                         ],
                       ),
-                      SizedBox(height: 30,),
+                      SizedBox(
+                        height: 30,
+                      ),
                       SelectionContainer(
-                        leading:  Icon(Icons.description),
+                        leading: Icon(Icons.description),
                         title: "Report",
                         onTap: () => Navigator.of(context).push(
                           MaterialPageRoute(

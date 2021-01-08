@@ -116,16 +116,13 @@ class _BookMarkBottomSheetState extends State<BookMarkBottomSheet> {
                       const Divider(
                         color: Colors.grey,
                       ),
-                      SizedBox(
-                        height: 20,
-                      ),
                       !model.isNextPressed
                           ? Column(
                               mainAxisSize: MainAxisSize.min,
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                SizedBox(height: 10),
+                                SizedBox(height: 30),
                                 Padding(
                                   padding: const EdgeInsets.only(left: 13.0),
                                   child: Text(
@@ -150,6 +147,7 @@ class _BookMarkBottomSheetState extends State<BookMarkBottomSheet> {
                                   onChanged: (dynamic newValue) {
                                     model.setSfValues = newValue;
                                   },
+                                  
                                 ),
                                 SizedBox(height: 50),
                                 Container(
@@ -181,11 +179,64 @@ class _BookMarkBottomSheetState extends State<BookMarkBottomSheet> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                SizedBox(height: 10),
+                                Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(left: 20),
+                                    child: IconButton(
+                                      icon: Icon(
+                                        Icons.arrow_back_ios,
+                                        color: Colors.white,
+                                      ),
+                                      onPressed: () {
+                                        model.setIsNextPressed = false;
+                                        model.saveDataLocally();
+                                      },
+                                    ),
+                                  ),
+                                ),
+                                Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.grey[700],
+                                    borderRadius: BorderRadius.circular(25),
+                                  ),
+                                  padding: const EdgeInsets.all(10),
+                                  margin: const EdgeInsets.all(10),
+                                  child: Column(
+                                    children: [
+                                      Container(
+                                        margin: const EdgeInsets.symmetric(
+                                            horizontal: 15),
+                                        alignment: Alignment.centerLeft,
+                                        child: Text(
+                                          "Note:",
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline6
+                                              .copyWith(color: Colors.white),
+                                        ),
+                                      ),
+                                      Container(
+                                        margin: const EdgeInsets.symmetric(
+                                            horizontal: 15, vertical: 10),
+                                        decoration: BoxDecoration(),
+                                        child: Text(
+                                          "You can close this and look for correct page No. for the unit and open it again...",
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .subtitle1
+                                              .copyWith(
+                                                color: Colors.white,
+                                              ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
                                 Padding(
                                   padding: const EdgeInsets.only(left: 13.0),
                                   child: Text(
-                                    "Add book Marks for these units!",
+                                    "Please add book Marks for these units!",
                                     style: TextStyle(
                                       fontSize: 20,
                                       fontWeight: FontWeight.bold,
@@ -367,6 +418,7 @@ Widget bookMarkEntry(BuildContext context, TextEditingController controller1,
             controller: controller2,
             onChanged: onChange2,
             textInputType: TextInputType.number,
+            hintText: "Page No.",
           ),
         ),
       ],
@@ -378,6 +430,7 @@ class TextFormFieldView extends StatelessWidget {
   final TextEditingController controller;
   final String Function(String) validator;
   final TextInputType textInputType;
+  final String hintText;
   final Function onChanged;
 
   const TextFormFieldView({
@@ -386,6 +439,7 @@ class TextFormFieldView extends StatelessWidget {
     this.validator,
     this.textInputType = TextInputType.emailAddress,
     this.onChanged,
+    this.hintText = "",
   }) : super(key: key);
 
   @override
@@ -398,6 +452,7 @@ class TextFormFieldView extends StatelessWidget {
           child: TextFormField(
             controller: controller,
             keyboardType: textInputType,
+            style: TextStyle(color: Colors.white),
             decoration: InputDecoration(
               labelStyle: Theme.of(context)
                   .textTheme
@@ -411,6 +466,8 @@ class TextFormFieldView extends StatelessWidget {
                   color: Colors.grey,
                 ),
               ),
+              hintText: hintText,
+              hintStyle: TextStyle(color: Colors.grey),
               contentPadding: EdgeInsets.all(10),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10.0),
