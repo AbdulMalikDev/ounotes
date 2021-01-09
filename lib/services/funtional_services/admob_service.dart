@@ -1,6 +1,5 @@
 
 import 'package:FSOUNotes/app/locator.dart';
-import 'package:FSOUNotes/app/router.gr.dart';
 import 'package:FSOUNotes/models/user.dart';
 import 'package:FSOUNotes/services/funtional_services/authentication_service.dart';
 import 'package:FSOUNotes/services/funtional_services/remote_config_service.dart';
@@ -9,14 +8,12 @@ import 'package:injectable/injectable.dart';
 import 'package:firebase_admob/firebase_admob.dart';
 import 'package:logger/logger.dart';
 import 'package:FSOUNotes/app/logger.dart';
-import 'package:stacked_services/stacked_services.dart';
 
 Logger log = getLogger("AdmobService");
 @lazySingleton 
 class AdmobService{
 
   RemoteConfigService _remoteConfigService = locator<RemoteConfigService>();
-  NavigationService _navigationService = locator<NavigationService>();
   AuthenticationService _authenticationService = locator<AuthenticationService>();
 
   RemoteConfigService _remote = locator<RemoteConfigService>();

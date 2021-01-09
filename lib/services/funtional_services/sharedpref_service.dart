@@ -56,12 +56,13 @@ class SharedPreferencesService {
           log.e("User branch semester is null");
           return false;
         }
-      
+
         return user.isAuth;
       }
     } catch (e) {
       log.e(e.toString());
     }
+    return false;
   }
 
   getModeOfView() async {
