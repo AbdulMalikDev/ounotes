@@ -1,5 +1,6 @@
 import 'package:FSOUNotes/app/locator.dart';
 import 'package:FSOUNotes/models/subject.dart';
+import 'package:FSOUNotes/models/user.dart';
 import 'package:FSOUNotes/services/funtional_services/authentication_service.dart';
 import 'package:FSOUNotes/services/funtional_services/sharedpref_service.dart';
 import 'package:FSOUNotes/services/state_services/subjects_service.dart';
@@ -21,7 +22,7 @@ SharedPreferencesService getAndRegisterSharedPreferencesServiceMock({bool isUser
   var service = SharedPreferencesServiceMock();
 
   //Stubbing using mockito 
-  when(service.isUserLoggedIn()).thenAnswer((_) => Future.value(isUserLoggedIn));
+  when(service.isUserLoggedIn()).thenAnswer((_) => Future.value(new User()));
 
   locator.registerSingleton<SharedPreferencesService>(service);
   return service;

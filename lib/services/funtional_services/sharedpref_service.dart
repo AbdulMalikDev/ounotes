@@ -34,30 +34,30 @@ class SharedPreferencesService {
     prefs.setString("current_user_is_logged_in", json.encode(user.toJson()));
   }
 
-  Future<bool> isUserLoggedIn() async {
+  Future<User> isUserLoggedIn() async {
     try {
       AuthenticationService _authenticationService =
           locator<AuthenticationService>();
       SharedPreferences prefs = await store();
       //Changed 20th November to force users to sign in again to log anaytics events
       if (!prefs.containsKey("current_user_is_logged_in")) {
-        return false;
+        return null;
       } else {
         log.i("User retreived from storage");
         var user = User.fromData(
             json.decode(prefs.getString("current_user_is_logged_in")));
         if (user == null) {
           log.e("User is null");
-          return false;
+          return null;
         }
         if (user.semester != null && user.branch != null) {
           _authenticationService.setUser = user;
         } else {
           log.e("User branch semester is null");
-          return false;
+          return null;
         }
       
-        return user.isAuth;
+        return user;
       }
     } catch (e) {
       log.e(e.toString());

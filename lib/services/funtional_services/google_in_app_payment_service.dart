@@ -185,6 +185,7 @@ class GoogleInAppPaymentService{
     log.e("User purchased premium");
     User user = await _authenticationService.getUser();
     user.setPremiumUser = true;
+    user.premiumPurchaseDate = DateTime.now();
     await _firestoreService.updateUserInFirebase(user,updateLocally: true);
     await _notificationService.dispatchLocalNotification(NotificationService.premium_purchase_notify,{
         "title":"✨ Congratulations ! You are a premium user ! ✨",

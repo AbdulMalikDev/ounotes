@@ -1,7 +1,10 @@
 import 'package:FSOUNotes/app/locator.dart';
 import 'package:FSOUNotes/app/logger.dart';
 import 'package:FSOUNotes/app/router.gr.dart';
+import 'package:FSOUNotes/models/user.dart';
 import 'package:FSOUNotes/services/funtional_services/app_info_service.dart';
+import 'package:FSOUNotes/services/funtional_services/firestore_service.dart';
+import 'package:FSOUNotes/services/funtional_services/notification_service.dart';
 import 'package:FSOUNotes/services/funtional_services/push_notification_service.dart';
 import 'package:FSOUNotes/services/funtional_services/remote_config_service.dart';
 import 'package:FSOUNotes/services/funtional_services/sharedpref_service.dart';
@@ -16,22 +19,27 @@ Logger log = getLogger("SplashViewModel");
 class SplashViewModel extends FutureViewModel {
   RemoteConfigService _remoteConfigService = locator<RemoteConfigService>();
   NavigationService _navigationService = locator<NavigationService>();
+  NotificationService _notificationService = locator<NotificationService>();
   SharedPreferencesService _sharedPreferencesService =
       locator<SharedPreferencesService>();
   SubjectsService _subjectsService = locator<SubjectsService>();
+  FirestoreService _firestoreService = locator<FirestoreService>();
   AppInfoService _appInfoService = locator<AppInfoService>();
-  PushNotificationService _notificationService = locator<PushNotificationService>();
+  PushNotificationService _pushNotificationService = locator<PushNotificationService>();
 
   handleStartUpLogic() async {
-    await _notificationService.initialise();
-    var hasLoggedInUser = await _sharedPreferencesService.isUserLoggedIn();
+    await _pushNotificationService.initialise();
+    var LoggedInUser = await _sharedPreferencesService.isUserLoggedIn();
     //Check if user has outdated version
     Map<String,dynamic> result = await _checkForUpdatedVersionAndShowDialog();
 
-    if (hasLoggedInUser) {
+    if (LoggedInUser != null) {
+      if(LoggedInUser.isPremiumUser ?? false)
+      _checkPremiumPurchaseDate(LoggedInUser.id);
       await _subjectsService.loadSubjects();
       _navigationService.replaceWith(Routes.homeViewRoute,arguments:HomeViewArguments(shouldShowUpdateDialog: result["doesUserNeedUpdate"],versionDetails: result));
     } else {
+      log.e("user is null");
       _navigationService.replaceWith(Routes.introViewRoute);
     }
   }
@@ -87,4 +95,18 @@ class SplashViewModel extends FutureViewModel {
 
   @override
   Future futureToRun() => handleStartUpLogic();
+
+  void _checkPremiumPurchaseDate(id) async {
+    User user = await _firestoreService.getUserById(id);
+    DateTime expiryDate = user.premiumPurchaseDate.add(Duration(days: 365)); 
+    if(expiryDate.isAfter(DateTime.now())){
+      user.setPremiumUser = false;
+    }
+    await _firestoreService.updateUserInFirebase(user,updateLocally: true);
+    await _notificationService.dispatchLocalNotification(NotificationService.premium_purchase_notify,{
+        "title":"Your Premium Package has expired",
+        "body" : "Enjoy OU Notes Ad-free and download unlimited offline Notes and save Data by becoming a pro member !",
+      }
+    );
+  }
 }

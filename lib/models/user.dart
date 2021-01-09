@@ -1,13 +1,18 @@
+import 'package:FSOUNotes/app/logger.dart';
+import 'package:logger/logger.dart';
+
+Logger log = getLogger("User.dart");
 class User{
-  final String username;
-  final String email;
-  final String createdAt;
-  final String semester;
-  final String branch;
-  final String id;
-  final String photoUrl;
+  String username;
+  String email;
+  String createdAt;
+  String semester;
+  String branch;
+  String id;
+  String photoUrl;
   String college;
   bool isPremiumUser;
+  DateTime premiumPurchaseDate;
 
   //is user signed in?
   bool isAuth;
@@ -31,47 +36,51 @@ class User{
   // FCM token
   String fcmToken;
 
-  User({this.username, this.email, this.createdAt, this.semester, this.branch, this.college,this.isAuth,this.id,this.photoUrl,this.isUserAllowedToUpload,this.fcmToken,this.isPremiumUser});
+  User({this.username, this.email, this.createdAt, this.semester, this.branch, this.college,this.isAuth,this.id,this.photoUrl,this.isUserAllowedToUpload,this.fcmToken,this.isPremiumUser,this.premiumPurchaseDate});
 
   User.fromData(Map<String,dynamic> data)
-  : username              = data['Username'],
-    email                 = data['email'],
-    createdAt             = data['createdAt'].toString(),
-    semester              = data['Semester'],
-    branch                = data['Branch'],
-    college               = data['College'],
-    isAuth                = data['isAuth'] ?? false,
-    id                    = data['id'],
-    isPremiumUser         = data['isPremiumUser'] ?? false,
-    fcmToken              = data['fcmToken'],
-    photoUrl              = data['photoUrl'],
-    isAdmin               = data['isAdmin'] ?? false,
-    uploads               = data["uploads"],
-    numOfUploads          = data["numOfUploads"],
-    numOfAcceptedUploads  = data["numOfAcceptedUploads"],
-    downloads             = data["downloads"] ?? [],
+  {  
+    id                    = data['id'];
+    email                 = data['email'];
+    branch                = data['Branch'];
+    isAuth                = data['isAuth'] ?? false;
+    college               = data['College'];
+    isAdmin               = data['isAdmin'] ?? false;
+    uploads               = data["uploads"];
+    semester              = data['Semester'];
+    username              = data['Username'];
+    fcmToken              = data['fcmToken'];
+    premiumPurchaseDate   = _parseDate(data['premiumPurchaseDate']);
+    photoUrl              = data['photoUrl'];
+    downloads             = data["downloads"] ?? [];
+    createdAt             = data['createdAt'].toString();
+    numOfUploads          = data["numOfUploads"];
+    isPremiumUser         = data['isPremiumUser'] ?? false;
+    numOfAcceptedUploads  = data["numOfAcceptedUploads"];
     isUserAllowedToUpload = data['isUserAllowedToUpload'] ?? true;
+  }
 
 
   Map<String,dynamic> toJson() {
     return {
-            "Username"                                       : username,
-            "email"                                          : email,
-            "createdAt"                                      : createdAt.toString(),
-            "Semester"                                       : semester,
-            "Branch"                                         : branch,
-            "College"                                        : college,
-            "isAuth"                                         : isAuth ?? false,
-            "id"                                             : id,
-            "photoUrl"                                       : photoUrl,
-            "fcmToken"                                       : fcmToken,
-            "isAdmin"                                        : isAdmin ?? false,
-         if(uploads!=null)"uploads"                          : uploads,
-         if(numOfUploads!=null)"numOfUploads"                : numOfUploads,
-         if(numOfAcceptedUploads!=null)"numOfAcceptedUploads": numOfAcceptedUploads,
-         if(isPremiumUser!=null)"isPremiumUser"              : isPremiumUser,
-         if(downloads!=null)"downloads"                      : downloads,
-            "isUserAllowedToUpload"                          : isUserAllowedToUpload ?? true,
+               "Username"                                       : username,
+               "email"                                          : email,
+               "createdAt"                                      : createdAt.toString(),
+               "Semester"                                       : semester,
+               "Branch"                                         : branch,
+               "College"                                        : college,
+               "isAuth"                                         : isAuth ?? false,
+               "id"                                             : id,
+               "photoUrl"                                       : photoUrl,
+               "fcmToken"                                       : fcmToken,
+               "isAdmin"                                        : isAdmin ?? false,
+            if(uploads!=null)"uploads"                          : uploads,
+            if(numOfUploads!=null)"numOfUploads"                : numOfUploads,
+            if(numOfAcceptedUploads!=null)"numOfAcceptedUploads": numOfAcceptedUploads,
+            if(isPremiumUser!=null)"isPremiumUser"              : isPremiumUser,
+            if(downloads!=null)"downloads"                      : downloads,
+            if(premiumPurchaseDate!=null)"premiumPurchaseDate"  : premiumPurchaseDate,
+               "isUserAllowedToUpload"                          : isUserAllowedToUpload ?? true,
     };
   }
 
@@ -86,9 +95,10 @@ class User{
 
     set setIsUserAllowedToUpload(bool value){this.isUserAllowedToUpload = false;}
 
-    // incrementUploads(){if(numOfUploads==null){numOfUploads=0;} numOfUploads++;}
-
-    // incrementAcceptedUploads(){if(numOfAcceptedUploads==null){numOfAcceptedUploads=0;} numOfAcceptedUploads++;}
-
-    // addToUploadedDocuments(String documentId){if(uploads==null){uploads=[];}uploads.add(documentId);}
+    _parseDate(date){
+      DateTime purchaseDate;
+      try{purchaseDate = DateTime.parse(date?.toDate()?.toString() ?? DateTime.now().toString());}
+      catch(e){log.e(e.toString());return null;}
+      return purchaseDate;
+    }
 }
