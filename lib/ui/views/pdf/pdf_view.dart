@@ -1,9 +1,6 @@
 
 import 'dart:io';
-
-import 'package:FSOUNotes/app/locator.dart';
 import 'package:FSOUNotes/app/logger.dart';
-import 'package:FSOUNotes/enums/bottom_sheet_type.dart';
 import 'package:FSOUNotes/misc/constants.dart';
 import 'package:FSOUNotes/ui/widgets/dumb_widgets/pdf_view/pdf_error_dialog.dart';
 import 'package:FSOUNotes/ui/widgets/dumb_widgets/pdf_view/pdf_search_toolbar_widget.dart';
@@ -13,7 +10,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:logger/logger.dart';
-import 'package:stacked_services/stacked_services.dart';
 
 /// PDF Viewer import
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';

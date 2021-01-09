@@ -19,7 +19,6 @@ import 'package:FSOUNotes/services/funtional_services/sharedpref_service.dart';
 import 'package:FSOUNotes/services/state_services/subjects_service.dart';
 import 'package:FSOUNotes/services/state_services/vote_service.dart';
 import 'package:FSOUNotes/enums/bottom_sheet_type.dart';
-import 'package:FSOUNotes/services/funtional_services/notification_service.dart';
 import 'package:FSOUNotes/ui/widgets/smart_widgets/notes_tile/notes_tile_view.dart';
 import 'package:cuid/cuid.dart';
 import 'package:flutter/foundation.dart';

@@ -1,10 +1,8 @@
 
 import 'package:FSOUNotes/app/logger.dart';
-import 'package:flutter/services.dart';
 import 'package:injectable/injectable.dart';
 import 'package:logger/logger.dart';
 // import 'package:purchases_flutter/purchases_flutter.dart';
-import 'package:flutter/material.dart';
 Logger log = getLogger("InAppPaymentService");
 @lazySingleton
 class InAppPaymentService {

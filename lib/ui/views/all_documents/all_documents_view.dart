@@ -1,5 +1,4 @@
 import 'package:FSOUNotes/services/funtional_services/onboarding_service.dart';
-import 'package:FSOUNotes/ui/shared/app_config.dart';
 import 'package:FSOUNotes/ui/views/all_documents/all_documents_viewmodel.dart';
 import 'package:FSOUNotes/ui/views/links/links_view.dart';
 import 'package:FSOUNotes/ui/views/notes/notes_view.dart';
