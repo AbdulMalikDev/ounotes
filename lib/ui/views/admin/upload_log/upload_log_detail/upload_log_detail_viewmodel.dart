@@ -12,13 +12,15 @@ import 'package:FSOUNotes/services/funtional_services/analytics_service.dart';
 import 'package:FSOUNotes/services/funtional_services/authentication_service.dart';
 import 'package:FSOUNotes/services/funtional_services/firestore_service.dart';
 import 'package:FSOUNotes/services/funtional_services/google_drive_service.dart';
+import 'package:FSOUNotes/services/funtional_services/onboarding_service.dart';
 import 'package:FSOUNotes/services/funtional_services/sharedpref_service.dart';
 import 'package:FSOUNotes/services/state_services/subjects_service.dart';
 import 'package:FSOUNotes/ui/views/notes/notes_viewmodel.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:logger/logger.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
-Logger log = getLogger("UploadLogViewModel");
+Logger log = getLogger("UploadLogDetailViewModel");
 
 class UploadLogDetailViewModel extends FutureViewModel{
  FirestoreService _firestoreService = locator<FirestoreService>();
@@ -56,7 +58,8 @@ class UploadLogDetailViewModel extends FutureViewModel{
       NotesViewModel notesViewModel = NotesViewModel();
       AbstractDocument doc = await _firestoreService.getDocumentById(logItem.subjectName, logItem.id, Constants.getDocFromConstant(logItem.type));
       log.e(doc?.path);
-      if (logItem.type == Constants.links){
+      if (logItem.type == Constants.links)
+      {
         _showLink(logItem);
       }else{
 
@@ -75,22 +78,27 @@ class UploadLogDetailViewModel extends FutureViewModel{
   uploadDocument(UploadLog logItem) async {
     setBusy(true);
     try {
-
-      GoogleDriveService _googleDriveService = locator<GoogleDriveService>();
-      dynamic doc = await _firestoreService.getDocumentById(logItem.subjectName,logItem.id,Constants.getDocFromConstant(logItem.type));
-      if(doc == null){await _dialogService.showDialog(title:"Oops",description: "Can't find this document");setBusy(false);return;}
+      List<String> docsToUploadIds;
+      docsToUploadIds = OnboardingService.box.get("upload_docs") ?? [];
+      if(!docsToUploadIds.contains(logItem.id))docsToUploadIds.add(logItem.id);
+      OnboardingService.box.put("upload_docs",docsToUploadIds);
+      log.e(docsToUploadIds);
+      Fluttertoast.showToast(msg: "Added to upload list !");
+      // GoogleDriveService _googleDriveService = locator<GoogleDriveService>();
+      // dynamic doc = await _firestoreService.getDocumentById(logItem.subjectName,logItem.id,Constants.getDocFromConstant(logItem.type));
+      // if(doc == null){await _dialogService.showDialog(title:"Oops",description: "Can't find this document");setBusy(false);return;}
     
-      if (logItem.type == Constants.links){
-        if(doc.uploaded == true){await _dialogService.showDialog(title: "ERROR" , description: "ALREADY UPLOADED");setBusy(false);return;}
-        doc.uploaded = true;
-        await _firestoreService.updateDocument(doc, Document.Links);
-      }else{
+      // if (logItem.type == Constants.links){
+      //   if(doc.uploaded == true){await _dialogService.showDialog(title: "ERROR" , description: "ALREADY UPLOADED");setBusy(false);return;}
+      //   doc.uploaded = true;
+      //   await _firestoreService.updateDocument(doc, Document.Links);
+      // }else{
 
-        if(doc.GDriveLink != null){await _dialogService.showDialog(title: "ERROR" , description: "ALREADY UPLOADED");setBusy(false);return;}
-        String result = await _googleDriveService.processFile(doc: doc, document:Constants.getDocFromConstant(logItem.type) , addToGdrive: true);
-        _dialogService.showDialog(title: "OUTPUT" , description: result);
-      }
-      deleteLogItem(logItem);
+      //   if(doc.GDriveLink != null){await _dialogService.showDialog(title: "ERROR" , description: "ALREADY UPLOADED");setBusy(false);return;}
+      //   String result = await _googleDriveService.processFile(doc: doc, document:Constants.getDocFromConstant(logItem.type) , addToGdrive: true);
+      //   _dialogService.showDialog(title: "OUTPUT" , description: result);
+      // }
+      // deleteLogItem(logItem);
 
     }catch (e) {
       _bottomSheetService.showBottomSheet(title: "OOPS",description: e.toString(),);
@@ -126,8 +134,10 @@ class UploadLogDetailViewModel extends FutureViewModel{
   
     void _showLink(UploadLog logItem) async {
       Subject sub = _subjectsService.getSubjectByName(logItem.subjectName);
+      log.e(sub);
       Link link = await _firestoreService.getLinkById(sub.id,logItem.id);
-        _dialogService.showDialog(title: "Link Content" , description: link.linkUrl);
+      log.e(link.linkUrl);
+      _dialogService.showDialog(title: "Link Content" , description: link.linkUrl);
     }
   
     void _deleteDocument(UploadLog logItem) async {

@@ -310,10 +310,14 @@ class _FilledStacksFloatingBoxBottomSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     bool isFileUploadSheet = false;
-    if (request.customData != null &&
-        request.customData.runtimeType.toString() ==
-            "_InternalLinkedHashMap<String, bool>") {
-      isFileUploadSheet = true;
+    bool isDownloadSheet = false;
+    if (request.customData != null && request.customData.runtimeType.toString() == "_InternalLinkedHashMap<String, bool>"){
+
+        if(request.customData["file_upload"]!=null && request.customData["file_upload"]){
+          isFileUploadSheet = true;
+        }else if(request.customData["download"]!=null && request.customData["download"]){
+           isDownloadSheet = true;
+        }
     }
     return Container(
       margin: EdgeInsets.all(25),
@@ -326,15 +330,16 @@ class _FilledStacksFloatingBoxBottomSheet extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           SizedBox(height: 10),
-          Padding(
-            padding: const EdgeInsets.only(left: 13.0),
-            child: Text(
-              request.title,
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: Colors.grey[900],
-              ),
+          isDownloadSheet
+          ?IconButton(icon:Icon(Icons.file_download,size: 40,color:Colors.teal),onPressed: (){})
+          :Text(
+            request.title,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: Colors.grey[900],
+              
             ),
           ),
           SizedBox(height: 25),
@@ -489,13 +494,13 @@ class PremiumBottomSheet extends StatelessWidget {
           SizedBox(
             height: 10,
           ),
-          buildPremiumOffer(
-            "Save and Read Offline",
-            Icon(
-              Icons.import_contacts,
-              color: Colors.teal,
-            ),
-          ),
+          // buildPremiumOffer(
+          //   "Save and Read Offline",
+          //   Icon(
+          //     Icons.import_contacts,
+          //     color: Colors.teal,
+          //   ),
+          // ),
           SizedBox(
             height: 40,
           ),
@@ -511,8 +516,8 @@ class PremiumBottomSheet extends StatelessWidget {
                   borderRadius: BorderRadius.circular(30),
                 ),
                 child: new Text(
-                  "Buy now",
-                  style: TextStyle(fontSize: 15),
+                  "Support Us",
+                  style: TextStyle(fontSize: 15,fontWeight: FontWeight.bold),
                 ),
               ),
             ),

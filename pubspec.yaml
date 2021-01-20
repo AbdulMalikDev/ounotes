@@ -14,7 +14,7 @@ description: A new Flutter project.
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 2.1.0+36
+version: 2.1.0+41
 
 environment:
   sdk: ">=2.9.0 <3.0.0"
@@ -73,7 +73,9 @@ dependencies:
   syncfusion_flutter_sliders: ^18.4.32-beta
   flutter_downloader: ^1.5.2
   open_file: ^3.0.3
-  flutter_easyloading: ^2.2.2
+  ext_storage: ^1.0.3
+  confetti: ^0.5.4+1
+  # flutter_easyloading: ^2.2.2
 
   # Architecture related packages
   flutter_hooks: null
@@ -107,7 +109,6 @@ dependencies:
   onesignal_flutter: ^2.6.1
   sentry: ">=3.0.0 <4.0.0"
   wiredash: ^0.4.0
-  adcolony: ^2.0.6
 
   # Miscellaneous Packages
   async: ^2.0.8

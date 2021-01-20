@@ -10,7 +10,7 @@ import 'package:FSOUNotes/app/locator.dart';
 import 'package:FSOUNotes/app/logger.dart';
 import 'package:FSOUNotes/enums/constants.dart';
 import 'package:FSOUNotes/enums/enums.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:ext_storage/ext_storage.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:syncfusion_flutter_pdf/pdf.dart';
 import 'package:FSOUNotes/models/notes.dart';
@@ -238,12 +238,12 @@ class GoogleDriveService {
           await clientViaServiceAccount(accountCredentials, scopes);
       var drive = ga.DriveApi(gdriveAuthClient);
       //*Download file
-       String fileID = note.GDriveID;
-      ga.Media file = await drive.files
-          .get(fileID, downloadOptions: ga.DownloadOptions.FullMedia);
+      String fileID = note.GDriveID;
+      ga.Media file = await drive.files.get(fileID, downloadOptions: ga.DownloadOptions.FullMedia);
+      var dir = await ExtStorage.getExternalStoragePublicDirectory(ExtStorage.DIRECTORY_DOWNLOADS);
       
       String fileName = "${note.subjectName}_${note.title}.pdf";
-      String filePath = "/storage/emulated/0/Download/" + fileName;
+      String filePath = dir + fileName;
 
       //*Figure out size from note.size property to show proper loading indicator
       File localFile;
@@ -251,6 +251,7 @@ class GoogleDriveService {
       contentLength = note.size.split(" ")[1] == 'KB'
           ? contentLength * 1000
           : contentLength * 1000000;
+      log.e("Size in numbers : " + contentLength.toString());
       int downloadedLength = 0;
       downloadProgress.value = 0;
       List<int> dataStore = [];
@@ -258,15 +259,15 @@ class GoogleDriveService {
       //*Start the download
       file.stream.listen((data) {
         downloadedLength += data.length;
-        downloadProgress.value =
-            downloadedLength / contentLength;
+        downloadProgress.value = (downloadedLength / contentLength) * 100;
+        log.e(downloadedLength);
+        log.e(contentLength);
         print("loading.. : " + downloadProgress.value.toString());
-        if(downloadProgress.value < 1)
-        EasyLoading.showProgress(downloadProgress.value, status: 'downloading...');
+        // if(downloadProgress.value < 1)
+        // EasyLoading.showProgress(downloadProgress.value, status: 'downloading...');
         dataStore.insertAll(dataStore.length, data);
       }, onDone: () async {
-        EasyLoading.removeAllCallbacks();
-        EasyLoading.dismiss();
+        // EasyLoading.dismiss();
         localFile = File(filePath);
         await localFile.writeAsBytes(dataStore);
         await Future.delayed(Duration(seconds: 1));
@@ -430,6 +431,7 @@ class GoogleDriveService {
     List<String> bookmarkNames = note.bookmarks.keys.toList();
     List<int> bookmarkPageNos = note.bookmarks.values.toList();
     for (int i = 0; i < note.bookmarks.length; i++) {
+      if(bookmarkPageNos[i] > pages-1 || bookmarkPageNos[i] < 0 )continue;
       //Creates a document bookmark
       PdfBookmark bookmark = document.bookmarks.insert(i, bookmarkNames[i]);
 

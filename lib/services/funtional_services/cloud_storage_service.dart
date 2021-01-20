@@ -8,6 +8,7 @@ import 'package:FSOUNotes/app/router.gr.dart';
 import 'package:FSOUNotes/enums/enums.dart';
 import 'package:FSOUNotes/models/document.dart';
 import 'package:FSOUNotes/services/funtional_services/firestore_service.dart';
+import 'package:FSOUNotes/services/funtional_services/authentication_service.dart';
 import 'package:FSOUNotes/services/state_services/notes_service.dart';
 import 'package:FSOUNotes/services/state_services/question_paper_service.dart';
 import 'package:FSOUNotes/services/state_services/syllabus_service.dart';
@@ -23,6 +24,7 @@ import 'package:mime/mime.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'package:syncfusion_flutter_pdf/pdf.dart';
+Logger log = getLogger("CloudStorageService");
 
 @lazySingleton
 class CloudStorageService {
@@ -32,7 +34,8 @@ class CloudStorageService {
   SyllabusService _syllabusService = locator<SyllabusService>();
   FirestoreService _firestoreService = locator<FirestoreService>();
   NavigationService _navigationService = locator<NavigationService>();
-  Logger log = getLogger("CloudStorageService");
+  BottomSheetService _bottomSheetService = locator<BottomSheetService>();
+  AuthenticationService _authenticationService = locator<AuthenticationService>();
   final String url =
       "https://storage.googleapis.com/ou-notes.appspot.com/pdfs/";
   StorageReference _storageReference = FirebaseStorage.instance.ref();
@@ -117,17 +120,20 @@ class CloudStorageService {
     log.i("notesName : ${note.title}");
     log.i("Subject Name : ${note.subjectName}");
     log.i("Type : $type");
-    
+    bool isImage;
+    String docPath;
     try {
       //*Select file and sanitize extension
       PdfDocument pdf;
       String tempPath = (await _localPath)+"/${DateTime.now().millisecondsSinceEpoch}";
       //Not defining type since it could be List of files or just one file
-      final document = await _filePickerService.selectFile(uploadFileType:uploadFileType);
+      List result = await _filePickerService.selectFile(uploadFileType:uploadFileType);
+      final document = result[0];
       if(document==null)return "File is null";
-      bool isImage = (document.runtimeType.toString() == "List<File>");
+      isImage = result[1];
       log.e("isImage : " + isImage.toString());
-      String docPath = isImage ? document[0].path : document.path; 
+      docPath = isImage ? document[0].path : document.path; 
+      log.e(docPath);
       String mimeStr = lookupMimeType(docPath);
       log.e(mimeStr);
       var fileType = mimeStr.split('/').last;
@@ -191,6 +197,8 @@ class CloudStorageService {
       String error;
       if (e is PlatformException) error = e.message;
       error = e.toString();
+      if((await _authenticationService.getUser()).isAdmin)
+        _bottomSheetService.showBottomSheet(title: "Error",description: error + "\nisImage : ${isImage.toString()}\nDoc Path : $docPath");
       log.e(error);
       return "error";
     }
@@ -263,17 +271,19 @@ class CloudStorageService {
 
 
     } catch (e) {
-      return _errorHandling(
+      return await _errorHandling(
           e, "While deleting document in FIREBASE STORAGE , Error occurred");
     }
   }
 
-  _errorHandling(e, String message) {
+  _errorHandling(e, String message) async {
     log.e(message);
     String error;
     if (e is PlatformException) error = e.message;
     error = e.toString();
     log.e(error);
+    if((await _authenticationService.getUser()).isAdmin)
+        _bottomSheetService.showBottomSheet(title: "Error",description: error);
     return error;
   }
 

@@ -23,10 +23,10 @@ class DownloadService {
     this.user = await _authenticationService.getUser();
     Box downloadBox = Hive.box('downloads');
     downloadBox.add(download);
-    if (downloadBox.length > 3 && !user.isPremiumUser) {
-      //if downloads list length is > 3 and he is not a premium user then delete the oldest download which is at index 0
-      downloadBox.deleteAt(0);
-    }
+    // if (downloadBox.length > 3 && !user.isPremiumUser) {
+    //   //if downloads list length is > 3 and he is not a premium user then delete the oldest download which is at index 0
+    //   downloadBox.deleteAt(0);
+    // }
   }
 
   void removeDownload(int index, String path) {

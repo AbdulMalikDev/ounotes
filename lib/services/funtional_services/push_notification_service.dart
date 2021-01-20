@@ -77,7 +77,7 @@ class PushNotificationService{
     bool shouldNavigate = navigate && (wantToCheckOutNotification?.confirmed ?? false);
     if(shouldNavigate){
       isDocInReview
-      ? _navigationService.navigateTo(Routes.adminViewRoute)
+      ? _navigationService.navigateTo(Routes.uploadLogViewRoute)
       : _navigationService.navigateTo(Routes.allDocumentsViewRoute,arguments: AllDocumentsViewArguments(subjectName: subjectName,newDocIDUploaded: notesID));
     }
   }

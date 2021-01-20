@@ -121,18 +121,19 @@ class _DrawerViewState extends State<DrawerView> {
                               subtitle1,
                               model.navigateToUserUploadScreen,
                               Document.Drawer),
-                          // ListTile(
-                          //     leading: SizedBox(
-                          //         height: 30,
-                          //         width: 40,
-                          //         child: ClipRRect(
-                          //             child: Image.asset(
-                          //                 "assets/images/donate-icon.png"))),
-                          //     title: Text(
-                          //       "Donate",
-                          //       style: subtitle1,
-                          //     ),
-                          //     onTap: model.navigateToDonateScreen),
+                          if(!(model.user?.isPremiumUser ?? false))
+                          ListTile(
+                              leading: SizedBox(
+                                  height: 30,
+                                  width: 40,
+                                  child: ClipRRect(
+                                      child: Image.asset(
+                                          "assets/images/donate-icon.png"))),
+                              title: Text(
+                                "Support Us ",
+                                style: subtitle1,
+                              ),
+                              onTap: model.navigateToDonateScreen),
                           ListTile(
                               key: intro.keys[1],
                               leading: Icon(

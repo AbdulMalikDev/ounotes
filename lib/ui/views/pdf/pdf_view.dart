@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:FSOUNotes/app/locator.dart';
 import 'package:FSOUNotes/app/logger.dart';
 import 'package:FSOUNotes/enums/bottom_sheet_type.dart';
+import 'package:FSOUNotes/enums/enums.dart';
 import 'package:FSOUNotes/misc/constants.dart';
 import 'package:FSOUNotes/ui/widgets/dumb_widgets/pdf_view/pdf_error_dialog.dart';
 import 'package:FSOUNotes/ui/widgets/dumb_widgets/pdf_view/pdf_search_toolbar_widget.dart';
@@ -58,11 +59,13 @@ class _PDFScreenState extends State<PDFScreen> {
         MediaQuery.of(context).orientation == Orientation.landscape;
     return Scaffold(
       //Book marks
-      floatingActionButton: widget.askBookMarks
+      
+      floatingActionButton: 
+          widget.askBookMarks && (widget.doc.path == Document.Notes)
           ? Padding(
               padding: const EdgeInsets.all(8.0),
               child: FloatingActionButton(
-                child: const Icon(Icons.add),
+                child: const Icon(Icons.bookmark),
                 onPressed: () async {
                   if(widget.doc.type == Constants.notes)
                   showBottomSeetForBookMarks(false);
@@ -74,10 +77,8 @@ class _PDFScreenState extends State<PDFScreen> {
       appBar: isLandscape
           ? null
           : AppBar(
-            toolbarHeight: MediaQuery.of(context).size.height * 0.075,
-              flexibleSpace: FittedBox(
-                fit: BoxFit.fitWidth,
-                              child: Toolbar(
+            toolbarHeight: MediaQuery.of(context).size.height * 0.070,
+              flexibleSpace: Toolbar(
                   showTooltip: true,
                   controller: _pdfViewerController,
                   onTap: (Object toolbarItem) {
@@ -113,7 +114,6 @@ class _PDFScreenState extends State<PDFScreen> {
                     }
                   },
                 ),
-              ),
               automaticallyImplyLeading: false,
               backgroundColor:
                   SfPdfViewerTheme.of(context).bookmarkViewStyle.headerBarColor,
@@ -135,7 +135,7 @@ class _PDFScreenState extends State<PDFScreen> {
                 },
                 child: Stack(children: [
                   SfPdfViewer.file(
-                    File(widget.pathPDF),
+                    File(widget.pathPDF.trim()),
                     enableTextSelection: false,
                     key: _pdfViewerKey,
                     controller: _pdfViewerController,

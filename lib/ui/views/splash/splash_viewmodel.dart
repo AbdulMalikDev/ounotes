@@ -9,6 +9,7 @@ import 'package:FSOUNotes/services/funtional_services/push_notification_service.
 import 'package:FSOUNotes/services/funtional_services/remote_config_service.dart';
 import 'package:FSOUNotes/services/funtional_services/sharedpref_service.dart';
 import 'package:FSOUNotes/services/state_services/subjects_service.dart';
+import 'package:connectivity_wrapper/connectivity_wrapper.dart';
 import 'package:logger/logger.dart';
 import 'package:package_info/package_info.dart';
 import 'package:stacked/stacked.dart';
@@ -28,16 +29,20 @@ class SplashViewModel extends FutureViewModel {
   PushNotificationService _pushNotificationService = locator<PushNotificationService>();
 
   handleStartUpLogic() async {
+    bool isUserOnline = await ConnectivityWrapper.instance.isConnected;
+
     await _pushNotificationService.initialise();
     var LoggedInUser = await _sharedPreferencesService.isUserLoggedIn();
-    //Check if user has outdated version
-    Map<String,dynamic> result = await _checkForUpdatedVersionAndShowDialog();
+    //Check if user has outdated version if he/she is online
+    Map<String,dynamic> result;
+    if(isUserOnline) result = await _checkForUpdatedVersionAndShowDialog();
 
     if (LoggedInUser != null) {
       if(LoggedInUser.isPremiumUser ?? false)
       _checkPremiumPurchaseDate(LoggedInUser.id);
       await _subjectsService.loadSubjects();
-      _navigationService.replaceWith(Routes.homeViewRoute,arguments:HomeViewArguments(shouldShowUpdateDialog: result["doesUserNeedUpdate"],versionDetails: result));
+      if(isUserOnline)_navigationService.replaceWith(Routes.homeViewRoute,arguments:HomeViewArguments(shouldShowUpdateDialog: result["doesUserNeedUpdate"],versionDetails: result));
+      else _navigationService.replaceWith(Routes.homeViewRoute);
     } else {
       log.e("user is null");
       _navigationService.replaceWith(Routes.introViewRoute);
@@ -98,7 +103,7 @@ class SplashViewModel extends FutureViewModel {
 
   void _checkPremiumPurchaseDate(id) async {
     User user = await _firestoreService.getUserById(id);
-    DateTime expiryDate = user.premiumPurchaseDate.add(Duration(days: 365)); 
+    DateTime expiryDate = user?.premiumPurchaseDate?.add(Duration(days: 365)) ?? DateTime.now().add(Duration(days:365)); 
     if(expiryDate.isAfter(DateTime.now())){
       user.setPremiumUser = false;
     }

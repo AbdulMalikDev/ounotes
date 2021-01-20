@@ -34,11 +34,13 @@ import 'package:FSOUNotes/models/notes.dart';
 import 'package:FSOUNotes/models/question_paper.dart';
 import 'package:FSOUNotes/models/syllabus.dart';
 import 'package:FSOUNotes/ui/views/edit/edit_view.dart';
+import 'package:FSOUNotes/ui/views/admin/upload_log/upload_log_view.dart';
 import 'package:FSOUNotes/ui/views/admin/upload_log/upload_log_detail/upload_log_detail_view.dart';
 import 'package:FSOUNotes/models/UploadLog.dart';
 import 'package:FSOUNotes/ui/views/admin/upload_log/upload_log_detail/upload_log_edit/upload_log_edit_view.dart';
 import 'package:FSOUNotes/ui/widgets/smart_widgets/watch_ad/watch_ad_view.dart';
 import 'package:FSOUNotes/ui/widgets/smart_widgets/thank_you_page/thank_you_view.dart';
+import 'package:FSOUNotes/ui/widgets/smart_widgets/thank_you_page/upload_thank_you/thank_you_for_uploading.dart';
 import 'package:FSOUNotes/ui/widgets/smart_widgets/why_to_pay_for_download_page/why_to_pay_for_download.dart';
 
 abstract class Routes {
@@ -64,10 +66,13 @@ abstract class Routes {
   static const adminViewRoute = '/admin-view-route';
   static const webViewWidgetRoute = '/web-view-widget-route';
   static const editViewRoute = '/edit-view-route';
+  static const uploadLogViewRoute = '/upload-log-view-route';
   static const uploadLogDetailViewRoute = '/upload-log-detail-view-route';
   static const uploadLogEditViewRoute = '/upload-log-edit-view-route';
   static const watchAdToContinueView = '/watch-ad-to-continue-view';
   static const thankYouView = '/thank-you-view';
+  static const thankYouForUploadingViewRoute =
+      '/thank-you-for-uploading-view-route';
   static const whyToPayForDownloadView = '/why-to-pay-for-download-view';
   static const all = {
     splashViewRoute,
@@ -92,10 +97,12 @@ abstract class Routes {
     adminViewRoute,
     webViewWidgetRoute,
     editViewRoute,
+    uploadLogViewRoute,
     uploadLogDetailViewRoute,
     uploadLogEditViewRoute,
     watchAdToContinueView,
     thankYouView,
+    thankYouForUploadingViewRoute,
     whyToPayForDownloadView,
   };
 }
@@ -356,6 +363,16 @@ class Router extends RouterBase {
               subjectName: typedArgs.subjectName),
           settings: settings,
         );
+      case Routes.uploadLogViewRoute:
+        if (hasInvalidArgs<UploadLogViewArguments>(args)) {
+          return misTypedArgsRoute<UploadLogViewArguments>(args);
+        }
+        final typedArgs =
+            args as UploadLogViewArguments ?? UploadLogViewArguments();
+        return MaterialPageRoute<dynamic>(
+          builder: (context) => UploadLogView(key: typedArgs.key),
+          settings: settings,
+        );
       case Routes.uploadLogDetailViewRoute:
         if (hasInvalidArgs<UploadLogDetailViewArguments>(args)) {
           return misTypedArgsRoute<UploadLogDetailViewArguments>(args);
@@ -394,9 +411,20 @@ class Router extends RouterBase {
           settings: settings,
           fullscreenDialog: true,
         );
-      case Routes.whyToPayForDownloadView:
+      case Routes.thankYouForUploadingViewRoute:
         return MaterialPageRoute<dynamic>(
-          builder: (context) => WhyToPayForDownloadView(),
+          builder: (context) => ThankYouForUploadingView(),
+          settings: settings,
+          fullscreenDialog: true,
+        );
+      case Routes.whyToPayForDownloadView:
+        if (hasInvalidArgs<WhyToPayForDownloadViewArguments>(args)) {
+          return misTypedArgsRoute<WhyToPayForDownloadViewArguments>(args);
+        }
+        final typedArgs = args as WhyToPayForDownloadViewArguments ??
+            WhyToPayForDownloadViewArguments();
+        return MaterialPageRoute<dynamic>(
+          builder: (context) => WhyToPayForDownloadView(price: typedArgs.price),
           settings: settings,
           fullscreenDialog: true,
         );
@@ -577,6 +605,12 @@ class EditViewArguments {
       @required this.subjectName});
 }
 
+//UploadLogView arguments holder class
+class UploadLogViewArguments {
+  final Key key;
+  UploadLogViewArguments({this.key});
+}
+
 //UploadLogDetailView arguments holder class
 class UploadLogDetailViewArguments {
   final UploadLog logItem;
@@ -594,4 +628,10 @@ class UploadLogEditViewArguments {
 class ThankYouViewArguments {
   final String filePath;
   ThankYouViewArguments({this.filePath});
+}
+
+//WhyToPayForDownloadView arguments holder class
+class WhyToPayForDownloadViewArguments {
+  final String price;
+  WhyToPayForDownloadViewArguments({this.price});
 }

@@ -31,7 +31,14 @@ class SharedPreferencesService {
   saveUserLocally(User user) async {
     SharedPreferences prefs = await store();
     log.i("User getting saved locally");
-    prefs.setString("current_user_is_logged_in", json.encode(user.toJson()));
+    prefs.setString("current_user_is_logged_in", json.encode(user.toJson(),toEncodable: myEncode));
+  }
+
+    dynamic myEncode(dynamic item) {
+    if(item is DateTime) {
+      return item.toIso8601String();
+    }
+    return item;
   }
 
   Future<User> isUserLoggedIn() async {

@@ -19,9 +19,12 @@ class NotificationService{
 
   static const download_purchase_notify = "DownloadPurchase";
   static const premium_purchase_notify = "PremiumPurchase";
+  static const premium_expire_notify = "PremiumExpire";
   static const download_purchase_notify_id = 1;
   static const premium_purchase_notify_id = 2;
+  static const premium_expire_notify_id = 3;
 
+  static const List<String> notifyKeys = [download_purchase_notify,premium_purchase_notify,premium_expire_notify];
 
   init() async {
     await AwesomeNotifications().initialize(
@@ -55,13 +58,19 @@ class NotificationService{
   }
 
   handleLocalNotification(ReceivedAction receivedNotification) {
+    final payload = receivedNotification.payload;
+
+    if(!notifyKeys.contains(receivedNotification.id)){
+      OpenFile.open(payload["path"]);
+    }
+
     switch(receivedNotification.id){
-      case download_purchase_notify_id:
-        final payload = receivedNotification.payload;
-        OpenFile.open(payload["path"]);
-        break;
       case premium_purchase_notify_id:
         _navigationService.navigateTo(Routes.thankYouView);
+        break;
+      case premium_expire_notify_id:
+        //TODO Update thankyou view to urge user to buy premium again since it has expired
+        // _navigationService.navigateTo(Routes.thankYouView);
         break;
       default:
         break;
@@ -74,7 +83,7 @@ class NotificationService{
       case download_purchase_notify:
         await AwesomeNotifications().createNotification(
           content: NotificationContent(
-              id: download_purchase_notify_id,
+              id: id,
               channelKey: download_purchase_notify,
               title: customData["title"],
               body: customData["body"],
@@ -86,6 +95,16 @@ class NotificationService{
         await AwesomeNotifications().createNotification(
           content: NotificationContent(
               id: premium_purchase_notify_id,
+              channelKey: premium_purchase_notify,
+              title: customData["title"],
+              body: customData["body"],
+          )
+        );
+        break;
+      case premium_expire_notify:
+        await AwesomeNotifications().createNotification(
+          content: NotificationContent(
+              id: premium_expire_notify_id,
               channelKey: premium_purchase_notify,
               title: customData["title"],
               body: customData["body"],

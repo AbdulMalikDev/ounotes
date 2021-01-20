@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:FSOUNotes/AppTheme/AppStateNotifier.dart';
 import 'package:FSOUNotes/AppTheme/AppTheme.dart';
 import 'package:FSOUNotes/models/subject.dart';
@@ -17,7 +19,6 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:hive/hive.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:path_provider/path_provider.dart';
@@ -46,8 +47,9 @@ void main() async {
   //Setting up Hive DB
   final appDir = await getApplicationDocumentsDirectory();
   Hive.init(appDir.path);
+  Hive.registerAdapter<Download>(DownloadAdapter());
   await Hive.openBox("OUNOTES");
-  Hive.registerAdapter(DownloadAdapter());
+  await Hive.openBox('downloads');
   RemoteConfigService _remoteConfigService = locator<RemoteConfigService>();
   CrashlyticsService _crashlyticsService = locator<CrashlyticsService>();
   AdmobService _admobService = locator<AdmobService>();
@@ -73,23 +75,23 @@ void main() async {
   InAppPurchaseConnection.enablePendingPurchases();
   await _googleInAppPaymentService.initialize();
   //TODO DevChecklist - Uncomment for error handling
-  // FlutterError.onError = (details, {bool forceReport = false}) {
-  //   _crashlyticsService.sentryClient.captureException(
-  //     exception: details.exception,
-  //     stackTrace: details.stack,
-  //   );
-  // };
+  FlutterError.onError = (details, {bool forceReport = false}) {
+    _crashlyticsService.sentryClient.captureException(
+      exception: details.exception,
+      stackTrace: details.stack,
+    );
+  };
   // await dothis();
-  runApp(MyApp());
-  // runZonedGuarded(
-  //   () => runApp(MyApp()),
-  //   (error, stackTrace) async {
-  //     await _crashlyticsService.sentryClient.captureException(
-  //       exception: error,
-  //       stackTrace: stackTrace,
-  //     );
-  //   },
-  // );
+  // runApp(MyApp());
+  runZonedGuarded(
+    () => runApp(MyApp()),
+    (error, stackTrace) async {
+      await _crashlyticsService.sentryClient.captureException(
+        exception: error,
+        stackTrace: stackTrace,
+      );
+    },
+  );
   }
 
   dothis() async {
@@ -171,7 +173,6 @@ class MyApp extends StatelessWidget {
               _remoteConfigService.remoteConfig.getString("WIREDASH_SECRET"),
           navigatorKey: locator<NavigationService>().navigatorKey,
           child: MaterialApp(
-            builder: EasyLoading.init(),
             navigatorObservers: <NavigatorObserver>[observer],
             title: 'OU Notes',
             debugShowCheckedModeBanner: false,

@@ -15,8 +15,8 @@ class RemoteConfigService{
     {
       _remoteConfig = await RemoteConfig.instance;
       //TODO DEV CHECKLIST
-      // await remoteConfig.fetch(expiration: const Duration(hours: 4));
-      await remoteConfig.fetch(expiration: const Duration(seconds: 1));
+      await remoteConfig.fetch(expiration: const Duration(hours: 4));
+      // await remoteConfig.fetch(expiration: const Duration(seconds: 1));
       await remoteConfig.activateFetched();
     }
   }

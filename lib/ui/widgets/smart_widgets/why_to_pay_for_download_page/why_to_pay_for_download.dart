@@ -2,6 +2,8 @@ import 'package:FSOUNotes/misc/constants.dart';
 import 'package:flutter/material.dart';
 
 class WhyToPayForDownloadView extends StatelessWidget {
+  final String price;
+  WhyToPayForDownloadView({this.price});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,14 +54,15 @@ class WhyToPayForDownloadView extends StatelessWidget {
                     height: 20,
                   ),
                   Text(
-                    "Why are we charing ₹10",
+                    "It Sucks !",
                     style: Theme.of(context)
                         .textTheme
                         .headline6
                         .copyWith(color: primary),
                   ),
+                  SizedBox(height: 20,),
                   Text(
-                    "per download?",
+                    "₹10 per download ??",
                     style: Theme.of(context)
                         .textTheme
                         .headline6
@@ -68,9 +71,8 @@ class WhyToPayForDownloadView extends StatelessWidget {
                   SizedBox(
                     height: 30,
                   ),
-                  //TODO malik complete this question
                   Text(
-                    "Lorem ipsum dolor sit amet.",
+                    "LOREM IPSUM",
                     style: Theme.of(context)
                         .textTheme
                         .subtitle1

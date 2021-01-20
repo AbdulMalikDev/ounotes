@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:FSOUNotes/app/locator.dart';
 import 'package:FSOUNotes/app/logger.dart';
+import 'package:FSOUNotes/models/notes.dart';
 import 'package:FSOUNotes/models/subject.dart';
 import 'package:FSOUNotes/services/funtional_services/firestore_service.dart';
 import 'package:FSOUNotes/services/funtional_services/google_drive_service.dart';
@@ -16,7 +17,7 @@ import 'package:hive/hive.dart';
 class SubjectsService with ChangeNotifier {
   Logger log = getLogger("SubjectsService");
   FirestoreService _firestoreService = locator<FirestoreService>();
-  
+  Note note;
   static List<Subject> fakeData = [
     Subject.namedParameter(id: 12, name: "ljsdlf", branchToSem: {})
   ];
@@ -107,9 +108,9 @@ class SubjectsService with ChangeNotifier {
     //*Try-catch block for retreiving All Subjects
     try {
       //Check if stored in local Storage and retreive
-      if (prefs.containsKey("all_subjects")) {
+      if (prefs.containsKey("all_BE_subjects")) {
         log.i("all subjects found in local storage");
-        List allsubs = json.decode(prefs.getString("all_subjects"));
+        List allsubs = json.decode(prefs.getString("all_BE_subjects"));
         subjectObjects = allsubs
             .map((jsonSubject) => Subject.fromData(jsonSubject))
             .toList();
@@ -157,7 +158,7 @@ class SubjectsService with ChangeNotifier {
     prefs.setString("user_subjects", json.encode(userSubjects));
     List<Map<String, dynamic>> allSubjects =
         _allSubjects.value.map((sub) => sub.toJson()).toList();
-    prefs.setString("all_subjects", json.encode(allSubjects));
+    prefs.setString("all_BE_subjects", json.encode(allSubjects));
   }
 
   //* This was created for getting the subject by name
@@ -225,8 +226,12 @@ class SubjectsService with ChangeNotifier {
     List<String> queryWords = (query.split(" ") + query.split("-"));
     //? Remove duplicate words
     queryWords.toSet().toList();
-    //? Remove words with less than 3 letters like "OF" , "I" , "AND" etc.
-    queryWords.removeWhere((queryWord) => queryWord.length <= 3);
+    //? Remove words with less than 3 letters like "OF" , "I" , "AND" etc. and other common words
+    queryWords.removeWhere((queryWord) {
+      if(queryWord.length <= 3) return true;
+      if(["ENGINEERING"].contains(queryWord)) return true;
+      return false;
+    });
     return queryWords;
   }
 

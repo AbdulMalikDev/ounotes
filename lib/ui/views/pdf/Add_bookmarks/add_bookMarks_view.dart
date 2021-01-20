@@ -1,3 +1,4 @@
+import 'package:FSOUNotes/app/router.gr.dart';
 import 'package:FSOUNotes/misc/constants.dart';
 import 'package:FSOUNotes/models/notes.dart';
 import 'package:FSOUNotes/ui/shared/app_config.dart';
@@ -351,6 +352,13 @@ class _BookMarkBottomSheetState extends State<BookMarkBottomSheet> {
                                     ),
                                     Expanded(
                                       child: FlatButton(
+                                        child: Text(
+                                          "Upload",
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        color: Theme.of(context).primaryColor,
                                         onPressed: () {
                                           Map<String, int> bookMarks = {};
                                           for (int i = 1; i <= 5; i++) {
@@ -360,23 +368,11 @@ class _BookMarkBottomSheetState extends State<BookMarkBottomSheet> {
                                                       model.unitPageNos[i]);
                                             }
                                           }
+                                          log.e(bookMarks);
                                           model.note.bookmarks = bookMarks;
-                                          //TODO malik return back bookmarks to the screen ...
-                                          var count = 0;
-                                          Navigator.pop(
-                                            context,
-                                            (route) {
-                                              return count++ == 2;
-                                            },
-                                          );
+                                          model.setNoteToService();
+                                          Navigator.popUntil(context, (route) => route.settings.name == Routes.uploadViewRoute,);
                                         },
-                                        child: Text(
-                                          "Upload",
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                        color: Theme.of(context).primaryColor,
                                       ),
                                     ),
                                   ],
@@ -418,7 +414,11 @@ Widget bookMarkEntry(BuildContext context, TextEditingController controller1,
             controller: controller2,
             onChanged: onChange2,
             textInputType: TextInputType.number,
-            hintText: "Page No.",
+            hintText: "Starting Page No.",
+            validator: (input) {
+              if(input.isEmpty) return "Please enter Page No.";
+              if(int.tryParse(input)==null) return "Please input valid number";
+            },
           ),
         ),
       ],

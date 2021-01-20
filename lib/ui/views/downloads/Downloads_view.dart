@@ -47,113 +47,126 @@ class _DownLoadViewState extends State<DownLoadView> {
   }
 
   Widget buildDownloadList(DownLoadViewModel model) {
-    return Column(
-      children: [
-        ValueListenableBuilder(
-          valueListenable: Hive.box('downloads').listenable(),
-          builder: (context, donwloadsBox, widget) {
-            return Container(
-              height: model.user?.isPremiumUser ?? false
-                  ? App(context).appHeight(1)
-                  : App(context).appHeight(0.18)*donwloadsBox.length,
-              child: ListView.builder(
-                itemCount: donwloadsBox.length,
-                itemBuilder: (context, index) {
-                  final download = donwloadsBox.getAt(index) as Download;
-                  return GestureDetector(
-                    onTap: () {
-                      model.navigateToPDFScreen(download);
-                    },
-                    child: FractionallySizedBox(
-                      widthFactor: 0.99,
-                      child: Container(
-                        margin:
-                            EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                        decoration: AppStateNotifier.isDarkModeOn
-                            ? Constants.mdecoration.copyWith(
-                                color: Theme.of(context).colorScheme.background,
-                                boxShadow: [],
-                              )
-                            : Constants.mdecoration.copyWith(
-                                color: Theme.of(context).colorScheme.background,
-                              ),
-                        child: DownloadListTile(
-                          download: download,
-                          index: index,
-                          onDeletePressed: () {
-                            model.deleteDownload(index, download.path);
-                          },
-                        ),
-                      ),
-                    ),
-                  );
-                },
-              ),
-            );
-          },
-        ),
-        model.user?.isPremiumUser ?? false
-            ? Container()
-            : Container(
-                decoration: Constants.mdecoration,
-                padding: const EdgeInsets.all(10),
-                margin: const EdgeInsets.all(10),
-                child: Column(
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 15),
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        "Note:",
-                        style: Theme.of(context)
-                            .textTheme
-                            .headline6
-                            .copyWith(color: primary),
-                      ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.symmetric(
-                          horizontal: 15, vertical: 10),
-                      decoration: BoxDecoration(),
-                      child: Text(
-                        "Only 3 notes can be stored offline in the app. Unlock unlimited offline downloads in the app by becoming a Pro Member.",
-                        style: Theme.of(context)
-                            .textTheme
-                            .subtitle1
-                            .copyWith(color: primary),
-                      ),
-                    ),
-                    Container(
-                      height: 40,
-                      margin: const EdgeInsets.all(10),
-                      width: App(context).appWidth(0.45),
-                      child: RaisedButton(
-                        textColor: Colors.white,
-                        color: Colors.teal.shade500,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30),
-                        ),
-                        onPressed: () {
-                          model.buyPremium();
-                        },
-                        child: Row(
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          ValueListenableBuilder(
+            valueListenable: Hive.box('downloads').listenable(),
+            builder: (context, donwloadsBox, widget) {
+              return Container(
+                // height: model.user?.isPremiumUser ?? false
+                height: true
+                    ? App(context).appHeight(1)
+                    : App(context).appHeight(0.18) * donwloadsBox.length,
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Container(
+                        decoration: Constants.mdecoration,
+                        padding: const EdgeInsets.all(10),
+                        margin: const EdgeInsets.all(10),
+                        child: Column(
                           children: [
-                            Text("Buy Premium"),
-                            SizedBox(
-                              width: 10,
+                            Container(
+                              margin:
+                                  const EdgeInsets.symmetric(horizontal: 15),
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                "Note:",
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .headline6
+                                    .copyWith(color: primary),
+                              ),
                             ),
-                            Icon(
-                              MdiIcons.crown,
-                              color: Colors.amber,
+                            Container(
+                              margin: const EdgeInsets.symmetric(
+                                  horizontal: 15, vertical: 10),
+                              decoration: BoxDecoration(),
+                              child: RichText(
+                                text: TextSpan(
+                                  style: Theme.of(context).textTheme.body1,
+                                  children: [
+                                    TextSpan(
+                                        text:
+                                            'Notes which have been opened in the app will be shown here. If you have downloaded the notes by pressing the download icon '),
+                                    WidgetSpan(
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 2.0),
+                                        child:
+                                            Icon(Icons.file_download, size: 18),
+                                      ),
+                                    ),
+                                    TextSpan(
+                                        text: ' you can find them in your '),
+                                    TextSpan(
+                                        text: 'Internal Storage > Downloads',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold)),
+                                    TextSpan(text: ' folder of your mobile'),
+                                  ],
+                                ),
+                              ),
                             ),
                           ],
                         ),
                       ),
-                    ),
-                  ],
+                      ListView.builder(
+                        physics: NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        itemCount: donwloadsBox.length + 1,
+                        itemBuilder: (context, index) {
+                          bool isLastElem = index == donwloadsBox.length; 
+                          final download = 
+                          isLastElem
+                          ? null
+                          :donwloadsBox.getAt(index) as Download;
+                          return isLastElem
+                              ? SizedBox(height: 100)
+                              : GestureDetector(
+                                  onTap: () {
+                                    model.navigateToPDFScreen(download);
+                                  },
+                                  child: FractionallySizedBox(
+                                    widthFactor: 0.99,
+                                    child: Container(
+                                      margin: EdgeInsets.symmetric(
+                                          horizontal: 10, vertical: 10),
+                                      decoration: AppStateNotifier.isDarkModeOn
+                                          ? Constants.mdecoration.copyWith(
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .background,
+                                              boxShadow: [],
+                                            )
+                                          : Constants.mdecoration.copyWith(
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .background,
+                                            ),
+                                      child: DownloadListTile(
+                                        download: download,
+                                        index: index,
+                                        onDeletePressed: () {
+                                          model.deleteDownload(
+                                              index, download.path);
+                                        },
+                                      ),
+                                    ),
+                                  ),
+                                );
+                        },
+                      ),
+                    ],
+                  ),
                 ),
-              )
-      ],
+              );
+            },
+          ),
+        ],
+      ),
     );
   }
 }
@@ -351,3 +364,45 @@ class DownloadListTile extends StatelessWidget {
     );
   }
 }
+
+//legacy code
+
+// Container(
+//   margin: const EdgeInsets.symmetric(
+//       horizontal: 15, vertical: 10),
+//   decoration: BoxDecoration(),
+//   child: Text(
+//     "Notes which have been opened in the app will be shown here. If you have downloaded the notes by pressing the download icon, you can find them in your Internal Storage > Downloads folder of your mobile",
+//     style: Theme.of(context)
+//         .textTheme
+//         .subtitle1
+//         .copyWith(color: primary),
+//   ),
+// ),
+// Container(
+//   height: 40,
+//   margin: const EdgeInsets.all(10),
+//   width: App(context).appWidth(0.45),
+//   child: RaisedButton(
+//     textColor: Colors.white,
+//     color: Colors.teal.shade500,
+//     shape: RoundedRectangleBorder(
+//       borderRadius: BorderRadius.circular(30),
+//     ),
+//     onPressed: () {
+//       model.buyPremium();
+//     },
+//     child: Row(
+//       children: [
+//         Text("Buy Premium"),
+//         SizedBox(
+//           width: 10,
+//         ),
+//         Icon(
+//           MdiIcons.crown,
+//           color: Colors.amber,
+//         ),
+//       ],
+//     ),
+//   ),
+// ),

@@ -221,7 +221,7 @@ class UploadLogDetailView extends StatelessWidget {
                                               await model.viewDocument(logItem);
                                             },
                                           ),
-                                              )),
+                                              ),),
                                           Expanded(
                                             child: FittedBox(
                                               child: Padding(

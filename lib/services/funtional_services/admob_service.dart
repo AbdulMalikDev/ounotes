@@ -23,6 +23,7 @@ class AdmobService{
   String get ADMOB_APP_ID => _remote.remoteConfig.getString("ADMOB_APP_ID");
   String get ADMOB_AD_BANNER_ID => _remote.remoteConfig.getString("ADMOB_AD_BANNER_ID");
   String get ADMOB_AD_INTERSTITIAL_ID => _remote.remoteConfig.getString("ADMOB_AD_INTERSTITIAL_ID");
+  String get ADMOB_REWARDED_AD_ID => _remoteConfigService.remoteConfig.getString("ADMOB_REWARDED_AD_ID");
 
   BannerAd notes_view_banner_ad;
   InterstitialAd notes_view_interstitial_ad;
@@ -60,8 +61,9 @@ class AdmobService{
     try {
       if(_NumberOfTimeNotesOpened==null){_NumberOfTimeNotesOpened=0;}
       if(_NumberOfAdsShown==null){_NumberOfAdsShown=0;}
-      
-      bool ad = getNumberOfTimeNotesOpened() % 7 == 0;
+
+      log.e(getNumberOfTimeNotesOpened());
+      bool ad = getNumberOfTimeNotesOpened() % 9 == 0;
       
       if (ad){
         
@@ -114,7 +116,7 @@ class AdmobService{
       }
       if (event == RewardedVideoAdEvent.failedToLoad){
         log.e("failedToLoad");
-        _adFailedToBeShown();
+        // _adFailedToBeShown();
       }
     };
     // await RewardedVideoAd.instance.load(adUnitId : adUnitId , targetingInfo: info);
@@ -126,7 +128,7 @@ class AdmobService{
 
       log.e(adUnitId);
       log.e(appId);
-      bool adloaded = await RewardedVideoAd.instance.load(adUnitId : RewardedVideoAd.testAdUnitId , targetingInfo: info);
+      bool adloaded = await RewardedVideoAd.instance.load(adUnitId : ADMOB_REWARDED_AD_ID , targetingInfo: info);
       log.e(adloaded);
       
     } catch (e) {
@@ -143,8 +145,8 @@ class AdmobService{
 
   InterstitialAd getInterstitialAd() {
     return InterstitialAd(
-        adUnitId: InterstitialAd.testAdUnitId,
-        // adUnitId: ADMOB_AD_INTERSTITIAL_ID,
+        // adUnitId: InterstitialAd.testAdUnitId,
+        adUnitId: ADMOB_AD_INTERSTITIAL_ID,
         targetingInfo: info,
         listener: (MobileAdEvent event) {
         print("InterstitialAd event is $event");

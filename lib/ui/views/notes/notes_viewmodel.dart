@@ -49,13 +49,12 @@ class NotesViewModel extends BaseViewModel {
       locator<AuthenticationService>();
   RemoteConfigService _remoteConfigService = locator<RemoteConfigService>();
   NavigationService _navigationService = locator<NavigationService>();
+  NotificationService _notificationService = locator<NotificationService>();
   SharedPreferencesService _sharedPreferencesService =
       locator<SharedPreferencesService>();
   VoteService _voteService = locator<VoteService>();
   SubjectsService _subjectsService = locator<SubjectsService>();
   BottomSheetService _bottomSheetService = locator<BottomSheetService>();
-  GoogleInAppPaymentService _googleInAppPaymentService =
-      locator<GoogleInAppPaymentService>();
   GoogleDriveService _googleDriveService = locator<GoogleDriveService>();
 
   double _progress = 0;
@@ -202,7 +201,7 @@ class NotesViewModel extends BaseViewModel {
     if (prefs.containsKey("openDocChoice")) {
       String button = prefs.getString("openDocChoice");
       if (button == "Open In App") {
-        navigateToWebView(note);
+        navigateToPDFView(note);
       } else {
         _sharedPreferencesService.updateView(note.id);
         Helper.launchURL(note.GDriveLink);
@@ -214,7 +213,7 @@ class NotesViewModel extends BaseViewModel {
       variant: BottomSheetType.floating2,
       title: 'Where do you want to open the file?',
       description:
-          "Tip : Open Notes in Google Drive app to avoid loading issues. ' Open in Browser > Google Drive Icon ' ",
+          "",
       mainButtonTitle: 'Open In Browser',
       secondaryButtonTitle: 'Open In App',
     );
@@ -248,14 +247,14 @@ class NotesViewModel extends BaseViewModel {
 
   navigateToPDFScreen(String buttonText, Note note) {
     if (buttonText == 'Open In App') {
-      navigateToWebView(note);
+      navigateToPDFView(note);
     } else {
       _sharedPreferencesService.updateView(note.id);
       Helper.launchURL(note.GDriveLink);
     }
   }
 
-  void navigateToWebView(Note note) async {
+  void navigateToPDFView(Note note) async {
     try {
       _googleDriveService.downloadFile(
         note: note,
@@ -282,7 +281,10 @@ class NotesViewModel extends BaseViewModel {
     _navigationService.popRepeated(1);
   }
 
-  void incrementViewForAd() {
+  void incrementViewForAd() async {
+    User user = await _authenticationService.getUser();
+    if (!(_admobService.adDue && !user.isPremiumUser??false ||
+        _admobService.shouldAdBeShown()))
     this.admobService.incrementNumberOfTimeNotesOpened();
     this.admobService.shouldAdBeShown();
   }
@@ -379,8 +381,8 @@ class NotesViewModel extends BaseViewModel {
         refresh: refresh,
         onDownloadCallback: handleDownloadPurchase,
       ),
-      onTap: () {
-        incrementViewForAd();
+      onTap: () async{
+        await incrementViewForAd();
         openDoc(note);
       },
     );
@@ -392,20 +394,45 @@ class NotesViewModel extends BaseViewModel {
   }
 
   void handleDownloadPurchase({Note note}) async {
-    ProductDetails prod = _googleInAppPaymentService
-        .getProduct(GoogleInAppPaymentService.pdfProductID);
-    //Show download floating sheet
-    SheetResponse response = await _bottomSheetService.showCustomSheet(
-        variant: BottomSheetType.downloadPdf,
-        title: "Download PDF",
-        customData: {"price": prod?.price ?? "10"});
+    SheetResponse response = await _bottomSheetService.showCustomSheet(variant:BottomSheetType.filledStacks,title: "⬇",description: "Sure you want to download ${note.title} ?",mainButtonTitle: "YES",secondaryButtonTitle: "NO",customData: {"download":true});
+    print(response?.confirmed);
+    if(response == null || !response.confirmed)return;
+    await _googleDriveService.downloadPuchasedPdf
+    (
+      note:note,
+      startDownload: () {
+        setLoading(true);
+      },
+      onDownloadedCallback: (path,fileName) async {
+        setLoading(false);
+        await _notificationService.dispatchLocalNotification(NotificationService.download_purchase_notify, {
+            "title":"Downloaded " + fileName,
+            "body" : "PDF File has been downloaded in the downloads folder. Thank you for using the OU Notes app.",
+            "payload": {"path" : path,"id" : note.id},
+          }
+        );
+        User user = await _authenticationService.getUser();
+        user.addDownload("${note.subjectId}_${note.id}");
+        _navigationService.navigateTo(Routes.thankYouView,arguments: ThankYouViewArguments(filePath: path));
+      },
+    );
 
-    if (response?.confirmed ?? false) {
-      if (prod == null) {
-        return;
-      }
-      await _googleInAppPaymentService.buyProduct(prod: prod, note: note);
-      log.e("Download started");
-    }
+    // -- Legacy Code used for premium in-app  feature--
+    // 
+    // ProductDetails prod = _googleInAppPaymentService
+    //     .getProduct(GoogleInAppPaymentService.pdfProductID);
+    // //Show download floating sheet
+    // SheetResponse response = await _bottomSheetService.showCustomSheet(
+    //     variant: BottomSheetType.downloadPdf,
+    //     title: "Download PDF",
+    //     customData: {"price": prod?.price ?? "10"});
+
+    // if (response?.confirmed ?? false) {
+    //   if (prod == null) {
+    //     return;
+    //   }
+    //   await _googleInAppPaymentService.buyProduct(prod: prod, note: note);
+    //   log.e("Download started");
+    // }
   }
 }

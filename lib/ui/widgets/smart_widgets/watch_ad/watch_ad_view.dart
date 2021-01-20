@@ -59,7 +59,7 @@ class _WatchAdToContinueViewState extends State<WatchAdToContinueView> {
                     height: 45,
                     child: RaisedButton(
                       textColor: Colors.white,
-                      color: Colors.teal.shade500,
+                      color: Colors.teal.shade400,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(30),
                       ),
@@ -89,7 +89,7 @@ class _WatchAdToContinueViewState extends State<WatchAdToContinueView> {
                     height: 45,
                     child: RaisedButton(
                       textColor: Colors.white,
-                      color: Colors.teal.shade500,
+                      color: Colors.teal.shade400,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(30),
                       ),
@@ -97,14 +97,15 @@ class _WatchAdToContinueViewState extends State<WatchAdToContinueView> {
                         model.buyPremium();
                       },
                       child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text("Buy Premium"),
+                          Text("Support us ",style: TextStyle(fontWeight: FontWeight.bold),),
                           SizedBox(
                             width: 10,
                           ),
                           Icon(
-                            MdiIcons.crown,
-                            color: Colors.amber,
+                            MdiIcons.heart,
+                            color: Colors.red[700],
                           ),
                         ],
                       ),

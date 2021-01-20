@@ -74,13 +74,13 @@ class User{
                "photoUrl"                                       : photoUrl,
                "fcmToken"                                       : fcmToken,
                "isAdmin"                                        : isAdmin ?? false,
+               "isUserAllowedToUpload"                          : isUserAllowedToUpload ?? true,
             if(uploads!=null)"uploads"                          : uploads,
             if(numOfUploads!=null)"numOfUploads"                : numOfUploads,
             if(numOfAcceptedUploads!=null)"numOfAcceptedUploads": numOfAcceptedUploads,
             if(isPremiumUser!=null)"isPremiumUser"              : isPremiumUser,
             if(downloads!=null)"downloads"                      : downloads,
             if(premiumPurchaseDate!=null)"premiumPurchaseDate"  : premiumPurchaseDate,
-               "isUserAllowedToUpload"                          : isUserAllowedToUpload ?? true,
     };
   }
 
@@ -97,6 +97,7 @@ class User{
 
     _parseDate(date){
       DateTime purchaseDate;
+      log.e(purchaseDate);
       try{purchaseDate = DateTime.parse(date?.toDate()?.toString() ?? DateTime.now().toString());}
       catch(e){log.e(e.toString());return null;}
       return purchaseDate;

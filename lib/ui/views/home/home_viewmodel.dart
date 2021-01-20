@@ -266,8 +266,12 @@ class HomeViewModel extends BaseViewModel {
     return notes;
   }
 
-  void updateDialog(
-      bool shouldShowUpdateDialog, Map<String, dynamic> versionDetails) {
+  void updateDialog
+  (
+    bool shouldShowUpdateDialog, 
+    Map<String, dynamic> versionDetails
+  ) {
+    if (versionDetails == null)return;
     SchedulerBinding.instance.addPostFrameCallback((timeStamp) async {
       if (shouldShowUpdateDialog) {
         String updatedVersion = versionDetails["updatedVersion"];

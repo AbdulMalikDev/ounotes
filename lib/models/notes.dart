@@ -18,7 +18,7 @@ class Note extends AbstractDocument {
   DateTime uploadDate;
   String firebaseId;
   Map<String,int> bookmarks = {};
-  bool       isDownloaded   = false;
+  bool isDownloaded   = false;
   //Do not change name of this variable
   Document path;
   String type;

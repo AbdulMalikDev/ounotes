@@ -64,7 +64,7 @@ class Link extends AbstractDocument{
     if(subjectName!=null)"subjectName": subjectName,
     if(title!=null) "title"           : title,
     if(description!=null)"description": description,
-    if(url!=null)"url"                : linkUrl,
+    if(linkUrl!=null)"url"                : linkUrl,
     if(id!=null)"id"                  : id,
     if(subjectId!=null)"subjectId"    : subjectId,
     if(uploader_id!=null)"uploader_id": uploader_id,

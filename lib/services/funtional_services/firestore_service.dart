@@ -567,10 +567,10 @@ class FirestoreService {
       if(_authenticationService.user.email!=null)"email": _authenticationService.user.email,
       if(note.size!=null)"size"                         : note.size,
     };
-    _analyticsService.sendNotification(
-        isAdmin: true,
-        message: Strings.admin_document_upload_notification_message,
-        title: Strings.admin_document_upload_notification_title);
+    // _analyticsService.sendNotification(
+    //     isAdmin: true,
+    //     message: Strings.admin_document_upload_notification_message,
+    //     title: Strings.admin_document_upload_notification_title);
     return uploadLog;
   }
 
@@ -591,10 +591,10 @@ class FirestoreService {
         name: "UPLOAD_LINK",
         parameters: uploadLog,
         addInNotificationService: true);
-    _analyticsService.sendNotification(
-        isAdmin: true,
-        message: Strings.admin_document_upload_notification_message,
-        title: Strings.admin_document_upload_notification_title);
+    // _analyticsService.sendNotification(
+    //     isAdmin: true,
+    //     message: Strings.admin_document_upload_notification_message,
+    //     title: Strings.admin_document_upload_notification_title);
     return uploadLog;
   }
 

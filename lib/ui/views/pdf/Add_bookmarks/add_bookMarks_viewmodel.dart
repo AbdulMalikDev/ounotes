@@ -125,4 +125,8 @@ class BookMarkBottomSheetViewModel extends BaseViewModel {
     };
     _subjectsService.documentHiveBox.put("bottomsheet", bottomsheet);
   }
+
+  void setNoteToService() {
+    _subjectsService.note = this.note;
+  }
 }

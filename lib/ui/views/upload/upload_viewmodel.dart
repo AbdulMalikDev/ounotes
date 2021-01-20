@@ -150,16 +150,77 @@ class UploadViewModel extends BaseViewModel {
     _navigationService.navigateTo(Routes.termsAndConditionView);
   }
 
-  Future handleUpload(String text1, String text2, String text3, Document path,
-      String subjectName, BuildContext context) async {
-    //* For all 4 upload screens , there are different text fields and
-    //* their value may be different while uploading , so i have used switch case to
-    //* handle all 4 situations
+  Future handleUpload
+  (
+    String text1, 
+    String text2, 
+    String text3, 
+    Document path,
+    String subjectName, 
+    BuildContext context
+  ) async {
+
     setBusy(true);
     Subject subject = await _firestoreService.getSubjectByName(subjectName);
-    String type;
-    log.e("year $_year");
+
     AbstractDocument doc;
+    doc = _setDoc(doc,path,text1,text2,text3,subjectName,subject);
+
+    if (doc.path == Document.Links) {
+
+      _processLink(doc);
+      setBusy(false);
+
+    }else{
+
+      SheetResponse response = await _showDocTypeSelectionSheet();
+      if (response == null) {setBusy(false);return;}
+      String fileType = response.confirmed ? enumConst.Constants.pdf : enumConst.Constants.png;
+      var result = await _cloudStorageService.uploadFile(note: doc, type: doc.type, uploadFileType: fileType);
+      log.w(result);
+
+      //* Handle upload result
+      switch(result){
+        case "BLOCKED":
+          await _showBannedDialog();
+          setBusy(false);
+          return;
+          break;
+        case "File size more than 35mb":
+          _showFileSizeExceededDialog(context);
+          setBusy(false);
+          return;
+          break;
+        case "error":
+          setBusy(false);
+          Fluttertoast.showToast(msg: "An error occurred...please try again later");
+          break;
+        case "file is not pdf":
+          await _showFileIsNotPdfDialog(context);
+          setBusy(false);
+          break;
+        case "upload successful":
+          setBusy(false);
+          _navigationService.navigateTo(Routes.thankYouForUploadingViewRoute);
+          break;
+        default:
+          setBusy(false);
+          return;
+          break;
+      }
+    }
+  }
+
+  launchURL(String url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
+
+  AbstractDocument _setDoc(AbstractDocument doc,path,text1,text2,text3,subjectName,subject) {
+    String type;
     switch (path) {
       case Document.Notes:
         type = Constants.notes;
@@ -221,33 +282,19 @@ class UploadViewModel extends BaseViewModel {
       case Document.Report:
         break;
     }
-    if (doc.path != Document.Links) {
-      SheetResponse response = await _bottomSheetService.showCustomSheet(
-          variant: BottomSheetType.filledStacks,
-          title: "What do you want to upload?",
-          description: "",
-          mainButtonTitle: "PDF",
-          secondaryButtonTitle: "Image",
-          customData: {"file_upload": true});
-      if (response == null) {
-        setBusy(false);
-        return;
-      }
-      String fileType = response.confirmed
-          ? enumConst.Constants.pdf
-          : enumConst.Constants.png;
-      var result = await _cloudStorageService.uploadFile(
-          note: doc, type: type, uploadFileType: fileType);
-      log.w(result);
-      if (result == "BLOCKED") {
-        await _dialogService.showDialog(
+    return doc;
+  }
+
+  _showBannedDialog() async {
+    await _dialogService.showDialog(
             title: "BANNED",
             description:
                 "You have been banned by admins for uploading irrelevant content or reporting documents with no issue again and again. Use the feedback option in the drawer to contact the admins if you think this is a mistake");
-        setBusy(false);
-        return;
-      } else if (result == "File size more than 35mb") {
-        showDialog(
+        
+  }
+
+  void _showFileSizeExceededDialog(context) {
+    showDialog(
             context: context,
             builder: (BuildContext context) {
               return AlertDialog(
@@ -328,74 +375,10 @@ class UploadViewModel extends BaseViewModel {
                         }),
                   ]);
             });
-        setBusy(false);
-        return;
-      } else if (result == "File is null") {
-        setBusy(false);
-        return;
-      } else if (result == 'error') {
-        setBusy(false);
-        Fluttertoast.showToast(
-            msg: "An error occurred...please try again later");
-      } else if (result == "upload successful") {
-        setBusy(false);
-        showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20)),
-                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-                content: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    Text(
-                      "Thank you for uploading ! The admins will verify if your uploaded document is relevant and it will be displayed in $subjectName.\n",
-                      style: Theme.of(context)
-                          .textTheme
-                          .subtitle1
-                          .copyWith(fontSize: 18),
-                    ),
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.warning,
-                          size: 30,
-                        ),
-                        SizedBox(
-                          width: 5,
-                        ),
-                        Expanded(
-                          child: Text(
-                            "Uploading irrelevant information may result in a ban from the application",
-                            style: Theme.of(context)
-                                .textTheme
-                                .subtitle1
-                                .copyWith(fontSize: 15),
-                            overflow: TextOverflow.clip,
-                          ),
-                        )
-                      ],
-                    )
-                  ],
-                ),
-                actions: <Widget>[
-                  FlatButton(
-                      child: Text(
-                        "ok",
-                        style: Theme.of(context)
-                            .textTheme
-                            .subtitle2
-                            .copyWith(fontSize: 17),
-                      ),
-                      onPressed: () {
-                        Navigator.pop(context);
-                      }),
-                ],
-              );
-            });
-      } else if (result == 'file is not pdf') {
-        await showDialog(
+  }
+
+  _showFileIsNotPdfDialog(BuildContext context) async {
+    await showDialog(
             context: context,
             builder: (BuildContext context) {
               return AlertDialog(
@@ -476,34 +459,36 @@ class UploadViewModel extends BaseViewModel {
                         }),
                   ]);
             });
-        setBusy(false);
-      }
+  }
+
+  void _processLink(AbstractDocument doc) async {
+    Link link = doc;
+    log.e("link content");
+    log.e(link.linkUrl);
+    bool isValidURL = Uri.parse(link.linkUrl).isAbsolute;
+    if (isValidURL) {
+      await _firestoreService.saveLink(doc);
+      await _dialogService.showDialog(
+          title: "SUCCESS",
+          description:
+              "Thank you for sharing a resource with all the students ! Admins will review the link and display it in the app.");
+      _navigationService
+          .popUntil((route) => route.settings.name == Routes.homeViewRoute);
     } else {
-      Link link = doc;
-      bool isValidURL = Uri.parse(link.linkUrl).isAbsolute;
-      if (isValidURL) {
-        await _firestoreService.saveLink(doc);
-        await _dialogService.showDialog(
-            title: "SUCCESS",
-            description:
-                "Thank you for sharing a resource with all the students ! Admins will review the link and display it in the app.");
-        _navigationService
-            .popUntil((route) => route.settings.name == Routes.homeViewRoute);
-      } else {
-        await _dialogService.showDialog(
-            title: "Aww ! Wrong Link !",
-            description:
-                "Looks like the link format is not valid, make sure to copy and paste the exact link and not just the domain name. For example, \"google.com\" is not valid, \"https://google.com\" is a valid URL");
-      }
-      setBusy(false);
+      await _dialogService.showDialog(
+          title: "Aww ! Wrong Link !",
+          description:
+              "Looks like the link format is not valid, make sure to copy and paste the exact link and not just the domain name. For example, \"google.com\" is not valid, \"https://google.com\" is a valid URL");
     }
   }
 
-  launchURL(String url) async {
-    if (await canLaunch(url)) {
-      await launch(url);
-    } else {
-      throw 'Could not launch $url';
-    }
+  Future<SheetResponse> _showDocTypeSelectionSheet() async {
+    return await _bottomSheetService.showCustomSheet(
+          variant: BottomSheetType.filledStacks,
+          title: "What do you want to upload?",
+          description: "",
+          mainButtonTitle: "PDF",
+          secondaryButtonTitle: "Image",
+          customData: {"file_upload": true});
   }
 }

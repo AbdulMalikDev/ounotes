@@ -1,19 +1,16 @@
 import 'package:FSOUNotes/misc/constants.dart';
-import 'package:FSOUNotes/ui/widgets/smart_widgets/thank_you_page/thank_you_viewmodel.dart';
 import 'package:flutter/material.dart';
-import 'package:open_file/open_file.dart';
 import 'package:stacked/stacked.dart';
 import 'package:confetti/confetti.dart';
+import 'thank_you_for_uploading_viewmodel.dart';
 
 
-class ThankYouView extends StatefulWidget {
-  final String filePath;
-  ThankYouView({this.filePath});
+class ThankYouForUploadingView extends StatefulWidget {
   @override
-  _ThankYouViewState createState() => _ThankYouViewState();
+  _ThankYouForUploadingViewState createState() => _ThankYouForUploadingViewState();
 }
 
-class _ThankYouViewState extends State<ThankYouView> {
+class _ThankYouForUploadingViewState extends State<ThankYouForUploadingView> {
   ConfettiController _controllerCenter;
    @override
   void initState() {
@@ -30,11 +27,11 @@ class _ThankYouViewState extends State<ThankYouView> {
   }
   @override
   Widget build(BuildContext context) {
-    return ViewModelBuilder<ThankYouViewModel>.reactive(
-      viewModelBuilder: () => ThankYouViewModel(),
+    return ViewModelBuilder<ThankYouForUploadingViewModel>.reactive(
+      viewModelBuilder: () => ThankYouForUploadingViewModel(),
       builder: (
         BuildContext context,
-        ThankYouViewModel model,
+        ThankYouForUploadingViewModel model,
         Widget child,
       ) {
         return Scaffold(
@@ -99,20 +96,18 @@ class _ThankYouViewState extends State<ThankYouView> {
                           ),
                         ),
                       ),
-                      if(widget.filePath == null)
+                      // Text(
+                      //   "Congratulations !",
+                      //   style: Theme.of(context)
+                      //       .textTheme
+                      //       .headline6
+                      //       .copyWith(color: primary),
+                      // ),
+                      // SizedBox(
+                      //   height: 20,
+                      // ),
                       Text(
-                        "Congratulations !",
-                        style: Theme.of(context)
-                            .textTheme
-                            .headline6
-                            .copyWith(color: primary),
-                      ),
-                      if(widget.filePath == null)
-                      SizedBox(
-                        height: 20,
-                      ),
-                      Text(
-                        widget.filePath==null ? "You are a Premium User!" : "Thank you for downloading!",
+                        "Thank you for uploading !",
                         style: Theme.of(context)
                             .textTheme
                             .headline6
@@ -121,7 +116,7 @@ class _ThankYouViewState extends State<ThankYouView> {
                       SizedBox(
                         height: 30,
                       ),
-                      if(widget.filePath!=null)
+                      
                       Text(
                         "You will receive a confimation",
                         style: Theme.of(context)
@@ -129,41 +124,20 @@ class _ThankYouViewState extends State<ThankYouView> {
                             .subtitle1
                             .copyWith(color: Colors.teal.shade400),
                       ),
-                      if(widget.filePath!=null)
                       Text(
-                        "notification about your download.",
+                        "notification from the admins",
                         style: Theme.of(context)
                             .textTheme
                             .subtitle1
                             .copyWith(color: Colors.teal.shade400),
                       ),
-                      if(widget.filePath!=null)
-                      SizedBox(height:5),
-                      if(widget.filePath!=null)
                       Text(
-                        "Access this file in the ",
+                        "once the document is verified",
                         style: Theme.of(context)
                             .textTheme
                             .subtitle1
                             .copyWith(color: Colors.teal.shade400),
                       ),
-                      if(widget.filePath!=null)
-                      Text(
-                        "Internal Storage > Downloads folder ",
-                        style: Theme.of(context)
-                            .textTheme
-                            .subtitle1
-                            .copyWith(color: Colors.teal.shade400),
-                      ),
-                      if(widget.filePath!=null)
-                      Text(
-                        "of your mobile",
-                        style: Theme.of(context)
-                            .textTheme
-                            .subtitle1
-                            .copyWith(color: Colors.teal.shade400),
-                      ),
-                      if(widget.filePath!=null)
                       SizedBox(
                         height: 50,
                       ),
@@ -173,10 +147,7 @@ class _ThankYouViewState extends State<ThankYouView> {
                           height: 55,
                           child: RaisedButton(
                             onPressed: () {
-                              if(widget.filePath==null)
                               model.navigateToHome();
-                              else
-                              OpenFile.open(widget.filePath);
                             },
                             textColor: Colors.white,
                             color: Colors.teal,
@@ -186,7 +157,7 @@ class _ThankYouViewState extends State<ThankYouView> {
                               borderRadius: BorderRadius.circular(30),
                             ),
                             child: new Text(
-                              widget.filePath!=null ? "Open File" : "Done",
+                              "Done",
                               style: TextStyle(fontSize: 18),
                             ),
                           ),

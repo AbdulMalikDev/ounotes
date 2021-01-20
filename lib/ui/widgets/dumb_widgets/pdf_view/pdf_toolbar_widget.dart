@@ -1,7 +1,9 @@
 
+import 'package:FSOUNotes/models/document.dart';
 import 'package:FSOUNotes/ui/widgets/dumb_widgets/pdf_view/pdf_error_dialog.dart';
 import 'package:FSOUNotes/ui/widgets/dumb_widgets/pdf_view/pdf_toolbar_item_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:share/share.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import 'package:syncfusion_flutter_core/src/theme/pdfviewer_theme.dart';
 
@@ -15,6 +17,7 @@ class Toolbar extends StatefulWidget {
     this.controller,
     this.onTap,
     this.showTooltip = true,
+    this.doc,
     Key key,
   }) : super(key: key);
 
@@ -26,6 +29,9 @@ class Toolbar extends StatefulWidget {
 
   /// Called when the toolbar item is selected.
   final TapCallback onTap;
+
+  ///Abstract Document
+  final AbstractDocument doc;
 
   @override
   ToolbarState createState() => ToolbarState();
@@ -100,34 +106,6 @@ class ToolbarState extends State<Toolbar> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              // ToolbarItem(
-              //   height: 40,
-              //   width: 40,
-              //   child: Material(
-              //       color: Colors.transparent,
-              //       child: IconButton(
-              //         icon: Icon(
-              //           Icons.folder_open,
-              //           color: _color,
-              //           size: 24,
-              //         ),
-              //         onPressed: () async {
-              //           // widget.onTap?.call('File Explorer');
-              //           // widget.controller.clearSelection();
-              //           // await Future.delayed(Duration(milliseconds: 50));
-              //           // Navigator.of(context).push(MaterialPageRoute(
-              //           //     builder: (context) => FileExplorer(
-              //           //           brightness: _pdfViewerThemeData.brightness,
-              //           //           onDocumentTap: (document) {
-              //           //             widget.onTap?.call(document);
-              //           //             Navigator.of(context, rootNavigator: true)
-              //           //                 .pop(context);
-              //           //           },
-              //           //         )));
-              //         },
-              //         tooltip: widget.showTooltip ? 'Choose file' : null,
-              //       )),
-              // ),
               Row(children: <Widget>[
                 ToolbarItem(
                     height: 25,
@@ -137,7 +115,7 @@ class ToolbarState extends State<Toolbar> {
                       child: Row(children: [
                         Padding(
                           padding: const EdgeInsets.only(right: 2.0, bottom: 1),
-                          child: Flexible(
+                          child: FittedBox(
                             child: paginationTextField(context),
                           ),
                         ),
@@ -241,7 +219,12 @@ class ToolbarState extends State<Toolbar> {
                           size: 24,
                         ),
                         onPressed: () {
-                          //TODO MALIK include share logic
+                          final RenderBox box = context.findRenderObject();
+                          Share.share(
+                              "Notes Name: ${widget.doc.title}\n\nSubject Name: ${widget.doc.subjectName}\n\nLink:${widget.doc.GDriveLink}\n\nFind Latest Notes | Question Papers | Syllabus | Resources for Osmania University at the OU NOTES App\n\nhttps://play.google.com/store/apps/details?id=com.notes.ounotes",
+                              sharePositionOrigin:
+                                  box.localToGlobal(Offset.zero) & box.size
+                          );
                         },
                         tooltip: widget.showTooltip ? 'Search' : null,
                       ),
