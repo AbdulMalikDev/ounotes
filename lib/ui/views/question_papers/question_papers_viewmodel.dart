@@ -19,7 +19,6 @@ class QuestionPapersViewModel extends BaseViewModel {
   FirestoreService _firestoreService = locator<FirestoreService>();
   List<QuestionPaper> _questionPapers = [];
   NavigationService _navigationService = locator<NavigationService>();
-  DialogService _dialogService = locator<DialogService>();
   SharedPreferencesService _sharedPreferencesService =
       locator<SharedPreferencesService>();
   BottomSheetService _bottomSheetService = locator<BottomSheetService>();

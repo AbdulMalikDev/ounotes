@@ -14,12 +14,12 @@ import 'package:FSOUNotes/services/funtional_services/authentication_service.dar
 import 'package:FSOUNotes/services/funtional_services/firestore_service.dart';
 import 'package:FSOUNotes/services/funtional_services/google_drive_service.dart';
 import 'package:FSOUNotes/services/funtional_services/google_in_app_payment_service.dart';
+import 'package:FSOUNotes/services/funtional_services/notification_service.dart';
 import 'package:FSOUNotes/services/funtional_services/remote_config_service.dart';
 import 'package:FSOUNotes/services/funtional_services/sharedpref_service.dart';
 import 'package:FSOUNotes/services/state_services/subjects_service.dart';
 import 'package:FSOUNotes/services/state_services/vote_service.dart';
 import 'package:FSOUNotes/enums/bottom_sheet_type.dart';
-import 'package:FSOUNotes/services/funtional_services/notification_service.dart';
 import 'package:FSOUNotes/ui/widgets/smart_widgets/notes_tile/notes_tile_view.dart';
 import 'package:cuid/cuid.dart';
 import 'package:flutter/foundation.dart';

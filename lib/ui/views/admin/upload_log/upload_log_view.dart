@@ -324,7 +324,4 @@ class _UploadLogViewState extends State<UploadLogView> {
       viewModelBuilder: () => UploadLogViewModel(),
     );
   }
-
-  @override
-  bool get wantKeepAlive => true;
 }

@@ -69,6 +69,7 @@ class SharedPreferencesService {
     } catch (e) {
       log.e(e.toString());
     }
+    return null;
   }
 
   getModeOfView() async {
