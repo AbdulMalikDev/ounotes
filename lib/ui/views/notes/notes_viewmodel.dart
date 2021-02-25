@@ -86,8 +86,72 @@ class NotesViewModel extends BaseViewModel {
 
   //Refresh the notes Value Notifier to show pinned notes above
   refresh(subjectName) async {
+    setBusy(true);
+    print("refresh");
     notesTiles.value = [];
-    await fetchNotesAndVotes(subjectName);
+    Map<String, Map<String, DateTime>> pinnedNotes = {
+      "empty": {"a": DateTime.now()}
+    };
+    if (box.get("pinnedNotes") != null) {
+      Map notesMap = box.get("pinnedNotes");
+      notesMap = notesMap.map((key, value) {
+        if (value.isEmpty) {
+          value = {"a": DateTime.now()};
+        }
+        pinnedNotes.addEntries([
+          MapEntry<String, Map<String, DateTime>>(
+              key as String, new Map<String, DateTime>.from(value))
+        ]);
+        return MapEntry<String, Map<String, DateTime>>(
+            key as String, new Map<String, DateTime>.from(value));
+      });
+    }
+    Map<String, DateTime> subjectPinnedNotes = pinnedNotes[subjectName] ?? {};
+    List<String> pinnedNotesIDs = subjectPinnedNotes.keys.toList();
+    List<Note> currentSubjectPinnedNotes = [];
+    for (int i = 0; i < _notes.length; i++) {
+      Note note = _notes[i];
+      if (note.GDriveLink == null) {
+        continue;
+      }
+      //>Skip pinned notes to add them in the last
+      if (pinnedNotesIDs.contains(note.id)) {
+        currentSubjectPinnedNotes.add(note);
+        continue;
+      }
+      //>Add normal notes to the list as usual
+      else {
+        _notesTiles.value.add(
+          _addInkWellWidget(note),
+        );
+      }
+    }
+
+    //Add all the pinned notes
+    if (currentSubjectPinnedNotes.isNotEmpty) {
+      //>Order dates by most recently pinned
+      List<DateTime> dates = subjectPinnedNotes.values.toList();
+      dates.sort((a, b) => a.compareTo(b));
+      dates = dates.reversed.toList();
+      subjectPinnedNotes.remove("a");
+      // log.e(currentSubjectPinnedNotes);
+      currentSubjectPinnedNotes.asMap().forEach((index, _) {
+        DateTime recentDate = dates[index];
+        String notesIdCorrespondingToTheRecentDate = subjectPinnedNotes.keys
+            .toList()
+            .where((key) => subjectPinnedNotes[key] == recentDate)
+            .toList()[0];
+        Note noteToAdd = currentSubjectPinnedNotes
+            .where((note) => note.id == notesIdCorrespondingToTheRecentDate)
+            .toList()[0];
+        _notesTiles.value.insert(
+          index,
+          _addInkWellWidget(noteToAdd, isPinned: true),
+        );
+      });
+    }
+    setBusy(false);
+    notesTiles.notifyListeners();
   }
 
   List<Note> get notes => _notes;
@@ -192,8 +256,8 @@ class NotesViewModel extends BaseViewModel {
 
   void openDoc(Note note) async {
     User user = await _authenticationService.getUser();
-    if (_admobService.adDue && !user.isPremiumUser??false ||
-        _admobService.shouldAdBeShown()) {
+    if (_admobService.adDue && !user.isPremiumUser ??
+        false || _admobService.shouldAdBeShown()) {
       _navigationService.navigateTo(Routes.watchAdToContinueView);
       return;
     }
@@ -212,8 +276,7 @@ class NotesViewModel extends BaseViewModel {
     SheetResponse response = await _bottomSheetService.showCustomSheet(
       variant: BottomSheetType.floating2,
       title: 'Where do you want to open the file?',
-      description:
-          "",
+      description: "",
       mainButtonTitle: 'Open In Browser',
       secondaryButtonTitle: 'Open In App',
     );
@@ -283,9 +346,9 @@ class NotesViewModel extends BaseViewModel {
 
   void incrementViewForAd() async {
     User user = await _authenticationService.getUser();
-    if (!(_admobService.adDue && !user.isPremiumUser??false ||
-        _admobService.shouldAdBeShown()))
-    this.admobService.incrementNumberOfTimeNotesOpened();
+    if (!(_admobService.adDue && !user.isPremiumUser ??
+        false || _admobService.shouldAdBeShown()))
+      this.admobService.incrementNumberOfTimeNotesOpened();
     this.admobService.shouldAdBeShown();
   }
 
@@ -381,7 +444,7 @@ class NotesViewModel extends BaseViewModel {
         refresh: refresh,
         onDownloadCallback: handleDownloadPurchase,
       ),
-      onTap: () async{
+      onTap: () async {
         await incrementViewForAd();
         openDoc(note);
       },
@@ -394,31 +457,38 @@ class NotesViewModel extends BaseViewModel {
   }
 
   void handleDownloadPurchase({Note note}) async {
-    SheetResponse response = await _bottomSheetService.showCustomSheet(variant:BottomSheetType.filledStacks,title: "⬇",description: "Sure you want to download ${note.title} ?",mainButtonTitle: "YES",secondaryButtonTitle: "NO",customData: {"download":true});
+    SheetResponse response = await _bottomSheetService.showCustomSheet(
+        variant: BottomSheetType.filledStacks,
+        title: "⬇",
+        description: "Sure you want to download ${note.title} ?",
+        mainButtonTitle: "YES",
+        secondaryButtonTitle: "NO",
+        customData: {"download": true});
     print(response?.confirmed);
-    if(response == null || !response.confirmed)return;
-    await _googleDriveService.downloadPuchasedPdf
-    (
-      note:note,
+    if (response == null || !response.confirmed) return;
+    await _googleDriveService.downloadPuchasedPdf(
+      note: note,
       startDownload: () {
         setLoading(true);
       },
-      onDownloadedCallback: (path,fileName) async {
+      onDownloadedCallback: (path, fileName) async {
         setLoading(false);
-        await _notificationService.dispatchLocalNotification(NotificationService.download_purchase_notify, {
-            "title":"Downloaded " + fileName,
-            "body" : "PDF File has been downloaded in the downloads folder. Thank you for using the OU Notes app.",
-            "payload": {"path" : path,"id" : note.id},
-          }
-        );
+        await _notificationService.dispatchLocalNotification(
+            NotificationService.download_purchase_notify, {
+          "title": "Downloaded " + fileName,
+          "body":
+              "PDF File has been downloaded in the downloads folder. Thank you for using the OU Notes app.",
+          "payload": {"path": path, "id": note.id},
+        });
         User user = await _authenticationService.getUser();
         user.addDownload("${note.subjectId}_${note.id}");
-        _navigationService.navigateTo(Routes.thankYouView,arguments: ThankYouViewArguments(filePath: path));
+        _navigationService.navigateTo(Routes.thankYouView,
+            arguments: ThankYouViewArguments(filePath: path));
       },
     );
 
     // -- Legacy Code used for premium in-app  feature--
-    // 
+    //
     // ProductDetails prod = _googleInAppPaymentService
     //     .getProduct(GoogleInAppPaymentService.pdfProductID);
     // //Show download floating sheet

@@ -10,7 +10,9 @@ import 'package:FSOUNotes/ui/widgets/smart_widgets/subjects_dialog/subjects_dial
 import 'package:FSOUNotes/ui/widgets/smart_widgets/user_subject_list/user_subject_list_view.dart';
 import 'package:feature_discovery/feature_discovery.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:logger/logger.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:pimp_my_button/pimp_my_button.dart';
 import 'package:rate_my_app/rate_my_app.dart';
 import 'package:stacked/stacked.dart';
@@ -40,56 +42,111 @@ class HomeView extends StatelessWidget {
           builder: (context) => Scaffold(
             drawer: DrawerView(),
             backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-            appBar: AppBar(
-              leading: Builder(builder: (BuildContext context) {
-                return DescribedFeatureOverlay(
-                  featureId: OnboardingService
-                      .drawer_hamburger_icon_to_access_other_features, // Unique id that identifies this overlay.
-                  tapTarget: const Icon(Icons
-                      .menu), // The widget that will be displayed as the tap target.
-                  title: Text('Drawer'),
-                  description: Text('Find cool new features in the drawer'),
-                  backgroundColor: Theme.of(context).primaryColor,
-                  targetColor: Colors.white,
-                  textColor: Colors.white,
-                  onComplete: () {
-                    Scaffold.of(context).openDrawer();
-                    return Future.value(true);
-                  },
-                  child: IconButton(
-                    icon: Icon(Icons.menu),
-                    onPressed: () => Scaffold.of(context).openDrawer(),
+            appBar: model.isEditPressed
+                ? AppBar(
+                    leading: IconButton(
+                      icon: Icon(
+                        Icons.arrow_back,
+                        color: Colors.white,
+                      ),
+                      onPressed: () {
+                        model.setIsEditPressed = false;
+                        model.resetUserSelectedSubjects();
+                      },
+                    ),
+                    title: ValueListenableBuilder(
+                      valueListenable: model.userSelectedSubjects,
+                      builder: (context, userSelectedSubjects, child) {
+                        return Text(
+                          "${userSelectedSubjects.length} Selected",
+                          style: theme.appBarTheme.textTheme.headline6,
+                        );
+                      },
+                    ),
+                    backgroundColor: theme.appBarTheme.color,
+                    actions: [
+                      IconButton(
+                        icon: Icon(
+                          Icons.delete,
+                          color: Colors.white,
+                        ),
+                        onPressed: () {
+                          print('delete pressed');
+                          Helper.showDeleteConfirmDialog(
+                            context: context,
+                            onDeletePressed: () {
+                              Navigator.pop(context);
+                              model.deleteSelectedSubjects();
+                            },
+                            msg:
+                                "Are you sure you want to delete these subjects?",
+                          );
+                        },
+                      ),
+                    ],
+                  )
+                : AppBar(
+                    leading: Builder(builder: (BuildContext context) {
+                      return DescribedFeatureOverlay(
+                        featureId: OnboardingService
+                            .drawer_hamburger_icon_to_access_other_features, // Unique id that identifies this overlay.
+                        tapTarget: const Icon(Icons
+                            .menu), // The widget that will be displayed as the tap target.
+                        title: Text('Drawer'),
+                        description:
+                            Text('Find cool new features in the drawer'),
+                        backgroundColor: Theme.of(context).primaryColor,
+                        targetColor: Colors.white,
+                        textColor: Colors.white,
+                        onComplete: () {
+                          Scaffold.of(context).openDrawer();
+                          return Future.value(true);
+                        },
+                        child: IconButton(
+                          icon: Icon(Icons.menu),
+                          onPressed: () => Scaffold.of(context).openDrawer(),
+                        ),
+                      );
+                    }),
+                    iconTheme: IconThemeData(
+                      color: Colors.white, //change your color here
+                    ),
+                    title: Text(
+                      'My Subjects',
+                      style: theme.appBarTheme.textTheme.headline6,
+                    ),
+                    backgroundColor: theme.appBarTheme.color,
+                    actions: <Widget>[
+                      IconButton(
+                        icon: Icon(
+                          MdiIcons.pencil,
+                          color: Colors.white,
+                        ),
+                        onPressed: () {
+                          model.setIsEditPressed = true;
+                        },
+                      ),
+                      IconButton(
+                        icon: Icon(
+                          Icons.search,
+                          color: Colors.white,
+                        ),
+                        onPressed: () {
+                          showSearch(
+                              context: context,
+                              delegate: SearchView(path: Path.Appbar));
+                        },
+                      ),
+                    ],
                   ),
-                );
-              }),
-              iconTheme: IconThemeData(
-                color: Colors.white, //change your color here
-              ),
-              title: Text(
-                'My Subjects',
-                style: theme.appBarTheme.textTheme.headline6,
-              ),
-              backgroundColor: theme.appBarTheme.color,
-              actions: <Widget>[
-                IconButton(
-                  icon: Icon(
-                    Icons.search,
-                    color: Colors.white,
-                  ),
-                  onPressed: () {
-                    showSearch(
-                        context: context,
-                        delegate: SearchView(path: Path.Appbar));
-                  },
-                ),
-              ],
-            ),
             body: ValueListenableBuilder(
               valueListenable: model.userSubjects,
               builder: (context, userSubjects, child) {
                 return model.userSubjects.value.length == 0
                     ? NoSubjectsOverlay()
-                    : UserSubjectListView();
+                    : UserSubjectListView(
+                        isEditPressed: model.isEditPressed,
+                      );
               },
             ),
             floatingActionButton: Padding(
@@ -133,6 +190,7 @@ class HomeView extends StatelessWidget {
       viewModelBuilder: () => HomeViewModel(),
     );
   }
+
   // FirestoreService _firestore = locator<FirestoreService>();
   // print("start");
   // List<int> ids = [];

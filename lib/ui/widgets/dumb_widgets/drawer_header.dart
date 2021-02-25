@@ -41,7 +41,7 @@ class DrawerHeaderView extends StatelessWidget {
                         style: Theme.of(context)
                             .textTheme
                             .headline6
-                            .copyWith(fontSize: 25),
+                            .copyWith(fontSize: 25,color: Colors.white,),
                       ),
                       SizedBox(
                         width: 10,

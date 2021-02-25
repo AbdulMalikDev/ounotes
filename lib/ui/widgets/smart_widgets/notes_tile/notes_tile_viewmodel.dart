@@ -52,10 +52,6 @@ class NotesTileViewModel extends BaseViewModel {
 
   Map<String, int> get numberOfVotes => _voteService.numberOfVotes;
 
-  downloadNote() async {
-    
-  }
-
   handleVotes(String vote, String votedon, Note note) {
     //if the user has pressed on same vote again then make the vote to none and update it in db
     if (vote == votedon) {

@@ -106,7 +106,7 @@ class _DrawerViewState extends State<DrawerView> {
                                       isDarkModeEnabled:
                                           AppStateNotifier.isDarkModeOn,
                                       onStateChanged: (val) {
-                                        model.updateAppTheme();
+                                        model.updateAppTheme(val);
                                       },
                                     ),
                                   ),
@@ -121,19 +121,25 @@ class _DrawerViewState extends State<DrawerView> {
                               subtitle1,
                               model.navigateToUserUploadScreen,
                               Document.Drawer),
-                          if(!(model.user?.isPremiumUser ?? false))
-                          ListTile(
-                              leading: SizedBox(
+                          if (!(model.user?.isPremiumUser ?? false))
+                            ListTile(
+                                leading: SizedBox(
                                   height: 30,
                                   width: 40,
                                   child: ClipRRect(
-                                      child: Image.asset(
-                                          "assets/images/donate-icon.png"))),
-                              title: Text(
-                                "Support Us ",
-                                style: subtitle1,
-                              ),
-                              onTap: model.navigateToDonateScreen),
+                                    child: Image.asset(
+                                      "assets/images/donate-icon.png",
+                                      color: AppStateNotifier.isDarkModeOn
+                                          ? Colors.white
+                                          : Colors.black,
+                                    ),
+                                  ),
+                                ),
+                                title: Text(
+                                  "Support Us ",
+                                  style: subtitle1,
+                                ),
+                                onTap: model.navigateToDonateScreen),
                           ListTile(
                               key: intro.keys[1],
                               leading: Icon(
@@ -271,7 +277,6 @@ class _DrawerViewState extends State<DrawerView> {
                           ),
                           NavItem(Icons.import_contacts, "About Us", subtitle1,
                               model.navigateToAboutUsScreen, Document.None),
-
                           ListTile(
                             leading: Icon(
                               Icons.logout,
@@ -285,11 +290,11 @@ class _DrawerViewState extends State<DrawerView> {
                               model.handleSignOut(context);
                             },
                           ),
+                          SizedBox(
+                            height: 50,
+                          ),
                         ],
                       ),
-                    ),
-                    SizedBox(
-                      height: 50,
                     ),
                   ],
                 ),

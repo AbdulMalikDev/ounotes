@@ -14,7 +14,9 @@ class UserSubjectListViewModel extends BaseViewModel {
   SubjectsService _subjectsService = locator<SubjectsService>();
   ValueNotifier<List<Subject>> get userSubjects =>
       _subjectsService.userSubjects;
- 
+  ValueNotifier<List<Subject>> get userSelectedSubjects =>
+      _subjectsService.selectedSubjects;
+
   void onTap(subjectName) {
     _navigationService.navigateTo(Routes.allDocumentsViewRoute,
         arguments: AllDocumentsViewArguments(subjectName: subjectName));
@@ -28,6 +30,12 @@ class UserSubjectListViewModel extends BaseViewModel {
         await _subjectsService.removeUserSubjectAtIntex(oldIndex);
     await _subjectsService.insertUserSubject(newIndex, sub);
   }
+
+  updateUserSelectedSubjects(Subject subject) {
+    _subjectsService.updateSelectedSubject(subject);
+  }
+
+  
 
   void removeSubject(Subject subject) {
     log.i("Subject added to User Subject List from Dialog");

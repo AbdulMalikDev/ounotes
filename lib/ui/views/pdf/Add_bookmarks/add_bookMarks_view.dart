@@ -148,7 +148,6 @@ class _BookMarkBottomSheetState extends State<BookMarkBottomSheet> {
                                   onChanged: (dynamic newValue) {
                                     model.setSfValues = newValue;
                                   },
-                                  
                                 ),
                                 SizedBox(height: 50),
                                 Container(
@@ -191,6 +190,7 @@ class _BookMarkBottomSheetState extends State<BookMarkBottomSheet> {
                                       ),
                                       onPressed: () {
                                         model.setIsNextPressed = false;
+                                        model.setUnitsToService();
                                         model.saveDataLocally();
                                       },
                                     ),
@@ -222,7 +222,8 @@ class _BookMarkBottomSheetState extends State<BookMarkBottomSheet> {
                                             horizontal: 15, vertical: 10),
                                         decoration: BoxDecoration(),
                                         child: Text(
-                                          "You can close this and look for correct page No. for the unit and open it again...",
+                                          "You can close this and look for correct page No. " +
+                                              "for the unit and open it again...",
                                           style: Theme.of(context)
                                               .textTheme
                                               .subtitle1
@@ -371,7 +372,12 @@ class _BookMarkBottomSheetState extends State<BookMarkBottomSheet> {
                                           log.e(bookMarks);
                                           model.note.bookmarks = bookMarks;
                                           model.setNoteToService();
-                                          Navigator.popUntil(context, (route) => route.settings.name == Routes.uploadViewRoute,);
+                                          Navigator.popUntil(
+                                            context,
+                                            (route) =>
+                                                route.settings.name ==
+                                                Routes.uploadViewRoute,
+                                          );
                                         },
                                       ),
                                     ),
@@ -416,8 +422,9 @@ Widget bookMarkEntry(BuildContext context, TextEditingController controller1,
             textInputType: TextInputType.number,
             hintText: "Starting Page No.",
             validator: (input) {
-              if(input.isEmpty) return "Please enter Page No.";
-              if(int.tryParse(input)==null) return "Please input valid number";
+              if (input.isEmpty) return "Please enter Page No.";
+              if (int.tryParse(input) == null)
+                return "Please input valid number";
             },
           ),
         ),

@@ -63,7 +63,14 @@ class _DownLoadViewState extends State<DownLoadView> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Container(
-                        decoration: Constants.mdecoration,
+                        decoration: AppStateNotifier.isDarkModeOn
+                            ? Constants.mdecoration.copyWith(
+                                color: Theme.of(context).colorScheme.background,
+                                boxShadow: [],
+                              )
+                            : Constants.mdecoration.copyWith(
+                                color: Theme.of(context).colorScheme.background,
+                              ),
                         padding: const EdgeInsets.all(10),
                         margin: const EdgeInsets.all(10),
                         child: Column(
@@ -86,7 +93,7 @@ class _DownLoadViewState extends State<DownLoadView> {
                               decoration: BoxDecoration(),
                               child: RichText(
                                 text: TextSpan(
-                                  style: Theme.of(context).textTheme.body1,
+                                  style: Theme.of(context).textTheme.bodyText1,
                                   children: [
                                     TextSpan(
                                         text:
@@ -118,11 +125,10 @@ class _DownLoadViewState extends State<DownLoadView> {
                         shrinkWrap: true,
                         itemCount: donwloadsBox.length + 1,
                         itemBuilder: (context, index) {
-                          bool isLastElem = index == donwloadsBox.length; 
-                          final download = 
-                          isLastElem
-                          ? null
-                          :donwloadsBox.getAt(index) as Download;
+                          bool isLastElem = index == donwloadsBox.length;
+                          final download = isLastElem
+                              ? null
+                              : donwloadsBox.getAt(index) as Download;
                           return isLastElem
                               ? SizedBox(height: 100)
                               : GestureDetector(
