@@ -46,8 +46,8 @@ class _NotesViewState extends State<NotesView>
                   borderRadius: BorderRadius.circular(30),
                 ),
                 padding: EdgeInsets.all(10),
-                height: App(context).appHeight(0.15),
-                width: App(context).appWidth(0.85),
+                height: App(context).appHeight(0.17),
+                width: App(context).appWidth(0.87),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -109,7 +109,10 @@ class _NotesViewState extends State<NotesView>
                                 .subtitle1
                                 .copyWith(fontSize: 12),
                           ),
-                        )
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
                       ],
                     ),
                   ],

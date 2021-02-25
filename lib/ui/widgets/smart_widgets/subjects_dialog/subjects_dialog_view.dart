@@ -72,6 +72,10 @@ class _SubjectsDialogViewState extends State<SubjectsDialogView> {
                           child: TextField(
                             controller: _textEditingController,
                             decoration: InputDecoration(
+                              prefixIcon: Icon(
+                                Icons.search,
+                                color: Theme.of(context).iconTheme.color,
+                              ),
                               fillColor:
                                   Theme.of(context).colorScheme.background,
                               filled: true,
@@ -96,10 +100,6 @@ class _SubjectsDialogViewState extends State<SubjectsDialogView> {
                                 borderSide: BorderSide(
                                   color: Colors.transparent,
                                 ),
-                              ),
-                              icon: Icon(
-                                Icons.search,
-                                color: Theme.of(context).iconTheme.color,
                               ),
                             ),
                             style: Theme.of(context).textTheme.headline5,

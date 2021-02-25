@@ -54,7 +54,9 @@ class SimilarSubjectTile extends StatelessWidget {
             height: 1.0,
           ),
           Container(
-            decoration: Constants.mdecoration,
+            decoration: Constants.mdecoration.copyWith(
+              color: Theme.of(context).scaffoldBackgroundColor,
+            ),
             padding: const EdgeInsets.all(10),
             margin: const EdgeInsets.symmetric(
               horizontal: 16.0,

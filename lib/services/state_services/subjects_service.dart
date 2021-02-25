@@ -34,12 +34,21 @@ class SubjectsService with ChangeNotifier {
   ValueNotifier<List<Subject>> _allSubjects =
       new ValueNotifier(new List<Subject>());
 
+  ValueNotifier<List<Subject>> _selectedSubjects =
+      new ValueNotifier(new List<Subject>());
+
   void setUserSubjects(users) {
     _userSubjects = users;
   }
 
+  void resetUserSelectedSubjects() {
+    _selectedSubjects.value = [];
+    _selectedSubjects.notifyListeners();
+  }
+
   ValueNotifier<List<Subject>> get userSubjects => _userSubjects;
   ValueNotifier<List<Subject>> get allSubjects => _allSubjects;
+  ValueNotifier<List<Subject>> get selectedSubjects => _selectedSubjects;
 
   Future<dynamic> addUserSubject(Subject subject) async {
     if (_userSubjects.value.firstWhere(
@@ -62,7 +71,7 @@ class SubjectsService with ChangeNotifier {
     return null;
   }
 
-  removeUserSubject(Subject subject) async {
+  removeUserSubject(Subject subject, {saveChanges = true}) async {
     List<Subject> subs = _userSubjects.value;
     subs.remove(subject);
     _userSubjects.value = subs;
@@ -71,6 +80,41 @@ class SubjectsService with ChangeNotifier {
     _allSubjects.value = subsr;
     _userSubjects.notifyListeners();
     _allSubjects.notifyListeners();
+    if (saveChanges) {
+      await _saveStateToLocal();
+    }
+  }
+
+  Future<dynamic> updateSelectedSubject(Subject subject) async {
+    if (_selectedSubjects.value.firstWhere(
+            (element) =>
+                element.name.toLowerCase() == subject.name.toLowerCase(),
+            orElse: () => null) !=
+        null) {
+      print('remove selected subject');
+      _selectedSubjects.value.removeWhere(
+        (sub) => sub.name.toLowerCase() == subject.name.toLowerCase(),
+      );
+      _selectedSubjects.notifyListeners();
+      return;
+    }
+    List<Subject> subs = _selectedSubjects.value;
+    subs.add(subject);
+    _selectedSubjects.value = subs;
+    _selectedSubjects.notifyListeners();
+    return null;
+  }
+
+  removeSelectedUserSubjects() async {
+    if (_selectedSubjects.value.length == 0) {
+      return;
+    }
+    for (int i = 0; i < _selectedSubjects.value.length; i++) {
+      Subject sub = _selectedSubjects.value[i];
+      removeUserSubject(sub, saveChanges: false);
+    }
+    _selectedSubjects.value = [];
+    _selectedSubjects.notifyListeners();
     await _saveStateToLocal();
   }
 
@@ -228,8 +272,8 @@ class SubjectsService with ChangeNotifier {
     queryWords.toSet().toList();
     //? Remove words with less than 3 letters like "OF" , "I" , "AND" etc. and other common words
     queryWords.removeWhere((queryWord) {
-      if(queryWord.length <= 3) return true;
-      if(["ENGINEERING"].contains(queryWord)) return true;
+      if (queryWord.length <= 3) return true;
+      if (["ENGINEERING"].contains(queryWord)) return true;
       return false;
     });
     return queryWords;
@@ -238,7 +282,7 @@ class SubjectsService with ChangeNotifier {
   addSubject(Subject subject) async {
     GoogleDriveService _googleDriveService = locator<GoogleDriveService>();
     subject = await _googleDriveService.createSubjectFolders(subject);
-    if(subject==null)return "ERROR ADDING SUBJECT";
+    if (subject == null) return "ERROR ADDING SUBJECT";
     await _firestoreService.addSubject(subject);
     return "SUCCESS ADDING SUBJECT";
   }
@@ -256,19 +300,19 @@ class SubjectsService with ChangeNotifier {
     log.e("Result : " + result.toString());
   }
 
-  addSemesterToSubject(Subject subject, String branch, String semester){
-    if(subject==null || branch==null || semester==null)return;
-    subject.branchToSem.update(branch, (value) => value + [semester], ifAbsent: ()=>[semester]);
+  addSemesterToSubject(Subject subject, String branch, String semester) {
+    if (subject == null || branch == null || semester == null) return;
+    subject.branchToSem.update(branch, (value) => value + [semester],
+        ifAbsent: () => [semester]);
   }
 
-  removeSemesterFromSubject(Subject subject, String branch, String semester){
-    if(subject==null || branch==null || semester==null)return;
+  removeSemesterFromSubject(Subject subject, String branch, String semester) {
+    if (subject == null || branch == null || semester == null) return;
     List<String> semesters = subject.branchToSem[branch];
-    if(semesters.contains(semester)){
+    if (semesters.contains(semester)) {
       semesters.remove(semester);
     }
     subject.branchToSem[branch] = semesters;
     return subject;
   }
-
 }

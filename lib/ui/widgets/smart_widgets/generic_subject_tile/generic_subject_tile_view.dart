@@ -1,3 +1,5 @@
+import 'package:FSOUNotes/AppTheme/AppStateNotifier.dart';
+import 'package:FSOUNotes/AppTheme/AppTheme.dart';
 import 'package:FSOUNotes/models/subject.dart';
 import 'package:FSOUNotes/ui/shared/app_config.dart';
 import 'package:FSOUNotes/ui/widgets/smart_widgets/generic_subject_tile/generic_subject_tile_viewmodel.dart';
@@ -28,7 +30,9 @@ class GenericSubjectTileView extends StatelessWidget {
                     margin: EdgeInsets.symmetric(horizontal: 14, vertical: 10),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(16),
-                      color: theme.colorScheme.background,
+                      color: AppStateNotifier.isDarkModeOn
+                          ? Colors.grey[700]
+                          : theme.colorScheme.background,
                     ),
                     child: Center(
                       child: Container(

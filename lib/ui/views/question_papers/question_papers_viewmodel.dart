@@ -1,6 +1,7 @@
 import 'package:FSOUNotes/app/locator.dart';
 import 'package:FSOUNotes/app/logger.dart';
 import 'package:FSOUNotes/app/router.gr.dart';
+import 'package:FSOUNotes/misc/course_info.dart';
 import 'package:FSOUNotes/misc/helper.dart';
 import 'package:FSOUNotes/models/question_paper.dart';
 import 'package:FSOUNotes/services/funtional_services/firestore_service.dart';
@@ -22,18 +23,32 @@ class QuestionPapersViewModel extends BaseViewModel {
   SharedPreferencesService _sharedPreferencesService =
       locator<SharedPreferencesService>();
   BottomSheetService _bottomSheetService = locator<BottomSheetService>();
-  List<Widget> _questionPaperTiles=[];
+  List<Widget> _questionPaperTiles = [];
 
   List<Widget> get questionPaperTiles => _questionPaperTiles;
 
   List<QuestionPaper> get questionPapers => _questionPapers;
+  List<DropdownMenuItem<String>> _dropDownMenuItemsofquestionSortMethods;
+  String _selectedSortingMethod;
+  String get selectedSortingMethod => _selectedSortingMethod;
 
-  Future fetchQuestionPapers(String subjectName) async {
+  List<DropdownMenuItem<String>> get dropdownofsortingmethods =>
+      _dropDownMenuItemsofquestionSortMethods;
+
+  List<DropdownMenuItem<String>> buildAndGetDropDownMenuItems(List items) {
+    List<DropdownMenuItem<String>> i = List();
+    items.forEach((item) {
+      i.add(DropdownMenuItem(value: item, child: Text(item)));
+    });
+    return i;
+  }
+
+  Future fetchQuestionPapers(String subjectName, {sortBy = "Year ASC"}) async {
     setBusy(true);
-    var questionPapers =
+    List<QuestionPaper> questionPapers =
         await _firestoreService.loadQuestionPapersFromFirebase(subjectName);
     if (questionPapers is String) {
-     await Fluttertoast.showToast(
+      await Fluttertoast.showToast(
           msg:
               "You are facing an error in loading the QuestionPapers. If you are facing this error more than once, please let us know by using the 'feedback' option in the app drawer.");
       setBusy(false);
@@ -48,8 +63,44 @@ class QuestionPapersViewModel extends BaseViewModel {
       }
       _questionPaperTiles.add(_addInkWellWidget(questionPaper));
     }
+
     notifyListeners();
     setBusy(false);
+  }
+
+  updateQuestionPaperList({String sortBy}) {
+    setBusy(true);
+    if (sortBy == CourseInfo.questionSortMethods[0]) {
+      questionPapers.sort((a, b) => a.year?.compareTo(b.year));
+    } else if (sortBy == CourseInfo.questionSortMethods[1]) {
+      questionPapers.sort((b, a) => a.year?.compareTo(b.year));
+    } else if (sortBy == CourseInfo.questionSortMethods[2]) {
+      questionPapers.sort((a, b) => a.branch?.compareTo(b.branch));
+    } else if (sortBy == CourseInfo.questionSortMethods[3]) {
+      questionPapers.sort((b, a) => a.branch?.compareTo(b.branch));
+    }
+    _questionPaperTiles = [];
+    for (int i = 0; i < questionPapers.length; i++) {
+      QuestionPaper questionPaper = questionPapers[i];
+      if (questionPaper.GDriveLink == null) {
+        continue;
+      }
+      _questionPaperTiles.add(_addInkWellWidget(questionPaper));
+    }
+    setBusy(false);
+  }
+
+  init() {
+    _dropDownMenuItemsofquestionSortMethods =
+        buildAndGetDropDownMenuItems(CourseInfo.questionSortMethods);
+    _selectedSortingMethod = _dropDownMenuItemsofquestionSortMethods[1].value;
+    notifyListeners();
+  }
+
+  void changedDropDownItemOfQuestionSortType(String selectedSortType) {
+    _selectedSortingMethod = selectedSortType;
+    updateQuestionPaperList(sortBy: selectedSortingMethod);
+    notifyListeners();
   }
 
   void onTap(QuestionPaper questionPaper) async {
@@ -69,8 +120,7 @@ class QuestionPapersViewModel extends BaseViewModel {
     SheetResponse response = await _bottomSheetService.showCustomSheet(
       variant: BottomSheetType.floating2,
       title: 'Where do you want to open the file?',
-      description:
-          "",
+      description: "",
       mainButtonTitle: 'Open In Browser',
       secondaryButtonTitle: 'Open In App',
     );

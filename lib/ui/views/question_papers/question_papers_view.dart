@@ -1,5 +1,6 @@
 import 'package:FSOUNotes/ui/shared/app_config.dart';
 import 'package:FSOUNotes/ui/views/question_papers/question_papers_viewmodel.dart';
+import 'package:FSOUNotes/ui/widgets/dumb_widgets/drop_down_button_view.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
@@ -19,7 +20,10 @@ class _QuestionPapersViewState extends State<QuestionPapersView>
   Widget build(BuildContext context) {
     super.build(context);
     return ViewModelBuilder<QuestionPapersViewModel>.reactive(
-      onModelReady: (model) => model.fetchQuestionPapers(widget.subjectName),
+      onModelReady: (model) {
+        model.fetchQuestionPapers(widget.subjectName);
+        model.init();
+      },
       builder: (context, model, child) => SingleChildScrollView(
         child: Container(
           alignment: Alignment.center,
@@ -71,12 +75,42 @@ class _QuestionPapersViewState extends State<QuestionPapersView>
                       ),
                     )
                   : Column(
-                      children: model.questionPaperTiles +
-                          [
-                            SizedBox(
-                              height: 50,
-                            )
-                          ],
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.only(right: 10),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Spacer(),
+                              // Text(
+                              //   "Sort by :",
+                              //   style: Theme.of(context)
+                              //       .textTheme
+                              //       .headline5
+                              //       .copyWith(
+                              //           fontSize: 18,
+                              //           fontWeight: FontWeight.w500),
+                              // ),
+                              Flexible(
+                                child: DropDownButtonView(
+                                  selectedItem: model.selectedSortingMethod,
+                                  dropDownMenuItems:
+                                      model.dropdownofsortingmethods,
+                                  changedDropDownItem: model
+                                      .changedDropDownItemOfQuestionSortType,
+                                  dropDownColor: Theme.of(context).primaryColor,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Column(
+                          children: model.questionPaperTiles,
+                        ),
+                        SizedBox(
+                          height: 50,
+                        ),
+                      ],
                     ),
         ),
       ),

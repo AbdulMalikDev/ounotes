@@ -17,6 +17,7 @@ import 'package:feature_discovery/feature_discovery.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:open_appstore/open_appstore.dart';
 import 'package:rate_my_app/rate_my_app.dart';
 import 'package:stacked/stacked.dart';
@@ -35,12 +36,35 @@ class HomeViewModel extends BaseViewModel {
   BottomSheetService _bottomSheetService = locator<BottomSheetService>();
   ValueNotifier<List<Subject>> get userSubjects =>
       _subjectsService.userSubjects;
+  ValueNotifier<List<Subject>> get userSelectedSubjects =>
+      _subjectsService.selectedSubjects;
   ValueNotifier<List<Subject>> get allSubjects => _subjectsService.allSubjects;
   AppInfoService _appInfoService = locator<AppInfoService>();
   SharedPreferencesService _sharedPreferencesService =
       locator<SharedPreferencesService>();
   AuthenticationService _authenticationService =
       locator<AuthenticationService>();
+
+  bool _isEditPressed = false;
+
+  bool get isEditPressed => _isEditPressed;
+
+  set setIsEditPressed(bool isDeletePressed) {
+    _isEditPressed = isDeletePressed;
+    notifyListeners();
+  }
+
+  resetUserSelectedSubjects() {
+    _subjectsService.resetUserSelectedSubjects();
+  }
+
+  deleteSelectedSubjects() {
+    if (_subjectsService.selectedSubjects.value.length == 0) {
+      Fluttertoast.showToast(msg: "No subject selected!");
+      return;
+    }
+    _subjectsService.removeSelectedUserSubjects();
+  }
 
   User user;
   PackageInfo packageInfo;
@@ -266,12 +290,9 @@ class HomeViewModel extends BaseViewModel {
     return notes;
   }
 
-  void updateDialog
-  (
-    bool shouldShowUpdateDialog, 
-    Map<String, dynamic> versionDetails
-  ) {
-    if (versionDetails == null)return;
+  void updateDialog(
+      bool shouldShowUpdateDialog, Map<String, dynamic> versionDetails) {
+    if (versionDetails == null) return;
     SchedulerBinding.instance.addPostFrameCallback((timeStamp) async {
       if (shouldShowUpdateDialog) {
         String updatedVersion = versionDetails["updatedVersion"];

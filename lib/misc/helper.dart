@@ -47,6 +47,7 @@ class Helper {
 
   //Function to show custom dialog which is used to confim user before deleting any item
   static showDeleteConfirmDialog({
+    String msg = "Are you sure you want to delete this subject?",
     BuildContext context,
     Function onDeletePressed,
   }) {
@@ -85,13 +86,18 @@ class Helper {
               Text(
                 'Confirm',
                 style: Theme.of(context).textTheme.headline6,
+                textAlign: TextAlign.center,
               ),
               SizedBox(
                 height: 10,
               ),
-              Text('Are you sure you want to delete this subject?'),
+              Text(
+                msg,
+                style: Theme.of(context).textTheme.subtitle1,
+                textAlign: TextAlign.center,
+              ),
               SizedBox(
-                height: 10,
+                height: 15,
               ),
               Row(
                 children: [

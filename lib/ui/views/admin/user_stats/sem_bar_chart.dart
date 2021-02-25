@@ -1,7 +1,6 @@
-import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
-
 import 'user_stats_viewmodel.dart';
+import 'package:syncfusion_flutter_charts/charts.dart';
 
 class SemVerticalBarLabelChart extends StatelessWidget {
   final List<Sem> semesters;
@@ -10,25 +9,32 @@ class SemVerticalBarLabelChart extends StatelessWidget {
   SemVerticalBarLabelChart({this.animate, this.semesters});
   @override
   Widget build(BuildContext context) {
-    return new charts.BarChart(
-      _createSampleData(semesters),
-      animate: animate,
-      barRendererDecorator: new charts.BarLabelDecorator<String>(),
-      domainAxis: new charts.OrdinalAxisSpec(),
+    return Container(
+      child: SfCartesianChart(
+        primaryXAxis: CategoryAxis(),
+        tooltipBehavior: TooltipBehavior(
+          enable: true,
+          decimalPlaces: 0,
+          header: "Semester",
+        ),
+        series: <ChartSeries>[
+          ColumnSeries<Sem, String>(
+              dataSource: semesters,
+              // pointColorMapper: (College data, _) => data.color,
+              enableTooltip: true,
+              xValueMapper: (Sem data, _) =>
+                  data.sem.substring(0, 3) + data.sem[data.sem.length - 1],
+              yValueMapper: (Sem data, _) => data.noOfStudents,
+            
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(8),
+                topRight: Radius.circular(8),
+              ),
+              width: 0.8, // Width of the columns
+              spacing: 0.2 // Spacing between the columns
+              ),
+        ],
+      ),
     );
-  }
-
-  /// Create one series with sample hard coded data.
-  static List<charts.Series<Sem, String>> _createSampleData(
-      List<Sem> semesters) {
-    return [
-      new charts.Series<Sem, String>(
-          id: 'sem',
-          domainFn: (Sem sem, number) => 'sem ${number + 1}',
-          measureFn: (Sem sem, _) => sem.noOfStudents,
-          data: semesters,
-          // Set a label accessor to control the text of the bar label.
-          labelAccessorFn: (Sem sem, number) => '${sem.noOfStudents}')
-    ];
   }
 }

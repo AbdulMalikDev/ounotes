@@ -69,7 +69,13 @@ class BookMarkBottomSheetViewModel extends BaseViewModel {
     }
     print(_units);
     _sfValues = values;
+
     notifyListeners();
+  }
+
+  setUnitsToService() {
+    _note.units = _units;
+    setNoteToService();
   }
 
   Map<int, bool> get units => _units;

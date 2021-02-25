@@ -124,8 +124,7 @@ class DrawerViewModel extends BaseViewModel {
     );
   }
 
-  updateAppTheme() async {
-    bool boolVal = !AppStateNotifier.isDarkModeOn;
+  updateAppTheme(boolVal) async {
     _appStateNotifier.updateTheme(boolVal);
     SharedPreferences pref = await SharedPreferences.getInstance();
     pref.setBool('isdarkmodeon', boolVal);
