@@ -8,6 +8,9 @@ class AppTheme {
     accentColor: Color(0xffFFB800),
     brightness: Brightness.light,
     canvasColor: Colors.white,
+    textSelectionTheme: TextSelectionThemeData(
+      cursorColor: Colors.blue, //thereby
+    ),
     scaffoldBackgroundColor: Colors.white,
     appBarTheme: AppBarTheme(
       color: Color(0xff2A9D8F),
@@ -76,10 +79,13 @@ class AppTheme {
   );
 
   static final ThemeData darkTheme = ThemeData(
+    primaryColor: Color(0xff2A9D8F),
+    accentColor: Color(0xffFFB800),
     brightness: Brightness.dark,
     canvasColor: Colors.grey[800],
-    primaryColor: Colors.teal,
-    accentColor: Colors.amber,
+    textSelectionTheme: TextSelectionThemeData(
+      cursorColor: Colors.blue, //thereby
+    ),
     scaffoldBackgroundColor: Colors.grey[850],
     appBarTheme: AppBarTheme(
       color: Colors.grey[900],
