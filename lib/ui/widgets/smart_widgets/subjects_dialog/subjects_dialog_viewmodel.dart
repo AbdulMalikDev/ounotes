@@ -1,5 +1,6 @@
-import 'package:FSOUNotes/app/locator.dart';
-import 'package:FSOUNotes/app/logger.dart';
+import 'package:FSOUNotes/app/app.locator.dart';
+import 'package:FSOUNotes/app/app.logger.dart';
+import 'package:FSOUNotes/app/app.router.dart';
 import 'package:FSOUNotes/models/subject.dart';
 import 'package:FSOUNotes/models/user.dart';
 import 'package:flutter/material.dart';
@@ -33,26 +34,26 @@ class SubjectsDialogViewModel extends BaseViewModel {
   }
 
   List<Subject> alter(List<Subject> allSubjects) {
-    User user = _authenticationService.user;
-    String semester = user.semester;
-    String branch = user.branch;
+    // User user = _authenticationService.user;
+    // String semester = user.semester;
+    // String branch = user.branch;
     // log.e("user semester : $semester ${_authenticationService.user.semester}");
     // log.e("user branch : $branch");
 
-    List<Subject> filteredSubjects = [];
-    allSubjects.forEach((sub) {
-      if (sub?.branchToSem?.keys?.contains(branch) ?? false) {
-        if (sub.branchToSem[branch].contains(semester[semester.length - 1])) {
-          filteredSubjects.add(sub);
-        }
-      }
-    });
+    // List<Subject> filteredSubjects = [];
+    // allSubjects.forEach((sub) {
+    //   if (sub?.branchToSem?.keys?.contains(branch) ?? false) {
+    //     if (sub.branchToSem[branch].contains(semester[semester.length - 1])) {
+    //       filteredSubjects.add(sub);
+    //     }
+    //   }
+    // });
 
-    for (int i = 0; i < filteredSubjects.length; i++) {
-      allSubjects.remove(filteredSubjects[i]);
-      filteredSubjects[i].userSubject = true;
-      allSubjects.insert(i, filteredSubjects[i]);
-    }
-    return allSubjects;
+    // for (int i = 0; i < filteredSubjects.length; i++) {
+    //   allSubjects.remove(filteredSubjects[i]);
+    //   filteredSubjects[i].userSubject = true;
+    //   allSubjects.insert(i, filteredSubjects[i]);
+    // }
+    // return allSubjects;
   }
 }

@@ -1,6 +1,6 @@
-import 'package:FSOUNotes/app/locator.dart';
-import 'package:FSOUNotes/app/logger.dart';
-import 'package:FSOUNotes/app/router.gr.dart';
+import 'package:FSOUNotes/app/app.locator.dart';
+import 'package:FSOUNotes/app/app.logger.dart';
+import 'package:FSOUNotes/app/app.router.dart';
 import 'package:FSOUNotes/enums/constants.dart';
 import 'package:FSOUNotes/enums/enums.dart';
 import 'package:FSOUNotes/models/UploadLog.dart';
@@ -13,34 +13,35 @@ import 'package:stacked_services/stacked_services.dart';
 
 Logger log = getLogger("UploadLogViewModel");
 
-class UploadLogViewModel extends FutureViewModel{
- FirestoreService _firestoreService = locator<FirestoreService>();
- NavigationService _navigationService = locator<NavigationService>();
- DialogService _dialogService = locator<DialogService>();
- BottomSheetService _bottomSheetService = locator<BottomSheetService>();
+class UploadLogViewModel extends FutureViewModel {
+  FirestoreService _firestoreService = locator<FirestoreService>();
+  NavigationService _navigationService = locator<NavigationService>();
+  DialogService _dialogService = locator<DialogService>();
+  BottomSheetService _bottomSheetService = locator<BottomSheetService>();
 
   List<UploadLog> _logs;
 
   List<UploadLog> get logs => _logs;
 
   fetchUploadLogs() async {
-    _logs = await _firestoreService.loadUploadLogFromFirebase();
+    //_logs = await _firestoreService.loadUploadLogFromFirebase();
   }
 
   @override
   Future futureToRun() => fetchUploadLogs();
 
   navigateToUploadLogDetailView(UploadLog uploadLog) async {
-    _navigationService.navigateTo(Routes.uploadLogDetailViewRoute,arguments: UploadLogDetailViewArguments(logItem: uploadLog));
+    _navigationService.navigateTo(Routes.uploadLogDetailView,
+        arguments: UploadLogDetailViewArguments(logItem: uploadLog));
   }
 
   Future<String> getUploadStatus(UploadLog logItem) async {
     if (logItem.type != Constants.links) {
-      var document = await _firestoreService.getDocumentById(
-          logItem.subjectName,
-          logItem.id,
-          Constants.getDocFromConstant(logItem.type));
-      return document.GDriveLink == null ? "NOT UPLOADED" : "UPLOADED";
+      // var document = await _firestoreService.getDocumentById(
+      //     logItem.subjectName,
+      //     logItem.id,
+      //     Constants.getDocFromConstant(logItem.type));
+      // return document.GDriveLink == null ? "NOT UPLOADED" : "UPLOADED";
     }
     return "None";
   }
@@ -54,30 +55,32 @@ class UploadLogViewModel extends FutureViewModel{
   uploadDocument(UploadLog logItem) async {
     setBusy(true);
     try {
-
       GoogleDriveService _googleDriveService = locator<GoogleDriveService>();
-      dynamic doc = await _firestoreService.getDocumentById(logItem.subjectName,logItem.id,Constants.getDocFromConstant(logItem.type));
-      if(doc == null){await _dialogService.showDialog(title:"Oops",description: "Can't find this document");setBusy(false);return;}
-    
-      if (logItem.type == Constants.links){
-        if(doc.uploaded == true){await _dialogService.showDialog(title: "ERROR" , description: "ALREADY UPLOADED");setBusy(false);return;}
-        doc.uploaded = true;
-        await _firestoreService.updateDocument(doc, Document.Links);
-      }else{
+      // dynamic doc = await _firestoreService.getDocumentById(logItem.subjectName,logItem.id,Constants.getDocFromConstant(logItem.type));
+      // if(doc == null){await _dialogService.showDialog(title:"Oops",description: "Can't find this document");setBusy(false);return;}
 
-        if(doc.GDriveLink != null){await _dialogService.showDialog(title: "ERROR" , description: "ALREADY UPLOADED");setBusy(false);return;}
-        String result = await _googleDriveService.processFile(doc: doc, document:Constants.getDocFromConstant(logItem.type) , addToGdrive: true);
-        _dialogService.showDialog(title: "OUTPUT" , description: result);
-      }
-      deleteLogItem(logItem);
+      // if (logItem.type == Constants.links){
+      //   if(doc.uploaded == true){await _dialogService.showDialog(title: "ERROR" , description: "ALREADY UPLOADED");setBusy(false);return;}
+      //   doc.uploaded = true;
+      //   await _firestoreService.updateDocument(doc, Document.Links);
+      // }else{
 
-    }catch (e) {
-      _bottomSheetService.showBottomSheet(title: "OOPS",description: e.toString(),);
+      //   if(doc.GDriveLink != null){await _dialogService.showDialog(title: "ERROR" , description: "ALREADY UPLOADED");setBusy(false);return;}
+      //   String result = await _googleDriveService.processFile(doc: doc, document:Constants.getDocFromConstant(logItem.type) , addToGdrive: true);
+      //   _dialogService.showDialog(title: "OUTPUT" , description: result);
+      // }
+      // deleteLogItem(logItem);
+
+    } catch (e) {
+      _bottomSheetService.showBottomSheet(
+        title: "OOPS",
+        description: e.toString(),
+      );
     }
     List<String> docsToUploadIds;
     docsToUploadIds = OnboardingService.box.get("upload_docs") ?? [];
     docsToUploadIds?.remove(logItem.id);
-    OnboardingService.box.put("upload_docs",docsToUploadIds);
+    OnboardingService.box.put("upload_docs", docsToUploadIds);
     setBusy(false);
   }
 
@@ -90,7 +93,7 @@ class UploadLogViewModel extends FutureViewModel{
     //   confirmationTitle: "Apne baap ku mat sikha"
     // );
     // if(dialogResult.confirmed)
-    await _firestoreService.deleteUploadLog(report);
+    // await _firestoreService.deleteUploadLog(report);
   }
 
   uploadSelectedDocuments() async {
@@ -98,13 +101,13 @@ class UploadLogViewModel extends FutureViewModel{
     List<String> docsToUploadIds;
     docsToUploadIds = OnboardingService.box.get("upload_docs") ?? [];
 
-    for( String id in docsToUploadIds ){
+    for (String id in docsToUploadIds) {
       var log = _logs.where((log) => log.id == id)?.toList();
-      if(log == null || log.isEmpty)continue;
+      if (log == null || log.isEmpty) continue;
       uploadLogs.add(log[0]);
     }
 
-    for ( UploadLog log in (uploadLogs ?? []) ){
+    for (UploadLog log in (uploadLogs ?? [])) {
       await this.uploadDocument(log);
     }
   }

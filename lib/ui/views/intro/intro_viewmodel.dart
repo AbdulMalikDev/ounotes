@@ -1,6 +1,6 @@
-import 'package:FSOUNotes/app/locator.dart';
-import 'package:FSOUNotes/app/logger.dart';
-import 'package:FSOUNotes/app/router.gr.dart';
+import 'package:FSOUNotes/app/app.locator.dart';
+import 'package:FSOUNotes/app/app.logger.dart';
+import 'package:FSOUNotes/app/app.router.dart';
 import 'package:FSOUNotes/misc/course_info.dart';
 import 'package:FSOUNotes/services/funtional_services/authentication_service.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -84,7 +84,7 @@ class IntroViewModel extends BaseViewModel {
       notifyListeners();
       setBusy(false);
       if (result) {
-        _navigationService.replaceWith(Routes.splashViewRoute);
+        _navigationService.replaceWith(Routes.splashView);
       } else {
         Fluttertoast.showToast(msg: "An Error Occured,Please try again later");
       }

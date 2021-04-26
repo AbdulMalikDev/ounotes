@@ -1,10 +1,9 @@
 
-import 'package:FSOUNotes/app/logger.dart';
-import 'package:injectable/injectable.dart';
+import 'package:FSOUNotes/app/app.logger.dart';
 import 'package:logger/logger.dart';
 // import 'package:purchases_flutter/purchases_flutter.dart';
 Logger log = getLogger("InAppPaymentService");
-@lazySingleton
+
 class InAppPaymentService {
 
   // bool isPro = false;

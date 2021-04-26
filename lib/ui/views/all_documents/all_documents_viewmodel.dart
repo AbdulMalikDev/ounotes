@@ -1,5 +1,6 @@
-import 'package:FSOUNotes/app/locator.dart';
-import 'package:FSOUNotes/app/router.gr.dart';
+import 'package:FSOUNotes/app/app.locator.dart';
+import 'package:FSOUNotes/app/app.logger.dart';
+import 'package:FSOUNotes/app/app.router.dart';
 import 'package:FSOUNotes/services/funtional_services/sharedpref_service.dart';
 import 'package:connectivity_wrapper/connectivity_wrapper.dart';
 import 'package:flutter/material.dart';
@@ -42,7 +43,7 @@ class AllDocumentsViewModel extends BaseViewModel {
   }
 
   onUploadButtonPressed() {
-    _navigationService.navigateTo(Routes.uploadSelectionViewRoute,
+    _navigationService.navigateTo(Routes.uploadSelectionView,
         arguments: UploadSelectionViewArguments(subjectName: _subjectName));
   }
 

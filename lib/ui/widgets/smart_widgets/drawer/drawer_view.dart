@@ -208,13 +208,13 @@ class _DrawerViewState extends State<DrawerView> {
                               Wiredash.of(context).show();
                             },
                           ),
-                          if (model.isAdmin)
-                            NavItem(
-                                Icons.equalizer,
-                                "Admin Panel",
-                                subtitle1,
-                                model.navigateToAdminUploadScreen,
-                                Document.Drawer),
+                          // if (model.isAdmin)
+                          //   NavItem(
+                          //       Icons.equalizer,
+                          //       "Admin Panel",
+                          //       subtitle1,
+                          //       model.navigateToAdminUploadScreen,
+                          //       Document.Drawer),
                           Divider(color: Colors.grey.shade600),
                           Row(children: <Widget>[
                             SizedBox(width: 20),

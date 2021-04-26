@@ -1,6 +1,6 @@
-import 'package:FSOUNotes/app/locator.dart';
-import 'package:FSOUNotes/app/logger.dart';
-import 'package:FSOUNotes/app/router.gr.dart';
+import 'package:FSOUNotes/app/app.locator.dart';
+import 'package:FSOUNotes/app/app.logger.dart';
+import 'package:FSOUNotes/app/app.router.dart';
 import 'package:FSOUNotes/models/user.dart';
 import 'package:FSOUNotes/services/funtional_services/app_info_service.dart';
 import 'package:FSOUNotes/services/funtional_services/firestore_service.dart';
@@ -41,11 +41,11 @@ class SplashViewModel extends FutureViewModel {
       if(LoggedInUser.isPremiumUser ?? false)
       _checkPremiumPurchaseDate(LoggedInUser.id);
       await _subjectsService.loadSubjects();
-      if(isUserOnline)_navigationService.replaceWith(Routes.homeViewRoute,arguments:HomeViewArguments(shouldShowUpdateDialog: result["doesUserNeedUpdate"],versionDetails: result));
-      else _navigationService.replaceWith(Routes.homeViewRoute);
+      if(isUserOnline)_navigationService.replaceWith(Routes.homeView,arguments:HomeViewArguments(shouldShowUpdateDialog: result["doesUserNeedUpdate"],versionDetails: result));
+      else _navigationService.replaceWith(Routes.homeView);
     } else {
       log.e("user is null");
-      _navigationService.replaceWith(Routes.introViewRoute);
+      _navigationService.replaceWith(Routes.introView);
     }
   }
 
@@ -102,16 +102,16 @@ class SplashViewModel extends FutureViewModel {
   Future futureToRun() => handleStartUpLogic();
 
   void _checkPremiumPurchaseDate(id) async {
-    User user = await _firestoreService.getUserById(id);
-    DateTime expiryDate = user?.premiumPurchaseDate?.add(Duration(days: 365)) ?? DateTime.now().add(Duration(days:365)); 
-    if(expiryDate.isAfter(DateTime.now())){
-      user.setPremiumUser = false;
-    }
-    await _firestoreService.updateUserInFirebase(user,updateLocally: true);
-    await _notificationService.dispatchLocalNotification(NotificationService.premium_purchase_notify,{
-        "title":"Your Premium Package has expired",
-        "body" : "Enjoy OU Notes Ad-free and download unlimited offline Notes and save Data by becoming a pro member !",
-      }
-    );
+    // User user = await _firestoreService.getUserById(id);
+    // DateTime expiryDate = user?.premiumPurchaseDate?.add(Duration(days: 365)) ?? DateTime.now().add(Duration(days:365)); 
+    // if(expiryDate.isAfter(DateTime.now())){
+    //   user.setPremiumUser = false;
+    // }
+    // await _firestoreService.updateUserInFirebase(user,updateLocally: true);
+    // await _notificationService.dispatchLocalNotification(NotificationService.premium_purchase_notify,{
+    //     "title":"Your Premium Package has expired",
+    //     "body" : "Enjoy OU Notes Ad-free and download unlimited offline Notes and save Data by becoming a pro member !",
+    //   }
+    // );
   }
 }

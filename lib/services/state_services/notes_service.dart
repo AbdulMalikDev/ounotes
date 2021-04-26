@@ -1,7 +1,6 @@
 import 'package:FSOUNotes/models/notes.dart';
-import 'package:injectable/injectable.dart';
 
-@lazySingleton
+
 class NotesService {
   List<Note> _notes;
 

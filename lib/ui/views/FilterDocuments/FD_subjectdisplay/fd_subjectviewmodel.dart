@@ -1,5 +1,6 @@
-import 'package:FSOUNotes/app/locator.dart';
-import 'package:FSOUNotes/misc/course_info.dart';
+import 'package:FSOUNotes/app/app.locator.dart';
+import 'package:FSOUNotes/app/app.logger.dart';
+import 'package:FSOUNotes/app/app.router.dart';import 'package:FSOUNotes/misc/course_info.dart';
 import 'package:FSOUNotes/models/subject.dart';
 import 'package:FSOUNotes/services/state_services/subjects_service.dart';
 import 'package:stacked/stacked.dart';

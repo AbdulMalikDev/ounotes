@@ -1,6 +1,8 @@
 
 import 'dart:io';
-import 'package:FSOUNotes/app/logger.dart';
+import 'package:FSOUNotes/app/app.locator.dart';
+import 'package:FSOUNotes/app/app.logger.dart';
+import 'package:FSOUNotes/app/app.router.dart';
 import 'package:FSOUNotes/enums/bottom_sheet_type.dart';
 import 'package:FSOUNotes/enums/enums.dart';
 import 'package:FSOUNotes/misc/constants.dart';

@@ -1,6 +1,6 @@
 import 'dart:convert';
-import 'package:FSOUNotes/app/locator.dart';
-import 'package:FSOUNotes/app/logger.dart';
+import 'package:FSOUNotes/app/app.locator.dart';
+import 'package:FSOUNotes/app/app.logger.dart';
 import 'package:FSOUNotes/models/notes.dart';
 import 'package:FSOUNotes/models/subject.dart';
 import 'package:FSOUNotes/services/funtional_services/firestore_service.dart';
@@ -8,12 +8,10 @@ import 'package:FSOUNotes/services/funtional_services/google_drive_service.dart'
 import 'package:FSOUNotes/services/funtional_services/sharedpref_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
-import 'package:injectable/injectable.dart';
 import 'package:logger/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:hive/hive.dart';
 
-@lazySingleton
 class SubjectsService with ChangeNotifier {
   Logger log = getLogger("SubjectsService");
   FirestoreService _firestoreService = locator<FirestoreService>();
@@ -162,11 +160,12 @@ class SubjectsService with ChangeNotifier {
         _allSubjects.value = subjectObjects;
       } else {
         //Get from Firebase
-        subjectObjects = await _firestoreService.loadSubjectsFromFirebase();
-        if (subjectObjects is String) {
-          throw (subjectObjects);
-        }
-        _allSubjects.value = subjectObjects;
+        //TODO
+        // subjectObjects = await _firestoreService.loadSubjectsFromFirebase();
+        // if (subjectObjects is String) {
+        //   throw (subjectObjects);
+        // }
+        // _allSubjects.value = subjectObjects;
       }
 
       _allSubjects.notifyListeners();
@@ -283,7 +282,8 @@ class SubjectsService with ChangeNotifier {
     GoogleDriveService _googleDriveService = locator<GoogleDriveService>();
     subject = await _googleDriveService.createSubjectFolders(subject);
     if (subject == null) return "ERROR ADDING SUBJECT";
-    await _firestoreService.addSubject(subject);
+    //TODO
+    // await _firestoreService.addSubject(subject);
     return "SUCCESS ADDING SUBJECT";
   }
 
@@ -294,10 +294,10 @@ class SubjectsService with ChangeNotifier {
     //Destroy from Gdrive
     await _googleDriveService.deleteSubjectFolder(subject);
     //Destroy from firebase with all notes syllabus and papers
-    bool result = await _firestoreService.destroySubject(subjectName, id);
+    // bool result = await _firestoreService.destroySubject(subjectName, id);
     log.e("DESTROYED");
     log.e("SubjectName : " + subjectName);
-    log.e("Result : " + result.toString());
+    // log.e("Result : " + result.toString());
   }
 
   addSemesterToSubject(Subject subject, String branch, String semester) {

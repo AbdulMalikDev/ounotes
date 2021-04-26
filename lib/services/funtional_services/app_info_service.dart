@@ -1,12 +1,10 @@
 
 
-import 'package:FSOUNotes/app/logger.dart';
-import 'package:injectable/injectable.dart';
+import 'package:FSOUNotes/app/app.logger.dart';
 import 'package:logger/logger.dart';
 import 'package:package_info/package_info.dart';
 
 Logger log = getLogger("AdmobService");
-@lazySingleton
 class AppInfoService{
   PackageInfo _packageInfo;
 

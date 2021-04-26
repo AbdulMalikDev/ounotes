@@ -1,5 +1,6 @@
-import 'package:FSOUNotes/app/router.gr.dart';
-import 'package:FSOUNotes/ui/views/splash/splash_viewmodel.dart';
+import 'package:FSOUNotes/app/app.locator.dart';
+import 'package:FSOUNotes/app/app.logger.dart';
+import 'package:FSOUNotes/app/app.router.dart';import 'package:FSOUNotes/ui/views/splash/splash_viewmodel.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
@@ -23,14 +24,14 @@ void main() {
        var navigationService = getAndRegisterNavigationServiceMock();
        var model = SplashViewModel();
        await model.handleStartUpLogic();
-       verify(navigationService.replaceWith(Routes.homeViewRoute));
+       verify(navigationService.replaceWith(Routes.homeView));
      });
 
      test('When called and User is not logged in, should call replace route with Routes.introViewRoute [login page]', () async {
        var navigationService = getAndRegisterNavigationServiceMock();
        var model = SplashViewModel();
        await model.handleStartUpLogic();
-       verify(navigationService.replaceWith(Routes.introViewRoute));
+       verify(navigationService.replaceWith(Routes.introView));
      });
    });
  });

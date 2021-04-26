@@ -1,5 +1,6 @@
-import 'package:FSOUNotes/app/locator.dart';
-import 'package:FSOUNotes/app/router.gr.dart';
+import 'package:FSOUNotes/app/app.locator.dart';
+import 'package:FSOUNotes/app/app.logger.dart';
+import 'package:FSOUNotes/app/app.router.dart';
 import 'package:FSOUNotes/enums/enums.dart';
 import 'package:FSOUNotes/misc/constants.dart';
 import 'package:FSOUNotes/models/document.dart';
@@ -22,7 +23,6 @@ import 'package:stacked_services/stacked_services.dart';
 import 'package:FSOUNotes/models/user.dart';
 import 'package:FSOUNotes/enums/bottom_sheet_type.dart';
 
-import 'package:FSOUNotes/app/logger.dart';
 
 class NotesTileViewModel extends BaseViewModel {
   final log = getLogger("BuildTileOfNotes");
@@ -57,10 +57,10 @@ class NotesTileViewModel extends BaseViewModel {
     if (vote == votedon) {
       _vote = Constants.none;
       if (votedon == Constants.upvote) {
-        _firestoreService.decrementVotes(note, 1);
+        // _firestoreService.decrementVotes(note, 1);
         decrementvotes(note.title, 1);
       } else {
-        _firestoreService.incrementVotes(note, 1);
+        // _firestoreService.incrementVotes(note, 1);
         incrementvotes(note.title, 1);
       }
       _voteService.removeVote(note.title);
@@ -72,10 +72,10 @@ class NotesTileViewModel extends BaseViewModel {
         _vote = Constants.upvote;
         //if vote was none then user is voting for first time,incementvote by once
         if (wasvotenone) {
-          _firestoreService.incrementVotes(note, 1);
+          // _firestoreService.incrementVotes(note, 1);
           incrementvotes(note.title, 1);
         } else {
-          _firestoreService.incrementVotes(note, 2);
+          // _firestoreService.incrementVotes(note, 2);
           incrementvotes(note.title, 2);
         }
         //if user has not already voted then add to db
@@ -90,10 +90,10 @@ class NotesTileViewModel extends BaseViewModel {
         if (_vote == Constants.none) wasvotenone = true;
         _vote = Constants.downvote;
         if (wasvotenone) {
-          _firestoreService.decrementVotes(note, 1);
+          // _firestoreService.decrementVotes(note, 1);
           decrementvotes(note.title, 1);
         } else {
-          _firestoreService.decrementVotes(note, 2);
+          // _firestoreService.decrementVotes(note, 2);
           decrementvotes(note.title, 2);
         }
         if (!hasalreadyvoted) {
@@ -151,7 +151,7 @@ class NotesTileViewModel extends BaseViewModel {
     setBusy(false);
   }
 
-  bool get isAdmin => _authenticationService.user.isAdmin;
+ // bool get isAdmin => _authenticationService.user.isAdmin;
 
   void reportNote(
       {String id,
@@ -175,34 +175,34 @@ class NotesTileViewModel extends BaseViewModel {
     log.i("Report BottomSheetResponse " + reportResponse.responseData);
 
     //Generate report with appropriate data
-    Report report = Report(
-        id, subjectName, type, title, _authenticationService.user.email,
-        reportReason: reportResponse.responseData);
+    // Report report = Report(
+    //     id, subjectName, type, title, _authenticationService.user.email,
+    //     reportReason: reportResponse.responseData);
 
     //Check whether user is banned
-    User user = await _firestoreService.refreshUser();
-    if (!user.isUserAllowedToUpload) {
-      _userIsNotAllowedNotToReport();
-      setBusy(false);
-      return;
-    }
+    // User user = await _firestoreService.refreshUser();
+    // if (!user.isUserAllowedToUpload) {
+    //   _userIsNotAllowedNotToReport();
+    //   setBusy(false);
+    //   return;
+    // }
 
     //If user is reporting the same document 2nd time the result will be a String
-    var result = await _reportsService.addReport(report);
-    if (result is String) {
-      _dialogService.showDialog(
-          title: "Thank you for reporting", description: result);
-    } else {
-      await _firestoreService.reportNote(report: report, doc: doc);
-      Fluttertoast.showToast(
-          msg: "Your report has been recorded. The admins will look into this.",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.CENTER,
-          timeInSecForIosWeb: 1,
-          backgroundColor: Colors.teal,
-          textColor: Colors.white,
-          fontSize: 16.0);
-    }
+    // var result = await _reportsService.addReport(report);
+    // if (result is String) {
+    //   _dialogService.showDialog(
+    //       title: "Thank you for reporting", description: result);
+    // } else {
+    //   // await _firestoreService.reportNote(report: report, doc: doc);
+    //   Fluttertoast.showToast(
+    //       msg: "Your report has been recorded. The admins will look into this.",
+    //       toastLength: Toast.LENGTH_SHORT,
+    //       gravity: ToastGravity.CENTER,
+    //       timeInSecForIosWeb: 1,
+    //       backgroundColor: Colors.teal,
+    //       textColor: Colors.white,
+    //       fontSize: 16.0);
+    // }
   }
 
   Future delete(AbstractDocument doc) async {
@@ -258,7 +258,7 @@ class NotesTileViewModel extends BaseViewModel {
   }
 
   navigateToEditView(Note note) {
-    _navigationService.navigateTo(Routes.editViewRoute,
+    _navigationService.navigateTo(Routes.editView,
         arguments: EditViewArguments(
             path: Document.Notes,
             subjectName: note.subjectName,
@@ -275,10 +275,10 @@ class NotesTileViewModel extends BaseViewModel {
     );
   }
 
-  void incrementViewForAd() {
-    this.admobService.incrementNumberOfTimeNotesOpened();
-    this.admobService.shouldAdBeShown();
-  }
+  // void incrementViewForAd() {
+  //   this.admobService.incrementNumberOfTimeNotesOpened();
+  //   this.admobService.shouldAdBeShown();
+  // }
 
   void pinNotes(Note note, Function refresh) {
     //Initialize and fetch pinned notes

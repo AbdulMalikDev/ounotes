@@ -1,7 +1,8 @@
 import 'dart:convert';
 
-import 'package:FSOUNotes/app/locator.dart';
-import 'package:FSOUNotes/app/router.gr.dart';
+import 'package:FSOUNotes/app/app.locator.dart';
+import 'package:FSOUNotes/app/app.logger.dart';
+import 'package:FSOUNotes/app/app.router.dart';
 import 'package:FSOUNotes/enums/enums.dart';
 import 'package:FSOUNotes/misc/course_info.dart';
 import 'package:FSOUNotes/models/user.dart';
@@ -85,7 +86,7 @@ class FDInputViewModel extends BaseViewModel {
 
   onTap(Document path) {
     _navigationService.navigateTo(
-      Routes.fdSubjectView,
+      Routes.fDSubjectView,
       arguments: FDSubjectViewArguments(
           sem: _selectedSemester, br: _selectedBranch, path: path),
     );

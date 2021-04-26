@@ -1,7 +1,5 @@
 import 'package:FSOUNotes/models/link.dart';
-import 'package:injectable/injectable.dart';
 
-@lazySingleton
 class LinksService{
   
       List<Link> _links;

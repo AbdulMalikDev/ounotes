@@ -1,6 +1,7 @@
 import 'package:FSOUNotes/app/config_reader.dart';
-import 'package:FSOUNotes/app/router.gr.dart';
-import 'package:FSOUNotes/ui/views/intro/intro_viewmodel.dart';
+import 'package:FSOUNotes/app/app.locator.dart';
+import 'package:FSOUNotes/app/app.logger.dart';
+import 'package:FSOUNotes/app/app.router.dart';import 'package:FSOUNotes/ui/views/intro/intro_viewmodel.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
@@ -37,7 +38,7 @@ void main() {
         // model.changedDropDownItemOfCollege(TestData.college);
         // model.changedDropDownItemOfSemester(TestData.semester);
         // await model.handleSignUp();
-        verify(navService.replaceWith(Routes.splashViewRoute));
+        verify(navService.replaceWith(Routes.splashView));
     });
    });
  });

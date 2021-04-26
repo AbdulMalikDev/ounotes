@@ -1,4 +1,3 @@
-import 'package:FSOUNotes/app/locator.dart';
 import 'package:FSOUNotes/models/subject.dart';
 import 'package:FSOUNotes/models/user.dart';
 import 'package:FSOUNotes/services/funtional_services/authentication_service.dart';
@@ -8,6 +7,8 @@ import 'package:FSOUNotes/utils/permission_handler.dart';
 import 'package:flutter/foundation.dart';
 import 'package:mockito/mockito.dart';
 import 'package:stacked_services/stacked_services.dart';
+import 'package:FSOUNotes/app/app.locator.dart';
+
 
 class SharedPreferencesServiceMock extends Mock implements SharedPreferencesService {}
 class NavigationServiceMock extends Mock implements NavigationService {}

@@ -1,14 +1,13 @@
-import 'package:FSOUNotes/app/locator.dart';
-import 'package:FSOUNotes/app/logger.dart';
+
+import 'package:FSOUNotes/app/app.locator.dart';
+import 'package:FSOUNotes/app/app.logger.dart';
 import 'package:FSOUNotes/models/download.dart';
 import 'package:FSOUNotes/models/user.dart';
 import 'package:FSOUNotes/services/funtional_services/authentication_service.dart';
 import 'package:FSOUNotes/services/funtional_services/cloud_storage_service.dart';
 import 'package:hive/hive.dart';
-import 'package:injectable/injectable.dart';
 import 'package:logger/logger.dart';
 
-@lazySingleton
 class DownloadService {
   Logger log = getLogger("DownloadService");
   String table = 'downloaded_subjects';

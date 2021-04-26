@@ -1,9 +1,7 @@
-import 'package:FSOUNotes/app/logger.dart';
+import 'package:FSOUNotes/app/app.logger.dart';
 import 'package:FSOUNotes/models/syllabus.dart';
-import 'package:injectable/injectable.dart';
 import 'package:logger/logger.dart';
 
-@lazySingleton
 class SyllabusService{
       Logger log = getLogger("SyllabusService");
       List<Syllabus> _syllabus;

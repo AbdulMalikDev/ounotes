@@ -72,7 +72,7 @@ class _SelectionCardState extends State<SelectionCard> {
                       title: widget.title,
                       items: widget.items,
                       onChanged: widget.onChange,
-                      selectedItem: widget.value,
+                      selectedValue: widget.value,
                       showDivider: false,
                       maxLongSide: MediaQuery.of(context).size.height * 0.72,
                       cancelText: "",
@@ -80,33 +80,33 @@ class _SelectionCardState extends State<SelectionCard> {
                           Theme.of(context).scaffoldBackgroundColor,
                     );
                   },
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        SizedBox(width: 10),
-                        Expanded(
-                          child: Center(
-                            child: Text(
-                              widget.value,
-                              style:
-                                  Theme.of(context).textTheme.headline5.copyWith(
-                                        fontSize: 15,
-                                      ),
-                              overflow: TextOverflow.ellipsis,
-                            ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      SizedBox(width: 10),
+                      Expanded(
+                        child: Center(
+                          child: Text(
+                            widget.value,
+                            style:
+                                Theme.of(context).textTheme.headline5.copyWith(
+                                      fontSize: 15,
+                                    ),
+                            overflow: TextOverflow.ellipsis,
                           ),
                         ),
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: Icon(
-                            Icons.keyboard_arrow_down,
-                            color: Theme.of(context).primaryColor,
-                          ),
+                      ),
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Icon(
+                          Icons.keyboard_arrow_down,
+                          color: Theme.of(context).primaryColor,
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
+              ),
             ],
           ),
         ),

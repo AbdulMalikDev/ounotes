@@ -1,6 +1,6 @@
-import 'package:FSOUNotes/app/locator.dart';
-import 'package:FSOUNotes/app/logger.dart';
-import 'package:FSOUNotes/app/router.gr.dart';
+import 'package:FSOUNotes/app/app.locator.dart';
+import 'package:FSOUNotes/app/app.logger.dart';
+import 'package:FSOUNotes/app/app.router.dart';
 import 'package:FSOUNotes/models/subject.dart';
 import 'package:FSOUNotes/services/state_services/subjects_service.dart';
 import 'package:flutter/material.dart';
@@ -18,7 +18,7 @@ class UserSubjectListViewModel extends BaseViewModel {
       _subjectsService.selectedSubjects;
 
   void onTap(subjectName) {
-    _navigationService.navigateTo(Routes.allDocumentsViewRoute,
+    _navigationService.navigateTo(Routes.allDocumentsView,
         arguments: AllDocumentsViewArguments(subjectName: subjectName));
   }
 

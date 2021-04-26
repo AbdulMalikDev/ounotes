@@ -1,5 +1,5 @@
 
-import 'package:FSOUNotes/app/logger.dart';
+import 'package:FSOUNotes/app/app.logger.dart';
 import 'package:flutter/services.dart';
 import 'package:logger/logger.dart';
 

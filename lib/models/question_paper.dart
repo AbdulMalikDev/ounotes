@@ -1,5 +1,5 @@
 
-import 'package:FSOUNotes/app/logger.dart';
+import 'package:FSOUNotes/app/app.logger.dart';
 import 'package:FSOUNotes/enums/constants.dart';
 import 'package:FSOUNotes/enums/enums.dart';
 import 'package:FSOUNotes/models/document.dart';

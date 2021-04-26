@@ -1,8 +1,8 @@
 import 'dart:io';
 import 'package:FSOUNotes/AppTheme/AppStateNotifier.dart';
-import 'package:FSOUNotes/app/locator.dart';
-import 'package:FSOUNotes/app/logger.dart';
-import 'package:FSOUNotes/app/router.gr.dart';
+import 'package:FSOUNotes/app/app.locator.dart';
+import 'package:FSOUNotes/app/app.logger.dart';
+import 'package:FSOUNotes/app/app.router.dart';
 import 'package:FSOUNotes/enums/bottom_sheet_type.dart';
 import 'package:FSOUNotes/enums/enums.dart';
 import 'package:FSOUNotes/models/user.dart';
@@ -51,7 +51,7 @@ class DrawerViewModel extends BaseViewModel {
     }
   }
 
-  bool get isAdmin => _authenticationService.user.isAdmin;
+ // bool get isAdmin => _authenticationService.user.isAdmin;
 
   dispatchEmail() async {
     await EmailService.emailFunc(
@@ -132,20 +132,20 @@ class DrawerViewModel extends BaseViewModel {
   }
 
   navigateToAllDocumentsScreen(Document document) {
-    _navigationService.navigateTo(Routes.allDocumentsViewRoute);
+    _navigationService.navigateTo(Routes.allDocumentsView);
   }
 
   navigateToProfileScreen(Document p1) {
-    _navigationService.navigateTo(Routes.profileView);
+    _navigationService.navigateTo(Routes.settingsView);
   }
 
   navigateToAboutUsScreen(Document p1) {
-    _navigationService.navigateTo(Routes.aboutUsViewRoute);
+    _navigationService.navigateTo(Routes.aboutUsView);
   }
 
   navigateToUserUploadScreen(Document p1) {
     _navigationService.navigateTo(
-      Routes.uploadSelectionViewRoute,
+      Routes.uploadSelectionView,
       arguments: UploadSelectionViewArguments(path: p1),
     );
   }
@@ -155,12 +155,12 @@ class DrawerViewModel extends BaseViewModel {
   }
 
   navigateToFDIntroScreen(Document path) {
-    _navigationService.navigateTo(Routes.fdInputView,
+    _navigationService.navigateTo(Routes.fDInputView,
         arguments: FDInputViewArguments(path: path));
   }
 
   navigateToAdminUploadScreen(Document path) {
-    _navigationService.navigateTo(Routes.adminViewRoute,
+    _navigationService.navigateTo(Routes.adminView,
         arguments: FDInputViewArguments(path: path));
   }
 
@@ -228,7 +228,7 @@ class DrawerViewModel extends BaseViewModel {
                     setBusy(true);
                     await _authenticationService.handleSignOut().then((value) {
                       if (value ?? true) {
-                        _navigationService.navigateTo(Routes.introViewRoute);
+                        _navigationService.navigateTo(Routes.introView);
                       } else
                         Fluttertoast.showToast(
                             msg: "Sign Out failed ,please try again later");

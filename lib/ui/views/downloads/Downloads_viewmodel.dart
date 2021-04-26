@@ -1,6 +1,6 @@
-import 'package:FSOUNotes/app/locator.dart';
-import 'package:FSOUNotes/app/logger.dart';
-import 'package:FSOUNotes/app/router.gr.dart';
+import 'package:FSOUNotes/app/app.locator.dart';
+import 'package:FSOUNotes/app/app.logger.dart';
+import 'package:FSOUNotes/app/app.router.dart';
 import 'package:FSOUNotes/enums/bottom_sheet_type.dart';
 import 'package:FSOUNotes/enums/enums.dart';
 import 'package:FSOUNotes/models/download.dart';
@@ -66,7 +66,7 @@ class DownLoadViewModel extends BaseViewModel {
       author: download.author,
       view: download.view,
     );
-    _navigationService.navigateTo(Routes.pdfScreenRoute,
+    _navigationService.navigateTo(Routes.pDFScreen,
         arguments: PDFScreenArguments(
             pathPDF: download.path, doc: note, askBookMarks: false));
   }

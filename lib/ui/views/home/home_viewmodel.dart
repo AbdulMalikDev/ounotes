@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'dart:math';
-import 'package:FSOUNotes/app/locator.dart';
 import 'package:FSOUNotes/enums/bottom_sheet_type.dart';
 import 'package:FSOUNotes/models/notes.dart';
 import 'package:FSOUNotes/models/question_paper.dart';
@@ -26,6 +25,9 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:FSOUNotes/services/funtional_services/app_info_service.dart';
 import 'package:FSOUNotes/models/user.dart';
 import 'package:package_info/package_info.dart';
+import 'package:FSOUNotes/app/app.locator.dart';
+import 'package:FSOUNotes/app/app.logger.dart';
+import 'package:FSOUNotes/app/app.router.dart';
 import 'package:FSOUNotes/services/funtional_services/authentication_service.dart';
 
 class HomeViewModel extends BaseViewModel {
@@ -258,37 +260,37 @@ class HomeViewModel extends BaseViewModel {
     }
   }
 
-  void updateNoteInFirebase(Note note) async {
-    await _firestoreService.updateNoteInFirebase(note);
-  }
+  // void updateNoteInFirebase(Note note) async {
+  //   await _firestoreService.updateNoteInFirebase(note);
+  // }
 
-  void updateQuestionPaperInFirebase(QuestionPaper paper) async {
-    await _firestoreService.updateQuestionPaperInFirebase(paper);
-  }
+  // void updateQuestionPaperInFirebase(QuestionPaper paper) async {
+  //   await _firestoreService.updateQuestionPaperInFirebase(paper);
+  // }
 
-  void updateSyllabusInFirebase(Syllabus syllabus) async {
-    await _firestoreService.updateSyllabusInFirebase(syllabus);
-  }
+  // void updateSyllabusInFirebase(Syllabus syllabus) async {
+  //   await _firestoreService.updateSyllabusInFirebase(syllabus);
+  // }
 
-  void addSubjectToFirebase(Subject subject) async {
-    await _firestoreService.updateSubjectInFirebase(subject.toJson());
-  }
+  // void addSubjectToFirebase(Subject subject) async {
+  //   await _firestoreService.updateSubjectInFirebase(subject.toJson());
+  // }
 
-  getNotesFromFirebase(Subject subject) async {
-    var notes = await _firestoreService.loadNotesFromFirebase(subject.name);
-    return notes;
-  }
+  // getNotesFromFirebase(Subject subject) async {
+  //   var notes = await _firestoreService.loadNotesFromFirebase(subject.name);
+  //   return notes;
+  // }
 
-  getQuestionPapersFromFirebase(Subject subject) async {
-    var notes =
-        await _firestoreService.loadQuestionPapersFromFirebase(subject.name);
-    return notes;
-  }
+  // getQuestionPapersFromFirebase(Subject subject) async {
+  //   var notes =
+  //       await _firestoreService.loadQuestionPapersFromFirebase(subject.name);
+  //   return notes;
+  // }
 
-  getSyllabusFromFirebase(Subject subject) async {
-    var notes = await _firestoreService.loadSyllabusFromFirebase(subject.name);
-    return notes;
-  }
+  // getSyllabusFromFirebase(Subject subject) async {
+  //   var notes = await _firestoreService.loadSyllabusFromFirebase(subject.name);
+  //   return notes;
+  // }
 
   void updateDialog(
       bool shouldShowUpdateDialog, Map<String, dynamic> versionDetails) {

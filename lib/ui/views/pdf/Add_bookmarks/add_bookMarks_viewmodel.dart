@@ -1,4 +1,6 @@
-import 'package:FSOUNotes/app/locator.dart';
+import 'package:FSOUNotes/app/app.locator.dart';
+import 'package:FSOUNotes/app/app.logger.dart';
+import 'package:FSOUNotes/app/app.router.dart';
 import 'package:FSOUNotes/models/notes.dart';
 import 'package:FSOUNotes/services/state_services/subjects_service.dart';
 import 'package:hive/hive.dart';

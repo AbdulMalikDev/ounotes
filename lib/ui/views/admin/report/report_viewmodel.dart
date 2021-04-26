@@ -1,6 +1,5 @@
-import 'package:FSOUNotes/app/locator.dart';
-import 'package:FSOUNotes/app/logger.dart';
-import 'package:FSOUNotes/app/router.gr.dart';
+import 'package:FSOUNotes/app/app.locator.dart';
+import 'package:FSOUNotes/app/app.logger.dart';
 import 'package:FSOUNotes/enums/constants.dart';
 import 'package:FSOUNotes/enums/enums.dart';
 import 'package:FSOUNotes/models/link.dart';
@@ -17,6 +16,7 @@ import 'package:FSOUNotes/ui/widgets/smart_widgets/notes_tile/notes_tile_viewmod
 import 'package:logger/logger.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
+
 Logger log = getLogger("UploadLogViewModel");
 
 class ReportViewModel extends FutureViewModel {
@@ -31,7 +31,7 @@ class ReportViewModel extends FutureViewModel {
   List<Report> get reports => _reports;
 
   fetchReports() async {
-    _reports = await _firestoreService.loadReportsFromFirebase();
+    // _reports = await _firestoreService.loadReportsFromFirebase();
   }
 
   @override
@@ -39,112 +39,121 @@ class ReportViewModel extends FutureViewModel {
 
   deleteReport(Report report) async {
     var dialogResult = await _dialogService.showConfirmationDialog(
-      title: "Are you sure?",
-      description:
-          "Report will be deleted. As an admin please make sure the issue is resolved",
-      cancelTitle: "WAIT",
-      confirmationTitle: "OK"
-    );
-    if(dialogResult.confirmed)await _firestoreService.deleteReport(report);
+        title: "Are you sure?",
+        description:
+            "Report will be deleted. As an admin please make sure the issue is resolved",
+        cancelTitle: "WAIT",
+        confirmationTitle: "OK");
+    // if(dialogResult.confirmed)await _firestoreService.deleteReport(report);
   }
 
   void accept(Report report) async {
     String title = "Thank you for reporting";
-    String message = "We have reviewed the document you have reported \" ${report.title} \" in the \" ${report.subjectName} \" subject and we have removed it ! Thank you again for making OU Notes a better place !";
-    DialogResponse result = await _dialogService.showConfirmationDialog(title: "Sure?",description: "");
-    if(result.confirmed){
-      _analyticsService.sendNotification(id: report.reporter_id,message: message,title: title);
+    String message =
+        "We have reviewed the document you have reported \" ${report.title} \" in the \" ${report.subjectName} \" subject and we have removed it ! Thank you again for making OU Notes a better place !";
+    DialogResponse result = await _dialogService.showConfirmationDialog(
+        title: "Sure?", description: "");
+    if (result.confirmed) {
+      _analyticsService.sendNotification(
+          id: report.reporter_id, message: message, title: title);
       report.setNotificationSent = true;
-      _firestoreService.updateDocument(report, Document.Report);
+      //   _firestoreService.updateDocument(report, Document.Report);
     }
   }
 
-  void deny(Report report)  async {
+  void deny(Report report) async {
     String title = "Thank you for reporting";
-    String message = "We have reviewed the document you have reported \" ${report.title} \" in the \" ${report.subjectName} \" subject and we have found NO ISSUE with it. Feel free to contact us using the feedback feature !";
-    DialogResponse result = await _dialogService.showConfirmationDialog(title: "Sure?",description: "");
-    if(result.confirmed){
-      _analyticsService.sendNotification(id: report.reporter_id,message: message,title: title);
+    String message =
+        "We have reviewed the document you have reported \" ${report.title} \" in the \" ${report.subjectName} \" subject and we have found NO ISSUE with it. Feel free to contact us using the feedback feature !";
+    DialogResponse result = await _dialogService.showConfirmationDialog(
+        title: "Sure?", description: "");
+    if (result.confirmed) {
+      _analyticsService.sendNotification(
+          id: report.reporter_id, message: message, title: title);
       report.setNotificationSent = true;
-      _firestoreService.updateDocument(report, Document.Report);
+      //  _firestoreService.updateDocument(report, Document.Report);
     }
   }
 
-  void ban(Report report)  async {
+  void ban(Report report) async {
     String title = "We're Sorry !";
-    String message = "We're sad to say that you won't be allowed to report or upload any documents. Feel free to contact us using the feedback feature !";
-    DialogResponse result = await _dialogService.showConfirmationDialog(title: "Sure?",description: "");
-    if(result.confirmed){
-      _analyticsService.sendNotification(id: report.reporter_id,message: message,title: title);
+    String message =
+        "We're sad to say that you won't be allowed to report or upload any documents. Feel free to contact us using the feedback feature !";
+    DialogResponse result = await _dialogService.showConfirmationDialog(
+        title: "Sure?", description: "");
+    if (result.confirmed) {
+      _analyticsService.sendNotification(
+          id: report.reporter_id, message: message, title: title);
       report.setNotificationSent = true;
-      _firestoreService.updateDocument(report, Document.Report);
-      User user = await _firestoreService.getUserById(report.reporter_id);
-      user.banUser = true;
-      _firestoreService.updateUserInFirebase(user,updateLocally: false);
+      // _firestoreService.updateDocument(report, Document.Report);
+      //  User user = await _firestoreService.getUserById(report.reporter_id);
+      // user.banUser = true;
+      // _firestoreService.updateUserInFirebase(user,updateLocally: false);
     }
   }
 
   void viewDocument(Report report) async {
-      setBusy(true);
+    setBusy(true);
 
-      if (report.type == Constants.links){
-        _showLink(report);
-      }else{
+    if (report.type == Constants.links) {
+      _showLink(report);
+    } else {
+      //  var document = await _firestoreService.getDocumentById(report.subjectName,report.id, Constants.getDocFromConstant(report.type));
+      //    _navigationService.navigateTo(Routes.webViewWidgetRoute,arguments: WebViewWidgetArguments(url: document.GDriveLink));
 
-        var document = await _firestoreService.getDocumentById(report.subjectName,report.id, Constants.getDocFromConstant(report.type));
-        _navigationService.navigateTo(Routes.webViewWidgetRoute,arguments: WebViewWidgetArguments(url: document.GDriveLink));
-
-      }
-      setBusy(false);
+    }
+    setBusy(false);
   }
 
   void deleteDocument(Report report) async {
-    DialogResponse result = await _dialogService.showConfirmationDialog(title:"Sure?",description:"pakka?");
-      if (result.confirmed){
+    DialogResponse result = await _dialogService.showConfirmationDialog(
+        title: "Sure?", description: "pakka?");
+    if (result.confirmed) {
+      setBusy(true);
+      log.e(report);
+      log.e(report.type);
 
-        setBusy(true);
-        log.e(report);
-        log.e(report.type);
-
-        if (report.type == Constants.links)
-        {
-          log.e("document to be deleted is link type");
-          _deleteDocument(report);
-          setBusy(false);
-          return;
-        }
-        GoogleDriveService _googleDriveService = locator<GoogleDriveService>();
-        dynamic doc = await _firestoreService.getDocumentById(report.subjectName,report.id,Constants.getDocFromConstant(report.type));
-        String result = await _googleDriveService.processFile(doc: doc, document:Constants.getDocFromConstant(report.type) , addToGdrive: false);
-        _dialogService.showDialog(title: "OUTPUT" , description: result);
+      if (report.type == Constants.links) {
+        log.e("document to be deleted is link type");
+        _deleteDocument(report);
         setBusy(false);
-      
+        return;
       }
+      GoogleDriveService _googleDriveService = locator<GoogleDriveService>();
+      //   dynamic doc = await _firestoreService.getDocumentById(report.subjectName,report.id,Constants.getDocFromConstant(report.type));
+      String result = await _googleDriveService.processFile(
+       //   doc: doc,
+          document: Constants.getDocFromConstant(report.type),
+          addToGdrive: false);
+      // _dialogService.showDialog(title: "OUTPUT" , description: result);
+      setBusy(false);
     }
-  
+  }
+
   void _deleteDocument(Report report) async {
     Subject sub = _subjectsService.getSubjectByName(report.subjectName);
-      NotesTileViewModel notesTileViewModel = NotesTileViewModel();
-      log.e(report.type);
-      if (report.type == Constants.questionPapers)
-      {
-        QuestionPaper questionPaper = await _firestoreService.getQuestionPaperById(sub.id,report.id);
-        notesTileViewModel.delete(questionPaper);
-      }else if(report.type == Constants.syllabus){
-        Syllabus syllabus = await _firestoreService.getSyllabusById(sub.id,report.id);
-        notesTileViewModel.delete(syllabus);
-      }else if(report.type == Constants.links){
-        Link link = await _firestoreService.deleteLinkById(sub.id,report.id);
-      }
+    NotesTileViewModel notesTileViewModel = NotesTileViewModel();
+    log.e(report.type);
+    if (report.type == Constants.questionPapers) {
+      //   QuestionPaper questionPaper = await _firestoreService.getQuestionPaperById(sub.id,report.id);
+      //    notesTileViewModel.delete(questionPaper);
+    } else if (report.type == Constants.syllabus) {
+      //   Syllabus syllabus = await _firestoreService.getSyllabusById(sub.id,report.id);
+      //   notesTileViewModel.delete(syllabus);
+    } else if (report.type == Constants.links) {
+      //  Link link = await _firestoreService.deleteLinkById(sub.id,report.id);
     }
+  }
 
   void _showLink(Report report) async {
     Subject sub = _subjectsService.getSubjectByName(report.subjectName);
-      Link link = await _firestoreService.getLinkById(sub.id,report.id);
-      _dialogService.showDialog(title: "Link Content" , description: link.linkUrl);
-    }
+    //   Link link = await _firestoreService.getLinkById(sub.id,report.id);
+    //  _dialogService.showDialog(title: "Link Content" , description: link.linkUrl);
+  }
 
   getNotificationStatus(Report report) {
-    return report.notificationSent??false ? Future.value("SENT") : Future.value("NOT SENT");
+    return report.notificationSent ?? false
+        ? Future.value("SENT")
+        : Future.value("NOT SENT");
   }
 }

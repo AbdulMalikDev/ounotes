@@ -1,7 +1,6 @@
 import 'package:FSOUNotes/models/question_paper.dart';
-import 'package:injectable/injectable.dart';
 
-@lazySingleton
+
 class QuestionPaperService{
   
       List<QuestionPaper> _questionPapers;

@@ -1,11 +1,10 @@
-import 'package:FSOUNotes/app/locator.dart';
 import 'package:FSOUNotes/services/funtional_services/sharedpref_service.dart';
-import 'package:injectable/injectable.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stacked_services/stacked_services.dart';
+import 'package:FSOUNotes/app/app.locator.dart';
 
-@lazySingleton
+
 class PermissionHandler {
   Future<bool> askPermission() async {
     DialogService _dialogService = locator<DialogService>();
@@ -17,7 +16,7 @@ class PermissionHandler {
     }
 
     var status = await Permission.storage.status;
-    if (status.isUndetermined || status.isDenied) {
+    if (status.isRestricted || status.isDenied) {
       // We didn't ask for permission yet.
       DialogResponse result = await _dialogService.showConfirmationDialog(
           title: "Permission",

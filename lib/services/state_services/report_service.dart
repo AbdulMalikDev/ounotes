@@ -1,11 +1,9 @@
-import 'package:FSOUNotes/app/locator.dart';
-import 'package:FSOUNotes/app/logger.dart';
+import 'package:FSOUNotes/app/app.locator.dart';
+import 'package:FSOUNotes/app/app.logger.dart';
 import 'package:FSOUNotes/models/report.dart';
 import 'package:FSOUNotes/services/funtional_services/sharedpref_service.dart';
-import 'package:injectable/injectable.dart';
 import 'package:logger/logger.dart';
 
-@lazySingleton
 class ReportsService{
       Logger log = getLogger("ReportsService");
       List<Report> _reports = [];

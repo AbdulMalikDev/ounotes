@@ -1,4 +1,4 @@
-import 'package:FSOUNotes/app/logger.dart';
+import 'package:FSOUNotes/app/app.logger.dart';
 import 'package:FSOUNotes/enums/enums.dart';
 import 'package:FSOUNotes/misc/helper.dart';
 import 'package:FSOUNotes/services/funtional_services/onboarding_service.dart';
@@ -10,7 +10,6 @@ import 'package:FSOUNotes/ui/widgets/smart_widgets/subjects_dialog/subjects_dial
 import 'package:FSOUNotes/ui/widgets/smart_widgets/user_subject_list/user_subject_list_view.dart';
 import 'package:feature_discovery/feature_discovery.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:logger/logger.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:pimp_my_button/pimp_my_button.dart';

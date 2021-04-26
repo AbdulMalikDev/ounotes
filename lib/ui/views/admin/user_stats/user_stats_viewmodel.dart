@@ -1,5 +1,5 @@
-import 'package:FSOUNotes/app/locator.dart';
-import 'package:FSOUNotes/app/logger.dart';
+import 'package:FSOUNotes/app/app.locator.dart';
+import 'package:FSOUNotes/app/app.logger.dart';
 import 'package:FSOUNotes/misc/course_info.dart';
 import 'package:FSOUNotes/services/funtional_services/firestore_service.dart';
 import 'package:logger/logger.dart';
@@ -21,7 +21,8 @@ class UserStatsViewModel extends FutureViewModel {
 
   fetchUserStats() async {
     setBusy(true);
-    userStats = await _firestoreService.getUserStats();
+    //TODO
+    //userStats = await _firestoreService.getUserStats();
     log.e(userStats);
     CourseInfo.colleges.forEach((college) async {
       _colleges.add(College(college, userStats[college]));

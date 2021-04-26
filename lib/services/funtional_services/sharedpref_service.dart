@@ -1,16 +1,15 @@
 import 'dart:convert';
-import 'package:FSOUNotes/app/locator.dart';
-import 'package:FSOUNotes/app/logger.dart';
+
+import 'package:FSOUNotes/app/app.locator.dart';
+import 'package:FSOUNotes/app/app.logger.dart';
 import 'package:FSOUNotes/models/notes_view.dart';
 import 'package:FSOUNotes/models/report.dart';
 import 'package:FSOUNotes/models/user.dart';
 import 'package:FSOUNotes/services/funtional_services/authentication_service.dart';
 import 'package:FSOUNotes/services/funtional_services/firestore_service.dart';
-import 'package:injectable/injectable.dart';
 import 'package:logger/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-@lazySingleton
 class SharedPreferencesService {
   Logger log = getLogger("SharedPreferencesService");
 
@@ -31,11 +30,12 @@ class SharedPreferencesService {
   saveUserLocally(User user) async {
     SharedPreferences prefs = await store();
     log.i("User getting saved locally");
-    prefs.setString("current_user_is_logged_in", json.encode(user.toJson(),toEncodable: myEncode));
+    prefs.setString("current_user_is_logged_in",
+        json.encode(user.toJson(), toEncodable: myEncode));
   }
 
-    dynamic myEncode(dynamic item) {
-    if(item is DateTime) {
+  dynamic myEncode(dynamic item) {
+    if (item is DateTime) {
       return item.toIso8601String();
     }
     return item;
@@ -58,12 +58,12 @@ class SharedPreferencesService {
           return null;
         }
         if (user.semester != null && user.branch != null) {
-          _authenticationService.setUser = user;
+          // _authenticationService.setUser = user;
         } else {
           log.e("User branch semester is null");
           return null;
         }
-      
+
         return user;
       }
     } catch (e) {
@@ -112,7 +112,8 @@ class SharedPreferencesService {
       //update views to the server
       notesView.views.forEach((docId, view) {
         if (view != 0) {
-          _firestoreService.incrementView(docId, view);
+          //TODO
+          // _firestoreService.incrementView(docId, view);
         }
         notesView.views[docId] = 0;
       });

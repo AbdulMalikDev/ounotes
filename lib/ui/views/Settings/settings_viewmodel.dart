@@ -1,8 +1,9 @@
 import 'dart:convert';
 import 'package:FSOUNotes/services/funtional_services/analytics_service.dart';
 import 'package:flutter/material.dart';
-import 'package:FSOUNotes/app/locator.dart';
-import 'package:FSOUNotes/app/router.gr.dart';
+import 'package:FSOUNotes/app/app.locator.dart';
+import 'package:FSOUNotes/app/app.logger.dart';
+import 'package:FSOUNotes/app/app.router.dart';
 import 'package:FSOUNotes/models/user.dart';
 import 'package:FSOUNotes/services/funtional_services/authentication_service.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -90,7 +91,7 @@ class SettingsViewModel extends BaseViewModel {
       setBusy(true);
       await _authenticationService.handleSignOut().then((value) {
         if (value) {
-          _navigationService.navigateTo(Routes.introViewRoute);
+          _navigationService.navigateTo(Routes.introView);
         } else
           Fluttertoast.showToast(
               msg: "Sign Out failed ,please try again later");

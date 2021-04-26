@@ -1,5 +1,7 @@
 import 'dart:async';
-import 'package:FSOUNotes/app/locator.dart';
+import 'package:FSOUNotes/app/app.locator.dart';
+import 'package:FSOUNotes/app/app.logger.dart';
+import 'package:FSOUNotes/app/app.router.dart';
 import 'package:FSOUNotes/models/notes.dart';
 import 'package:FSOUNotes/models/question_paper.dart';
 import 'package:FSOUNotes/models/syllabus.dart';
@@ -28,7 +30,6 @@ class WebViewWidget extends StatefulWidget {
 class _WebViewWidgetState extends State<WebViewWidget> {
   // Instance of WebView plugin
   final flutterWebViewPlugin = FlutterWebviewPlugin();
-
 
   // On urlChanged stream
   StreamSubscription<String> _onUrlChanged;

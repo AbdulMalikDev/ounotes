@@ -1,6 +1,6 @@
-import 'package:FSOUNotes/app/locator.dart';
-import 'package:FSOUNotes/app/logger.dart';
-import 'package:FSOUNotes/app/router.gr.dart';
+import 'package:FSOUNotes/app/app.locator.dart';
+import 'package:FSOUNotes/app/app.logger.dart';
+import 'package:FSOUNotes/app/app.router.dart';
 import 'package:FSOUNotes/misc/course_info.dart';
 import 'package:FSOUNotes/misc/helper.dart';
 import 'package:FSOUNotes/models/question_paper.dart';
@@ -45,16 +45,16 @@ class QuestionPapersViewModel extends BaseViewModel {
 
   Future fetchQuestionPapers(String subjectName, {sortBy = "Year ASC"}) async {
     setBusy(true);
-    List<QuestionPaper> questionPapers =
-        await _firestoreService.loadQuestionPapersFromFirebase(subjectName);
-    if (questionPapers is String) {
-      await Fluttertoast.showToast(
-          msg:
-              "You are facing an error in loading the QuestionPapers. If you are facing this error more than once, please let us know by using the 'feedback' option in the app drawer.");
-      setBusy(false);
-    } else {
-      _questionPapers = questionPapers;
-    }
+    // List<QuestionPaper> questionPapers =
+    //     await _firestoreService.loadQuestionPapersFromFirebase(subjectName);
+    // if (questionPapers is String) {
+    //   await Fluttertoast.showToast(
+    //       msg:
+    //           "You are facing an error in loading the QuestionPapers. If you are facing this error more than once, please let us know by using the 'feedback' option in the app drawer.");
+    //   setBusy(false);
+    // } else {
+    //   _questionPapers = questionPapers;
+    // }
 
     for (int i = 0; i < questionPapers.length; i++) {
       QuestionPaper questionPaper = questionPapers[i];
@@ -160,7 +160,7 @@ class QuestionPapersViewModel extends BaseViewModel {
   }
 
   void navigateToWebView(QuestionPaper questionPaper) {
-    _navigationService.navigateTo(Routes.webViewWidgetRoute,
+    _navigationService.navigateTo(Routes.webViewWidget,
         arguments: WebViewWidgetArguments(questionPaper: questionPaper));
   }
 

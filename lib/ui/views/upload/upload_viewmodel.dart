@@ -1,6 +1,6 @@
-import 'package:FSOUNotes/app/locator.dart';
-import 'package:FSOUNotes/app/logger.dart';
-import 'package:FSOUNotes/app/router.gr.dart';
+import 'package:FSOUNotes/app/app.locator.dart';
+import 'package:FSOUNotes/app/app.logger.dart';
+import 'package:FSOUNotes/app/app.router.dart';
 import 'package:FSOUNotes/enums/bottom_sheet_type.dart';
 import 'package:FSOUNotes/misc/constants.dart';
 import 'package:FSOUNotes/enums/enums.dart';
@@ -161,10 +161,11 @@ class UploadViewModel extends BaseViewModel {
   ) async {
 
     setBusy(true);
-    Subject subject = await _firestoreService.getSubjectByName(subjectName);
+    //TODO deprecated
+    // Subject subject = await _firestoreService.getSubjectByName(subjectName);
 
     AbstractDocument doc;
-    doc = _setDoc(doc,path,text1,text2,text3,subjectName,subject);
+    // doc = _setDoc(doc,path,text1,text2,text3,subjectName,subject);
 
     if (doc.path == Document.Links) {
 
@@ -201,7 +202,7 @@ class UploadViewModel extends BaseViewModel {
           break;
         case "upload successful":
           setBusy(false);
-          _navigationService.navigateTo(Routes.thankYouForUploadingViewRoute);
+          _navigationService.navigateTo(Routes.thankYouForUploadingView);
           break;
         default:
           setBusy(false);
@@ -467,13 +468,14 @@ class UploadViewModel extends BaseViewModel {
     log.e(link.linkUrl);
     bool isValidURL = Uri.parse(link.linkUrl).isAbsolute;
     if (isValidURL) {
-      await _firestoreService.saveLink(doc);
+      //TODO
+      // await _firestoreService.saveLink(doc);
       await _dialogService.showDialog(
           title: "SUCCESS",
           description:
               "Thank you for sharing a resource with all the students ! Admins will review the link and display it in the app.");
       _navigationService
-          .popUntil((route) => route.settings.name == Routes.homeViewRoute);
+          .popUntil((route) => route.settings.name == Routes.homeView);
     } else {
       await _dialogService.showDialog(
           title: "Aww ! Wrong Link !",

@@ -1,12 +1,16 @@
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
-import 'package:FSOUNotes/app/locator.dart';
-import 'package:FSOUNotes/app/router.gr.dart';
+import 'package:FSOUNotes/app/app.locator.dart';
+import 'package:FSOUNotes/app/app.logger.dart';
+import 'package:FSOUNotes/app/app.router.dart';
 
-class ThankYouForUploadingViewModel extends BaseViewModel{
+class ThankYouForUploadingViewModel extends BaseViewModel {
   NavigationService _navigationService = locator<NavigationService>();
   void navigateToHome() {
-    _navigationService.popUntil((route) => route.settings.name == Routes.allDocumentsViewRoute || route.settings.name == Routes.homeViewRoute);
+    _navigationService.popUntil(
+      (route) =>
+          route.settings.name == Routes.allDocumentsView ||
+          route.settings.name == Routes.homeView,
+    );
   }
-
 }

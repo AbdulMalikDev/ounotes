@@ -1,4 +1,4 @@
-import 'package:FSOUNotes/app/logger.dart';
+import 'package:FSOUNotes/app/app.logger.dart';
 import 'package:logger/logger.dart';
 
 Logger log = getLogger("Report");

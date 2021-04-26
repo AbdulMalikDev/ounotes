@@ -1,4 +1,6 @@
-import 'package:FSOUNotes/app/router.gr.dart';
+import 'package:FSOUNotes/app/app.locator.dart';
+import 'package:FSOUNotes/app/app.logger.dart';
+import 'package:FSOUNotes/app/app.router.dart';
 import 'package:FSOUNotes/misc/constants.dart';
 import 'package:FSOUNotes/models/notes.dart';
 import 'package:FSOUNotes/ui/shared/app_config.dart';
@@ -376,7 +378,7 @@ class _BookMarkBottomSheetState extends State<BookMarkBottomSheet> {
                                             context,
                                             (route) =>
                                                 route.settings.name ==
-                                                Routes.uploadViewRoute,
+                                                Routes.uploadView,
                                           );
                                         },
                                       ),

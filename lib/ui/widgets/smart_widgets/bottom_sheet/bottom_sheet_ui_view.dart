@@ -1,9 +1,9 @@
-import 'package:FSOUNotes/app/router.gr.dart';
+import 'package:FSOUNotes/app/app.locator.dart';
+import 'package:FSOUNotes/app/app.router.dart';
 import 'package:FSOUNotes/ui/shared/app_config.dart';
 import 'package:FSOUNotes/ui/widgets/dumb_widgets/TextFieldView.dart';
 import 'package:FSOUNotes/ui/widgets/smart_widgets/bottom_sheet/bottom_sheet_view_model.dart';
 import 'package:flutter/material.dart';
-import 'package:FSOUNotes/app/locator.dart';
 import 'package:FSOUNotes/enums/bottom_sheet_type.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:stacked/stacked.dart';

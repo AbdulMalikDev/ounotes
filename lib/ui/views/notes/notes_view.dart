@@ -206,7 +206,7 @@ class _NotesViewState extends State<NotesView>
   _initState(NotesViewModel model) async {
     model.fetchNotesAndVotes(widget.subjectName);
     try {
-      model.admobService.shouldAdBeShown();
+      // model.admobService.shouldAdBeShown();
     } catch (e) {
       print(e.toString());
     }

@@ -1,18 +1,18 @@
 import 'dart:math';
 
-import 'package:FSOUNotes/app/locator.dart';
-import 'package:FSOUNotes/app/router.gr.dart';
-import 'package:injectable/injectable.dart';
+
+import 'package:FSOUNotes/app/app.locator.dart';
+import 'package:FSOUNotes/app/app.logger.dart';
+import 'package:FSOUNotes/app/app.router.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:stacked_services/stacked_services.dart';
-import './../../app/logger.dart';
 import 'package:open_file/open_file.dart';
 Logger log = getLogger("NotificationService");
 
 
-@lazySingleton
+
 class NotificationService{
 
   NavigationService _navigationService = locator<NavigationService>();

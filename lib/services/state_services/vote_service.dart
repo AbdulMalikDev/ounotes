@@ -1,10 +1,8 @@
-import 'package:FSOUNotes/app/locator.dart';
+import 'package:FSOUNotes/app/app.locator.dart';
 import 'package:FSOUNotes/models/vote.dart';
 import 'package:FSOUNotes/services/funtional_services/db_service.dart';
-import 'package:injectable/injectable.dart';
 import 'package:flutter/cupertino.dart';
 
-@lazySingleton
 class VoteService with ChangeNotifier {
   String table = 'uservoted_subjects';
   List<Vote> allVotes = [];

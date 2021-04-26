@@ -1,5 +1,6 @@
-import 'package:FSOUNotes/app/locator.dart';
-import 'package:FSOUNotes/app/router.gr.dart';
+import 'package:FSOUNotes/app/app.locator.dart';
+import 'package:FSOUNotes/app/app.logger.dart';
+import 'package:FSOUNotes/app/app.router.dart';
 import 'package:FSOUNotes/misc/constants.dart';
 import 'package:FSOUNotes/enums/enums.dart';
 import 'package:stacked/stacked.dart';
@@ -19,7 +20,7 @@ class UploadSelectionViewModel extends BaseViewModel {
   }
 
   navigateToNotes() {
-    _navigationService.navigateTo(Routes.uploadViewRoute,
+    _navigationService.navigateTo(Routes.uploadView,
         arguments: UploadViewArguments(
           textFieldsMap: Constants.Notes,
           path: Document.Notes,
@@ -29,7 +30,7 @@ class UploadSelectionViewModel extends BaseViewModel {
   }
 
   navigateToQuestionPapers() {
-    _navigationService.navigateTo(Routes.uploadViewRoute,
+    _navigationService.navigateTo(Routes.uploadView,
         arguments: UploadViewArguments(
           textFieldsMap: Constants.QuestionPaper,
           path: Document.QuestionPapers,
@@ -39,7 +40,7 @@ class UploadSelectionViewModel extends BaseViewModel {
   }
 
   navigateToSyllabus() {
-    _navigationService.navigateTo(Routes.uploadViewRoute,
+    _navigationService.navigateTo(Routes.uploadView,
         arguments: UploadViewArguments(
           textFieldsMap: Constants.Syllabus,
           path: Document.Syllabus,
@@ -49,7 +50,7 @@ class UploadSelectionViewModel extends BaseViewModel {
   }
 
   navigateToLinks() {
-    _navigationService.navigateTo(Routes.uploadViewRoute,
+    _navigationService.navigateTo(Routes.uploadView,
         arguments: UploadViewArguments(
           textFieldsMap: Constants.Links,
           path: Document.Links,

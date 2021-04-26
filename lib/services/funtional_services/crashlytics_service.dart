@@ -1,9 +1,7 @@
 
 
-import 'package:injectable/injectable.dart';
 import 'package:sentry/sentry.dart';
 
-@lazySingleton
 class CrashlyticsService{
 
   SentryClient _sentryClient;
