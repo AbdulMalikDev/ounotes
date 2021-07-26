@@ -44,7 +44,7 @@ dependencies:
 
   # Utility Packages [ packages to perform a simple task ]
   cuid: ^0.1.2
-  file_picker: ^3.0.1
+  file_picker: ^3.0.3
   flutter_full_pdf_viewer: ^1.0.6
   flutter_dotenv: ^4.0.0-nullsafety.0
   flutter_mailer: ^2.0.0-null-safe
@@ -84,7 +84,7 @@ dependencies:
   stacked_services: ^0.8.5
   shared_preferences: ^2.0.5
   # purchases_flutter: ^2.0.0
-  awesome_notifications: ^0.0.6+10
+  awesome_notifications: ^0.0.6
 
   # firebase/google packages
   firebase_admob: ^0.11.2
@@ -94,6 +94,7 @@ dependencies:
   firebase_remote_config: ^0.10.0+3
   firebase_storage: ^10.0.1
   cloud_firestore: ^2.4.0
+  firebase_core: ^1.4.0
   google_sign_in: ^5.0.5
   googleapis: ^4.0.0
   googleapis_auth: ^1.1.0

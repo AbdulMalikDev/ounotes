@@ -12,10 +12,11 @@ class RemoteConfigService{
     if (_remoteConfig == null)
     {
       _remoteConfig = await RemoteConfig.instance;
-      //TODO DEV CHECKLIST
-      await remoteConfig.setConfigSettings(RemoteConfigSettings(minimumFetchInterval: const Duration(hours: 4)));
-      // await remoteConfig.fetch(expiration: const Duration(seconds: 1));
-      await remoteConfig.activate();
+      // //TODO DEV CHECKLIST
+      //FIXME 
+      // await remoteConfig.setConfigSettings(RemoteConfigSettings(minimumFetchInterval: const Duration(hours: 4)));
+      // // await remoteConfig.fetch(expiration: const Duration(seconds: 1));
+      // await remoteConfig.activate();
     }
   }
 }

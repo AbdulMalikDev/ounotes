@@ -11,6 +11,7 @@ import 'package:FSOUNotes/ui/widgets/smart_widgets/bottom_sheet/bottom_sheet_ui_
 import 'package:feature_discovery/feature_discovery.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 import 'package:flutter/material.dart';
@@ -32,6 +33,7 @@ import 'models/download.dart';
 Logger log = getLogger("main");
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   //Dynamic Injection
   setupLocator();
   //Setting custom Bottom Sheet
@@ -42,15 +44,15 @@ void main() async {
   Hive.registerAdapter<Download>(DownloadAdapter());
   await Hive.openBox("OUNOTES");
   await Hive.openBox('downloads');
-  RemoteConfigService _remoteConfigService = locator<RemoteConfigService>();
-  CrashlyticsService _crashlyticsService = locator<CrashlyticsService>();
-  AdmobService _admobService = locator<AdmobService>();
+  // RemoteConfigService _remoteConfigService = locator<RemoteConfigService>();
+  // CrashlyticsService _crashlyticsService = locator<CrashlyticsService>();
+  // AdmobService _admobService = locator<AdmobService>();
   // InAppPaymentService _inAppPaymentService= locator<InAppPaymentService>();
-  NotificationService _notificationService = locator<NotificationService>();
-  GoogleInAppPaymentService _googleInAppPaymentService =
-      locator<GoogleInAppPaymentService>();
+  // NotificationService _notificationService = locator<NotificationService>();
+  // GoogleInAppPaymentService _googleInAppPaymentService =
+      // locator<GoogleInAppPaymentService>();
   // await _inAppPaymentService.fetchData();
-  await _remoteConfigService.init();
+  // await _remoteConfigService.init();
   // await _admobService.init();
   //Sentry provides crash reporting
   // _crashlyticsService.sentryClient = SentryClient(
@@ -63,10 +65,10 @@ void main() async {
   //     .setInFocusDisplayType(OSNotificationDisplayType.notification);
   Logger.level = Level.verbose;
   SharedPreferences prefs = await SharedPreferences.getInstance();
-  AppStateNotifier.isDarkModeOn = prefs.getBool('isdarkmodeon') ?? false;
-  await _notificationService.init();
-  InAppPurchaseConnection.enablePendingPurchases();
-  await _googleInAppPaymentService.initialize();
+  // AppStateNotifier.isDarkModeOn = prefs.getBool('isdarkmodeon') ?? false;
+  // await _notificationService.init();
+  // InAppPurchaseConnection.enablePendingPurchases();
+  // await _googleInAppPaymentService.initialize();
   //TODO DevChecklist - Uncomment for error handling
   // FlutterError.onError = (details, {bool forceReport = false}) {
   //   _crashlyticsService.sentryClient.captureException(

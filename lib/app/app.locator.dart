@@ -7,6 +7,7 @@
 // ignore_for_file: public_member_api_docs
 
 import 'package:stacked/stacked.dart';
+import 'package:stacked/stacked_annotations.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 import '../AppTheme/AppStateNotifier.dart';
@@ -38,17 +39,21 @@ import '../utils/permission_handler.dart';
 
 final locator = StackedLocator.instance;
 
-void setupLocator() {
+void setupLocator({String environment, EnvironmentFilter environmentFilter}) {
+// Register environments
+  locator.registerEnvironment(
+      environment: environment, environmentFilter: environmentFilter);
+
+// Register dependencies
   locator.registerLazySingleton(() => BottomSheetService());
-  locator.registerLazySingleton(() => DialogService());
+  // locator.registerLazySingleton(() => DialogService());
   locator.registerLazySingleton(() => NavigationService());
-  locator.registerLazySingleton(() => SnackbarService());
+  // locator.registerLazySingleton(() => SnackbarService());
   locator.registerLazySingleton(() => AdmobService());
   locator.registerLazySingleton(() => AnalyticsService());
   locator.registerLazySingleton(() => AppInfoService());
   locator.registerLazySingleton(() => AppStateNotifier());
   locator.registerLazySingleton(() => AuthenticationService());
-  locator.registerLazySingleton(() => BottomSheetService());
   locator.registerLazySingleton(() => CloudStorageService());
   locator.registerLazySingleton(() => CrashlyticsService());
   locator.registerLazySingleton(() => DBService());
@@ -60,7 +65,7 @@ void setupLocator() {
   locator.registerLazySingleton(() => GoogleInAppPaymentService());
   locator.registerLazySingleton(() => InAppPaymentService());
   locator.registerLazySingleton(() => LinksService());
-  locator.registerLazySingleton(() => NavigationService());
+  // locator.registerLazySingleton(() => NavigationService());
   locator.registerLazySingleton(() => NotesService());
   locator.registerLazySingleton(() => NotificationService());
   locator.registerLazySingleton(() => PermissionHandler());
