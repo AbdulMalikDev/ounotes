@@ -14,33 +14,26 @@ Logger log = getLogger("PushNotificationService");
 
 class PushNotificationService {
   //TODO testing needed
-  // final FirebaseMessaging fcm = FirebaseMessaging();
-  final FirebaseMessaging fcm=FirebaseMessaging.instance;
+  final FirebaseMessaging fcm = FirebaseMessaging.instance;
 
   NavigationService _navigationService = locator<NavigationService>();
   BottomSheetService _bottomSheetService = locator<BottomSheetService>();
   RemoteConfigService _remoteConfigService = locator<RemoteConfigService>();
 
   Future initialise() async {
-    //TODO  deprecated 
-    // fcm.configure(
-    //   //When the app is in foreground
-    //   onMessage: (Map<String, dynamic> message) async {
-    //     print("onMessage : $message");
-    //     await _handleNotification(message);
-    //   },
-    //   //When app started from dead state
-    //   onLaunch: (Map<String, dynamic> message) async {
-    //     print("onLaunch : $message");
-    //     await Future.delayed(Duration(seconds: 2), () {});
-    //     _handleNotification(message);
-    //   },
-    //   //When app was in background
-    //   onResume: (Map<String, dynamic> message) async {
-    //     print("onResume : $message");
-    //     _handleNotification(message);
-    //   },
-    // );
+    FirebaseMessaging.onBackgroundMessage((message) async { 
+      print("onLaunch : $message");
+      await Future.delayed(Duration(seconds: 2), () {});
+      _handleNotification(message);
+    });
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) async { 
+      print("onMessage : $message");
+      await _handleNotification(message);
+    });
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) { 
+      print("onResume : $message");
+      _handleNotification(message);
+    });
   }
 
   _handleNotification(message) async {
@@ -87,13 +80,10 @@ class PushNotificationService {
 
   // ignore: non_constant_identifier_names
   void handleFcmTopicUnSubscription(
-    // ignore: non_constant_identifier_names
     String fcm_semester,
     String fcm_branch,
-    // ignore: non_constant_identifier_names
     String fcm_college,
     String user_semester,
-    // ignore: non_constant_identifier_names
     String user_branch,
     String user_college,
     String fcmToken,

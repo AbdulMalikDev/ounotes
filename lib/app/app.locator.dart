@@ -17,7 +17,7 @@ import '../services/funtional_services/authentication_service.dart';
 import '../services/funtional_services/cloud_storage_service.dart';
 import '../services/funtional_services/crashlytics_service.dart';
 import '../services/funtional_services/db_service.dart';
-import '../services/funtional_services/firestore_service.dart';
+import '../services/funtional_services/firebase_firestore/firestore_service.dart';
 import '../services/funtional_services/google_drive_service.dart';
 import '../services/funtional_services/google_in_app_payment_service.dart';
 import '../services/funtional_services/in_app_payment_service.dart';

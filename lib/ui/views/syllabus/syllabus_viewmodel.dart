@@ -6,7 +6,7 @@ import 'package:stacked/stacked.dart';
 import 'package:FSOUNotes/app/app.locator.dart';
 import 'package:FSOUNotes/app/app.logger.dart';
 import 'package:FSOUNotes/app/app.router.dart';
-import 'package:FSOUNotes/services/funtional_services/firestore_service.dart';
+import 'package:FSOUNotes/services/funtional_services/firebase_firestore/firestore_service.dart';
 import 'package:flutter/material.dart';
 import 'package:FSOUNotes/misc/helper.dart';
 import 'package:shared_preferences/shared_preferences.dart';

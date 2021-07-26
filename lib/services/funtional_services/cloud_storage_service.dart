@@ -7,7 +7,7 @@ import 'package:FSOUNotes/app/app.locator.dart';
 import 'package:FSOUNotes/app/app.router.dart';
 import 'package:FSOUNotes/enums/enums.dart';
 import 'package:FSOUNotes/models/document.dart';
-import 'package:FSOUNotes/services/funtional_services/firestore_service.dart';
+import 'package:FSOUNotes/services/funtional_services/firebase_firestore/firestore_service.dart';
 import 'package:FSOUNotes/services/funtional_services/authentication_service.dart';
 import 'package:FSOUNotes/services/state_services/notes_service.dart';
 import 'package:FSOUNotes/services/state_services/question_paper_service.dart';
@@ -38,7 +38,7 @@ class CloudStorageService {
       locator<AuthenticationService>();
   final String url =
       "https://storage.googleapis.com/ou-notes.appspot.com/pdfs/";
-  // StorageReference _storageReference = FirebaseStorage.instance.ref();
+  Reference _storageReference = FirebaseStorage.instance.ref();
 
   downloadFile({
     String notesName,
@@ -107,12 +107,12 @@ class CloudStorageService {
     AbstractDocument note,
     String uploadFileType,
   }) async {
-    // bool result1 = await _firestoreService.areUsersAllowed();
-    // bool result2 =
-    //     await _firestoreService.refreshUser().then((user) => user.isUserAllowedToUpload);
-    // if (!result1 || !result2) {
-    //   return "BLOCKED";
-    // }
+    bool result1 = await _firestoreService.areUsersAllowed();
+    bool result2 =
+        await _firestoreService.refreshUser().then((user) => user.isUserAllowedToUpload);
+    if (!result1 || !result2) {
+      return "BLOCKED";
+    }
 
     //Log values to console
     log.i("Values recieved to upload the file :");
@@ -175,29 +175,28 @@ class CloudStorageService {
       //*Set info on document and upload
       String fileName = assignFileName(note);
       note.setTitle = fileName;
-      // StorageUploadTask uploadTask = _storageReference
-      //     .child("pdfs/${note.subjectName}/$type/$fileName")
-      //     .putFile(fileToUpload);
-      // log.i("url : pdfs/${note.subjectName}/$type/$fileName");
+      UploadTask uploadTask = _storageReference
+          .child("pdfs/${note.subjectName}/$type/$fileName")
+          .putFile(fileToUpload);
+      log.i("url : pdfs/${note.subjectName}/$type/$fileName");
 
-      // StorageTaskSnapshot storageSnap = await uploadTask.onComplete;
-      // String downloadUrl = await storageSnap.ref.getDownloadURL();
+      TaskSnapshot storageSnap = await uploadTask.whenComplete(()=>{});
+      String downloadUrl = await storageSnap.ref.getDownloadURL();
 
-      // final metaData = await storageSnap.ref.getMetadata();
-      // final sizeInBytes = metaData.sizeBytes;
-      // final uploadedOn = metaData.creationTimeMillis;
-      // final String size = _formatBytes(sizeInBytes, 2);
-      // log.w("Document uploaded has size $size");
-      // DateTime upload = DateTime.fromMillisecondsSinceEpoch(uploadedOn);
-      // note.setUrl = downloadUrl;
-      // note.setSize = size;
-      // note.setDate = upload;
-      // note.setPages = pdf.pages.count;
+      final metaData = await storageSnap.ref.getMetadata();
+      final sizeInBytes = metaData.size;
+      DateTime upload = metaData.timeCreated;
+      final String size = _formatBytes(sizeInBytes, 2);
+      log.w("Document uploaded has size $size");
+      note.setUrl = downloadUrl;
+      note.setSize = size;
+      note.setDate = upload;
+      note.setPages = pdf.pages.count;
 
-      // pdf.dispose();
-      // fileToUpload.delete();
-      // _firestoreService.saveNotes(note);
-      // return "upload successful";
+      pdf.dispose();
+      fileToUpload.delete();
+      _firestoreService.saveNotes(note);
+      return "upload successful";
 
     } catch (e) {
       log.e("While UPLOADING Notes from Firebase STORAGE , Error occurred");
@@ -271,13 +270,13 @@ class CloudStorageService {
     try {
       //Delete from firebase if not added to Gdrive
       if (!addedToGdrive) {
-        // log.i("Deleting from firebase");
-        // await _firestoreService.deleteDocument(doc);
+        log.i("Deleting from firebase");
+        await _firestoreService.deleteDocument(doc);
       }
-      // StorageReference docRef = _storageReference
-      //     .child("pdfs/${doc.subjectName}/${doc.type}/${doc.title}");
-      // log.e("pdfs/${doc.subjectName}/${doc.type}/${doc.title} DELETED");
-      // await docRef.delete();
+      Reference docRef = _storageReference
+          .child("pdfs/${doc.subjectName}/${doc.type}/${doc.title}");
+      log.e("pdfs/${doc.subjectName}/${doc.type}/${doc.title} DELETED");
+      await docRef.delete();
 
     } catch (e) {
       return await _errorHandling(

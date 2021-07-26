@@ -7,7 +7,7 @@ import 'package:FSOUNotes/app/app.router.dart';
 import 'package:FSOUNotes/models/notes.dart';
 import 'package:FSOUNotes/models/user.dart';
 import 'package:FSOUNotes/services/funtional_services/authentication_service.dart';
-import 'package:FSOUNotes/services/funtional_services/firestore_service.dart';
+import 'package:FSOUNotes/services/funtional_services/firebase_firestore/firestore_service.dart';
 import 'package:FSOUNotes/services/funtional_services/google_drive_service.dart';
 import 'package:FSOUNotes/services/funtional_services/notification_service.dart';
 import 'package:FSOUNotes/services/funtional_services/onboarding_service.dart';
@@ -173,36 +173,35 @@ class GoogleInAppPaymentService{
         );
         User user = await _authenticationService.getUser();
         user.addDownload("${this.note.subjectId}_${this.note.id}");
-        //TODO
-       // await _firestoreService.updateUserInFirebase(user,updateLocally: true);
+        await _firestoreService.updateUserInFirebase(user,updateLocally: true);
         _navigationService.navigateTo(Routes.thankYouView,arguments: ThankYouViewArguments(filePath: path));
       },
     );
   }
 
   _handlePremiumPurchase() async {
-    // log.e("User purchased premium");
-    // User user = await _authenticationService.getUser();
-    // user.setPremiumUser = true;
-    // user.premiumPurchaseDate = DateTime.now();
-    // await _firestoreService.updateUserInFirebase(user,updateLocally: true);
-    // await _notificationService.dispatchLocalNotification(NotificationService.premium_purchase_notify,{
-    //     "title":"✨ Congratulations ! You are a premium user ! ✨",
-    //     "body" : "Enjoy OU Notes Ad-free and download unlimited offline Notes and save Data !",
-    //   }
-    // );
-    // _navigationService.navigateTo(Routes.thankYouView);
+    log.e("User purchased premium");
+    User user = await _authenticationService.getUser();
+    user.setPremiumUser = true;
+    user.premiumPurchaseDate = DateTime.now();
+    await _firestoreService.updateUserInFirebase(user,updateLocally: true);
+    await _notificationService.dispatchLocalNotification(NotificationService.premium_purchase_notify,{
+        "title":"✨ Congratulations ! You are a premium user ! ✨",
+        "body" : "Enjoy OU Notes Ad-free and download unlimited offline Notes and save Data !",
+      }
+    );
+    _navigationService.navigateTo(Routes.thankYouView);
   }
 
   Future<Note> _getNote() async {
-    // String key = OnboardingService.box.get(pdfProductID);
-    // if(key == null)return null;
+    String key = OnboardingService.box.get(pdfProductID);
+    if(key == null)return null;
 
-    // String subjectId;
-    // String noteId;
-    // subjectId = key.split("_").toList()[0];
-    // noteId = key.split("_").toList()[1];
-    // return await _firestoreService.getNoteById(int.parse(subjectId), noteId);
+    String subjectId;
+    String noteId;
+    subjectId = key.split("_").toList()[0];
+    noteId = key.split("_").toList()[1];
+    return await _firestoreService.getNoteById(int.parse(subjectId), noteId);
   }
 
 }

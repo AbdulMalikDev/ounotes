@@ -3,7 +3,7 @@ import 'package:FSOUNotes/app/app.locator.dart';
 import 'package:FSOUNotes/models/download.dart';
 import 'package:FSOUNotes/services/funtional_services/authentication_service.dart';
 import 'package:FSOUNotes/services/funtional_services/cloud_storage_service.dart';
-import 'package:FSOUNotes/services/funtional_services/firestore_service.dart';
+import 'package:FSOUNotes/services/funtional_services/firebase_firestore/firestore_service.dart';
 import 'package:FSOUNotes/services/funtional_services/remote_config_service.dart';
 import 'package:FSOUNotes/services/state_services/download_service.dart';
 import 'package:FSOUNotes/services/state_services/subjects_service.dart';
@@ -102,8 +102,7 @@ class GoogleDriveService {
         log.w(doc.toJson());
 
         // update in firestore with GDrive Link
-        // TODO
-        // await _firestoreService.updateDocument(doc, document);
+        await _firestoreService.updateDocument(doc, document);
       }
 
       // if accidentally added to GDrive delete it from there too
@@ -134,8 +133,7 @@ class GoogleDriveService {
       AutoRefreshingAuthClient gdriveAuthClient =
           await clientViaServiceAccount(accountCredentials, scopes);
       var drive = ga.DriveApi(gdriveAuthClient);
-      //TODO
-      //  await _firestoreService.deleteDocument(doc);
+       await _firestoreService.deleteDocument(doc);
       await drive.files.delete(doc.GDriveID);
       return "delete successful";
     } catch (e) {
@@ -173,9 +171,7 @@ class GoogleDriveService {
       String fileID = note.GDriveID;
 
       //*Download file
-      //TODO this is deprecated
-      // ga.Media file = await drive.files
-      //     .get(fileID, downloadOptions: ga.DownloadOptions.FullMedia);
+      ga.Media file = await drive.files.get(fileID, downloadOptions: ga.DownloadOptions.fullMedia);
 
       //*Figure out size from note.size property to show proper loading indicator
       double contentLength = double.parse(note.size.split(" ")[0]);
@@ -187,33 +183,32 @@ class GoogleDriveService {
       List<int> dataStore = [];
 
       //*Start the download
-      //TODO deprecated
-      // file.stream.listen((data) {
-      //   downloadedLength += data.length;
-      //   downloadProgress.value =
-      //       ((downloadedLength / contentLength) * 100);
-      //   print(downloadProgress.value);
-      //   dataStore.insertAll(dataStore.length, data);
-      // }, onDone: () async {
-      //   localFile = File(filePath);
-      //   await localFile.writeAsBytes(dataStore);
-      //   _insertBookmarks(filePath, note);
-      //   Download downloadObject = Download(
-      //     note.id,
-      //     filePath,
-      //     note.title,
-      //     note.subjectName,
-      //     note.author,
-      //     note.view,
-      //     note.pages,
-      //     note.size,
-      //     note.uploadDate,
-      //   );
-      //   _downloadService.addDownload(download: downloadObject);
-      //   await Future.delayed(Duration(seconds: 1));
-      //   downloadProgress.value = 0;
-      //   onDownloadedCallback(localFile.path, note);
-      // });
+      file.stream.listen((data) {
+        downloadedLength += data.length;
+        downloadProgress.value =
+            ((downloadedLength / contentLength) * 100);
+        print(downloadProgress.value);
+        dataStore.insertAll(dataStore.length, data);
+      }, onDone: () async {
+        localFile = File(filePath);
+        await localFile.writeAsBytes(dataStore);
+        _insertBookmarks(filePath, note);
+        Download downloadObject = Download(
+          note.id,
+          filePath,
+          note.title,
+          note.subjectName,
+          note.author,
+          note.view,
+          note.pages,
+          note.size,
+          note.uploadDate,
+        );
+        _downloadService.addDownload(download: downloadObject);
+        await Future.delayed(Duration(seconds: 1));
+        downloadProgress.value = 0;
+        onDownloadedCallback(localFile.path, note);
+      });
     } catch (e) {
       log.e(e.toString());
 
@@ -239,8 +234,7 @@ class GoogleDriveService {
     var drive = ga.DriveApi(gdriveAuthClient);
     //*Download file
     String fileID = note.GDriveID;
-    //TODO deprecated
-    // ga.Media file = await drive.files.get(fileID, downloadOptions: ga.DownloadOptions.FullMedia);
+    ga.Media file = await drive.files.get(fileID, downloadOptions: ga.DownloadOptions.fullMedia);
     var dir = await ExtStorage.getExternalStoragePublicDirectory(
         ExtStorage.DIRECTORY_DOWNLOADS);
 
@@ -259,25 +253,24 @@ class GoogleDriveService {
     List<int> dataStore = [];
 
     //*Start the download
-    //TODO deprecated
-    // file.stream.listen((data) {
-    //   downloadedLength += data.length;
-    //   downloadProgress.value = (downloadedLength / contentLength) * 100;
-    //   log.e(downloadedLength);
-    //   log.e(contentLength);
-    //   print("loading.. : " + downloadProgress.value.toString());
-    //   // if(downloadProgress.value < 1)
-    //   // EasyLoading.showProgress(downloadProgress.value, status: 'downloading...');
-    //   dataStore.insertAll(dataStore.length, data);
-    // }, onDone: () async {
-    //   // EasyLoading.dismiss();
-    //   localFile = File(filePath);
-    //   await localFile.writeAsBytes(dataStore);
-    //   await Future.delayed(Duration(seconds: 1));
-    //   downloadProgress.value = 0;
-    //   onDownloadedCallback(localFile.path,fileName);
-    //   log.e("DOWNLOAD DONE");
-    // });
+    file.stream.listen((data) {
+      downloadedLength += data.length;
+      downloadProgress.value = (downloadedLength / contentLength) * 100;
+      log.e(downloadedLength);
+      log.e(contentLength);
+      print("loading.. : " + downloadProgress.value.toString());
+      // if(downloadProgress.value < 1)
+      // EasyLoading.showProgress(downloadProgress.value, status: 'downloading...');
+      dataStore.insertAll(dataStore.length, data);
+    }, onDone: () async {
+      // EasyLoading.dismiss();
+      localFile = File(filePath);
+      await localFile.writeAsBytes(dataStore);
+      await Future.delayed(Duration(seconds: 1));
+      downloadProgress.value = 0;
+      onDownloadedCallback(localFile.path,fileName);
+      log.e("DOWNLOAD DONE");
+    });
   }
 
   Future<Subject> createSubjectFolders(Subject subject) async {
@@ -447,8 +440,7 @@ class GoogleDriveService {
     File(filePath).writeAsBytes(document.save());
     note.setPages = pages;
     if (!noteHasPages) {
-      //TODO
-      // _firestoreService.updateDocument(note, Document.Notes);
+      _firestoreService.updateDocument(note, Document.Notes);
     }
 
     //Disposes the document

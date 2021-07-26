@@ -74,17 +74,17 @@ void main() async {
   //     stackTrace: details.stack,
   //   );
   // };
-  // await dothis();
-  // runApp(MyApp());
-  runZonedGuarded(
-    () => runApp(MyApp()),
-    (error, stackTrace) async {
-      // await _crashlyticsService.sentryClient.captureException(
-      //   exception: error,
-      //   stackTrace: stackTrace,
-      // );
-    },
-  );
+  runApp(MyApp());
+  // runZonedGuarded(
+  //   () => runApp(MyApp()),
+  //   (error, stackTrace) async {
+  //     // await _crashlyticsService.sentryClient.captureException(
+  //     //   exception: error,
+  //     //   stackTrace: stackTrace,
+  //     // );
+  //   },
+  // );
+  await dothis();
 }
 
 dothis() async {

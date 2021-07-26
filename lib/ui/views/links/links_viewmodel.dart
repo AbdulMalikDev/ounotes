@@ -6,7 +6,7 @@ import 'package:FSOUNotes/models/link.dart';
 import 'package:FSOUNotes/app/app.locator.dart';
 import 'package:FSOUNotes/app/app.logger.dart';
 import 'package:FSOUNotes/app/app.router.dart';
-import 'package:FSOUNotes/services/funtional_services/firestore_service.dart';
+import 'package:FSOUNotes/services/funtional_services/firebase_firestore/firestore_service.dart';
 
 class LinksViewModel extends BaseViewModel {
   FirestoreService _firestoreService = locator<FirestoreService>();
