@@ -28,7 +28,7 @@ class SplashViewModel extends FutureViewModel {
   AppInfoService _appInfoService = locator<AppInfoService>();
   PushNotificationService _pushNotificationService = locator<PushNotificationService>();
 
-  handleStartUpLogic() async {z
+  handleStartUpLogic() async {
     bool isUserOnline = await ConnectivityWrapper.instance.isConnected;
 
     await _pushNotificationService.initialise();
