@@ -171,7 +171,7 @@ class AuthenticationService {
     if (_user == null) {
       SharedPreferencesService _sharedPreferencesService =
           locator<SharedPreferencesService>();
-      User user = await _sharedPreferencesService.getUser();
+      userModel.User user = await _sharedPreferencesService.getUser();
       return user;
     } else {
       return _user;

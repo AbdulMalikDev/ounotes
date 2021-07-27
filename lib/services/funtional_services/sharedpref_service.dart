@@ -63,7 +63,7 @@ class SharedPreferencesService {
           log.e("User branch semester is null");
           return null;
         }
-
+        _authenticationService.setUser = user;
         return user;
       }
     } catch (e) {

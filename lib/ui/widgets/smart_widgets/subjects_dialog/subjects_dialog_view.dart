@@ -119,7 +119,7 @@ class _SubjectsDialogViewState extends State<SubjectsDialogView> {
                             builder: (context, allSubjects, child) {
                               List<Subject> allSubjectsAltered =
                                   model.alter(allSubjects);
-
+                                
                               return ListView.builder(
                                 physics: BouncingScrollPhysics(),
                                 itemCount: allSubjectsAltered.length,

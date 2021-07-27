@@ -2,6 +2,7 @@ import 'package:FSOUNotes/app/app.locator.dart';
 import 'package:FSOUNotes/app/app.logger.dart';
 import 'package:FSOUNotes/app/app.router.dart';
 import 'package:FSOUNotes/models/user.dart';
+import 'package:connection_verify/connection_verify.dart';
 import 'package:FSOUNotes/services/funtional_services/app_info_service.dart';
 import 'package:FSOUNotes/services/funtional_services/firebase_firestore/firestore_service.dart';
 import 'package:FSOUNotes/services/funtional_services/notification_service.dart';
@@ -9,7 +10,6 @@ import 'package:FSOUNotes/services/funtional_services/push_notification_service.
 import 'package:FSOUNotes/services/funtional_services/remote_config_service.dart';
 import 'package:FSOUNotes/services/funtional_services/sharedpref_service.dart';
 import 'package:FSOUNotes/services/state_services/subjects_service.dart';
-import 'package:connectivity_wrapper/connectivity_wrapper.dart';
 import 'package:logger/logger.dart';
 import 'package:package_info/package_info.dart';
 import 'package:stacked/stacked.dart';
@@ -29,18 +29,17 @@ class SplashViewModel extends FutureViewModel {
   PushNotificationService _pushNotificationService = locator<PushNotificationService>();
 
   handleStartUpLogic() async {
-    bool isUserOnline = await ConnectivityWrapper.instance.isConnected;
-
-    await _pushNotificationService.initialise();
+    bool isUserOnline = await ConnectionVerify.connectionStatus();
+    // await _pushNotificationService.initialise();
     var LoggedInUser = await _sharedPreferencesService.isUserLoggedIn();
     //Check if user has outdated version if he/she is online
     Map<String,dynamic> result;
-    if(isUserOnline) result = await _checkForUpdatedVersionAndShowDialog();
-
+    // if(isUserOnline) result = await _checkForUpdatedVersionAndShowDialog();
     if (LoggedInUser != null) {
       if(LoggedInUser.isPremiumUser ?? false)
       _checkPremiumPurchaseDate(LoggedInUser.id);
       await _subjectsService.loadSubjects();
+      isUserOnline = false;
       if(isUserOnline)_navigationService.replaceWith(Routes.homeView,arguments:HomeViewArguments(shouldShowUpdateDialog: result["doesUserNeedUpdate"],versionDetails: result));
       else _navigationService.replaceWith(Routes.homeView);
     } else {
