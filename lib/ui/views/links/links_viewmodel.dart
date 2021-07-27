@@ -18,22 +18,22 @@ class LinksViewModel extends BaseViewModel {
   List<Widget> get linkTiles => _linkTiles;
 
   Future fetchLinks(String subjectName) async {
-    // setBusy(true);
-    // var links = await _firestoreService.loadLinksFromFirebase(subjectName);
-    // if (links is String) {
-    //   await Fluttertoast.showToast(
-    //       msg:
-    //           "You are facing an error in loading the links.If you are facing this error more than once, please let us know by using the 'feedback' option in the app drawer.");
-    //   setBusy(false);
-    // } else {
-    //   _links = links;
-    // }
-    // for (int i = 0; i < links.length; i++) {
-    //   Link link = links[i];
-    //   _linkTiles.add(_addInkWellWidget(link));
-    // }
-    // notifyListeners();
-    // setBusy(false);
+    setBusy(true);
+    var links = await _firestoreService.loadLinksFromFirebase(subjectName);
+    if (links is String) {
+      await Fluttertoast.showToast(
+          msg:
+              "You are facing an error in loading the links.If you are facing this error more than once, please let us know by using the 'feedback' option in the app drawer.");
+      setBusy(false);
+    } else {
+      _links = links;
+    }
+    for (int i = 0; i < links.length; i++) {
+      Link link = links[i];
+      _linkTiles.add(_addInkWellWidget(link));
+    }
+    notifyListeners();
+    setBusy(false);
   }
 
   Widget _addInkWellWidget(

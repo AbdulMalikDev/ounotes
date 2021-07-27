@@ -5,7 +5,7 @@ import 'package:FSOUNotes/enums/constants.dart';
 import 'package:FSOUNotes/enums/enums.dart';
 import 'package:FSOUNotes/models/UploadLog.dart';
 import 'package:FSOUNotes/services/funtional_services/firebase_firestore/firestore_service.dart';
-import 'package:FSOUNotes/services/funtional_services/google_drive_service.dart';
+import 'package:FSOUNotes/services/funtional_services/google_drive/google_drive_service.dart';
 import 'package:FSOUNotes/services/funtional_services/onboarding_service.dart';
 import 'package:logger/logger.dart';
 import 'package:stacked/stacked.dart';
@@ -24,7 +24,7 @@ class UploadLogViewModel extends FutureViewModel {
   List<UploadLog> get logs => _logs;
 
   fetchUploadLogs() async {
-    //_logs = await _firestoreService.loadUploadLogFromFirebase();
+    _logs = await _firestoreService.loadUploadLogFromFirebase();
   }
 
   @override
@@ -37,11 +37,11 @@ class UploadLogViewModel extends FutureViewModel {
 
   Future<String> getUploadStatus(UploadLog logItem) async {
     if (logItem.type != Constants.links) {
-      // var document = await _firestoreService.getDocumentById(
-      //     logItem.subjectName,
-      //     logItem.id,
-      //     Constants.getDocFromConstant(logItem.type));
-      // return document.GDriveLink == null ? "NOT UPLOADED" : "UPLOADED";
+      var document = await _firestoreService.getDocumentById(
+          logItem.subjectName,
+          logItem.id,
+          Constants.getDocFromConstant(logItem.type));
+      return document.GDriveLink == null ? "NOT UPLOADED" : "UPLOADED";
     }
     return "None";
   }
@@ -55,21 +55,20 @@ class UploadLogViewModel extends FutureViewModel {
   uploadDocument(UploadLog logItem) async {
     setBusy(true);
     try {
-      GoogleDriveService _googleDriveService = locator<GoogleDriveService>();
-      // dynamic doc = await _firestoreService.getDocumentById(logItem.subjectName,logItem.id,Constants.getDocFromConstant(logItem.type));
-      // if(doc == null){await _dialogService.showDialog(title:"Oops",description: "Can't find this document");setBusy(false);return;}
+      dynamic doc = await _firestoreService.getDocumentById(logItem.subjectName,logItem.id,Constants.getDocFromConstant(logItem.type));
+      if(doc == null){await _dialogService.showDialog(title:"Oops",description: "Can't find this document");setBusy(false);return;}
 
-      // if (logItem.type == Constants.links){
-      //   if(doc.uploaded == true){await _dialogService.showDialog(title: "ERROR" , description: "ALREADY UPLOADED");setBusy(false);return;}
-      //   doc.uploaded = true;
-      //   await _firestoreService.updateDocument(doc, Document.Links);
-      // }else{
+      if (logItem.type == Constants.links){
 
-      //   if(doc.GDriveLink != null){await _dialogService.showDialog(title: "ERROR" , description: "ALREADY UPLOADED");setBusy(false);return;}
-      //   String result = await _googleDriveService.processFile(doc: doc, document:Constants.getDocFromConstant(logItem.type) , addToGdrive: true);
-      //   _dialogService.showDialog(title: "OUTPUT" , description: result);
-      // }
-      // deleteLogItem(logItem);
+        if(doc.uploaded == true){await _dialogService.showDialog(title: "ERROR" , description: "ALREADY UPLOADED");setBusy(false);return;}
+        doc.uploaded = true;
+        await _firestoreService.updateDocument(doc, Document.Links);
+      }else{
+
+        await _firestoreService.updateDocument(doc, Constants.getDocFromConstant(logItem.type));
+      }
+      
+      deleteLogItem(logItem);
 
     } catch (e) {
       _bottomSheetService.showBottomSheet(
@@ -93,7 +92,7 @@ class UploadLogViewModel extends FutureViewModel {
     //   confirmationTitle: "Apne baap ku mat sikha"
     // );
     // if(dialogResult.confirmed)
-    // await _firestoreService.deleteUploadLog(report);
+    await _firestoreService.deleteUploadLog(report);
   }
 
   uploadSelectedDocuments() async {

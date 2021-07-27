@@ -9,7 +9,7 @@ import 'package:FSOUNotes/models/subject.dart';
 import 'package:FSOUNotes/models/syllabus.dart';
 import 'package:FSOUNotes/services/funtional_services/analytics_service.dart';
 import 'package:FSOUNotes/services/funtional_services/firebase_firestore/firestore_service.dart';
-import 'package:FSOUNotes/services/funtional_services/google_drive_service.dart';
+import 'package:FSOUNotes/services/funtional_services/google_drive/google_drive_service.dart';
 import 'package:FSOUNotes/services/state_services/subjects_service.dart';
 import 'package:FSOUNotes/models/user.dart';
 import 'package:FSOUNotes/ui/widgets/smart_widgets/notes_tile/notes_tile_viewmodel.dart';
@@ -120,12 +120,8 @@ class ReportViewModel extends FutureViewModel {
         return;
       }
       GoogleDriveService _googleDriveService = locator<GoogleDriveService>();
-      //   dynamic doc = await _firestoreService.getDocumentById(report.subjectName,report.id,Constants.getDocFromConstant(report.type));
-      String result = await _googleDriveService.processFile(
-       //   doc: doc,
-          document: Constants.getDocFromConstant(report.type),
-          addToGdrive: false);
-      // _dialogService.showDialog(title: "OUTPUT" , description: result);
+      dynamic doc = await _firestoreService.getDocumentById(report.subjectName,report.id,Constants.getDocFromConstant(report.type));
+      String result = await _googleDriveService.deleteFile(doc:doc);
       setBusy(false);
     }
   }

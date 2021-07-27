@@ -1,7 +1,7 @@
 import 'package:FSOUNotes/enums/constants.dart';
 import 'package:FSOUNotes/enums/enums.dart';
 import 'package:FSOUNotes/models/document.dart';
-import 'package:FSOUNotes/services/funtional_services/google_drive_service.dart';
+import 'package:FSOUNotes/services/funtional_services/google_drive/google_drive_service.dart';
 import 'package:stacked/stacked.dart';
 import 'package:FSOUNotes/models/report.dart';
 import 'package:FSOUNotes/services/funtional_services/authentication_service.dart';
@@ -28,7 +28,7 @@ class SyllabusTileViewModel extends BaseViewModel {
   NavigationService _navigationService = locator<NavigationService>();
   BottomSheetService _bottomSheetService = locator<BottomSheetService>();
 
-  // bool get isAdmin => _authenticationService.user.isAdmin;
+  bool get isAdmin => _authenticationService.user.isAdmin;
   bool _isSyllabusdownloaded = false;
   bool get isSyllabusdownloaded => _isSyllabusdownloaded;
 
@@ -48,31 +48,30 @@ class SyllabusTileViewModel extends BaseViewModel {
     log.i("Report BottomSheetResponse " + reportResponse.responseData);
 
     //Generate report with appropriate data
-    //  Report report = Report(doc.id, doc.subjectName, doc.type, doc.title, _authenticationService.user.email,reportReason: reportResponse.responseData);
+    Report report = Report(doc.id, doc.subjectName, doc.type, doc.title, _authenticationService.user.email,reportReason: reportResponse.responseData);
 
     //Check whether user is banned
-    //TODO deprecated
-    // User user = await _firestoreService.refreshUser();
-    // if(!user.isUserAllowedToUpload){_userIsNotAllowedNotToReport();setBusy(false); return;}
+    User user = await _firestoreService.refreshUser();
+    if(!user.isUserAllowedToUpload){_userIsNotAllowedNotToReport();setBusy(false); return;}
 
-    //If user is reporting the same document 2nd time the result will be a String
-    //var result = await _reportsService.addReport(report);
-    //   if (result is String) {
-    //     _dialogService.showDialog(
-    //         title: "Thank you for reporting", description: result);
-    //   } else {
-    //     // await _firestoreService.reportNote(report: report, doc: doc);
-    //     Fluttertoast.showToast(
-    //         msg: "Your report has been recorded. The admins will look into this.",
-    //         toastLength: Toast.LENGTH_SHORT,
-    //         gravity: ToastGravity.CENTER,
-    //         timeInSecForIosWeb: 1,
-    //         backgroundColor: Colors.teal,
-    //         textColor: Colors.white,
-    //         fontSize: 16.0);
-    //   }
+    // If user is reporting the same document 2nd time the result will be a String
+    var result = await _reportsService.addReport(report);
+      if (result is String) {
+        _dialogService.showDialog(
+            title: "Thank you for reporting", description: result);
+      } else {
+        // await _firestoreService.reportNote(report: report, doc: doc);
+        Fluttertoast.showToast(
+            msg: "Your report has been recorded. The admins will look into this.",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.CENTER,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.teal,
+            textColor: Colors.white,
+            fontSize: 16.0);
+      }
 
-    //   setBusy(false);
+      setBusy(false);
   }
 
   Future delete(AbstractDocument doc) async {

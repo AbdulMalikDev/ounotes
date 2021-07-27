@@ -252,8 +252,7 @@ class UploadLogDetailView extends StatelessWidget {
                                             }),
                                         SizedBox(height: 10),
                                         FutureBuilder(
-                                          //TODO
-                                            //     future: model.getUser(logItem.uploader_id),
+                                            future: model.getUser(logItem.uploader_id),
                                             builder: (context,
                                                 AsyncSnapshot<User> snapshot) {
                                           if (snapshot.hasData) {
@@ -586,8 +585,7 @@ class UploadLogDetailView extends StatelessWidget {
                                                             FontWeight.bold),
                                                   ),
                                                   onPressed: () {
-                                                    //TODO
-                                                    //   model.sendNotification(logItem,notificationTitleController.text,notificationBodyController.text,isBanned: isBanned);
+                                                      model.sendNotification(logItem,notificationTitleController.text,notificationBodyController.text,isBanned: isBanned);
                                                   },
                                                 ),
                                               ),

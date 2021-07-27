@@ -80,7 +80,7 @@ dependencies:
   # Architecture related packages
   hive: ^2.0.4
   hive_flutter: ^1.0.0
-  stacked: ^2.1.0
+  stacked: ^1.9.8
   stacked_services: ^0.8.5
   shared_preferences: ^2.0.5
   # purchases_flutter: ^2.0.0
@@ -114,10 +114,10 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  auto_route_generator: ^2.0.0
+  # auto_route_generator: ^2.0.0
   hive_generator: ^1.1.0
   build_runner: ^2.0.1
-  stacked_generator:
+  stacked_generator: 0.2.7
   flutter_launcher_icons: ^0.9.0
   mockito: ^5.0.5
 

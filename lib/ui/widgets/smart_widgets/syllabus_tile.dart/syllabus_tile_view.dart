@@ -158,32 +158,32 @@ class SyllabusTileView extends StatelessWidget {
                         )
                       ],
                     ),
-                    // model.isAdmin
-                    //     ? Row(
-                    //         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    //         children: [
-                    //             Container(
-                    //               child: RaisedButton(
-                    //                 child: Text("EDIT",
-                    //                     style: TextStyle(color: Colors.white)),
-                    //                 color: Colors.blue,
-                    //                 onPressed: () async {
-                    //                   await model.navigateToEditView(syllabus);
-                    //                 },
-                    //               ),
-                    //             ),
-                    //             Container(
-                    //               child: RaisedButton(
-                    //                 child: Text("DELETE",
-                    //                     style: TextStyle(color: Colors.white)),
-                    //                 color: Colors.red,
-                    //                 onPressed: () async {
-                    //                   await model.delete(syllabus);
-                    //                 },
-                    //               ),
-                    //             ),
-                    //           ])
-                    //     : Container(),
+                    model.isAdmin
+                        ? Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                                Container(
+                                  child: RaisedButton(
+                                    child: Text("EDIT",
+                                        style: TextStyle(color: Colors.white)),
+                                    color: Colors.blue,
+                                    onPressed: () async {
+                                      await model.navigateToEditView(syllabus);
+                                    },
+                                  ),
+                                ),
+                                Container(
+                                  child: RaisedButton(
+                                    child: Text("DELETE",
+                                        style: TextStyle(color: Colors.white)),
+                                    color: Colors.red,
+                                    onPressed: () async {
+                                      await model.delete(syllabus);
+                                    },
+                                  ),
+                                ),
+                              ])
+                        : Container(),
                   ],
                 ),
               ),

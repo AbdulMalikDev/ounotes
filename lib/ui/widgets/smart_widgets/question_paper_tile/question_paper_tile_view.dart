@@ -154,36 +154,36 @@ class QuestionPaperTileView extends StatelessWidget {
                               ),
                             ],
                           ),
-                          // model.isAdmin
-                          //     ? Row(
-                          //         mainAxisAlignment:
-                          //             MainAxisAlignment.spaceEvenly,
-                          //         children: [
-                          //             Container(
-                          //               child: RaisedButton(
-                          //                 child: Text("EDIT",
-                          //                     style: TextStyle(
-                          //                         color: Colors.white)),
-                          //                 color: Colors.blue,
-                          //                 onPressed: () async {
-                          //                   await model
-                          //                       .navigateToEditView(questionPaper);
-                          //                 },
-                          //               ),
-                          //             ),
-                          //             Container(
-                          //               child: RaisedButton(
-                          //                 child: Text("DELETE",
-                          //                     style: TextStyle(
-                          //                         color: Colors.white)),
-                          //                 color: Colors.red,
-                          //                 onPressed: () async {
-                          //                   await model.delete(questionPaper);
-                          //                 },
-                          //               ),
-                          //             ),
-                          //           ])
-                          //     : Container(),
+                          model.isAdmin
+                              ? Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                      Container(
+                                        child: RaisedButton(
+                                          child: Text("EDIT",
+                                              style: TextStyle(
+                                                  color: Colors.white)),
+                                          color: Colors.blue,
+                                          onPressed: () async {
+                                            await model
+                                                .navigateToEditView(questionPaper);
+                                          },
+                                        ),
+                                      ),
+                                      Container(
+                                        child: RaisedButton(
+                                          child: Text("DELETE",
+                                              style: TextStyle(
+                                                  color: Colors.white)),
+                                          color: Colors.red,
+                                          onPressed: () async {
+                                            await model.delete(questionPaper);
+                                          },
+                                        ),
+                                      ),
+                                    ])
+                              : Container(),
                         ],
                       ),
               ),

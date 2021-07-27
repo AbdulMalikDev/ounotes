@@ -12,7 +12,7 @@ import 'package:FSOUNotes/models/vote.dart';
 import 'package:FSOUNotes/services/funtional_services/admob_service.dart';
 import 'package:FSOUNotes/services/funtional_services/authentication_service.dart';
 import 'package:FSOUNotes/services/funtional_services/firebase_firestore/firestore_service.dart';
-import 'package:FSOUNotes/services/funtional_services/google_drive_service.dart';
+import 'package:FSOUNotes/services/funtional_services/google_drive/google_drive_service.dart';
 import 'package:FSOUNotes/services/funtional_services/google_in_app_payment_service.dart';
 import 'package:FSOUNotes/services/funtional_services/notification_service.dart';
 import 'package:FSOUNotes/services/funtional_services/remote_config_service.dart';
@@ -157,101 +157,101 @@ class NotesViewModel extends BaseViewModel {
   List<Note> get notes => _notes;
 
   Future fetchNotesAndVotes(String subjectName) async {
-    // setBusy(true);
-    // _notes = await _firestoreService.loadNotesFromFirebase(subjectName);
-    // if (_notes is String) {
-    //   await Fluttertoast.showToast(
-    //       msg:
-    //           "You are facing an error in loading the notes. If you are facing this error more than once, please let us know by using the 'feedback' option in the app drawer.");
-    //   return;
-    // }
-    // await _voteService.fetchAndSetVotesBySubject(subjectName);
-    // // await _downloadService.fetchAndSetDownloads();
-    // userVotedNotesList = _voteService.userVotesList;
+    setBusy(true);
+    _notes = await _firestoreService.loadNotesFromFirebase(subjectName);
+    if (_notes is String) {
+      await Fluttertoast.showToast(
+          msg:
+              "You are facing an error in loading the notes. If you are facing this error more than once, please let us know by using the 'feedback' option in the app drawer.");
+      return;
+    }
+    await _voteService.fetchAndSetVotesBySubject(subjectName);
+    // await _downloadService.fetchAndSetDownloads();
+    userVotedNotesList = _voteService.userVotesList;
 
-    // //> Populate Notes list
-    // bool notesForNotificationDisplay = false;
-    // log.e(box.get("pinnedNotes"));
-    // // box.delete("pinnedNotes");
-    // Map<String, Map<String, DateTime>> pinnedNotes = {
-    //   "empty": {"a": DateTime.now()}
-    // };
-    // if (box.get("pinnedNotes") != null) {
-    //   Map notesMap = box.get("pinnedNotes");
-    //   notesMap = notesMap.map((key, value) {
-    //     if (value.isEmpty) {
-    //       value = {"a": DateTime.now()};
-    //     }
-    //     pinnedNotes.addEntries([
-    //       MapEntry<String, Map<String, DateTime>>(
-    //           key as String, new Map<String, DateTime>.from(value))
-    //     ]);
-    //     return MapEntry<String, Map<String, DateTime>>(
-    //         key as String, new Map<String, DateTime>.from(value));
-    //   });
-    //   // log.e(pinnedNotes);
-    // }
-    // Map<String, DateTime> subjectPinnedNotes = pinnedNotes[subjectName] ?? {};
-    // List<String> pinnedNotesIDs = subjectPinnedNotes.keys.toList();
-    // List<Note> currentSubjectPinnedNotes = [];
-    // for (int i = 0; i < _notes.length; i++) {
-    //   Note note = _notes[i];
-    //   if (note.GDriveLink == null) {
-    //     continue;
-    //   }
+    //> Populate Notes list
+    bool notesForNotificationDisplay = false;
+    log.e(box.get("pinnedNotes"));
+    // box.delete("pinnedNotes");
+    Map<String, Map<String, DateTime>> pinnedNotes = {
+      "empty": {"a": DateTime.now()}
+    };
+    if (box.get("pinnedNotes") != null) {
+      Map notesMap = box.get("pinnedNotes");
+      notesMap = notesMap.map((key, value) {
+        if (value.isEmpty) {
+          value = {"a": DateTime.now()};
+        }
+        pinnedNotes.addEntries([
+          MapEntry<String, Map<String, DateTime>>(
+              key as String, new Map<String, DateTime>.from(value))
+        ]);
+        return MapEntry<String, Map<String, DateTime>>(
+            key as String, new Map<String, DateTime>.from(value));
+      });
+      // log.e(pinnedNotes);
+    }
+    Map<String, DateTime> subjectPinnedNotes = pinnedNotes[subjectName] ?? {};
+    List<String> pinnedNotesIDs = subjectPinnedNotes.keys.toList();
+    List<Note> currentSubjectPinnedNotes = [];
+    for (int i = 0; i < _notes.length; i++) {
+      Note note = _notes[i];
+      if (note.GDriveLink == null) {
+        continue;
+      }
 
-    //   //>To show document highlighted in notification
-    //   if (newDocIDUploaded != null && newDocIDUploaded == note.id) {
-    //     notesForNotificationDisplay = true;
-    //     notificationNote = note;
-    //     continue;
-    //   }
-    //   //>Skip pinned notes to add them in the last
-    //   else if (pinnedNotesIDs.contains(note.id)) {
-    //     currentSubjectPinnedNotes.add(note);
-    //     continue;
-    //   }
-    //   //>Add normal notes to the list as usual
-    //   else {
-    //     _notesTiles.value.add(
-    //       _addInkWellWidget(note),
-    //     );
-    //   }
-    // }
+      //>To show document highlighted in notification
+      if (newDocIDUploaded != null && newDocIDUploaded == note.id) {
+        notesForNotificationDisplay = true;
+        notificationNote = note;
+        continue;
+      }
+      //>Skip pinned notes to add them in the last
+      else if (pinnedNotesIDs.contains(note.id)) {
+        currentSubjectPinnedNotes.add(note);
+        continue;
+      }
+      //>Add normal notes to the list as usual
+      else {
+        _notesTiles.value.add(
+          _addInkWellWidget(note),
+        );
+      }
+    }
 
-    // //Add all the pinned notes
-    // if (currentSubjectPinnedNotes.isNotEmpty) {
-    //   //>Order dates by most recently pinned
-    //   List<DateTime> dates = subjectPinnedNotes.values.toList();
-    //   dates.sort((a, b) => a.compareTo(b));
-    //   dates = dates.reversed.toList();
-    //   subjectPinnedNotes.remove("a");
-    //   log.e(currentSubjectPinnedNotes);
-    //   currentSubjectPinnedNotes.asMap().forEach((index, _) {
-    //     DateTime recentDate = dates[index];
-    //     String notesIdCorrespondingToTheRecentDate = subjectPinnedNotes.keys
-    //         .toList()
-    //         .where((key) => subjectPinnedNotes[key] == recentDate)
-    //         .toList()[0];
-    //     Note noteToAdd = currentSubjectPinnedNotes
-    //         .where((note) => note.id == notesIdCorrespondingToTheRecentDate)
-    //         .toList()[0];
-    //     _notesTiles.value.insert(
-    //       index,
-    //       _addInkWellWidget(noteToAdd, isPinned: true),
-    //     );
-    //   });
-    // }
+    //Add all the pinned notes
+    if (currentSubjectPinnedNotes.isNotEmpty) {
+      //>Order dates by most recently pinned
+      List<DateTime> dates = subjectPinnedNotes.values.toList();
+      dates.sort((a, b) => a.compareTo(b));
+      dates = dates.reversed.toList();
+      subjectPinnedNotes.remove("a");
+      log.e(currentSubjectPinnedNotes);
+      currentSubjectPinnedNotes.asMap().forEach((index, _) {
+        DateTime recentDate = dates[index];
+        String notesIdCorrespondingToTheRecentDate = subjectPinnedNotes.keys
+            .toList()
+            .where((key) => subjectPinnedNotes[key] == recentDate)
+            .toList()[0];
+        Note noteToAdd = currentSubjectPinnedNotes
+            .where((note) => note.id == notesIdCorrespondingToTheRecentDate)
+            .toList()[0];
+        _notesTiles.value.insert(
+          index,
+          _addInkWellWidget(noteToAdd, isPinned: true),
+        );
+      });
+    }
 
-    // //> Adding this in the end so that it doesn't mess up the pinned notes
-    // if (notesForNotificationDisplay) {
-    //   _notesTiles.value.insert(
-    //     0,
-    //     _addInkWellWidget(notificationNote, notification: true),
-    //   );
-    // }
-    // setBusy(false);
-    // notifyListeners();
+    //> Adding this in the end so that it doesn't mess up the pinned notes
+    if (notesForNotificationDisplay) {
+      _notesTiles.value.insert(
+        0,
+        _addInkWellWidget(notificationNote, notification: true),
+      );
+    }
+    setBusy(false);
+    notifyListeners();
   }
 
   void openDoc(Note note) async {

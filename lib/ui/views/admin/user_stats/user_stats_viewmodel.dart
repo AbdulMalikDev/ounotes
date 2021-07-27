@@ -21,8 +21,7 @@ class UserStatsViewModel extends FutureViewModel {
 
   fetchUserStats() async {
     setBusy(true);
-    //TODO
-    //userStats = await _firestoreService.getUserStats();
+    userStats = await _firestoreService.getUserStats();
     log.e(userStats);
     CourseInfo.colleges.forEach((college) async {
       _colleges.add(College(college, userStats[college]));

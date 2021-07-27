@@ -14,6 +14,7 @@ import 'package:FSOUNotes/models/subject.dart';
 import 'package:FSOUNotes/models/syllabus.dart';
 import 'package:FSOUNotes/services/funtional_services/cloud_storage_service.dart';
 import 'package:FSOUNotes/services/funtional_services/firebase_firestore/firestore_service.dart';
+import 'package:FSOUNotes/services/funtional_services/google_drive/google_drive_service.dart';
 import 'package:FSOUNotes/services/state_services/subjects_service.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -31,6 +32,7 @@ class UploadViewModel extends BaseViewModel {
   DialogService _dialogService = locator<DialogService>();
   BottomSheetService _bottomSheetService = locator<BottomSheetService>();
   SubjectsService _subjectsService = locator<SubjectsService>();
+  GoogleDriveService _googleDriveService = locator<GoogleDriveService>();
 
   List<DropdownMenuItem<String>> _dropDownMenuItemsofsemester;
 
@@ -161,11 +163,10 @@ class UploadViewModel extends BaseViewModel {
   ) async {
 
     setBusy(true);
-    //TODO deprecated
-    // Subject subject = await _firestoreService.getSubjectByName(subjectName);
+    Subject subject = await _firestoreService.getSubjectByName(subjectName);
 
     AbstractDocument doc;
-    // doc = _setDoc(doc,path,text1,text2,text3,subjectName,subject);
+    doc = _setDoc(doc,path,text1,text2,text3,subjectName,subject);
 
     if (doc.path == Document.Links) {
 
@@ -177,7 +178,14 @@ class UploadViewModel extends BaseViewModel {
       SheetResponse response = await _showDocTypeSelectionSheet();
       if (response == null) {setBusy(false);return;}
       String fileType = response.confirmed ? enumConst.Constants.pdf : enumConst.Constants.png;
-      var result = await _cloudStorageService.uploadFile(note: doc, type: doc.type, uploadFileType: fileType);
+      // var result = await _cloudStorageService.uploadFile(note: doc, type: doc.type, uploadFileType: fileType);
+      var result = await _googleDriveService.processFile(
+        doc: doc,
+        docEnum: doc.path,
+        note: doc, 
+        type: doc.type, 
+        uploadFileType: fileType
+      );
       log.w(result);
 
       //* Handle upload result
@@ -200,7 +208,7 @@ class UploadViewModel extends BaseViewModel {
           await _showFileIsNotPdfDialog(context);
           setBusy(false);
           break;
-        case "upload successful":
+        case "Upload Successful":
           setBusy(false);
           _navigationService.navigateTo(Routes.thankYouForUploadingView);
           break;
@@ -468,8 +476,7 @@ class UploadViewModel extends BaseViewModel {
     log.e(link.linkUrl);
     bool isValidURL = Uri.parse(link.linkUrl).isAbsolute;
     if (isValidURL) {
-      //TODO
-      // await _firestoreService.saveLink(doc);
+      await _firestoreService.saveLink(doc);
       await _dialogService.showDialog(
           title: "SUCCESS",
           description:

@@ -134,33 +134,33 @@ class LinksTileView extends StatelessWidget {
                       ),
                     ),
                   ),
-                  // model.isAdmin
-                  //           ? 
-                  //           Row(
-                  //             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  //             children: [
-                  //               Container(
-                  //                 child: RaisedButton(
-                  //                   child: Text("EDIT",
-                  //                       style: TextStyle(color: Colors.white)),
-                  //                   color: Colors.blue,
-                  //                   onPressed: () async {
-                  //                     await model.navigateToEditView(link);
-                  //                   },
-                  //                 ),
-                  //               ),
-                  //               Container(
-                  //                 child: RaisedButton(
-                  //                   child: Text("DELETE",
-                  //                       style: TextStyle(color: Colors.white)),
-                  //                   color: Colors.red,
-                  //                   onPressed: () async {
-                  //                     await model.delete(link);
-                  //                   },
-                  //                 ),
-                  //               ),
-                  //             ])
-                  //           : Container(),
+                  model.isAdmin
+                            ? 
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                Container(
+                                  child: RaisedButton(
+                                    child: Text("EDIT",
+                                        style: TextStyle(color: Colors.white)),
+                                    color: Colors.blue,
+                                    onPressed: () async {
+                                      await model.navigateToEditView(link);
+                                    },
+                                  ),
+                                ),
+                                Container(
+                                  child: RaisedButton(
+                                    child: Text("DELETE",
+                                        style: TextStyle(color: Colors.white)),
+                                    color: Colors.red,
+                                    onPressed: () async {
+                                      await model.delete(link);
+                                    },
+                                  ),
+                                ),
+                              ])
+                            : Container(),
                 ],
               ),
             ),

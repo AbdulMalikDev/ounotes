@@ -7,7 +7,6 @@
 // ignore_for_file: public_member_api_docs
 
 import 'package:stacked/stacked.dart';
-import 'package:stacked/stacked_annotations.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 import '../AppTheme/AppStateNotifier.dart';
@@ -19,10 +18,11 @@ import '../services/funtional_services/cloud_storage_service.dart';
 import '../services/funtional_services/crashlytics_service.dart';
 import '../services/funtional_services/db_service.dart';
 import '../services/funtional_services/firebase_firestore/firestore_service.dart';
-import '../services/funtional_services/google_drive_service.dart';
+import '../services/funtional_services/google_drive/google_drive_service.dart';
 import '../services/funtional_services/google_in_app_payment_service.dart';
 import '../services/funtional_services/in_app_payment_service.dart';
 import '../services/funtional_services/notification_service.dart';
+import '../services/funtional_services/pdf_service.dart';
 import '../services/funtional_services/push_notification_service.dart';
 import '../services/funtional_services/remote_config_service.dart';
 import '../services/funtional_services/sharedpref_service.dart';
@@ -39,16 +39,8 @@ import '../utils/permission_handler.dart';
 
 final locator = StackedLocator.instance;
 
-void setupLocator({String environment, EnvironmentFilter environmentFilter}) {
-// Register environments
-  locator.registerEnvironment(
-      environment: environment, environmentFilter: environmentFilter);
-
-// Register dependencies
+void setupLocator() {
   locator.registerLazySingleton(() => BottomSheetService());
-  // locator.registerLazySingleton(() => DialogService());
-  locator.registerLazySingleton(() => NavigationService());
-  // locator.registerLazySingleton(() => SnackbarService());
   locator.registerLazySingleton(() => AdmobService());
   locator.registerLazySingleton(() => AnalyticsService());
   locator.registerLazySingleton(() => AppInfoService());
@@ -65,7 +57,7 @@ void setupLocator({String environment, EnvironmentFilter environmentFilter}) {
   locator.registerLazySingleton(() => GoogleInAppPaymentService());
   locator.registerLazySingleton(() => InAppPaymentService());
   locator.registerLazySingleton(() => LinksService());
-  // locator.registerLazySingleton(() => NavigationService());
+  locator.registerLazySingleton(() => NavigationService());
   locator.registerLazySingleton(() => NotesService());
   locator.registerLazySingleton(() => NotificationService());
   locator.registerLazySingleton(() => PermissionHandler());
@@ -78,4 +70,5 @@ void setupLocator({String environment, EnvironmentFilter environmentFilter}) {
   locator.registerLazySingleton(() => SubjectsService());
   locator.registerLazySingleton(() => SyllabusService());
   locator.registerLazySingleton(() => VoteService());
+  locator.registerLazySingleton(() => PDFService());
 }

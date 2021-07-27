@@ -149,8 +149,7 @@ extension FirestoreFunctions on FirestoreService{
       if(note.type!=null)"type"                         : note.type,
       if(note.title!=null)"fileName"                    : note.title,
       "uploadedAt"                                      : DateTime.now(),
-      // todo
-      // if(_authenticationService.user.email!=null)"email": _authenticationService.user.email,
+      if(_authenticationService.user.email!=null)"email": _authenticationService.user.email,
       if(note.size!=null)"size"                         : note.size,
     };
     // _analyticsService.sendNotification(
