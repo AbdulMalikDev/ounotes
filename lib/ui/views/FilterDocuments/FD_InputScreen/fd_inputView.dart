@@ -15,12 +15,6 @@ class FDInputView extends StatelessWidget {
     return ViewModelBuilder<FDInputViewModel>.reactive(
       onModelReady: (model) => model.setTitleAccordingtoPath(path),
       builder: (context, model, child) => Scaffold(
-        appBar: AppBar(
-          title: Text(
-            "OU Notes",
-            style: theme.appBarTheme.textTheme.headline6,
-          ),
-        ),
         backgroundColor: theme.scaffoldBackgroundColor,
         body: Container(
           height: MediaQuery.of(context).size.height,
@@ -34,7 +28,7 @@ class FDInputView extends StatelessWidget {
                 width: MediaQuery.of(context).size.width - 40,
                 child: Center(
                   child: Text(
-                    model.title,
+                    model.title??"",
                     style: theme.textTheme.subtitle1.copyWith(
                       decorationStyle: TextDecorationStyle.dashed,
                       fontSize: 18,

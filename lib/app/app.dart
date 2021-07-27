@@ -25,6 +25,7 @@ import 'package:FSOUNotes/services/state_services/vote_service.dart';
 import 'package:FSOUNotes/ui/views/FilterDocuments/FD_DocumentDisplay/fd_documentview.dart';
 import 'package:FSOUNotes/ui/views/FilterDocuments/FD_InputScreen/fd_inputView.dart';
 import 'package:FSOUNotes/ui/views/FilterDocuments/FD_subjectdisplay/fd_subjectview.dart';
+import 'package:FSOUNotes/ui/views/Main/main_screen_view.dart';
 import 'package:FSOUNotes/ui/views/Settings/settings_view.dart';
 import 'package:FSOUNotes/ui/views/about_us/about_us_view.dart';
 import 'package:FSOUNotes/ui/views/about_us/privacy_policy/privacy_policyview.dart';
@@ -86,17 +87,14 @@ import 'package:stacked_services/stacked_services.dart';
   MaterialRoute(page: ThankYouView),
   MaterialRoute(page: ThankYouForUploadingView),
   MaterialRoute(page: WhyToPayForDownloadView),
+  MaterialRoute(page: MainView),
 ], dependencies: [
   LazySingleton(classType: BottomSheetService),
-  // LazySingleton(classType: DialogService),
-  // LazySingleton(classType: NavigationService),
-  // LazySingleton(classType: SnackbarService),
   LazySingleton(classType: AdmobService),
   LazySingleton(classType: AnalyticsService),
   LazySingleton(classType: AppInfoService),
   LazySingleton(classType: AppStateNotifier),
   LazySingleton(classType: AuthenticationService),
-  // LazySingleton(classType: BottomSheetService),
   LazySingleton(classType: CloudStorageService),
   LazySingleton(classType: CrashlyticsService),
   LazySingleton(classType: DBService),

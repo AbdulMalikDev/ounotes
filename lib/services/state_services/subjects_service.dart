@@ -159,13 +159,13 @@ class SubjectsService with ChangeNotifier {
 
         _allSubjects.value = subjectObjects;
       } else {
-        //Get from Firebase
-        //TODO
-        // subjectObjects = await _firestoreService.loadSubjectsFromFirebase();
-        // if (subjectObjects is String) {
-        //   throw (subjectObjects);
-        // }
-        // _allSubjects.value = subjectObjects;
+        // Get from Firebase
+        log.i("Subjects being retreived from firebase");
+        subjectObjects = await _firestoreService.loadSubjectsFromFirebase();
+        if (subjectObjects is String) {
+          throw (subjectObjects);
+        }
+        _allSubjects.value = subjectObjects;
       }
 
       _allSubjects.notifyListeners();

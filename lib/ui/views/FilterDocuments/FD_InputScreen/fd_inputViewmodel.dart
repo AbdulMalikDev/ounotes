@@ -53,7 +53,7 @@ class FDInputViewModel extends BaseViewModel {
   }
 
   List<DropdownMenuItem<String>> buildAndGetDropDownMenuItems(List items) {
-    List<DropdownMenuItem<String>> i = List();
+    List<DropdownMenuItem<String>> i = [];
     items.forEach((item) {
       i.add(DropdownMenuItem(value: item, child: Text(item)));
     });

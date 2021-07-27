@@ -2,7 +2,7 @@ import 'package:FSOUNotes/app/app.locator.dart';
 import 'package:FSOUNotes/app/app.logger.dart';
 import 'package:FSOUNotes/app/app.router.dart';
 import 'package:FSOUNotes/services/funtional_services/sharedpref_service.dart';
-import 'package:connectivity_wrapper/connectivity_wrapper.dart';
+import 'package:connection_verify/connection_verify.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
@@ -55,7 +55,7 @@ class AllDocumentsViewModel extends BaseViewModel {
           description:
               "This is a student-community driven application. We do not upload all resources but give you a platform to do so.\n\nPlease Make sure you upload the best resources so that all students can benefit !\n\nThe Application is open-sourced on Github. Make sure to check it out and contribute!\n\n~Yours Sincerely\n   Abdul Malik & Syed Wajid\n   Founders, OU Notes");
     }
-    bool isUserOnline = await ConnectivityWrapper.instance.isConnected;
+    bool isUserOnline = await ConnectionVerify.connectionStatus();
     if (!isUserOnline) {
       _bottomSheetService.showBottomSheet(
           title: "Oops !",

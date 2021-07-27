@@ -232,13 +232,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.6.0-nullsafety"
-  connectivity_wrapper:
+  connection_verify:
     dependency: "direct main"
     description:
-      name: connectivity_wrapper
+      name: connection_verify
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.6"
+    version: "1.0.4"
   convert:
     dependency: transitive
     description:

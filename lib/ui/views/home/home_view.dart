@@ -1,329 +1,270 @@
 import 'package:FSOUNotes/app/app.logger.dart';
+import 'package:FSOUNotes/enums/constants.dart';
 import 'package:FSOUNotes/enums/enums.dart';
 import 'package:FSOUNotes/misc/helper.dart';
-import 'package:FSOUNotes/services/funtional_services/onboarding_service.dart';
+import 'package:FSOUNotes/ui/shared/app_config.dart';
 import 'package:FSOUNotes/ui/views/home/home_viewmodel.dart';
 import 'package:FSOUNotes/ui/views/search/search_view.dart';
 import 'package:FSOUNotes/ui/widgets/dumb_widgets/no_subjects_overlay.dart';
-import 'package:FSOUNotes/ui/widgets/smart_widgets/drawer/drawer_view.dart';
-import 'package:FSOUNotes/ui/widgets/smart_widgets/subjects_dialog/subjects_dialog_view.dart';
 import 'package:FSOUNotes/ui/widgets/smart_widgets/user_subject_list/user_subject_list_view.dart';
-import 'package:feature_discovery/feature_discovery.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:pimp_my_button/pimp_my_button.dart';
-import 'package:rate_my_app/rate_my_app.dart';
 import 'package:stacked/stacked.dart';
 
 Logger log = getLogger("HomeView");
 
-class HomeView extends StatelessWidget {
+class HomeView extends StatefulWidget {
   final bool shouldShowUpdateDialog;
   final Map<String, dynamic> versionDetails;
   const HomeView({Key key, this.shouldShowUpdateDialog, this.versionDetails})
       : super(key: key);
 
   @override
+  _HomeViewState createState() => _HomeViewState();
+}
+
+class _HomeViewState extends State<HomeView> {
+  @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
+    double hp = App(context).appHeight(1);
+    double wp = App(context).appWidth(1);
     return ViewModelBuilder<HomeViewModel>.reactive(
       onModelReady: (model) async {
         // await model.admobService.hideNotesViewBanner();
         model.showRateMyAppDialog(context);
-        model.updateDialog(shouldShowUpdateDialog, versionDetails);
+        model.updateDialog(
+            widget.shouldShowUpdateDialog, widget.versionDetails);
         model.showIntroDialog(context);
         // model.showTelgramDialog(context);
       },
-      builder: (context, model, child) => WillPopScope(
-        onWillPop: () => Helper.showWillPopDialog(context: context),
-        child: RateMyAppBuilder(
-          builder: (context) => Scaffold(
-            drawer: DrawerView(),
-            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-            appBar: model.isEditPressed
-                ? AppBar(
-                    leading: IconButton(
-                      icon: Icon(
-                        Icons.arrow_back,
-                        color: Colors.white,
+      builder: (context, homeViewModel, child) => Column(
+        children: [
+          Container(
+            margin: const EdgeInsets.all(10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                // Container(
+                //   alignment: Alignment.center,
+                //   height: hp * 0.05,
+                //   margin: EdgeInsets.only(bottom: 5),
+                //   child: Image.asset(Constants.appIcon),
+                // ),
+                GestureDetector(
+                  behavior: HitTestBehavior.translucent,
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 15),
+                    child: SizedBox(
+                      height: hp * 0.05,
+                      width: wp * 0.6,
+                      child: TextField(
+                        onTap: () {
+                          showSearch(
+                            context: context,
+                            delegate: SearchView(path: Path.Appbar),
+                          );
+                        },
+                        readOnly: true,
+                        decoration: InputDecoration(
+                          fillColor: Theme.of(context).colorScheme.background,
+                          filled: true,
+                          hintText: "Search Subject",
+                          hintStyle: TextStyle(
+                            fontFamily: "Montserrat",
+                            fontSize: hp * 0.015,
+                          ),
+                          contentPadding: EdgeInsets.symmetric(
+                            vertical: 2,
+                            horizontal: 18,
+                          ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(05),
+                            borderSide: BorderSide(
+                              color: Colors.transparent,
+                            ),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide(
+                              color: Colors.transparent,
+                            ),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide(
+                              color: Colors.transparent,
+                            ),
+                          ),
+                          prefixIcon: Icon(
+                            Icons.search,
+                            color: Theme.of(context).iconTheme.color,
+                          ),
+                        ),
+                        style: Theme.of(context).textTheme.headline5,
+                        onChanged: (value) {},
+                      ),
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: Container(
+                    height: hp * 0.04,
+                    alignment: Alignment.center,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        primary: Colors.amber,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              "UPLOAD",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 10,
+                              ),
+                            ),
+                          ),
+                          Icon(
+                            Icons.upload_file_rounded,
+                          ),
+                        ],
                       ),
                       onPressed: () {
-                        model.setIsEditPressed = false;
-                        model.resetUserSelectedSubjects();
+                        // model.onUploadButtonPressed();
                       },
                     ),
-                    title: ValueListenableBuilder(
-                      valueListenable: model.userSelectedSubjects,
-                      builder: (context, userSelectedSubjects, child) {
-                        return Text(
-                          "${userSelectedSubjects.length} Selected",
-                          style: theme.appBarTheme.textTheme.headline6,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Container(
+                margin: EdgeInsets.only(left: 15),
+                child: Text(
+                  "🔁 Study These Again",
+                  style: Theme.of(context)
+                      .textTheme
+                      .headline6
+                      .copyWith(fontWeight: FontWeight.bold, fontSize: 18),
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.only(right: 10),
+                child: TextButton(
+                  child: Text("See All"),
+                  onPressed: () {},
+                ),
+              ),
+            ],
+          ),
+          homeViewModel.isEditPressed
+              ? Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        SizedBox(
+                          width: 10,
+                        ),
+                        IconButton(
+                          onPressed: () {
+                            homeViewModel.setIsEditPressed = false;
+                          },
+                          icon: Icon(Icons.close),
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Container(
+                          margin: EdgeInsets.only(left: 10),
+                          child: ValueListenableBuilder(
+                            valueListenable: homeViewModel.userSelectedSubjects,
+                            builder: (context, userSelectedSubjects, child) {
+                              return Text(
+                                "${userSelectedSubjects.length} Selected",
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .headline6
+                                    .copyWith(fontWeight: FontWeight.bold),
+                              );
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                    IconButton(
+                      icon: Icon(
+                        Icons.delete,
+                        color: Theme.of(context).iconTheme.color,
+                      ),
+                      onPressed: () {
+                        print('delete pressed');
+                        Helper.showDeleteConfirmDialog(
+                          context: context,
+                          onDeletePressed: () {
+                            homeViewModel.setIsEditPressed = false;
+                            Navigator.pop(context);
+                            homeViewModel.deleteSelectedSubjects();
+                          },
+                          msg:
+                              "Are you sure you want to delete these subjects?",
                         );
                       },
                     ),
-                    backgroundColor: theme.appBarTheme.color,
-                    actions: [
-                      IconButton(
-                        icon: Icon(
-                          Icons.delete,
-                          color: Colors.white,
-                        ),
-                        onPressed: () {
-                          print('delete pressed');
-                          Helper.showDeleteConfirmDialog(
-                            context: context,
-                            onDeletePressed: () {
-                              Navigator.pop(context);
-                              model.deleteSelectedSubjects();
-                            },
-                            msg:
-                                "Are you sure you want to delete these subjects?",
-                          );
-                        },
+                  ],
+                )
+              : Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                      margin: EdgeInsets.only(left: 15),
+                      child: Text(
+                        "📝 My Subjects",
+                        style: Theme.of(context)
+                            .textTheme
+                            .headline6
+                            .copyWith(fontWeight: FontWeight.bold),
                       ),
-                    ],
-                  )
-                : AppBar(
-                    leading: Builder(builder: (BuildContext context) {
-                      return DescribedFeatureOverlay(
-                        featureId: OnboardingService
-                            .drawer_hamburger_icon_to_access_other_features, // Unique id that identifies this overlay.
-                        tapTarget: const Icon(Icons
-                            .menu), // The widget that will be displayed as the tap target.
-                        title: Text('Drawer'),
-                        description:
-                            Text('Find cool new features in the drawer'),
-                        backgroundColor: Theme.of(context).primaryColor,
-                        targetColor: Colors.white,
-                        textColor: Colors.white,
-                        onComplete: () {
-                          Scaffold.of(context).openDrawer();
-                          return Future.value(true);
-                        },
-                        child: IconButton(
-                          icon: Icon(Icons.menu),
-                          onPressed: () => Scaffold.of(context).openDrawer(),
-                        ),
-                      );
-                    }),
-                    iconTheme: IconThemeData(
-                      color: Colors.white, //change your color here
                     ),
-                    title: Text(
-                      'My Subjects',
-                      style: theme.appBarTheme.textTheme.headline6,
+                    IconButton(
+                      icon: Icon(
+                        MdiIcons.pencil,
+                        color: Theme.of(context).iconTheme.color,
+                      ),
+                      onPressed: () {
+                        homeViewModel.setIsEditPressed = true;
+                      },
                     ),
-                    backgroundColor: theme.appBarTheme.color,
-                    actions: <Widget>[
-                      IconButton(
-                        icon: Icon(
-                          MdiIcons.pencil,
-                          color: Colors.white,
-                        ),
-                        onPressed: () {
-                          model.setIsEditPressed = true;
-                        },
-                      ),
-                      IconButton(
-                        icon: Icon(
-                          Icons.search,
-                          color: Colors.white,
-                        ),
-                        onPressed: () {
-                          showSearch(
-                              context: context,
-                              delegate: SearchView(path: Path.Appbar));
-                        },
-                      ),
-                    ],
-                  ),
-            body: ValueListenableBuilder(
-              valueListenable: model.userSubjects,
+                  ],
+                ),
+          Expanded(
+            child: ValueListenableBuilder(
+              valueListenable: homeViewModel.userSubjects,
               builder: (context, userSubjects, child) {
-                return model.userSubjects.value.length == 0
+                return homeViewModel.userSubjects.value.length == 0
                     ? NoSubjectsOverlay()
                     : UserSubjectListView(
-                        isEditPressed: model.isEditPressed,
+                        isEditPressed: homeViewModel.isEditPressed,
                       );
               },
             ),
-            floatingActionButton: Padding(
-              padding: const EdgeInsets.only(bottom: 20.0),
-              child: DescribedFeatureOverlay(
-                featureId: OnboardingService
-                    .floating_action_button_to_add_subjects, // Unique id that identifies this overlay.
-                tapTarget: const Icon(Icons
-                    .add), // The widget that will be displayed as the tap target.
-                title: Text('Add Your Subjects !'),
-                description: Text(
-                    'Please use \"+\" button to add subjects and swipe left or right to delete them'),
-                backgroundColor: Theme.of(context).primaryColor,
-                targetColor: Theme.of(context).accentColor,
-                textColor: Colors.white,
-                child: PimpedButton(
-                  particle: DemoParticle(),
-                  pimpedWidgetBuilder: (context, controller) {
-                    return FloatingActionButton(
-                      onPressed: () async {
-                        controller.forward(from: 0.4);
-                        await Future.delayed(Duration(milliseconds: 290));
-                        showModalBottomSheet(
-                            context: context,
-                            isScrollControlled: true,
-                            backgroundColor: Colors.transparent,
-                            builder: (BuildContext context) =>
-                                SubjectsDialogView());
-                      },
-                      child: const Icon(Icons.add),
-                      backgroundColor: Theme.of(context).accentColor,
-                    );
-                  },
-                ),
-              ),
-            ),
           ),
-          onInitialized: (context, rateMyApp) {},
-        ),
+        ],
       ),
       viewModelBuilder: () => HomeViewModel(),
     );
   }
-
-  // FirestoreService _firestore = locator<FirestoreService>();
-  // print("start");
-  // List<int> ids = [];
-  // List<Subject> mainSubs = [];
-  // List<Subject> commentedOut = [];
-  // try {
-  //   CourseInfo.aallsubjects.forEach((sub)=>ids.add(sub.id));
-  //   for(int i=1 ; i<=378 ; i++){
-  //     if(ids.contains(i)){
-  //       Subject mainSub = CourseInfo.aallsubjects.firstWhere((sub)=>sub.id==i,orElse: ()=>null);
-  //       if(mainSub!=null)mainSubs.add(mainSub);
-  //     }else{
-  //       Subject commentedOutSub = CourseInfo.allOldSubjects.firstWhere((sub)=>sub.id==i,orElse: ()=>null);
-  //       if(commentedOutSub!=null)commentedOut.add(commentedOutSub);
-  //     }
-  //   }
-  // } catch (e) {
-  //   print(e.toString());
-  // }
-  // List mainNames = mainSubs.map((e) => e.name).toSet().toList();
-  // mainNames.sort((b,c)=>b.compareTo(c));
-  // List commentedOutNames = commentedOut.map((e) => e.name).toSet().toList();
-  // commentedOutNames.sort((b,c)=>b.compareTo(c));
-  // // commentedOutNames.forEach((element) {print(element);});
-  // // print();
-  // // print(a.length);
-  // print("Main Subjects : " + mainNames.length.toString());
-  // print("\n");
-  // print("Commented Out Subjects : " + commentedOut.length.toString());
-  // List<Subject> duplicateSubject = [];
-  // commentedOutNames.forEach((commentedOutName){
-  //   bool dupExist = mainNames.contains(commentedOutName);
-  //   if(dupExist){
-  //     //Found duplicateSubject that needs to be deleted rightaway
-  //     Subject currentSub = CourseInfo.aallsubjects.firstWhere((sub)=>sub.name==commentedOutName,orElse: ()=>null);
-  //     if(currentSub!=null)duplicateSubject.add(currentSub);
-  //     // print(currentSub?.name);
-  //   }
-  // });
-  // print("Duplicate Subjects : " + duplicateSubject.length.toString());
-  // List<String> duplicateSubjectNames = duplicateSubject.map((e) => e.name).toList();
-  // print(duplicateSubjectNames);
-  // //Duplicate subjects already handled so need of any deletion,
-  // //only need of new subject upload + delete of useless ones
-  // //* There are 378 subjects
-  // try {
-  //   for( int i=1 ; i<379 ; i++){
-
-  //     // There is a subject linked to each number
-  //     // It is either to be deleted or updated
-  //     if(ids.contains(i)){
-  //         Subject currentSub = CourseInfo.aallsubjects.firstWhere((sub)=>sub.id==i,orElse: ()=>null);
-  //         if(duplicateSubjectNames.contains(currentSub.name)){
-  //           //DO NOTHING SINCE ALREADY HANDLED
-  //           continue;
-  //         }
-  //         //The subject is in the main list so upload it
-  //         //UPLOAD
-  //         //TODO ADD SUBJECT TO FIREBASE AS WELL AS RUN CODE IN GDRIVE TO ADD 4 FOLDERS [VERIFIED]
-  //         await _addCompleteSubject(currentSub,_firestore);
-  //         print("Upload : " + currentSub.name);
-  //     }else{
-  //       Subject currentSub = CourseInfo.allOldSubjects.firstWhere((sub)=>sub.id==i,orElse: ()=>null);
-  //       if(currentSub==null)continue;
-  //       //If subject is duplicate simply ignore
-  //       if(duplicateSubjectNames.contains(currentSub.name)){
-  //         //DO NOTHING SINCE ALREADY HANDLED
-  //         continue;
-  //       }else{
-  //         //DELETE WITH ALL NOTES
-  //         print("Delete : " + currentSub.name);
-  //         _deleteExistenceOfSubject(currentSub.name,_firestore,i);
-  //       }
-  //     }
-  //   }
-  // }catch (e) {
-  //         print(e.toString());
-  // }
-
-  // void _deleteExistenceOfSubject(String subjectName,FirestoreService _firestore,int id) async {
-  //   bool result = await _firestore.destroySubject(subjectName, id);
-  //   log.e("DESTROYED");
-  //   log.e("SubjectName : " + subjectName);
-  //   log.e("Result : " + result.toString());
-  // }
-
-  // void _addCompleteSubject(Subject subject,FirestoreService _firestore) async {
-  //   // bool should_make_new_files = CourseInfo.allOldSubjects.any((element) => element.name == subject.name);
-  //   // if(!should_make_new_files){
-  //   subject = await _makeNewSubject(subject);
-  //   await _firestore.addSubject(subject);
-  // }
-
-  // Future<Subject> _makeNewSubject(Subject subject) async {
-  //   // DriveApi.DriveAppdataScope
-  //       AuthenticationService _authenticationService = locator<AuthenticationService>();
-  //       var AuthHeaders = await _authenticationService.refreshSignInCredentials();
-  //       var client = GoogleHttpClient(AuthHeaders);
-  //       var drive = ga.DriveApi(client);
-  //       var subjectFolder = await drive.files.create(
-  //                     ga.File()
-  //                       ..name = subject.name
-  //                       ..parents = ["10z-Uogzkp9ifd8wDzV1gGOgnqGPDKmsR"]// Optional if you want to create subfolder
-  //                       ..mimeType = 'application/vnd.google-apps.folder',  // this defines its folder
-  //                   );
-  //       var notesFolder = await drive.files.create(
-  //                     ga.File()
-  //                       ..name = 'NOTES'
-  //                       ..parents = [subjectFolder.id]// Optional if you want to create subfolder
-  //                       ..mimeType = 'application/vnd.google-apps.folder',  // this defines its folder
-  //                   );
-  //       var questionPapersFolder = await drive.files.create(
-  //                     ga.File()
-  //                       ..name = 'QUESTION PAPERS'
-  //                       ..parents = [subjectFolder.id]// Optional if you want to create subfolder
-  //                       ..mimeType = 'application/vnd.google-apps.folder',  // this defines its folder
-  //                   );
-  //       var syllabusFolder = await drive.files.create(
-  //                     ga.File()
-  //                       ..name = 'SYLLABUS'
-  //                       ..parents = [subjectFolder.id]// Optional if you want to create subfolder
-  //                       ..mimeType = 'application/vnd.google-apps.folder',  // this defines its folder
-  //                   );
-
-  //       subject.addFolderID(subjectFolder.id);
-  //       subject.addNotesFolderID(notesFolder.id);
-  //       subject.addQuestionPapersFolderID(questionPapersFolder.id);
-  //       subject.addSyllabusFolderID(syllabusFolder.id);
-  //       log.e(subjectFolder.id);
-  //       log.e(notesFolder.id);
-  //       log.e(questionPapersFolder.id);
-  //       log.e(syllabusFolder.id);
-  //       return subject;
-  // }
 }
 
 // import 'dart:io';

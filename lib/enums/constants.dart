@@ -16,7 +16,6 @@ class Constants {
   static const String openInBrowser = 'openInBrowser';
   static const String openInApp = 'openInApp';
 
-
   //firebase collection names
   static const String firebase_notes = "Notes";
   static const String firebase_questionPapers = "QuestionPapers";
@@ -28,6 +27,15 @@ class Constants {
   static const String png = 'png';
   static const String jpeg = 'jpeg';
   static const String jpg = 'jpg';
+
+  //images path
+  static const String appIcon = "assets/images/apnaicon.png";
+  static const String adminImage = "assets/images/admin.jpg";
+  static const String githubIcon = "assets/images/github-logo.png";
+  static const String donateIcon = "assets/images/donate-icon.png";
+  static const String pdfIcon = "assets/images/pdf.png";
+
+  
 
   //Notification Events [ Make sure Cloud Functions file has same constants ]
   static const String notificationEventNotesUpload =
@@ -143,7 +151,6 @@ class Constants {
       case Document.None:
       case Document.Drawer:
       case Document.Random:
-
         return "";
         break;
     }

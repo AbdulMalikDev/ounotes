@@ -21,7 +21,7 @@ class SettingsViewModel extends BaseViewModel {
       locator<SharedPreferencesService>();
   AnalyticsService _analyticsService = locator<AnalyticsService>();
 
-  User _user;
+  User _user= User();
   User get user => _user;
   String _userOption;
 
@@ -31,7 +31,7 @@ class SettingsViewModel extends BaseViewModel {
   List<DropdownMenuItem<String>> get dropDownOfOpenPDF => _dropDownOfOpenPDF;
 
   List<DropdownMenuItem<String>> buildAndGetDropDownMenuItems(List items) {
-    List<DropdownMenuItem<String>> i = List();
+    List<DropdownMenuItem<String>> i = [];
     items.forEach((item) {
       i.add(DropdownMenuItem(value: item, child: Text(item)));
     });
@@ -53,7 +53,6 @@ class SettingsViewModel extends BaseViewModel {
   }
 
   Future setUser() async {
-    setBusy(true);
     SharedPreferences prefs = await _sharedPreferencesService.store();
     if (prefs.containsKey("openDocChoice")) {
       _userOption = prefs.getString("openDocChoice");
@@ -69,7 +68,6 @@ class SettingsViewModel extends BaseViewModel {
     User user = User.fromData(
         json.decode(prefs.getString("current_user_is_logged_in")));
     _user = user;
-    setBusy(false);
     notifyListeners();
   }
 
@@ -100,4 +98,5 @@ class SettingsViewModel extends BaseViewModel {
       notifyListeners();
     }
   }
+
 }

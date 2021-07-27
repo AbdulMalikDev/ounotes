@@ -12,6 +12,11 @@ class RemoteConfigService{
     if (_remoteConfig == null)
     {
       _remoteConfig = await RemoteConfig.instance;
+      await _remoteConfig.setConfigSettings(RemoteConfigSettings(
+        fetchTimeout: const Duration(seconds: 10),
+        minimumFetchInterval: Duration.zero,
+      ));
+      RemoteConfigValue(null, ValueSource.valueStatic);
       // //TODO DEV CHECKLIST
       //FIXME 
       // await remoteConfig.setConfigSettings(RemoteConfigSettings(minimumFetchInterval: const Duration(hours: 4)));

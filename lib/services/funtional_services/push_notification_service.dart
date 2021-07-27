@@ -21,22 +21,13 @@ class PushNotificationService {
   RemoteConfigService _remoteConfigService = locator<RemoteConfigService>();
 
   Future initialise() async {
-    FirebaseMessaging.onBackgroundMessage((message) async { 
-      print("onLaunch : $message");
-      await Future.delayed(Duration(seconds: 2), () {});
-      _handleNotification(message);
-    });
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) async { 
-      print("onMessage : $message");
-      await _handleNotification(message);
-    });
-    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) { 
-      print("onResume : $message");
-      _handleNotification(message);
-    });
+    FirebaseMessaging.onBackgroundMessage(_handleNotification);
+    FirebaseMessaging.onMessage.listen(_handleNotification);
+    FirebaseMessaging.onMessageOpenedApp.listen(_handleNotification);
   }
 
-  _handleNotification(message) async {
+  Future<void> _handleNotification(RemoteMessage remoteMessage) async {
+    Map<String,dynamic> message = remoteMessage.data;
     String title = message["data"]["title"];
     String body = message["data"]["body"];
     String subjectName = message["data"]["subjectName"];
