@@ -16,9 +16,6 @@ import 'package:stacked_services/stacked_services.dart';
 import 'package:FSOUNotes/misc/course_info.dart';
 import 'package:FSOUNotes/app/app.logger.dart';
 
-
-//TODO pura deprecate hogaya baigan ki meri
-
 class AuthenticationService {
   //Class Logger
   Logger log = getLogger("AuthenticationService");

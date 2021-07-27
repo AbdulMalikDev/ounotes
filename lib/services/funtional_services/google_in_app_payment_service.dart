@@ -8,7 +8,7 @@ import 'package:FSOUNotes/models/notes.dart';
 import 'package:FSOUNotes/models/user.dart';
 import 'package:FSOUNotes/services/funtional_services/authentication_service.dart';
 import 'package:FSOUNotes/services/funtional_services/firebase_firestore/firestore_service.dart';
-import 'package:FSOUNotes/services/funtional_services/google_drive_service.dart';
+import 'package:FSOUNotes/services/funtional_services/google_drive/google_drive_service.dart';
 import 'package:FSOUNotes/services/funtional_services/notification_service.dart';
 import 'package:FSOUNotes/services/funtional_services/onboarding_service.dart';
 import 'package:flutter/foundation.dart';

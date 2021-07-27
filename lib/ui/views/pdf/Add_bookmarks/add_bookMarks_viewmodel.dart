@@ -98,7 +98,7 @@ class BookMarkBottomSheetViewModel extends BaseViewModel {
     }
     Map<String, dynamic> bottomsheet =
         _subjectsService.documentHiveBox.get('bottomsheet');
-    _isNextPressed = bottomsheet["NextPressed"];
+    _isNextPressed = bottomsheet["NextPressed"] ?? false;
     int start = bottomsheet["start"].toInt();
     int end = bottomsheet['end'].toInt();
     _unitTitles = bottomsheet['unitTitles'] as Map<int, String>;

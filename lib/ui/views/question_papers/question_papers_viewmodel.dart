@@ -45,16 +45,16 @@ class QuestionPapersViewModel extends BaseViewModel {
 
   Future fetchQuestionPapers(String subjectName, {sortBy = "Year ASC"}) async {
     setBusy(true);
-    // List<QuestionPaper> questionPapers =
-    //     await _firestoreService.loadQuestionPapersFromFirebase(subjectName);
-    // if (questionPapers is String) {
-    //   await Fluttertoast.showToast(
-    //       msg:
-    //           "You are facing an error in loading the QuestionPapers. If you are facing this error more than once, please let us know by using the 'feedback' option in the app drawer.");
-    //   setBusy(false);
-    // } else {
-    //   _questionPapers = questionPapers;
-    // }
+    List<QuestionPaper> questionPapers =
+        await _firestoreService.loadQuestionPapersFromFirebase(subjectName);
+    if (questionPapers is String) {
+      await Fluttertoast.showToast(
+          msg:
+              "You are facing an error in loading the QuestionPapers. If you are facing this error more than once, please let us know by using the 'feedback' option in the app drawer.");
+      setBusy(false);
+    } else {
+      _questionPapers = questionPapers;
+    }
 
     for (int i = 0; i < questionPapers.length; i++) {
       QuestionPaper questionPaper = questionPapers[i];

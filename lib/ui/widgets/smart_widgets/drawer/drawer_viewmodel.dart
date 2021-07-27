@@ -51,7 +51,7 @@ class DrawerViewModel extends BaseViewModel {
     }
   }
 
- // bool get isAdmin => _authenticationService.user.isAdmin;
+ bool get isAdmin => _authenticationService.user.isAdmin;
 
   dispatchEmail() async {
     await EmailService.emailFunc(

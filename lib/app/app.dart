@@ -7,10 +7,11 @@ import 'package:FSOUNotes/services/funtional_services/cloud_storage_service.dart
 import 'package:FSOUNotes/services/funtional_services/crashlytics_service.dart';
 import 'package:FSOUNotes/services/funtional_services/db_service.dart';
 import 'package:FSOUNotes/services/funtional_services/firebase_firestore/firestore_service.dart';
-import 'package:FSOUNotes/services/funtional_services/google_drive_service.dart';
+import 'package:FSOUNotes/services/funtional_services/google_drive/google_drive_service.dart';
 import 'package:FSOUNotes/services/funtional_services/google_in_app_payment_service.dart';
 import 'package:FSOUNotes/services/funtional_services/in_app_payment_service.dart';
 import 'package:FSOUNotes/services/funtional_services/notification_service.dart';
+import 'package:FSOUNotes/services/funtional_services/pdf_service.dart';
 import 'package:FSOUNotes/services/funtional_services/push_notification_service.dart';
 import 'package:FSOUNotes/services/funtional_services/remote_config_service.dart';
 import 'package:FSOUNotes/services/funtional_services/sharedpref_service.dart';
@@ -57,7 +58,7 @@ import 'package:FSOUNotes/utils/permission_handler.dart';
 import 'package:stacked/stacked_annotations.dart';
 import 'package:stacked_services/stacked_services.dart';
 
-@StackedApp(logger: StackedLogger(), routes: [
+@StackedApp(routes: [
   MaterialRoute(page: SplashView, initial: true),
   MaterialRoute(page: IntroView),
   MaterialRoute(page: HomeView),
@@ -119,6 +120,7 @@ import 'package:stacked_services/stacked_services.dart';
   LazySingleton(classType: SubjectsService),
   LazySingleton(classType: SyllabusService),
   LazySingleton(classType: VoteService),
+  LazySingleton(classType: PDFService),
 ])
 class App {
   /** This class has no puporse besides housing the annotation that generates the required functionality **/

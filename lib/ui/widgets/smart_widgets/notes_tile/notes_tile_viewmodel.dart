@@ -10,7 +10,7 @@ import 'package:FSOUNotes/models/vote.dart';
 import 'package:FSOUNotes/services/funtional_services/authentication_service.dart';
 import 'package:FSOUNotes/services/funtional_services/cloud_storage_service.dart';
 import 'package:FSOUNotes/services/funtional_services/firebase_firestore/firestore_service.dart';
-import 'package:FSOUNotes/services/funtional_services/google_drive_service.dart';
+import 'package:FSOUNotes/services/funtional_services/google_drive/google_drive_service.dart';
 import 'package:FSOUNotes/services/funtional_services/admob_service.dart';
 import 'package:FSOUNotes/services/state_services/report_service.dart';
 import 'package:FSOUNotes/services/state_services/vote_service.dart';
@@ -151,7 +151,7 @@ class NotesTileViewModel extends BaseViewModel {
     setBusy(false);
   }
 
- // bool get isAdmin => _authenticationService.user.isAdmin;
+ bool get isAdmin => _authenticationService.user.isAdmin;
 
   void reportNote(
       {String id,
@@ -174,35 +174,35 @@ class NotesTileViewModel extends BaseViewModel {
     }
     log.i("Report BottomSheetResponse " + reportResponse.responseData);
 
-    //Generate report with appropriate data
-    // Report report = Report(
-    //     id, subjectName, type, title, _authenticationService.user.email,
-    //     reportReason: reportResponse.responseData);
+    // Generate report with appropriate data
+    Report report = Report(
+        id, subjectName, type, title, _authenticationService.user.email,
+        reportReason: reportResponse.responseData);
 
-    //Check whether user is banned
-    // User user = await _firestoreService.refreshUser();
-    // if (!user.isUserAllowedToUpload) {
-    //   _userIsNotAllowedNotToReport();
-    //   setBusy(false);
-    //   return;
-    // }
+    // Check whether user is banned
+    User user = await _firestoreService.refreshUser();
+    if (!user.isUserAllowedToUpload) {
+      _userIsNotAllowedNotToReport();
+      setBusy(false);
+      return;
+    }
 
-    //If user is reporting the same document 2nd time the result will be a String
-    // var result = await _reportsService.addReport(report);
-    // if (result is String) {
-    //   _dialogService.showDialog(
-    //       title: "Thank you for reporting", description: result);
-    // } else {
-    //   // await _firestoreService.reportNote(report: report, doc: doc);
-    //   Fluttertoast.showToast(
-    //       msg: "Your report has been recorded. The admins will look into this.",
-    //       toastLength: Toast.LENGTH_SHORT,
-    //       gravity: ToastGravity.CENTER,
-    //       timeInSecForIosWeb: 1,
-    //       backgroundColor: Colors.teal,
-    //       textColor: Colors.white,
-    //       fontSize: 16.0);
-    // }
+    // If user is reporting the same document 2nd time the result will be a String
+    var result = await _reportsService.addReport(report);
+    if (result is String) {
+      _dialogService.showDialog(
+          title: "Thank you for reporting", description: result);
+    } else {
+      // await _firestoreService.reportNote(report: report, doc: doc);
+      Fluttertoast.showToast(
+          msg: "Your report has been recorded. The admins will look into this.",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.teal,
+          textColor: Colors.white,
+          fontSize: 16.0);
+    }
   }
 
   Future delete(AbstractDocument doc) async {

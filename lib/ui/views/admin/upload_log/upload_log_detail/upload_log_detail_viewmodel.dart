@@ -9,8 +9,9 @@ import 'package:FSOUNotes/models/user.dart';
 import 'package:FSOUNotes/services/funtional_services/analytics_service.dart';
 import 'package:FSOUNotes/services/funtional_services/authentication_service.dart';
 import 'package:FSOUNotes/services/funtional_services/firebase_firestore/firestore_service.dart';
-import 'package:FSOUNotes/services/funtional_services/google_drive_service.dart';
+import 'package:FSOUNotes/services/funtional_services/google_drive/google_drive_service.dart';
 import 'package:FSOUNotes/services/funtional_services/onboarding_service.dart';
+import 'package:FSOUNotes/services/funtional_services/remote_config_service.dart';
 import 'package:FSOUNotes/services/funtional_services/sharedpref_service.dart';
 import 'package:FSOUNotes/services/state_services/subjects_service.dart';
 import 'package:FSOUNotes/ui/views/notes/notes_viewmodel.dart';
@@ -34,12 +35,13 @@ class UploadLogDetailViewModel extends FutureViewModel {
   SharedPreferencesService _sharedPreferencesService =
       locator<SharedPreferencesService>();
   SubjectsService _subjectsService = locator<SubjectsService>();
+  RemoteConfigService _remoteConfigService = locator<RemoteConfigService>();
   List<UploadLog> _logs;
 
   List<UploadLog> get logs => _logs;
 
   fetchUploadLogs() async {
-    // _logs = await _firestoreService.loadUploadLogFromFirebase();
+    _logs = await _firestoreService.loadUploadLogFromFirebase();
   }
 
   @override
@@ -52,28 +54,28 @@ class UploadLogDetailViewModel extends FutureViewModel {
             "Upload Log will be deleted. As an admin please make sure to take necessary steps",
         cancelTitle: "WAIT",
         confirmationTitle: "Apne baap ku mat sikha");
-    // if(dialogResult.confirmed)await _firestoreService.deleteUploadLog(report);
+    if(dialogResult.confirmed)await _firestoreService.deleteUploadLog(report);
   }
 
   viewDocument(UploadLog logItem) async {
     setBusy(true);
     NotesViewModel notesViewModel = NotesViewModel();
-    //  AbstractDocument doc = await _firestoreService.getDocumentById(logItem.subjectName, logItem.id, Constants.getDocFromConstant(logItem.type));
-    //  log.e(doc?.path);
-    //   if (logItem.type == Constants.links)
-    //   {
-    //     _showLink(logItem);
-    //   }else{
+     AbstractDocument doc = await _firestoreService.getDocumentById(logItem.subjectName, logItem.id, Constants.getDocFromConstant(logItem.type));
+     log.e(doc?.path);
+      if (logItem.type == Constants.links)
+      {
+        _showLink(logItem);
+      }else{
 
-    //   await notesViewModel.onTap(
-    //     notesName: logItem.fileName,
-    //     subName: logItem.subjectName,
-    //     type: logItem.type,
-    //     doc: doc,
-    //   );
+      await notesViewModel.onTap(
+        notesName: logItem.fileName,
+        subName: logItem.subjectName,
+        type: logItem.type,
+        doc: doc,
+      );
 
-    //   }
-    //   setBusy(false);
+      }
+      setBusy(false);
   }
 
   uploadDocument(UploadLog logItem) async {
@@ -97,7 +99,7 @@ class UploadLogDetailViewModel extends FutureViewModel {
       // }else{
 
       //   if(doc.GDriveLink != null){await _dialogService.showDialog(title: "ERROR" , description: "ALREADY UPLOADED");setBusy(false);return;}
-      //   String result = await _googleDriveService.processFile(doc: doc, document:Constants.getDocFromConstant(logItem.type) , addToGdrive: true);
+      //   String result = await _googleDriveService.processFile(doc: doc, docEnum:Constants.getDocFromConstant(logItem.type),note: doc,type: doc.type);
       //   _dialogService.showDialog(title: "OUTPUT" , description: result);
       // }
       // deleteLogItem(logItem);
@@ -123,37 +125,37 @@ class UploadLogDetailViewModel extends FutureViewModel {
       return;
     }
 
-    // GoogleDriveService _googleDriveService = locator<GoogleDriveService>();
-    // dynamic doc = await _firestoreService.getDocumentById(logItem.subjectName,logItem.id,Constants.getDocFromConstant(logItem.type));
-    // if(doc!=null)
-    // {
-    //   String result = await _googleDriveService.processFile(doc: doc, document:Constants.getDocFromConstant(logItem.type) , addToGdrive: false);
-    //   _dialogService.showDialog(title: "OUTPUT" , description: result);
-    // }
-    // deleteLogItem(logItem);
-    // setBusy(false);
+    GoogleDriveService _googleDriveService = locator<GoogleDriveService>();
+    dynamic doc = await _firestoreService.getDocumentById(logItem.subjectName,logItem.id,Constants.getDocFromConstant(logItem.type));
+    if(doc!=null)
+    {
+      String result = await _googleDriveService.processFile(doc: doc, docEnum:Constants.getDocFromConstant(logItem.type),note: doc,);
+      _dialogService.showDialog(title: "OUTPUT" , description: result);
+    }
+    deleteLogItem(logItem);
+    setBusy(false);
   }
 
   void _showLink(UploadLog logItem) async {
-    // Subject sub = _subjectsService.getSubjectByName(logItem.subjectName);
-    // log.e(sub);
-    // Link link = await _firestoreService.getLinkById(sub.id,logItem.id);
-    // log.e(link.linkUrl);
-    // _dialogService.showDialog(title: "Link Content" , description: link.linkUrl);
+    Subject sub = _subjectsService.getSubjectByName(logItem.subjectName);
+    log.e(sub);
+    Link link = await _firestoreService.getLinkById(sub.id,logItem.id);
+    log.e(link.linkUrl);
+    _dialogService.showDialog(title: "Link Content" , description: link.linkUrl);
   }
 
   void _deleteDocument(UploadLog logItem) async {
-    // Subject sub = _subjectsService.getSubjectByName(logItem.subjectName);
-    // await _firestoreService.deleteLinkById(sub.id,logItem.id);
+    Subject sub = _subjectsService.getSubjectByName(logItem.subjectName);
+    await _firestoreService.deleteLinkById(sub.id,logItem.id);
   }
 
   Future<String> getUploadStatus(UploadLog logItem) async {
-    // var document = await _firestoreService.getDocumentById(logItem.subjectName,logItem.id,Constants.getDocFromConstant(logItem.type));
-    // if (logItem.type != Constants.links){
-    //   return document.GDriveLink==null ? "NOT UPLOADED" : "UPLOADED";
-    // }else{
-    //   return document.uploaded == null||document.uploaded == false ? "NOT UPLOADED" : "UPLOADED";
-    // }
+    var document = await _firestoreService.getDocumentById(logItem.subjectName,logItem.id,Constants.getDocFromConstant(logItem.type));
+    if (logItem.type != Constants.links){
+      return document.GDriveLink==null ? "NOT UPLOADED" : "UPLOADED";
+    }else{
+      return document.uploaded == null||document.uploaded == false ? "NOT UPLOADED" : "UPLOADED";
+    }
   }
 
   getNotificationStatus(UploadLog logItem) {
@@ -163,27 +165,29 @@ class UploadLogDetailViewModel extends FutureViewModel {
         : Future.value("NOT SENT");
   }
 
-  // Future<User> getUser(String id)async => await _firestoreService.getUserById(id);
+  Future<User> getUser(String id)async => await _firestoreService.getUserById(id);
 
-  // void sendNotification(UploadLog uploadLog,String title,String body,{bool isBanned=false}) async {
-  //    SheetResponse result = await _bottomSheetService.showBottomSheet(title: "Sure?",description: "");
-  //   if(result.confirmed){
-  //     _analyticsService.sendNotification(id: uploadLog.uploader_id,message: body,title: title);
-  //     uploadLog.setNotificationSent = true;
-  //     _firestoreService.updateDocument(uploadLog, Document.UploadLog);
-  //     if(isBanned){
-  //       User user = await _sharedPreferencesService.getUser();
-  //       user.banUser = true;
-  //       _firestoreService.updateUserInFirebase(user);
-  //     }
-  //   }
-  // }
+  void sendNotification(UploadLog uploadLog,String title,String body,{bool isBanned=false}) async {
+     SheetResponse result = await _bottomSheetService.showBottomSheet(title: "Sure?",description: "");
+    if(result.confirmed){
+      _analyticsService.sendNotification(id: uploadLog.uploader_id,message: body,title: title);
+      uploadLog.setNotificationSent = true;
+      _firestoreService.updateDocument(uploadLog, Document.UploadLog);
+      if(isBanned){
+        User user = await _sharedPreferencesService.getUser();
+        user.banUser = true;
+        _firestoreService.updateUserInFirebase(user);
+      }
+    }
+  }
 
   void navigateToEditScreen(UploadLog logItem) {
-    _navigationService.navigateTo(
-      Routes.uploadLogEditView,
-      arguments: UploadLogEditViewArguments(uploadLog: logItem),
-    );
+    // _navigationService.navigateTo(
+    //   Routes.uploadLogEditView,
+    //   arguments: UploadLogEditViewArguments(uploadLog: logItem),
+    // );
+    log.e(_remoteConfigService.remoteConfig.getString("GDRIVE"));
+    log.e(_remoteConfigService.remoteConfig.getString("APP_VERSION"));
   }
 
   //  void accept(UploadLog uploadLog) async {
@@ -204,18 +208,18 @@ class UploadLogDetailViewModel extends FutureViewModel {
   //   }
   // }
 
-  // void ban(UploadLog uploadLog) async {
-  //   String title = "We're Sorry !";
-  //   String message = "We're sad to say that you won't be allowed to report or upload any documents. Feel free to contact us using the feedback feature !";
-  //   DialogResponse result = await _dialogService.showConfirmationDialog(title: "Sure?",description: "");
-  //   if(result.confirmed){
-  //     _analyticsService.sendNotification(id: uploadLog.uploader_id,message: message,title: title);
-  //     uploadLog.setNotificationSent = true;
-  //     _firestoreService.updateDocument(uploadLog, Document.UploadLog);
-  //   User user = await _sharedPreferencesService.getUser();
-  //   user.banUser = true;
-  //   _firestoreService.updateUserInFirebase(user);
-  // }
-  // }
+  void ban(UploadLog uploadLog) async {
+    String title = "We're Sorry !";
+    String message = "We're sad to say that you won't be allowed to report or upload any documents. Feel free to contact us using the feedback feature !";
+    DialogResponse result = await _dialogService.showConfirmationDialog(title: "Sure?",description: "");
+    if(result.confirmed){
+      _analyticsService.sendNotification(id: uploadLog.uploader_id,message: message,title: title);
+      uploadLog.setNotificationSent = true;
+      _firestoreService.updateDocument(uploadLog, Document.UploadLog);
+    User user = await _sharedPreferencesService.getUser();
+    user.banUser = true;
+    _firestoreService.updateUserInFirebase(user);
+  }
+  }
 
 }

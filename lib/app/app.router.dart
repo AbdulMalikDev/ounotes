@@ -1,8 +1,8 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-//
+// **************************************************************************
 // StackedRouterGenerator
-//
+// **************************************************************************
 
 // ignore_for_file: public_member_api_docs
 
@@ -172,9 +172,7 @@ class StackedRouter extends RouterBase {
       );
     },
     AllDocumentsView: (data) {
-      var args = data.getArgs<AllDocumentsViewArguments>(
-        orElse: () => AllDocumentsViewArguments(),
-      );
+      var args = data.getArgs<AllDocumentsViewArguments>(nullOk: false);
       return MaterialPageRoute<dynamic>(
         builder: (context) => AllDocumentsView(
           subjectName: args.subjectName,
@@ -185,9 +183,7 @@ class StackedRouter extends RouterBase {
       );
     },
     PDFScreen: (data) {
-      var args = data.getArgs<PDFScreenArguments>(
-        orElse: () => PDFScreenArguments(),
-      );
+      var args = data.getArgs<PDFScreenArguments>(nullOk: false);
       return MaterialPageRoute<dynamic>(
         builder: (context) => PDFScreen(
           pathPDF: args.pathPDF,
@@ -198,9 +194,7 @@ class StackedRouter extends RouterBase {
       );
     },
     NotesView: (data) {
-      var args = data.getArgs<NotesViewArguments>(
-        orElse: () => NotesViewArguments(),
-      );
+      var args = data.getArgs<NotesViewArguments>(nullOk: false);
       return MaterialPageRoute<dynamic>(
         builder: (context) => NotesView(
           subjectName: args.subjectName,
@@ -212,9 +206,7 @@ class StackedRouter extends RouterBase {
       );
     },
     QuestionPapersView: (data) {
-      var args = data.getArgs<QuestionPapersViewArguments>(
-        orElse: () => QuestionPapersViewArguments(),
-      );
+      var args = data.getArgs<QuestionPapersViewArguments>(nullOk: false);
       return MaterialPageRoute<dynamic>(
         builder: (context) => QuestionPapersView(
           subjectName: args.subjectName,
@@ -225,9 +217,7 @@ class StackedRouter extends RouterBase {
       );
     },
     SyllabusView: (data) {
-      var args = data.getArgs<SyllabusViewArguments>(
-        orElse: () => SyllabusViewArguments(),
-      );
+      var args = data.getArgs<SyllabusViewArguments>(nullOk: false);
       return MaterialPageRoute<dynamic>(
         builder: (context) => SyllabusView(
           subjectName: args.subjectName,
@@ -238,9 +228,7 @@ class StackedRouter extends RouterBase {
       );
     },
     LinksView: (data) {
-      var args = data.getArgs<LinksViewArguments>(
-        orElse: () => LinksViewArguments(),
-      );
+      var args = data.getArgs<LinksViewArguments>(nullOk: false);
       return MaterialPageRoute<dynamic>(
         builder: (context) => LinksView(
           subjectName: args.subjectName,
@@ -263,9 +251,7 @@ class StackedRouter extends RouterBase {
       );
     },
     UploadView: (data) {
-      var args = data.getArgs<UploadViewArguments>(
-        orElse: () => UploadViewArguments(),
-      );
+      var args = data.getArgs<UploadViewArguments>(nullOk: false);
       return MaterialPageRoute<dynamic>(
         builder: (context) => UploadView(
           textFieldsMap: args.textFieldsMap,
@@ -295,9 +281,7 @@ class StackedRouter extends RouterBase {
       );
     },
     FDInputView: (data) {
-      var args = data.getArgs<FDInputViewArguments>(
-        orElse: () => FDInputViewArguments(),
-      );
+      var args = data.getArgs<FDInputViewArguments>(nullOk: false);
       return MaterialPageRoute<dynamic>(
         builder: (context) => FDInputView(
           path: args.path,
@@ -307,9 +291,7 @@ class StackedRouter extends RouterBase {
       );
     },
     FDSubjectView: (data) {
-      var args = data.getArgs<FDSubjectViewArguments>(
-        orElse: () => FDSubjectViewArguments(),
-      );
+      var args = data.getArgs<FDSubjectViewArguments>(nullOk: false);
       return MaterialPageRoute<dynamic>(
         builder: (context) => FDSubjectView(
           sem: args.sem,
@@ -321,9 +303,7 @@ class StackedRouter extends RouterBase {
       );
     },
     FDDocumentView: (data) {
-      var args = data.getArgs<FDDocumentViewArguments>(
-        orElse: () => FDDocumentViewArguments(),
-      );
+      var args = data.getArgs<FDDocumentViewArguments>(nullOk: false);
       return MaterialPageRoute<dynamic>(
         builder: (context) => FDDocumentView(
           subjectName: args.subjectName,
@@ -367,9 +347,7 @@ class StackedRouter extends RouterBase {
       );
     },
     EditView: (data) {
-      var args = data.getArgs<EditViewArguments>(
-        orElse: () => EditViewArguments(),
-      );
+      var args = data.getArgs<EditViewArguments>(nullOk: false);
       return MaterialPageRoute<dynamic>(
         builder: (context) => EditView(
           key: args.key,
@@ -442,10 +420,9 @@ class StackedRouter extends RouterBase {
   };
 }
 
-///
+/// ************************************************************************
 /// Arguments holder classes
-///
-
+/// *************************************************************************
 /// HomeView arguments holder class
 class HomeViewArguments {
   final Key key;
@@ -461,7 +438,7 @@ class AllDocumentsViewArguments {
   final String path;
   final String newDocIDUploaded;
   AllDocumentsViewArguments(
-      {this.subjectName, this.path, this.newDocIDUploaded});
+      {@required this.subjectName, this.path, this.newDocIDUploaded});
 }
 
 /// PDFScreen arguments holder class
@@ -469,7 +446,7 @@ class PDFScreenArguments {
   final String pathPDF;
   final AbstractDocument doc;
   final bool askBookMarks;
-  PDFScreenArguments({this.pathPDF, this.doc, this.askBookMarks});
+  PDFScreenArguments({this.pathPDF, this.doc, @required this.askBookMarks});
 }
 
 /// NotesView arguments holder class
@@ -479,7 +456,7 @@ class NotesViewArguments {
   final String newDocIDUploaded;
   final Key key;
   NotesViewArguments(
-      {this.subjectName, this.path, this.newDocIDUploaded, this.key});
+      {@required this.subjectName, this.path, this.newDocIDUploaded, this.key});
 }
 
 /// QuestionPapersView arguments holder class
@@ -487,7 +464,8 @@ class QuestionPapersViewArguments {
   final String subjectName;
   final String path;
   final Key key;
-  QuestionPapersViewArguments({this.subjectName, this.path, this.key});
+  QuestionPapersViewArguments(
+      {@required this.subjectName, this.path, this.key});
 }
 
 /// SyllabusView arguments holder class
@@ -495,7 +473,7 @@ class SyllabusViewArguments {
   final String subjectName;
   final String path;
   final Key key;
-  SyllabusViewArguments({this.subjectName, this.path, this.key});
+  SyllabusViewArguments({@required this.subjectName, this.path, this.key});
 }
 
 /// LinksView arguments holder class
@@ -503,7 +481,7 @@ class LinksViewArguments {
   final String subjectName;
   final String path;
   final Key key;
-  LinksViewArguments({this.subjectName, this.path, this.key});
+  LinksViewArguments({@required this.subjectName, this.path, this.key});
 }
 
 /// UploadView arguments holder class
@@ -513,7 +491,7 @@ class UploadViewArguments {
   final Document path;
   final Document path2;
   UploadViewArguments(
-      {this.textFieldsMap, this.subjectName, this.path, this.path2});
+      {this.textFieldsMap, @required this.subjectName, this.path, this.path2});
 }
 
 /// UploadSelectionView arguments holder class
@@ -527,7 +505,7 @@ class UploadSelectionViewArguments {
 class FDInputViewArguments {
   final Document path;
   final Key key;
-  FDInputViewArguments({this.path, this.key});
+  FDInputViewArguments({@required this.path, this.key});
 }
 
 /// FDSubjectView arguments holder class
@@ -536,7 +514,8 @@ class FDSubjectViewArguments {
   final String br;
   final Document path;
   final Key key;
-  FDSubjectViewArguments({this.sem, this.br, this.path, this.key});
+  FDSubjectViewArguments(
+      {@required this.sem, @required this.br, @required this.path, this.key});
 }
 
 /// FDDocumentView arguments holder class
@@ -544,7 +523,7 @@ class FDDocumentViewArguments {
   final String subjectName;
   final Document path;
   final Key key;
-  FDDocumentViewArguments({this.subjectName, this.path, this.key});
+  FDDocumentViewArguments({@required this.subjectName, this.path, this.key});
 }
 
 /// WebViewWidget arguments holder class
@@ -568,11 +547,11 @@ class EditViewArguments {
   final String subjectName;
   EditViewArguments(
       {this.key,
-      this.title,
-      this.textFieldsMap,
-      this.path,
+      @required this.title,
+      @required this.textFieldsMap,
+      @required this.path,
       this.note,
-      this.subjectName});
+      @required this.subjectName});
 }
 
 /// UploadLogDetailView arguments holder class

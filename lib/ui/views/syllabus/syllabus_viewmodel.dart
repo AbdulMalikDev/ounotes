@@ -31,26 +31,26 @@ class SyllabusViewModel extends BaseViewModel {
 
   Future fetchSyllabus(String subjectName) async {
     setBusy(true);
-    // var syllabusList =
-    //     await _firestoreService.loadSyllabusFromFirebase(subjectName);
-    // if (syllabusList is String) {
-    //   await Fluttertoast.showToast(
-    //       msg:
-    //           "You are facing an error in loading the Syllabus. If you are facing this error more than once, please let us know by using the 'feedback' option in the app drawer.");
-    //   setBusy(false);
-    //   return;
-    // } else {
-    //   _syllabus = syllabusList;
-    // }
+    var syllabusList =
+        await _firestoreService.loadSyllabusFromFirebase(subjectName);
+    if (syllabusList is String) {
+      await Fluttertoast.showToast(
+          msg:
+              "You are facing an error in loading the Syllabus. If you are facing this error more than once, please let us know by using the 'feedback' option in the app drawer.");
+      setBusy(false);
+      return;
+    } else {
+      _syllabus = syllabusList;
+    }
 
-    // for (int i = 0; i < syllabusList.length; i++) {
-    //   Syllabus syllabus = syllabusList[i];
-    //   if (syllabus.GDriveLink == null) {
-    //     continue;
-    //   }
-    //   _syllabusTiles.add(_addInkWellWidget(syllabus));
-    // }
-    // notifyListeners();
+    for (int i = 0; i < syllabusList.length; i++) {
+      Syllabus syllabus = syllabusList[i];
+      if (syllabus.GDriveLink == null) {
+        continue;
+      }
+      _syllabusTiles.add(_addInkWellWidget(syllabus));
+    }
+    notifyListeners();
     setBusy(false);
   }
 
