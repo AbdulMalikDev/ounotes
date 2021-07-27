@@ -10,6 +10,7 @@ import 'package:FSOUNotes/services/funtional_services/remote_config_service.dart
 import 'package:FSOUNotes/services/funtional_services/sharedpref_service.dart';
 import 'package:FSOUNotes/services/state_services/subjects_service.dart';
 import 'package:connectivity_wrapper/connectivity_wrapper.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:logger/logger.dart';
 import 'package:package_info/package_info.dart';
 import 'package:stacked/stacked.dart';
@@ -26,27 +27,32 @@ class SplashViewModel extends FutureViewModel {
   SubjectsService _subjectsService = locator<SubjectsService>();
   FirestoreService _firestoreService = locator<FirestoreService>();
   AppInfoService _appInfoService = locator<AppInfoService>();
-  PushNotificationService _pushNotificationService = locator<PushNotificationService>();
+  PushNotificationService _pushNotificationService =
+      locator<PushNotificationService>();
 
   handleStartUpLogic() async {
-    bool isUserOnline = await ConnectivityWrapper.instance.isConnected;
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      _navigationService.replaceWith(Routes.homeView);
+    });
 
-    await _pushNotificationService.initialise();
-    var LoggedInUser = await _sharedPreferencesService.isUserLoggedIn();
-    //Check if user has outdated version if he/she is online
-    Map<String,dynamic> result;
-    if(isUserOnline) result = await _checkForUpdatedVersionAndShowDialog();
+    // bool isUserOnline = await ConnectivityWrapper.instance.isConnected;
 
-    if (LoggedInUser != null) {
-      if(LoggedInUser.isPremiumUser ?? false)
-      _checkPremiumPurchaseDate(LoggedInUser.id);
-      await _subjectsService.loadSubjects();
-      if(isUserOnline)_navigationService.replaceWith(Routes.homeView,arguments:HomeViewArguments(shouldShowUpdateDialog: result["doesUserNeedUpdate"],versionDetails: result));
-      else _navigationService.replaceWith(Routes.homeView);
-    } else {
-      log.e("user is null");
-      _navigationService.replaceWith(Routes.introView);
-    }
+    // await _pushNotificationService.initialise();
+    // var LoggedInUser = await _sharedPreferencesService.isUserLoggedIn();
+    // //Check if user has outdated version if he/she is online
+    // Map<String,dynamic> result;
+    // if(isUserOnline) result = await _checkForUpdatedVersionAndShowDialog();
+
+    // if (LoggedInUser != null) {
+    //   if(LoggedInUser.isPremiumUser ?? false)
+    //   _checkPremiumPurchaseDate(LoggedInUser.id);
+    //   await _subjectsService.loadSubjects();
+    //   if(isUserOnline)_navigationService.replaceWith(Routes.homeView,arguments:HomeViewArguments(shouldShowUpdateDialog: result["doesUserNeedUpdate"],versionDetails: result));
+    //   else _navigationService.replaceWith(Routes.homeView);
+    // } else {
+    //   log.e("user is null");
+    //   _navigationService.replaceWith(Routes.introView);
+    // }
   }
 
   _checkForUpdatedVersionAndShowDialog() async {
@@ -60,11 +66,12 @@ class SplashViewModel extends FutureViewModel {
     log.i("Current Version :" + currentVersion);
     log.i("Are Both Equal ?");
     log.i(currentVersion == updatedVersion);
-    bool doesUserNeedUpdate = _isCurrentVersionOudated(currentVersion, updatedVersion); 
+    bool doesUserNeedUpdate =
+        _isCurrentVersionOudated(currentVersion, updatedVersion);
     return {
-      "doesUserNeedUpdate" : doesUserNeedUpdate,
-      "currentVersion" : currentVersion,
-      "updatedVersion" : updatedVersion,
+      "doesUserNeedUpdate": doesUserNeedUpdate,
+      "currentVersion": currentVersion,
+      "updatedVersion": updatedVersion,
     };
   }
 
@@ -103,7 +110,7 @@ class SplashViewModel extends FutureViewModel {
 
   void _checkPremiumPurchaseDate(id) async {
     // User user = await _firestoreService.getUserById(id);
-    // DateTime expiryDate = user?.premiumPurchaseDate?.add(Duration(days: 365)) ?? DateTime.now().add(Duration(days:365)); 
+    // DateTime expiryDate = user?.premiumPurchaseDate?.add(Duration(days: 365)) ?? DateTime.now().add(Duration(days:365));
     // if(expiryDate.isAfter(DateTime.now())){
     //   user.setPremiumUser = false;
     // }

@@ -162,10 +162,12 @@ class MyApp extends StatelessWidget {
     return ViewModelBuilder<AppStateNotifier>.reactive(
       builder: (context, model, child) => FeatureDiscovery(
         child: Wiredash(
-          projectId: _remoteConfigService.remoteConfig
-              .getString("WIREDASH_PROJECT_ID"),
-          secret:
-              _remoteConfigService.remoteConfig.getString("WIREDASH_SECRET"),
+          projectId: "Sometid",
+          secret: "sdsdsd",
+          // projectId: _remoteConfigService.remoteConfig
+          //     .getString("WIREDASH_PROJECT_ID"),
+          // secret:
+          //     _remoteConfigService.remoteConfig.getString("WIREDASH_SECRET"),
           navigatorKey: StackedService.navigatorKey,
           child: MaterialApp(
             navigatorObservers: <NavigatorObserver>[observer],
