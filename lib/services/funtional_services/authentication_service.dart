@@ -66,7 +66,9 @@ class AuthenticationService {
 
     IdTokenResult token = await _firebaseUser.getIdTokenResult(true);
     bool isAdmin = token?.claims["admin"] ?? false;
+    bool isVerifier = token?.claims["verifier"] ?? false;
     log.e("isAdmin : " + isAdmin.toString());
+    log.e("isVerifier : " + isVerifier.toString());
 
     if (isAdmin) {
       googleSignIn =
@@ -92,6 +94,9 @@ class AuthenticationService {
     );
     if (isAdmin) {
       _user.setAdmin = true;
+    }
+    if(isVerifier){
+      _user.setVerifier = true;
     }
 
     //Add User to Firebase

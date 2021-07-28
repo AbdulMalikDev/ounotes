@@ -3,14 +3,17 @@ import 'package:FSOUNotes/app/app.router.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 
-class AdminViewModel extends BaseViewModel{
+class VerifierPanelViewModel extends BaseViewModel {
 
 
   NavigationService _navigationService = locator<NavigationService>();
 
 
-  navigateToAddVerifierView(){
-    _navigationService.navigateTo(Routes.addVerifierView);
+  navigateToVerifyDocumentsScreen() {
+    _navigationService.navigateTo(Routes.verifyDocumentsView);
   }
-  
+
+  navigateToReportedDocumentsScreen() {
+    _navigationService.navigateTo(Routes.reportedDocumentsView);
+  }
 }

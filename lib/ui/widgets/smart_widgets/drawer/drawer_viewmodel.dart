@@ -45,12 +45,14 @@ class DrawerViewModel extends BaseViewModel {
 
   PackageInfo packageInfo;
 
+
   getPackageInfo() async {
     if (packageInfo == null) {
       packageInfo = await _appInfoService.getPackageInfo();
     }
   }
 
+ bool get isVerifier => _authenticationService.user.isVerifier;
  bool get isAdmin => _authenticationService.user.isAdmin;
 
   dispatchEmail() async {
@@ -162,6 +164,9 @@ class DrawerViewModel extends BaseViewModel {
   navigateToAdminUploadScreen(Document path) {
     _navigationService.navigateTo(Routes.adminView,
         arguments: FDInputViewArguments(path: path));
+  }
+  navigateToVerifierPanelScreen(Document path) {
+    _navigationService.navigateTo(Routes.verifierPanelView);
   }
 
   Future<String> getUserEmail() async =>
@@ -283,5 +288,8 @@ class DrawerViewModel extends BaseViewModel {
       await _googleInAppPaymentService.buyProduct(prod:prod);
       log.e("Download started");
     }
+  }
+
+  navigateToVerifierPanel() {
   }
 }

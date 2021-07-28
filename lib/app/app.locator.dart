@@ -14,6 +14,7 @@ import '../services/funtional_services/admob_service.dart';
 import '../services/funtional_services/analytics_service.dart';
 import '../services/funtional_services/app_info_service.dart';
 import '../services/funtional_services/authentication_service.dart';
+import '../services/funtional_services/cloud_functions_service.dart';
 import '../services/funtional_services/cloud_storage_service.dart';
 import '../services/funtional_services/crashlytics_service.dart';
 import '../services/funtional_services/db_service.dart';
@@ -71,4 +72,5 @@ void setupLocator() {
   locator.registerLazySingleton(() => SyllabusService());
   locator.registerLazySingleton(() => VoteService());
   locator.registerLazySingleton(() => PDFService());
+  locator.registerLazySingleton(() => CloudFunctionsService());
 }

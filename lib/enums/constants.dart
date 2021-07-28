@@ -29,9 +29,11 @@ class Constants {
   static const String jpeg = 'jpeg';
   static const String jpg = 'jpg';
 
-  //Notification Events [ Make sure Cloud Functions file has same constants ]
+  //Notification Events [ Make sure Cloud Functions file has exact same constants ]
   static const String notificationEventNotesUpload =
       "notificationEventNotesUpload";
+  static const String notificationEventGrantVerifierAccess =
+      "notificationEventGrantVerifierAccess";
 
   static TextStyle kHintTextStyle = TextStyle(
     color: Colors.white54,

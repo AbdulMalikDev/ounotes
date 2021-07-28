@@ -215,6 +215,13 @@ class _DrawerViewState extends State<DrawerView> {
                                 subtitle1,
                                 model.navigateToAdminUploadScreen,
                                 Document.Drawer),
+                          if (model.isVerifier)
+                            NavItem(
+                                Icons.account_balance,
+                                "Verifier Panel",
+                                subtitle1,
+                                model.navigateToVerifierPanelScreen,
+                                Document.Drawer),
                           Divider(color: Colors.grey.shade600),
                           Row(children: <Widget>[
                             SizedBox(width: 20),
@@ -269,7 +276,7 @@ class _DrawerViewState extends State<DrawerView> {
                             onTap: () {
                               final RenderBox box = context.findRenderObject();
                               Share.share(
-                                  'OU Notes is probably the an App to find all lastest Academic Material for Osmania University including\n 1. Notes (PDF , e-books etc.)\n 2. Syllabus\n 3. Previous Question Papers\n 4. Resources (helpful links for learning online)\n. Check it out on Google Play!\n https://play.google.com/store/apps/details?id=com.notes.ounotes',
+                                  'At OU Notes you can find all lastest Academic Material for Osmania University including\n 1. Notes (PDF , e-books etc.)\n 2. Syllabus\n 3. Previous Question Papers\n 4. Resources (helpful links for learning online)\n. Check it out on Google Play!\n https://play.google.com/store/apps/details?id=com.notes.ounotes',
                                   sharePositionOrigin:
                                       box.localToGlobal(Offset.zero) &
                                           box.size);

@@ -31,7 +31,7 @@ class ReportViewModel extends FutureViewModel {
   List<Report> get reports => _reports;
 
   fetchReports() async {
-    // _reports = await _firestoreService.loadReportsFromFirebase();
+    _reports = await _firestoreService.loadReportsFromFirebase();
   }
 
   @override
@@ -143,8 +143,8 @@ class ReportViewModel extends FutureViewModel {
 
   void _showLink(Report report) async {
     Subject sub = _subjectsService.getSubjectByName(report.subjectName);
-    //   Link link = await _firestoreService.getLinkById(sub.id,report.id);
-    //  _dialogService.showDialog(title: "Link Content" , description: link.linkUrl);
+      Link link = await _firestoreService.getLinkById(sub.id,report.id);
+     _dialogService.showDialog(title: "Link Content" , description: link.linkUrl);
   }
 
   getNotificationStatus(Report report) {

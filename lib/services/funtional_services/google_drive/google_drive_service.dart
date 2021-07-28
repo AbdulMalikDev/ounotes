@@ -20,6 +20,7 @@ import 'package:FSOUNotes/services/state_services/syllabus_service.dart';
 import 'package:FSOUNotes/utils/file_picker_service.dart';
 import 'package:ext_storage/ext_storage.dart';
 import 'package:mime/mime.dart';
+import 'package:pdf_compressor/pdf_compressor.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'package:syncfusion_flutter_pdf/pdf.dart';
@@ -59,6 +60,10 @@ part './google_drive_extra/google_drive_functions.dart';
 Logger log = getLogger("GoogleDriveService");
 
 class GoogleDriveService {
+
+  String _chars = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
+  math.Random _rnd = math.Random();
+
   RemoteConfigService _remoteConfigService = locator<RemoteConfigService>();
   FilePickerService _filePickerService = locator<FilePickerService>();
   AuthenticationService _authenticationService =
@@ -96,6 +101,7 @@ class GoogleDriveService {
     String type,
     String uploadFileType = Constants.pdf,
   }) async {
+    log.v("Uploading file to Google Drive");
 
     //Variables
     bool isImage;
@@ -172,7 +178,13 @@ class GoogleDriveService {
           arguments: PDFScreenArguments(
               doc: note, pathPDF: fileToUpload.path, askBookMarks: true));
       
-      //>> 1.4 Upload to Google Drive 
+      //>> 1.4 Compress PDF
+      String outputPath = await getOutputPath();
+      log.e(outputPath);
+      await PdfCompressor.compressPdfFile(docPath, outputPath, CompressQuality.MEDIUM);
+      fileToUpload = File(outputPath);
+
+      //>> 1.5 Upload to Google Drive 
       
       log.i("Uploading File to Google Drive");
       log.i(doc);
@@ -180,7 +192,7 @@ class GoogleDriveService {
 
       try {
 
-        //>> 1.4.1 initialize http client and GDrive API
+        //>> 1.5.1 initialize http client and GDrive API
         final accountCredentials = new ServiceAccountCredentials.fromJson(
             _remote.remoteConfig.getString("GDRIVE"));
         final scopes = ['https://www.googleapis.com/auth/drive'];
@@ -194,20 +206,20 @@ class GoogleDriveService {
           return;
         }
 
-        //>> 1.4.2 Set metadata for the GDrive File
+        //>> 1.5.2 Set metadata for the GDrive File
         gDriveFileToUpload = ga.File();
         gDriveFileToUpload.parents = [subjectSubFolderID];
         gDriveFileToUpload.name = doc.title;
         gDriveFileToUpload.copyRequiresWriterPermission = true;
 
-        //>> 1.4.3 Commence Upload
+        //>> 1.5.3 Commence Upload
         log.e(fileToUpload);
         response = await drive.files.create(
           gDriveFileToUpload,
           uploadMedia: ga.Media(fileToUpload.openRead(), fileToUpload.lengthSync()),
         );
 
-        ///>> 1.4.4 Create and Set Data to access the uploaded file
+        ///>> 1.5.4 Create and Set Data to access the uploaded file
         GDrive_URL =
             "https://drive.google.com/file/d/${response.id}/view?usp=sharing";
         log.w("GDrive Link : " + GDrive_URL);
@@ -224,7 +236,7 @@ class GoogleDriveService {
             "While UPLOADING Notes to Google Drive , Error occurred");
       }
 
-      //>> 1.5 Set Metadata of the file
+      //>> 1.6 Set Metadata of the file to store in Database
       String fileName = assignFileName(note);
       note.setTitle = fileName;
       note.setUrl = GDrive_URL;

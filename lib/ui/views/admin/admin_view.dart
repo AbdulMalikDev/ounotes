@@ -85,6 +85,11 @@ class _AdminViewState extends State<AdminView>
                           ),
                         ),
                       ),
+                      SelectionContainer(
+                        leading: Icon(Icons.account_balance),
+                        title: "Add Verifier",
+                        onTap: () => model.navigateToAddVerifierView(),
+                      ),
                     ],
                   ),
                 ),

@@ -3,6 +3,7 @@ import 'package:FSOUNotes/services/funtional_services/admob_service.dart';
 import 'package:FSOUNotes/services/funtional_services/analytics_service.dart';
 import 'package:FSOUNotes/services/funtional_services/app_info_service.dart';
 import 'package:FSOUNotes/services/funtional_services/authentication_service.dart';
+import 'package:FSOUNotes/services/funtional_services/cloud_functions_service.dart';
 import 'package:FSOUNotes/services/funtional_services/cloud_storage_service.dart';
 import 'package:FSOUNotes/services/funtional_services/crashlytics_service.dart';
 import 'package:FSOUNotes/services/funtional_services/db_service.dart';
@@ -30,6 +31,7 @@ import 'package:FSOUNotes/ui/views/Settings/settings_view.dart';
 import 'package:FSOUNotes/ui/views/about_us/about_us_view.dart';
 import 'package:FSOUNotes/ui/views/about_us/privacy_policy/privacy_policyview.dart';
 import 'package:FSOUNotes/ui/views/about_us/privacy_policy/terms_and_conditionview.dart';
+import 'package:FSOUNotes/ui/views/admin/add_verifier/add_verifier_view.dart';
 import 'package:FSOUNotes/ui/views/admin/admin_view.dart';
 import 'package:FSOUNotes/ui/views/admin/upload_log/upload_log_detail/upload_log_detail_view.dart';
 import 'package:FSOUNotes/ui/views/admin/upload_log/upload_log_detail/upload_log_edit/upload_log_edit_view.dart';
@@ -47,6 +49,9 @@ import 'package:FSOUNotes/ui/views/splash/spash_view.dart';
 import 'package:FSOUNotes/ui/views/syllabus/syllabus_view.dart';
 import 'package:FSOUNotes/ui/views/upload/upload_selection/upload_selection_view.dart';
 import 'package:FSOUNotes/ui/views/upload/upload_view.dart';
+import 'package:FSOUNotes/ui/views/verifier/reported%20documents/reported_documents_view.dart';
+import 'package:FSOUNotes/ui/views/verifier/verifier_view.dart';
+import 'package:FSOUNotes/ui/views/verifier/verify%20documents/verify_documents_view.dart';
 import 'package:FSOUNotes/ui/views/web_view/web_view.dart';
 import 'package:FSOUNotes/ui/widgets/smart_widgets/thank_you_page/thank_you_view.dart';
 import 'package:FSOUNotes/ui/widgets/smart_widgets/thank_you_page/upload_thank_you/thank_you_for_uploading.dart';
@@ -58,6 +63,7 @@ import 'package:stacked/stacked_annotations.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 @StackedApp(routes: [
+  //32 screens
   MaterialRoute(page: SplashView, initial: true),
   MaterialRoute(page: IntroView),
   MaterialRoute(page: HomeView),
@@ -87,6 +93,10 @@ import 'package:stacked_services/stacked_services.dart';
   MaterialRoute(page: ThankYouView),
   MaterialRoute(page: ThankYouForUploadingView),
   MaterialRoute(page: WhyToPayForDownloadView),
+  MaterialRoute(page: AddVerifierView),
+  MaterialRoute(page: VerifierPanelView),
+  MaterialRoute(page: VerifyDocumentsView),
+  MaterialRoute(page: ReportedDocumentsView),
 ], dependencies: [
   LazySingleton(classType: BottomSheetService),
   LazySingleton(classType: AdmobService),
@@ -119,6 +129,7 @@ import 'package:stacked_services/stacked_services.dart';
   LazySingleton(classType: SyllabusService),
   LazySingleton(classType: VoteService),
   LazySingleton(classType: PDFService),
+  LazySingleton(classType: CloudFunctionsService),
 ])
 class App {
   /** This class has no puporse besides housing the annotation that generates the required functionality **/
