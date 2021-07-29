@@ -7,6 +7,7 @@ import 'package:FSOUNotes/app/app.locator.dart';
 import 'package:FSOUNotes/app/app.router.dart';
 import 'package:FSOUNotes/enums/enums.dart';
 import 'package:FSOUNotes/models/document.dart';
+import 'package:FSOUNotes/services/funtional_services/document_service.dart';
 import 'package:FSOUNotes/services/funtional_services/firebase_firestore/firestore_service.dart';
 import 'package:FSOUNotes/services/funtional_services/authentication_service.dart';
 import 'package:FSOUNotes/services/state_services/notes_service.dart';
@@ -40,12 +41,13 @@ class CloudStorageService {
       "https://storage.googleapis.com/ou-notes.appspot.com/pdfs/";
   Reference _storageReference = FirebaseStorage.instance.ref();
 
-  downloadFile({
+  Future<File> downloadFile({
     String notesName,
     String subName,
     String type,
     AbstractDocument note,
   }) async {
+    DocumentService _documentService = locator<DocumentService>();
     log.i("notesName : $notesName");
     log.i("Subject Name : $subName");
     log.i("Type : $type");
@@ -61,14 +63,11 @@ class CloudStorageService {
       log.w("downloading");
       var bytes = await consolidateHttpClientResponseBytes(
         response,
-        // onBytesReceived: (bytesReceived, expectedContentLength) {
-        //   if (expectedContentLength != null) {
-        //     log.w("downloading" +
-        //         (bytesReceived / expectedContentLength * 100)
-        //             .toStringAsFixed(0) +
-        //         "%");
-        //   }
-        // },
+        onBytesReceived: (bytesReceived, expectedContentLength) {
+          if (expectedContentLength != null) {
+             _documentService.downloadProgress.value = (bytesReceived / expectedContentLength * 100);
+          }
+        },
       );
 
       String dir = (await getApplicationDocumentsDirectory()).path;
@@ -80,14 +79,13 @@ class CloudStorageService {
       File file = new File('$dir/$id');
       await file.writeAsBytes(bytes);
       log.i("file path: ${file.path}");
-      return file.path;
+      return file;
     } catch (e) {
       log.e("While retreiving Notes from Firebase STORAGE , Error occurred");
       String error;
       if (e is PlatformException) error = e.message;
       error = e.toString();
       log.e(error);
-      return "error";
     }
   }
 

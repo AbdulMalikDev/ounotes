@@ -193,7 +193,7 @@ class NotesTileViewModel extends BaseViewModel {
       _dialogService.showDialog(
           title: "Thank you for reporting", description: result);
     } else {
-      // await _firestoreService.reportNote(report: report, doc: doc);
+      await _firestoreService.reportNote(report: report, doc: doc);
       Fluttertoast.showToast(
           msg: "Your report has been recorded. The admins will look into this.",
           toastLength: Toast.LENGTH_SHORT,

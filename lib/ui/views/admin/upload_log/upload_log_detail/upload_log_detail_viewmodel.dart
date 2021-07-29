@@ -9,6 +9,7 @@ import 'package:FSOUNotes/models/subject.dart';
 import 'package:FSOUNotes/models/user.dart';
 import 'package:FSOUNotes/services/funtional_services/analytics_service.dart';
 import 'package:FSOUNotes/services/funtional_services/authentication_service.dart';
+import 'package:FSOUNotes/services/funtional_services/document_service.dart';
 import 'package:FSOUNotes/services/funtional_services/firebase_firestore/firestore_service.dart';
 import 'package:FSOUNotes/services/funtional_services/google_drive/google_drive_service.dart';
 import 'package:FSOUNotes/services/funtional_services/onboarding_service.dart';
@@ -39,6 +40,7 @@ class UploadLogDetailViewModel extends FutureViewModel {
   SubjectsService _subjectsService = locator<SubjectsService>();
   RemoteConfigService _remoteConfigService = locator<RemoteConfigService>();
   GoogleDriveService _googleDriveService = locator<GoogleDriveService>();
+  DocumentService _documentService = locator<DocumentService>();
   List<UploadLog> _logs;
 
   bool isloading = false;
@@ -48,7 +50,7 @@ class UploadLogDetailViewModel extends FutureViewModel {
   List<UploadLog> get logs => _logs;
 
   fetchUploadLogs() async {
-    _logs = await _firestoreService.loadUploadLogFromFirebase();
+    _logs = await _firestoreService.loadUploadLogFromFirebase(isAdmin: true);
   }
 
   @override
@@ -70,18 +72,20 @@ class UploadLogDetailViewModel extends FutureViewModel {
 
   viewDocument(UploadLog logItem) async {
     setBusy(true);
-    NotesViewModel notesViewModel = NotesViewModel();
-     AbstractDocument doc = await _firestoreService.getDocumentById(logItem.subjectName, logItem.id, Constants.getDocFromConstant(logItem.type));
-     log.e(doc?.path);
-      if (logItem.type == Constants.links)
-      {
-        _showLink(logItem);
-      }else{
+    log.e("going in");
+    await _documentService.viewDocument(logItem);
+    // NotesViewModel notesViewModel = NotesViewModel();
+    //  AbstractDocument doc = await _firestoreService.getDocumentById(logItem.subjectName, logItem.id, Constants.getDocFromConstant(logItem.type));
+    //  log.e(doc?.path);
+    //   if (logItem.type == Constants.links)
+    //   {
+    //     _showLink(logItem);
+    //   }else{
 
-      await navigateToPDFView(doc);
+    //   await navigateToPDFView(doc);
 
-      }
-      setBusy(false);
+    //   }
+    setBusy(false);
   }
 
   uploadDocument(UploadLog logItem) async {

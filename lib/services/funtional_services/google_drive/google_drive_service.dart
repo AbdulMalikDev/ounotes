@@ -280,7 +280,8 @@ class GoogleDriveService {
   downloadFile(
       {@required Note note,
       @required onDownloadedCallback,
-      @required startDownload}) async {
+      @required startDownload,
+      loading}) async {
     try {
       log.e(note.toJson());
       //*If file exists, avoid downloading again
@@ -333,6 +334,7 @@ class GoogleDriveService {
         downloadedLength += data.length;
         downloadProgress.value =
             ((downloadedLength / contentLength) * 100);
+        loading.value = downloadProgress.value;
         print(downloadProgress.value);
         dataStore.insertAll(dataStore.length, data);
       }, onDone: () async {
@@ -357,8 +359,6 @@ class GoogleDriveService {
       });
     } catch (e) {
       log.e(e.toString());
-
-      throw e;
     }
   }
 

@@ -7,6 +7,7 @@ import 'package:FSOUNotes/services/funtional_services/cloud_functions_service.da
 import 'package:FSOUNotes/services/funtional_services/cloud_storage_service.dart';
 import 'package:FSOUNotes/services/funtional_services/crashlytics_service.dart';
 import 'package:FSOUNotes/services/funtional_services/db_service.dart';
+import 'package:FSOUNotes/services/funtional_services/document_service.dart';
 import 'package:FSOUNotes/services/funtional_services/firebase_firestore/firestore_service.dart';
 import 'package:FSOUNotes/services/funtional_services/google_drive/google_drive_service.dart';
 import 'package:FSOUNotes/services/funtional_services/google_in_app_payment_service.dart';
@@ -130,6 +131,7 @@ import 'package:stacked_services/stacked_services.dart';
   LazySingleton(classType: VoteService),
   LazySingleton(classType: PDFService),
   LazySingleton(classType: CloudFunctionsService),
+  LazySingleton(classType: DocumentService),
 ])
 class App {
   /** This class has no puporse besides housing the annotation that generates the required functionality **/

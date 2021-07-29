@@ -219,13 +219,18 @@ extension FirestoreWrites on FirestoreService{
     }
   }
 
-  updateUploadLogInFirebase(Map note) async {
-    log.e(note["id"]);
-
+  updateUploadLogInFirebase(UploadLog logItem) async {
+    Map<String, dynamic> data = logItem.toJson();
     try {
+      data.addAll({
+        "verifiers" : FieldValue.increment(1),
+        if(logItem.additionalInfo!=null)
+        "additionalInfoFromVerifiers": FieldValue.arrayUnion([logItem.additionalInfo]),
+      });
       await _uploadLogCollectionReference
-          .doc(note["id"])
-          .set(note,SetOptions(merge: true));
+          .doc(data["id"])
+          .set(data,SetOptions(merge: true));
+          
     } on Exception catch (e) {
       log.e(e.toString());
     }
@@ -251,6 +256,27 @@ extension FirestoreWrites on FirestoreService{
         if (updateLocally) {
           _sharedPreferencesService.saveUserLocally(user);
         }
+      } else {
+        log.e("User is Null, not found in Local Storage");
+      }
+    } on Exception catch (e) {
+      log.e(e.toString());
+    }
+  }
+
+  updateVerifierInFirebase(Verifier user, {bool updateLocally = true}) async {
+    Map<String, dynamic> data = user.toJson();
+    data.addAll({
+      "docsVerified": FieldValue.arrayUnion([user.docIdBeingVerified]),
+      "numOfVerifiedDocs": FieldValue.increment(user.numOfVerifiedDocs),
+      "numOfReportedDocs": FieldValue.increment(user.numOfReportedDocs),
+    });
+    try {
+      if (user != null && user.docIdBeingVerified!=null){
+        log.e(user.id);
+        await _verifiersCollectionReference
+            .doc(user.id)
+            .set(user.toJson(), SetOptions(merge: true));
       } else {
         log.e("User is Null, not found in Local Storage");
       }

@@ -155,11 +155,21 @@ extension FirestoreReads on FirestoreService{
     }
   }
 
-  loadUploadLogFromFirebase() async {
+  loadUploadLogFromFirebase({bool isAdmin = false}) async {
     try {
-      QuerySnapshot snapshot = await _uploadLogCollectionReference
+      QuerySnapshot snapshot; 
+      
+      if(isAdmin){
+      snapshot = await _uploadLogCollectionReference
+          .orderBy("uploadedAt", descending: true)
+          .where("isVerifierVerified",isEqualTo: true)
+          .where("isAdminVerified",isEqualTo: false)
+          .get();
+      }else{
+        snapshot = await _uploadLogCollectionReference
           .orderBy("uploadedAt", descending: true)
           .get();
+      }
       List<UploadLog> uploadLogs = snapshot.docs
           .map((doc) => UploadLog.fromData(doc.data()))
           .toList();
