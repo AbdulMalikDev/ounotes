@@ -151,6 +151,14 @@ class NotesColumnWidget extends StatelessWidget {
           children: <Widget>[
             Column(
               children: <Widget>[
+                Text(
+                  size,
+                  style: TextStyle(
+                    color: primary,
+                    fontSize: 10,
+                    letterSpacing: .3,
+                  ),
+                ),
                 Container(
                   height: App(context).appScreenHeightWithOutSafeArea(0.1),
                   width: App(context).appScreenWidthWithOutSafeArea(0.2),
@@ -163,12 +171,25 @@ class NotesColumnWidget extends StatelessWidget {
                     ),
                   ),
                 ),
-                Text(
-                  size,
-                  style: TextStyle(
-                    color: primary,
-                    fontSize: 10,
-                    letterSpacing: .3,
+                Container(
+                  alignment: Alignment.center,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.remove_red_eye,
+                        color: secondary,
+                        size: 20,
+                      ),
+                      SizedBox(
+                        width: 5,
+                      ),
+                      Text(
+                        view.toString(),
+                        style: TextStyle(
+                            color: primary, fontSize: 13, letterSpacing: .3),
+                      ),
+                    ],
                   ),
                 ),
               ],
@@ -282,53 +303,32 @@ class NotesColumnWidget extends StatelessWidget {
                       SizedBox(
                         width: 10,
                       ),
-                      Container(
-                        alignment: Alignment.center,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.remove_red_eye,
-                              color: secondary,
-                              size: 20,
-                            ),
-                            SizedBox(
-                              width: 5,
-                            ),
-                            Text(
-                              view.toString(),
-                              style: TextStyle(
-                                  color: primary,
-                                  fontSize: 13,
-                                  letterSpacing: .3),
-                            ),
-                          ],
-                        ),
-                      ),
                     ],
                   ),
                   SizedBox(
                     height: 15,
                   ),
-                  Container(
-                    width: wp * 0.6,
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        primary: Theme.of(context).primaryColor,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
+                    Container(
+                      width: wp * 0.6,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          primary: Theme.of(context).primaryColor,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                        onPressed: () {
+                          model.openDoc(note);
+                        },
+                        child: Text(
+                          "Open",
+                          style: Theme.of(context)
+                              .textTheme
+                              .button
+                              .copyWith(color: Colors.white),
                         ),
                       ),
-                      onPressed: () {},
-                      child: Text(
-                        "Open",
-                        style: Theme.of(context)
-                            .textTheme
-                            .button
-                            .copyWith(color: Colors.white),
-                      ),
                     ),
-                  ),
                 ],
               ),
             )

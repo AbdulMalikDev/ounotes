@@ -68,6 +68,10 @@ class HomeViewModel extends BaseViewModel {
     );
   }
 
+  navigateToRecentlyOpenedSeeAllScreen() {
+    _navigationService.navigateTo(Routes.recentlyAddedNotesView);
+  }
+
   deleteSelectedSubjects() {
     if (_subjectsService.selectedSubjects.value.length == 0) {
       Fluttertoast.showToast(msg: "No subject selected!");

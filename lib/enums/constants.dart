@@ -10,9 +10,6 @@ class Constants {
   static const String uploadLog = "Upload Log";
   static const String report = "Report";
   static const String userStats = "user_stats";
-  static const String none = 'none';
-  static const String upvote = 'upvote';
-  static const String downvote = 'downvote';
   static const String openInBrowser = 'openInBrowser';
   static const String openInApp = 'openInApp';
 
@@ -35,11 +32,16 @@ class Constants {
   static const String donateIcon = "assets/images/donate-icon.png";
   static const String pdfIcon = "assets/images/pdf.png";
 
-  
+  //Hive Box Names
+  static const String ouNotes = "OUNOTES";
+  static const String downloads = "downloads";
+  static const String recentlyOpenedNotes = "recentlyOpenedNotes";
 
   //Notification Events [ Make sure Cloud Functions file has same constants ]
   static const String notificationEventNotesUpload =
       "notificationEventNotesUpload";
+  static const String notificationEventGrantVerifierAccess =
+      "notificationEventGrantVerifierAccess";
 
   static TextStyle kHintTextStyle = TextStyle(
     color: Colors.white54,

@@ -233,6 +233,12 @@ extension FirestoreReads on FirestoreService {
     return User.fromData(doc.data());
   }
 
-  Future<UploadLog> getUploadLogById(String id) async => UploadLog.fromData(
-      (await _uploadLogCollectionReference.doc(id).get()).data());
+  Future<User> getUserByEmail(String email) async {
+    log.i("Retreiving user with email : " + email);
+    QuerySnapshot snapshot = await _usersCollectionReference.where("email",isEqualTo: email).get();
+    return User.fromData(snapshot.docs[0].data());
+  }
+
+  Future<UploadLog> getUploadLogById(String id) async => UploadLog.fromData((await _uploadLogCollectionReference.doc(id).get()).data());
+
 }

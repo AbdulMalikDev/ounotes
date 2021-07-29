@@ -4,6 +4,7 @@ import 'package:FSOUNotes/enums/enums.dart';
 import 'package:FSOUNotes/models/UploadLog.dart';
 import 'package:FSOUNotes/models/document.dart';
 import 'package:FSOUNotes/models/link.dart';
+import 'package:FSOUNotes/models/notes.dart';
 import 'package:FSOUNotes/models/subject.dart';
 import 'package:FSOUNotes/models/user.dart';
 import 'package:FSOUNotes/services/funtional_services/analytics_service.dart';
@@ -15,6 +16,7 @@ import 'package:FSOUNotes/services/funtional_services/remote_config_service.dart
 import 'package:FSOUNotes/services/funtional_services/sharedpref_service.dart';
 import 'package:FSOUNotes/services/state_services/subjects_service.dart';
 import 'package:FSOUNotes/ui/views/notes/notes_viewmodel.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:logger/logger.dart';
 import 'package:stacked/stacked.dart';
@@ -36,8 +38,13 @@ class UploadLogDetailViewModel extends FutureViewModel {
       locator<SharedPreferencesService>();
   SubjectsService _subjectsService = locator<SubjectsService>();
   RemoteConfigService _remoteConfigService = locator<RemoteConfigService>();
+  GoogleDriveService _googleDriveService = locator<GoogleDriveService>();
   List<UploadLog> _logs;
 
+  bool isloading = false;
+  
+  ValueNotifier<double> get downloadProgress =>
+      _googleDriveService.downloadProgress;
   List<UploadLog> get logs => _logs;
 
   fetchUploadLogs() async {
@@ -47,14 +54,18 @@ class UploadLogDetailViewModel extends FutureViewModel {
   @override
   Future futureToRun() => fetchUploadLogs();
 
-  deleteLogItem(UploadLog report) async {
+  deleteLogItem(UploadLog report,{bool showDialog = true}) async {
+    if(showDialog){
     var dialogResult = await _dialogService.showConfirmationDialog(
         title: "Are you sure?",
         description:
             "Upload Log will be deleted. As an admin please make sure to take necessary steps",
         cancelTitle: "WAIT",
         confirmationTitle: "Apne baap ku mat sikha");
-    if(dialogResult.confirmed)await _firestoreService.deleteUploadLog(report);
+    if(!dialogResult.confirmed)
+    return;
+    }
+    await _firestoreService.deleteUploadLog(report);
   }
 
   viewDocument(UploadLog logItem) async {
@@ -67,12 +78,7 @@ class UploadLogDetailViewModel extends FutureViewModel {
         _showLink(logItem);
       }else{
 
-      await notesViewModel.onTap(
-        notesName: logItem.fileName,
-        subName: logItem.subjectName,
-        type: logItem.type,
-        doc: doc,
-      );
+      await navigateToPDFView(doc);
 
       }
       setBusy(false);
@@ -129,10 +135,10 @@ class UploadLogDetailViewModel extends FutureViewModel {
     dynamic doc = await _firestoreService.getDocumentById(logItem.subjectName,logItem.id,Constants.getDocFromConstant(logItem.type));
     if(doc!=null)
     {
-      String result = await _googleDriveService.processFile(doc: doc, docEnum:Constants.getDocFromConstant(logItem.type),note: doc,);
-      _dialogService.showDialog(title: "OUTPUT" , description: result);
+      await _googleDriveService.deleteFile(doc: doc);
+      _dialogService.showDialog(title: "Deleted" , description: "Success");
     }
-    deleteLogItem(logItem);
+    deleteLogItem(logItem,showDialog: false);
     setBusy(false);
   }
 
@@ -220,6 +226,34 @@ class UploadLogDetailViewModel extends FutureViewModel {
     user.banUser = true;
     _firestoreService.updateUserInFirebase(user);
   }
+  }
+
+  void navigateToPDFView(Note note) async {
+    try {
+      _googleDriveService.downloadFile(
+        note: note,
+        startDownload: () {
+          setLoading(true);
+        },
+        onDownloadedCallback: (path, note) {
+          setLoading(false);
+          _navigationService.navigateTo(Routes.pDFScreen,
+              arguments: PDFScreenArguments(
+                  pathPDF: path, doc: note, askBookMarks: false));
+        },
+      );
+    } catch (e) {
+      setLoading(false);
+      Fluttertoast.showToast(
+          msg: "An error Occurred while downloading pdf..." +
+              "Please check you internet connection and try again later");
+      return;
+    }
+  }
+
+  setLoading(bool val) {
+    isloading = val;
+    notifyListeners();
   }
 
 }

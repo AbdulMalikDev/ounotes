@@ -1,13 +1,18 @@
+import 'package:FSOUNotes/AppTheme/AppStateNotifier.dart';
 import 'package:FSOUNotes/app/app.logger.dart';
 import 'package:FSOUNotes/enums/constants.dart';
 import 'package:FSOUNotes/enums/enums.dart';
 import 'package:FSOUNotes/misc/helper.dart';
+import 'package:FSOUNotes/models/recently_open_notes.dart';
 import 'package:FSOUNotes/ui/shared/app_config.dart';
+import 'package:FSOUNotes/ui/views/downloads/Downloads_view.dart';
 import 'package:FSOUNotes/ui/views/home/home_viewmodel.dart';
+import 'package:FSOUNotes/ui/views/home/recently_opened_notes_tile.dart';
 import 'package:FSOUNotes/ui/views/search/search_view.dart';
 import 'package:FSOUNotes/ui/widgets/dumb_widgets/no_subjects_overlay.dart';
 import 'package:FSOUNotes/ui/widgets/smart_widgets/user_subject_list/user_subject_list_view.dart';
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:logger/logger.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:stacked/stacked.dart';
@@ -25,6 +30,14 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> {
+  ScrollController _controller;
+
+  @override
+  void initState() {
+    _controller = ScrollController();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
@@ -42,6 +55,7 @@ class _HomeViewState extends State<HomeView> {
       builder: (context, homeViewModel, child) => Column(
         children: [
           Container(
+            alignment: Alignment.center,
             margin: const EdgeInsets.all(10),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -101,42 +115,44 @@ class _HomeViewState extends State<HomeView> {
                   ),
                 ),
                 Flexible(
-                  child: Center(
+                  child: GestureDetector(
+                    onTap: () {
+                      homeViewModel.navigateToUserUploadScreen();
+                    },
                     child: Container(
-                      width: wp * 0.35,
+                      height: hp * 0.052,
+                      width: wp * 0.3,
                       alignment: Alignment.center,
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          primary: Colors.amber,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 10,
-                            vertical: 5,
-                          ),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Expanded(
-                              child: Text(
-                                "UPLOAD",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 10,
-                                ),
+                      margin: EdgeInsets.only(bottom: hp*0.012),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 5,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.amber,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Flexible(
+                            child: Text(
+                              "UPLOAD",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 10,
                               ),
                             ),
-                            Icon(
-                              Icons.upload_file_rounded,
-                            ),
-                          ],
-                        ),
-                        onPressed: () {
-                          homeViewModel.navigateToUserUploadScreen();
-                        },
+                          ),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          Icon(
+                            Icons.upload_file_rounded,
+                            size: 25,
+                          ),
+                        ],
                       ),
                     ),
                   ),
@@ -144,28 +160,85 @@ class _HomeViewState extends State<HomeView> {
               ],
             ),
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Container(
-                margin: EdgeInsets.only(left: 15),
-                child: Text(
-                  "🔁 Study These Again",
-                  style: Theme.of(context)
-                      .textTheme
-                      .headline6
-                      .copyWith(fontWeight: FontWeight.bold, fontSize: 18),
-                ),
-              ),
-              Container(
-                margin: EdgeInsets.only(right: 10),
-                child: TextButton(
-                  child: Text("See All"),
-                  onPressed: () {},
-                ),
-              ),
-            ],
-          ),
+          ValueListenableBuilder(
+              valueListenable:
+                  Hive.box<RecentlyOpenedNotes>(Constants.recentlyOpenedNotes)
+                      .listenable(),
+              builder: (context,
+                  Box<RecentlyOpenedNotes> recentlyOpenedNotesBox, widget) {
+                if (recentlyOpenedNotesBox.isEmpty) {
+                  return Container();
+                }
+                return Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(
+                          margin: EdgeInsets.only(left: 15),
+                          child: Text(
+                            "🔁 Study These Again",
+                            style: Theme.of(context)
+                                .textTheme
+                                .headline6
+                                .copyWith(
+                                    fontWeight: FontWeight.bold, fontSize: 17),
+                          ),
+                        ),
+                        Container(
+                          margin: EdgeInsets.only(right: 10),
+                          child: TextButton(
+                            child: Text("See All"),
+                            onPressed: () {
+                              homeViewModel
+                                  .navigateToRecentlyOpenedSeeAllScreen();
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                    Container(
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          children: [
+                            for (int i = recentlyOpenedNotesBox.length - 1;
+                                i >= 0 && i > recentlyOpenedNotesBox.length - 5;
+                                i--)
+                              GestureDetector(
+                                onTap: () {},
+                                child: Container(
+                                  margin: EdgeInsets.symmetric(
+                                      horizontal: 10, vertical: 10),
+                                  decoration: AppStateNotifier.isDarkModeOn
+                                      ? Constants.mdecoration.copyWith(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .background,
+                                          boxShadow: [],
+                                        )
+                                      : Constants.mdecoration.copyWith(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .background,
+                                        ),
+                                  child: RecentlyOpenedNotesTile(
+                                    recentlyOpenedNotes:
+                                        recentlyOpenedNotesBox.getAt(i),
+                                    index: i,
+                                  ),
+                                ),
+                              )
+                          ],
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                  ],
+                );
+              }),
           homeViewModel.isEditPressed
               ? Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -229,10 +302,8 @@ class _HomeViewState extends State<HomeView> {
                       margin: EdgeInsets.only(left: 15),
                       child: Text(
                         "📝 My Subjects",
-                        style: Theme.of(context)
-                            .textTheme
-                            .headline6
-                            .copyWith(fontWeight: FontWeight.bold),
+                        style: Theme.of(context).textTheme.headline6.copyWith(
+                            fontWeight: FontWeight.bold, fontSize: 17),
                       ),
                     ),
                     IconButton(

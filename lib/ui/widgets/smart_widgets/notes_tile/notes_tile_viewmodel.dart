@@ -3,14 +3,18 @@ import 'package:FSOUNotes/app/app.logger.dart';
 import 'package:FSOUNotes/app/app.router.dart';
 import 'package:FSOUNotes/enums/enums.dart';
 import 'package:FSOUNotes/misc/constants.dart';
+import 'package:FSOUNotes/misc/helper.dart';
 import 'package:FSOUNotes/models/document.dart';
 import 'package:FSOUNotes/models/notes.dart';
+import 'package:FSOUNotes/models/recently_open_notes.dart';
 import 'package:FSOUNotes/models/report.dart';
 import 'package:FSOUNotes/services/funtional_services/authentication_service.dart';
 import 'package:FSOUNotes/services/funtional_services/cloud_storage_service.dart';
 import 'package:FSOUNotes/services/funtional_services/firebase_firestore/firestore_service.dart';
 import 'package:FSOUNotes/services/funtional_services/google_drive/google_drive_service.dart';
 import 'package:FSOUNotes/services/funtional_services/admob_service.dart';
+import 'package:FSOUNotes/services/funtional_services/sharedpref_service.dart';
+import 'package:FSOUNotes/services/state_services/recently_opened_notes_service.dart';
 import 'package:FSOUNotes/services/state_services/report_service.dart';
 import 'package:FSOUNotes/services/state_services/subjects_service.dart';
 import 'package:flutter/material.dart';
@@ -35,7 +39,10 @@ class NotesTileViewModel extends BaseViewModel {
   GoogleDriveService _googleDriveService = locator<GoogleDriveService>();
   BottomSheetService _bottomSheetService = locator<BottomSheetService>();
   SubjectsService _subjectService = locator<SubjectsService>();
-
+  SharedPreferencesService _sharedPreferencesService =
+      locator<SharedPreferencesService>();
+  RecentlyOpenedNotesService _recentlyOpenedNotesService =
+      locator<RecentlyOpenedNotesService>();
   bool _isnotedownloaded = false;
   bool get isnotedownloaded => _isnotedownloaded;
   AdmobService get admobService => _admobService;
@@ -92,6 +99,25 @@ class NotesTileViewModel extends BaseViewModel {
           textColor: Colors.white,
           fontSize: 16.0);
     }
+  }
+
+  void openDoc(Note note) async {
+    await _sharedPreferencesService.updateView(note.id);
+    //Add to recently opened notes
+    _recentlyOpenedNotesService.addRecentlyOpenedNotes(
+      recentlyOpenedNotes: RecentlyOpenedNotes(
+        author: note.author,
+        id: note.id,
+        pages: note.pages,
+        size: note.size,
+        subjectName: note.subjectName,
+        title: note.title,
+        uploadDate: note.uploadDate,
+        url: note.url,
+        view: note.view,
+      ),
+    );
+    Helper.launchURL(note.GDriveLink);
   }
 
   Future delete(AbstractDocument doc) async {

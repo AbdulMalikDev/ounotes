@@ -127,11 +127,13 @@ class _AllDocumentsViewState extends State<AllDocumentsView>
                               margin: EdgeInsets.symmetric(
                                   horizontal: 5, vertical: 10),
                               // width: App(context).appWidth(0.3),
-                              child: RaisedButton(
+                              child: ElevatedButton(
                                 key: intro == null ? null : intro.keys[0],
-                                color: Colors.amber,
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(20)),
+                                style: ElevatedButton.styleFrom(
+                                  primary: Colors.amber,
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20)),
+                                ),
                                 child: Shimmer.fromColors(
                                   baseColor: Colors.red,
                                   highlightColor: Colors.white,
@@ -154,7 +156,7 @@ class _AllDocumentsViewState extends State<AllDocumentsView>
                           ],
                           leading: IconButton(
                             icon: Icon(
-                              Icons.arrow_back,
+                              Icons.arrow_back_ios,
                             ),
                             onPressed: () {
                               Navigator.of(context).pop();

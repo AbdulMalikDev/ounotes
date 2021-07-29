@@ -103,8 +103,25 @@ extension FirestoreWrites on FirestoreService{
     }
   }
 
+  addVerifier(Verifier verifier) async {
+    CloudFunctionsService cloudFunctionsService = locator<CloudFunctionsService>();
+    AuthenticationService _authenticationService = locator<AuthenticationService>();
+    String id = _authenticationService.user.id;
+    await cloudFunctionsService.grantVerifierRole(id,verifier.email,verifier.id);
+    Map<String, dynamic> data = verifier.toJson();
+    try {
+      log.i("Adding Verifier to firebase");
+      await _verifiersCollectionReference
+          .doc(data["Id"])
+          .set(data,SetOptions(merge: true));
 
-  //* UPDATES
+    } catch (e) {
+      return _errorHandling(e, "While saving user to Firebase , Error occurred");
+    }
+  }
+
+
+  //******************************           UPDATES           ****************************************/ 
 
   updateSubjectInFirebase(Map subject) async {
     try {

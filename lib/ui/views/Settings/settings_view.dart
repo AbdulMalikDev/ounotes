@@ -23,10 +23,6 @@ class SettingsView extends StatefulWidget {
 }
 
 class _SettingsViewState extends State<SettingsView> {
-  TextEditingController controllerForEmail = TextEditingController();
-  TextEditingController controllerForSem = TextEditingController();
-  TextEditingController controllerForBranch = TextEditingController();
-  TextEditingController controllerForCollege = TextEditingController();
   final Shader linearGradient = LinearGradient(
     colors: <Color>[Colors.teal[700], Colors.teal[400]],
   ).createShader(Rect.fromLTWH(0.0, 0.0, 200.0, 70.0));
@@ -41,12 +37,8 @@ class _SettingsViewState extends State<SettingsView> {
         ? theme.iconTheme.color
         : Colors.black.withOpacity(0.6);
     return ViewModelBuilder<SettingsViewModel>.reactive(
-      onModelReady: (model) async {
-        await model.setUser();
-        controllerForEmail.text = model.user?.email;
-        controllerForSem.text = model.user?.semester;
-        controllerForBranch.text = model.user?.branch;
-        controllerForCollege.text = model.user?.college;
+      onModelReady: (model) {
+        model.setUser();
       },
       builder: (context, model, child) {
         return ModalProgressHUD(
@@ -188,28 +180,17 @@ class _SettingsViewState extends State<SettingsView> {
                       //   NavItem(Icons.equalizer, "Admin Panel", subtitle1,
                       //       model.navigateToAdminUploadScreen, Document.Drawer),
                       SettingsTile(
-                        title: "Email",
-                        subTitle: model.user?.email ?? "",
-                        icon: Icon(Icons.email, color: iconColor),
-                      ),
-                      SettingsTile(
-                        title: "Semester",
-                        subTitle: model.user?.semester ?? "",
-                        icon: Icon(Icons.calendar_today, color: iconColor),
-                      ),
-                      SettingsTile(
-                        title: "Branch",
-                        subTitle: model.user?.branch ?? "",
-                        icon: Icon(Icons.person, color: iconColor),
-                      ),
-                      SettingsTile(
-                        title: "College",
-                        subTitle: model.user?.college ?? "",
-                        largeSubtitle: true,
-                        icon: Icon(
-                          Icons.school_sharp,
-                          color: iconColor,
+                        isClickable: true,
+                        onPressed: () {
+                          model.navigateToAccountInfoScreen();
+                        },
+                        icon: SizedBox(
+                          height: 30,
+                          width: 30,
+                          child: Icon(Icons.person, color: iconColor),
                         ),
+                        title: "Account Settings",
+                        subTitle: "Change your semeter, branch etc.",
                       ),
                       SettingsTile(
                         isClickable: true,
@@ -224,10 +205,45 @@ class _SettingsViewState extends State<SettingsView> {
                         title: "RATE THIS APP",
                         subTitle: "Donate a 5 star.",
                       ),
+                      if (model.isAdmin)
+                        SettingsTile(
+                          isClickable: true,
+                          onPressed: () {
+                            model.navigateToAdminUploadScreen();
+                          },
+                          icon: SizedBox(
+                            height: 30,
+                            width: 30,
+                            child: Icon(Icons.equalizer, color: iconColor),
+                          ),
+                          title: "Admin Panel",
+                          subTitle: "Admin tools",
+                        ),
+
+                      if (model.isVerifier)
+                        SettingsTile(
+                          isClickable: true,
+                          onPressed: () {
+                            model.navigateToVerifierPanelScreen();
+                          },
+                          icon: SizedBox(
+                            height: 30,
+                            width: 30,
+                            child:
+                                Icon(Icons.account_balance, color: iconColor),
+                          ),
+                          title: "Verifier Panel",
+                          subTitle: "Verifier tools",
+                        ),
+
                       SettingsTile(
-                        icon: Icon(
-                          MdiIcons.accountSupervisor,
-                          color: iconColor,
+                        icon: SizedBox(
+                          height: 30,
+                          width: 30,
+                          child: Icon(
+                            MdiIcons.accountSupervisor,
+                            color: iconColor,
+                          ),
                         ),
                         title: "About Us",
                         subTitle: "TODO write some subtitle",
@@ -320,82 +336,6 @@ class _SettingsViewState extends State<SettingsView> {
                         ),
                       ),
                     ],
-                  ),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                //TODO remove this code
-                // Center(
-                //   child: Container(
-                //     height: App(context).appHeight(0.12),
-                //     width: double.infinity,
-                //     padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                //     margin: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-                //     decoration: BoxDecoration(
-                //       borderRadius: BorderRadius.circular(10),
-                //       color: theme.scaffoldBackgroundColor,
-                //       border: Border.all(
-                //         color: primary,
-                //         width: 1.5,
-                //       ),
-                //     ),
-                //     child: Column(
-                //       children: <Widget>[
-                //         Text(
-                //           "Open pdf in",
-                //           style: Theme.of(context)
-                //               .textTheme
-                //               .headline6
-                //               .copyWith(fontSize: 16),
-                //         ),
-                //         SizedBox(
-                //           height: 10,
-                //         ),
-                //         Flexible(
-                //           child: DropdownButton(
-                //             elevation: 15,
-                //             value: model.userOption,
-                //             items: model.dropDownOfOpenPDF,
-                //             onChanged: model.changedDropDownItemOfOpenPdfChoice,
-                //             dropdownColor:
-                //                 Theme.of(context).colorScheme.background,
-                //             focusColor:
-                //                 Theme.of(context).colorScheme.background,
-                //             style: Theme.of(context)
-                //                 .textTheme
-                //                 .subtitle1
-                //                 .copyWith(fontSize: 13),
-                //           ),
-                //         ),
-                //       ],
-                //     ),
-                //   ),
-                // ),
-                // SizedBox(
-                //   height: 10,
-                // ),
-                SizedBox(
-                  height: 15,
-                ),
-                Container(
-                  width: MediaQuery.of(context).size.width / 1.7,
-                  height: MediaQuery.of(context).size.height * 0.06,
-                  margin: const EdgeInsets.symmetric(horizontal: 70),
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(25),
-                      ),
-                      primary: Theme.of(context).primaryColor,
-                    ),
-                    child: Text(
-                      "CHANGE INFORMATION",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                    onPressed: () {
-                      model.changeProfileData();
-                    },
                   ),
                 ),
                 SizedBox(

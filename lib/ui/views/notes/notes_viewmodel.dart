@@ -246,56 +246,57 @@ class NotesViewModel extends BaseViewModel {
   }
 
   void openDoc(Note note) async {
-    User user = await _authenticationService.getUser();
+    _sharedPreferencesService.updateView(note.id);
+    Helper.launchURL(note.GDriveLink);
+    // User user = await _authenticationService.getUser();
     // if (_admobService.adDue && !user.isPremiumUser ??
     //     false || _admobService.shouldAdBeShown()) {
     //   _navigationService.navigateTo(Routes.watchAdToContinueView);
     //   return;
     // }
-    SharedPreferences prefs = await _sharedPreferencesService.store();
-    if (prefs.containsKey("openDocChoice")) {
-      String button = prefs.getString("openDocChoice");
-      if (button == "Open In App") {
-        navigateToPDFView(note);
-      } else {
-        _sharedPreferencesService.updateView(note.id);
-        Helper.launchURL(note.GDriveLink);
-      }
-      return;
-    }
+    // SharedPreferences prefs = await _sharedPreferencesService.store();
+    // if (prefs.containsKey("openDocChoice")) {
+    //   String button = prefs.getString("openDocChoice");
+    //   if (button == "Open In App") {
+    //     navigateToPDFView(note);
+    //   } else {
+    //   _sharedPreferencesService.updateView(note.id);
+    //   Helper.launchURL(note.GDriveLink);
+    // }
+    //   return;
+    // }
 
-    SheetResponse response = await _bottomSheetService.showCustomSheet(
-      variant: BottomSheetType.floating2,
-      title: 'Where do you want to open the file?',
-      description: "",
-      mainButtonTitle: 'Open In Browser',
-      secondaryButtonTitle: 'Open In App',
-    );
-    log.i("openDoc BottomSheetResponse ");
-    if (response == null) return;
-    if (!response.confirmed ?? false) {
-      return;
-    }
+    // SheetResponse response = await _bottomSheetService.showCustomSheet(
+    //   variant: BottomSheetType.floating2,
+    //   title: 'Where do you want to open the file?',
+    //   description: "",
+    //   mainButtonTitle: 'Open In Browser',
+    //   secondaryButtonTitle: 'Open In App',
+    // );
+    // log.i("openDoc BottomSheetResponse ");
+    // if (response == null) return;
+    // if (!response.confirmed ?? false) {
+    //   return;
+    // }
 
-    if (response.responseData['checkBox']) {
-      prefs.setString(
-        "openDocChoice",
-        response.responseData['buttonText'],
-      );
+    // if (response.responseData['checkBox']) {
+    //   prefs.setString(
+    //     "openDocChoice",
+    //     response.responseData['buttonText'],
+    //   );
 
-      SheetResponse response2 = await _bottomSheetService.showBottomSheet(
-        title: "Settings Saved !",
-        description: "You can change this anytime in settings screen.",
-      );
+    //   SheetResponse response2 = await _bottomSheetService.showBottomSheet(
+    //     title: "Settings Saved !",
+    //     description: "You can change this anytime in settings screen.",
+    //   );
 
-      if (response2.confirmed) {
-        navigateToPDFScreen(response.responseData['buttonText'], note);
-        return;
-      }
-    } else {
-      navigateToPDFScreen(response.responseData['buttonText'], note);
-    }
-
+    //   if (response2.confirmed) {
+    //     navigateToPDFScreen(response.responseData['buttonText'], note);
+    //     return;
+    //   }
+    // } else {
+    //   navigateToPDFScreen(response.responseData['buttonText'], note);
+    // }
     return;
   }
 
@@ -433,10 +434,11 @@ class NotesViewModel extends BaseViewModel {
         isPinned: isPinned,
         refresh: refresh,
         onDownloadCallback: handleDownloadPurchase,
+       
       ),
       onTap: () async {
         // await incrementViewForAd();
-        openDoc(note);
+        // openDoc(note);
       },
     );
   }

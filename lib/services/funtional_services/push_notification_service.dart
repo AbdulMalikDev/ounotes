@@ -42,6 +42,9 @@ class PushNotificationService {
         _handleNotesUpload(
             title, body, subjectName, navigate, notesID, isDocInReview);
         break;
+      case Constants.notificationEventGrantVerifierAccess:
+        _handleVerifierGrantAccess(title,body,navigate);
+        break;
 
       default:
         break;
@@ -51,6 +54,7 @@ class PushNotificationService {
   _handleNotesUpload(String title, String body, String subjectName,
       bool navigate, String notesID, bool isDocInReview) async {
     if (title == null || body == null || subjectName == null) return;
+
     SheetResponse wantToCheckOutNotification =
         await _bottomSheetService.showCustomSheet(
             variant: BottomSheetType.filledStacks,
@@ -58,14 +62,35 @@ class PushNotificationService {
             description: body,
             mainButtonTitle: "OK",
             secondaryButtonTitle: "Later");
+
     bool shouldNavigate =
         navigate && (wantToCheckOutNotification?.confirmed ?? false);
+
     if (shouldNavigate) {
       isDocInReview
           ? _navigationService.navigateTo(Routes.uploadLogView)
           : _navigationService.navigateTo(Routes.allDocumentsView,
               arguments: AllDocumentsViewArguments(
                   subjectName: subjectName, newDocIDUploaded: notesID));
+    }
+  }
+
+  _handleVerifierGrantAccess(String title, String body,bool navigate) async {
+    if (title == null || body == null) return;
+
+    SheetResponse wantToCheckOutNotification =
+        await _bottomSheetService.showCustomSheet(
+            variant: BottomSheetType.filledStacks,
+            title: title,
+            description: body,
+            mainButtonTitle: "OK",
+            secondaryButtonTitle: "Later");
+
+    bool shouldNavigate =
+        navigate && (wantToCheckOutNotification?.confirmed ?? false);
+
+    if (shouldNavigate) {
+      _navigationService.navigateTo(Routes.verifierPanelView);
     }
   }
 

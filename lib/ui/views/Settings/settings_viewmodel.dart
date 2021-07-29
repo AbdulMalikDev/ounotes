@@ -38,13 +38,15 @@ class SettingsViewModel extends BaseViewModel {
   GoogleInAppPaymentService _googleInAppPaymentService =
       locator<GoogleInAppPaymentService>();
 
+  String _userOption;
   User _user = User();
   User get user => _user;
-  String _userOption;
 
   String get userOption => _userOption;
 
   PackageInfo packageInfo;
+  bool get isVerifier => _authenticationService.user.isVerifier;
+  bool get isAdmin => _authenticationService.user.isAdmin;
 
   getPackageInfo() async {
     if (packageInfo == null) {
@@ -77,51 +79,10 @@ class SettingsViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  Future setUser() async {
-    SharedPreferences prefs = await _sharedPreferencesService.store();
-    if (prefs.containsKey("openDocChoice")) {
-      _userOption = prefs.getString("openDocChoice");
-    } else {
-      _userOption = "Ask me before opening pdf";
-    }
-    List<String> items = [
-      "Open In App",
-      "Open In Browser",
-      "Ask me before opening pdf"
-    ];
-    _dropDownOfOpenPDF = buildAndGetDropDownMenuItems(items);
-    User user = User.fromData(
-        json.decode(prefs.getString("current_user_is_logged_in")));
-    _user = user;
-    notifyListeners();
-  }
-
   void recordTelegramVisit() {
     _analyticsService.addTagInNotificationService(
         key: "TELEGRAM", value: "VISITED");
     _analyticsService.logEvent(name: "TELEGRAM_VISIT");
-  }
-
-  changeProfileData() async {
-    DialogResponse dialogResult = await _dialogService.showConfirmationDialog(
-      title: "Change Profile Data",
-      description:
-          "In Order to change your data,you just need to sign-in again using your Gmail id",
-      cancelTitle: "GO BACK",
-      confirmationTitle: "PROCEED",
-    );
-    if (dialogResult.confirmed) {
-      setBusy(true);
-      await _authenticationService.handleSignOut().then((value) {
-        if (value) {
-          _navigationService.navigateTo(Routes.introView);
-        } else
-          Fluttertoast.showToast(
-              msg: "Sign Out failed ,please try again later");
-      });
-      setBusy(false);
-      notifyListeners();
-    }
   }
 
   Future updateAppTheme(BuildContext context, bool isDarkModeEnabled) async {
@@ -141,9 +102,19 @@ class SettingsViewModel extends BaseViewModel {
     _navigationService.navigateTo(Routes.aboutUsView);
   }
 
+  navigateToVerifierPanelScreen() {
+    _navigationService.navigateTo(Routes.verifierPanelView);
+  }
+
   navigateToAdminUploadScreen() {
     _navigationService.navigateTo(
       Routes.adminView,
+    );
+  }
+
+  navigateToAccountInfoScreen() {
+    _navigationService.navigateTo(
+      Routes.accountInfoView,
     );
   }
 
@@ -153,6 +124,15 @@ class SettingsViewModel extends BaseViewModel {
       body:
           "[if you are facing errors please attach Screen Shots or Screen Recordings]",
     );
+  }
+
+  Future setUser() async {
+    SharedPreferences prefs = await _sharedPreferencesService.store();
+    User user = User.fromData(
+        json.decode(prefs.getString("current_user_is_logged_in")));
+    print(user);
+    _user = user;
+    notifyListeners();
   }
 
   handleSignOut(BuildContext context) async {
@@ -192,7 +172,7 @@ class SettingsViewModel extends BaseViewModel {
                     style: Theme.of(context)
                         .textTheme
                         .subtitle1
-                        .copyWith(fontSize: 15,color: Colors.redAccent),
+                        .copyWith(fontSize: 15, color: Colors.redAccent),
                   ),
                   onPressed: () {
                     Navigator.of(context).pop();
@@ -314,7 +294,6 @@ class SettingsViewModel extends BaseViewModel {
       await _getUser().then((user) => user.email);
 
   Future<String> getUserId() async => await _getUser().then((user) => user.id);
-
   Future<User> _getUser() async {
     if (_user == null) this._user = await _authenticationService.getUser();
     notifyListeners();

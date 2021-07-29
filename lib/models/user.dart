@@ -3,12 +3,12 @@ import 'package:logger/logger.dart';
 
 Logger log = getLogger("User.dart");
 class User{
+  String id;
   String username;
   String email;
   String createdAt;
   String semester;
   String branch;
-  String id;
   String photoUrl;
   String college;
   bool isPremiumUser;
@@ -19,6 +19,9 @@ class User{
 
   //is user admin?
   bool isAdmin = false;
+
+  //is user verifier?
+  bool isVerifier = false;
 
   //is user allowed to upload?
   bool isUserAllowedToUpload = true;
@@ -46,6 +49,7 @@ class User{
     isAuth                = data['isAuth'] ?? false;
     college               = data['College'];
     isAdmin               = data['isAdmin'] ?? false;
+    isVerifier               = data['isVerifier'] ?? false;
     uploads               = data["uploads"];
     semester              = data['Semester'];
     username              = data['Username'];
@@ -74,6 +78,7 @@ class User{
                "photoUrl"                                       : photoUrl,
                "fcmToken"                                       : fcmToken,
                "isAdmin"                                        : isAdmin ?? false,
+               "isVerifier"                                     : isVerifier ?? false,
                "isUserAllowedToUpload"                          : isUserAllowedToUpload ?? true,
             if(uploads!=null)"uploads"                          : uploads,
             if(numOfUploads!=null)"numOfUploads"                : numOfUploads,
@@ -85,6 +90,7 @@ class User{
   }
 
     set setAdmin(bool value){this.isAdmin = value;}
+    set setVerifier(bool value){this.isVerifier = value;}
 
     set setPremiumUser(bool value){this.isPremiumUser = value;}
 

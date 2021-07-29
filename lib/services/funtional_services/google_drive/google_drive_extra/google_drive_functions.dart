@@ -2,8 +2,7 @@ part of './../google_drive_service.dart';
 
 extension GoogleDriveFunctions on GoogleDriveService{
   
-  
-  
+ 
   
   void _logValuesToConsole(AbstractDocument note,type) {
     // Log values to console
@@ -16,6 +15,15 @@ extension GoogleDriveFunctions on GoogleDriveService{
   Future<String> _localPath() async {
     final directory = await getApplicationDocumentsDirectory();
     return directory.path;
+  }
+
+  Future<String> getOutputPath() async {
+    var dir = await getExternalStorageDirectory();
+    await new Directory('${dir.path}/CompressPdfs').create(recursive: true);
+
+    String randomString = getRandomString(10);
+    String pdfFileName = '$randomString.pdf';
+    return '${dir.path}/CompressPdfs/$pdfFileName';
   }
 
   String _formatBytes(int bytes, int decimals) {
@@ -45,6 +53,9 @@ extension GoogleDriveFunctions on GoogleDriveService{
     }
     return totalLength;
   }
+
+  String getRandomString(int length) => String.fromCharCodes(Iterable.generate(
+    length, (_) => _chars.codeUnitAt(_rnd.nextInt(_chars.length))));
 
   String assignFileName(AbstractDocument doc) {
     switch (doc.path) {

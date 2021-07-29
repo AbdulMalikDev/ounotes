@@ -35,7 +35,7 @@ class AppTheme {
       onPrimary: Color(0xff696b9e),
       secondary: Color(0xfff29a94),
       primaryVariant: Colors.black54,
-      background: Color(0xffeeeeee),
+      background: Colors.grey[100],
       //used for text in notes
       onSurface: Colors.grey[700],
       onBackground: Colors.grey[600],

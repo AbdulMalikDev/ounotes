@@ -38,7 +38,7 @@ class _DownLoadViewState extends State<DownLoadView> {
       child: Column(
         children: [
           ValueListenableBuilder(
-            valueListenable: Hive.box('downloads').listenable(),
+            valueListenable: Hive.box<Download>('downloads').listenable(),
             builder: (context, donwloadsBox, widget) {
               return Container(
                 // height: model.user?.isPremiumUser ?? false

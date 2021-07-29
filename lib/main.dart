@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:FSOUNotes/AppTheme/AppStateNotifier.dart';
 import 'package:FSOUNotes/AppTheme/AppTheme.dart';
+import 'package:FSOUNotes/models/recently_open_notes.dart';
 import 'package:FSOUNotes/services/funtional_services/admob_service.dart';
 import 'package:FSOUNotes/services/funtional_services/crashlytics_service.dart';
 import 'package:FSOUNotes/services/funtional_services/google_in_app_payment_service.dart';
@@ -29,6 +30,7 @@ import 'package:wiredash/wiredash.dart';
 import 'app/app.locator.dart';
 import 'app/app.logger.dart';
 import 'app/app.router.dart';
+import 'enums/constants.dart';
 import 'models/download.dart';
 
 Logger log = getLogger("main");
@@ -43,8 +45,10 @@ void main() async {
   final appDir = await getApplicationDocumentsDirectory();
   Hive.init(appDir.path);
   Hive.registerAdapter<Download>(DownloadAdapter());
-  await Hive.openBox("OUNOTES");
-  await Hive.openBox('downloads');
+  Hive.registerAdapter<RecentlyOpenedNotes>(RecentlyOpenedNotesAdapter());
+  await Hive.openBox(Constants.ouNotes);
+  await Hive.openBox<Download>(Constants.downloads);
+  await Hive.openBox<RecentlyOpenedNotes>(Constants.recentlyOpenedNotes);
   RemoteConfigService _remoteConfigService = locator<RemoteConfigService>();
   // CrashlyticsService _crashlyticsService = locator<CrashlyticsService>();
   // AdmobService _admobService = locator<AdmobService>();

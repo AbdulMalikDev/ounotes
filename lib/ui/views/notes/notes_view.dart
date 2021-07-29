@@ -7,7 +7,7 @@ import 'package:stacked/stacked.dart';
 
 import 'notes_viewmodel.dart';
 
-class NotesView extends StatefulWidget {
+class   NotesView extends StatefulWidget {
   final String subjectName;
   final String path;
   final String newDocIDUploaded;

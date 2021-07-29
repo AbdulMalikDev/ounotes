@@ -1,7 +1,7 @@
-
 import 'package:hive_flutter/hive_flutter.dart';
+part 'recently_open_notes.g.dart';
 
-@HiveType(typeId: 0)
+@HiveType(typeId: 1)
 class RecentlyOpenedNotes {
   @HiveField(0)
   final String id;
@@ -22,5 +22,14 @@ class RecentlyOpenedNotes {
   @HiveField(8)
   final DateTime uploadDate;
 
-  RecentlyOpenedNotes(this.id, this.url, this.title, this.subjectName, this.author, this.view, this.pages, this.size, this.uploadDate);
+  RecentlyOpenedNotes(
+      {this.id,
+      this.url,
+      this.title,
+      this.subjectName,
+      this.author,
+      this.view,
+      this.pages,
+      this.size,
+      this.uploadDate});
 }

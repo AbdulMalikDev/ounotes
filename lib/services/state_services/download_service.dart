@@ -10,7 +10,6 @@ import 'package:logger/logger.dart';
 
 class DownloadService {
   Logger log = getLogger("DownloadService");
-  String table = 'downloaded_subjects';
   User user;
   List<Download> _downloads = [];
 
