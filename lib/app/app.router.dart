@@ -284,7 +284,6 @@ class StackedRouter extends RouterBase {
       var args = data.getArgs<FDInputViewArguments>(nullOk: false);
       return MaterialPageRoute<dynamic>(
         builder: (context) => FDInputView(
-          path: args.path,
           key: args.key,
         ),
         settings: data,

@@ -47,99 +47,97 @@ class _HomeViewState extends State<HomeView> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                // Container(
-                //   alignment: Alignment.center,
-                //   height: hp * 0.05,
-                //   margin: EdgeInsets.only(bottom: 5),
-                //   child: Image.asset(Constants.appIcon),
-                // ),
-                GestureDetector(
-                  behavior: HitTestBehavior.translucent,
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 15),
-                    child: SizedBox(
-                      height: hp * 0.05,
-                      width: wp * 0.6,
-                      child: TextField(
-                        onTap: () {
-                          showSearch(
-                            context: context,
-                            delegate: SearchView(path: Path.Appbar),
-                          );
-                        },
-                        readOnly: true,
-                        decoration: InputDecoration(
-                          fillColor: Theme.of(context).colorScheme.background,
-                          filled: true,
-                          hintText: "Search Subject",
-                          hintStyle: TextStyle(
-                            fontFamily: "Montserrat",
-                            fontSize: hp * 0.015,
-                          ),
-                          contentPadding: EdgeInsets.symmetric(
-                            vertical: 2,
-                            horizontal: 18,
-                          ),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(05),
-                            borderSide: BorderSide(
-                              color: Colors.transparent,
-                            ),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide(
-                              color: Colors.transparent,
-                            ),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide(
-                              color: Colors.transparent,
-                            ),
-                          ),
-                          prefixIcon: Icon(
-                            Icons.search,
-                            color: Theme.of(context).iconTheme.color,
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 15),
+                  child: SizedBox(
+                    height: hp * 0.07,
+                    width: wp * 0.6,
+                    child: TextField(
+                      onTap: () {
+                        showSearch(
+                          context: context,
+                          delegate: SearchView(path: Path.Appbar),
+                        );
+                      },
+                      readOnly: true,
+                      decoration: InputDecoration(
+                        fillColor: Theme.of(context).colorScheme.background,
+                        filled: true,
+                        hintText: "Search Subject",
+                        hintStyle: TextStyle(
+                          fontFamily: "Montserrat",
+                          fontSize: hp * 0.015,
+                        ),
+                        contentPadding: EdgeInsets.symmetric(
+                          vertical: 2,
+                          horizontal: 18,
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(05),
+                          borderSide: BorderSide(
+                            color: Colors.transparent,
                           ),
                         ),
-                        style: Theme.of(context).textTheme.headline5,
-                        onChanged: (value) {},
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide(
+                            color: Colors.transparent,
+                          ),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide(
+                            color: Colors.transparent,
+                          ),
+                        ),
+                        prefixIcon: Icon(
+                          Icons.search,
+                          color: Theme.of(context).iconTheme.color,
+                        ),
                       ),
+                      style: Theme.of(context).textTheme.headline5,
+                      onChanged: (value) {},
                     ),
                   ),
                 ),
-                Expanded(
-                  child: Container(
-                    height: hp * 0.04,
-                    alignment: Alignment.center,
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        primary: Colors.amber,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
+                Flexible(
+                  child: Center(
+                    child: Container(
+                      width: wp * 0.35,
+                      alignment: Alignment.center,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          primary: Colors.amber,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 10,
+                            vertical: 5,
+                          ),
                         ),
-                      ),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: Text(
-                              "UPLOAD",
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 10,
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Expanded(
+                              child: Text(
+                                "UPLOAD",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 10,
+                                ),
                               ),
                             ),
-                          ),
-                          Icon(
-                            Icons.upload_file_rounded,
-                          ),
-                        ],
+                            Icon(
+                              Icons.upload_file_rounded,
+                            ),
+                          ],
+                        ),
+                        onPressed: () {
+                          homeViewModel.navigateToUserUploadScreen();
+                        },
                       ),
-                      onPressed: () {
-                        // model.onUploadButtonPressed();
-                      },
                     ),
                   ),
                 ),

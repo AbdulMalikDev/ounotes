@@ -1,15 +1,19 @@
 import 'package:FSOUNotes/AppTheme/AppStateNotifier.dart';
+import 'package:FSOUNotes/CustomIcons/custom_icons.dart';
 import 'package:FSOUNotes/misc/constants.dart';
 import 'package:FSOUNotes/ui/shared/app_config.dart';
 import 'package:FSOUNotes/ui/views/Settings/settings_viewmodel.dart';
 import 'package:FSOUNotes/ui/widgets/dumb_widgets/progress.dart';
+import 'package:animated_theme_switcher/animated_theme_switcher.dart';
+import 'package:day_night_switcher/day_night_switcher.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:lottie/lottie.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'package:share/share.dart';
 import 'package:stacked/stacked.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:wiredash/wiredash.dart';
 
 class SettingsView extends StatefulWidget {
   const SettingsView({Key key}) : super(key: key);
@@ -33,6 +37,9 @@ class _SettingsViewState extends State<SettingsView> {
         Theme.of(context).textTheme.subtitle1.copyWith(fontSize: 16);
     double hp = App(context).appHeight(1);
     double wp = App(context).appWidth(1);
+    var iconColor = AppStateNotifier.isDarkModeOn
+        ? theme.iconTheme.color
+        : Colors.black.withOpacity(0.6);
     return ViewModelBuilder<SettingsViewModel>.reactive(
       onModelReady: (model) async {
         await model.setUser();
@@ -90,6 +97,7 @@ class _SettingsViewState extends State<SettingsView> {
                               Text(
                                 model.user?.username ?? '',
                                 style: theme.textTheme.headline6.copyWith(
+                                  fontSize: 20,
                                   foreground: Paint()..shader = linearGradient,
                                 ),
                               ),
@@ -110,78 +118,209 @@ class _SettingsViewState extends State<SettingsView> {
                     ],
                   ),
                 ),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    Container(
-                      margin: EdgeInsets.symmetric(horizontal: 30),
-                      child: Column(
-                        children: [
-                          Container(
-                            margin: EdgeInsets.symmetric(
-                              horizontal: 40,
+                Container(
+                  margin: EdgeInsets.symmetric(horizontal: 30),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      GestureDetector(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.brightness_4,
+                              color: iconColor,
                             ),
-                            child: Row(
-                              children: [
-                                Icon(Icons.email),
-                                SizedBox(
-                                  width: wp * 0.03,
+                            SizedBox(
+                              width: wp * 0.03,
+                            ),
+                            Text(
+                              "Switch Theme",
+                              style: subtitle1,
+                            ),
+                            Spacer(),
+                            ThemeSwitcher(builder: (context) {
+                              return Container(
+                                height: 45,
+                                width: 50,
+                                child: DayNightSwitcher(
+                                  isDarkModeEnabled:
+                                      AppStateNotifier.isDarkModeOn,
+                                  onStateChanged: (bool val) async {
+                                    await model.updateAppTheme(context, val);
+                                  },
                                 ),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      "Email",
-                                      style: theme.textTheme.headline6.copyWith(
-                                        fontSize: 15,
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: 5,
-                                    ),
-                                    Text(
-                                      model.user?.email ?? "",
-                                      style: theme.textTheme.bodyText2
-                                          .copyWith(fontSize: 13),
-                                    ),
-                                  ],
-                                ),
-                                Spacer(),
-                                Icon(
-                                  Icons.arrow_forward_ios,
-                                  color: theme.iconTheme.color.withOpacity(0.8),
-                                  size: 20,
-                                ),
-                              ],
+                              );
+                            })
+                          ],
+                        ),
+                        onTap: () {},
+                      ),
+                      divider(),
+                      SettingsTile(
+                        icon: SizedBox(
+                          width: 30,
+                          height: 30,
+                          child: Icon(
+                            MdiIcons.volumeHigh,
+                            color: iconColor,
+                          ),
+                        ),
+                        title: 'Feedback',
+                        subTitle: "TODO",
+                        isClickable: true,
+                        onPressed: () async {
+                          await model.getPackageInfo();
+                          Wiredash.of(context).setBuildProperties(
+                            buildNumber: model.packageInfo.version,
+                            buildVersion: model.packageInfo.buildNumber,
+                          );
+                          Wiredash.of(context).setUserProperties(
+                            userEmail: await model.getUserEmail(),
+                            userId: await model.getUserId(),
+                          );
+                          Wiredash.of(context).show();
+                        },
+                      ),
+                      // if (model.isAdmin)
+                      //   NavItem(Icons.equalizer, "Admin Panel", subtitle1,
+                      //       model.navigateToAdminUploadScreen, Document.Drawer),
+                      SettingsTile(
+                        title: "Email",
+                        subTitle: model.user?.email ?? "",
+                        icon: Icon(Icons.email, color: iconColor),
+                      ),
+                      SettingsTile(
+                        title: "Semester",
+                        subTitle: model.user?.semester ?? "",
+                        icon: Icon(Icons.calendar_today, color: iconColor),
+                      ),
+                      SettingsTile(
+                        title: "Branch",
+                        subTitle: model.user?.branch ?? "",
+                        icon: Icon(Icons.person, color: iconColor),
+                      ),
+                      SettingsTile(
+                        title: "College",
+                        subTitle: model.user?.college ?? "",
+                        largeSubtitle: true,
+                        icon: Icon(
+                          Icons.school_sharp,
+                          color: iconColor,
+                        ),
+                      ),
+                      SettingsTile(
+                        isClickable: true,
+                        onPressed: () {
+                          model.showRateMyAppDialog(context);
+                        },
+                        icon: SizedBox(
+                          height: 30,
+                          width: 30,
+                          child: Icon(Custom.emo_thumbsup, color: iconColor),
+                        ),
+                        title: "RATE THIS APP",
+                        subTitle: "Donate a 5 star.",
+                      ),
+                      SettingsTile(
+                        icon: Icon(
+                          MdiIcons.accountSupervisor,
+                          color: iconColor,
+                        ),
+                        title: "About Us",
+                        subTitle: "TODO write some subtitle",
+                        isClickable: true,
+                        onPressed: () {
+                          model.navigateToAboutUsScreen();
+                        },
+                      ),
+                      SettingsTile(
+                        icon: SizedBox(
+                          height: 30,
+                          width: 30,
+                          child: ClipRRect(
+                            child: Image.asset("assets/images/donate-icon.png",
+                                color: iconColor),
+                          ),
+                        ),
+                        title: "Support Us",
+                        subTitle: "TODO add subtitle",
+                        isClickable: true,
+                        onPressed: () {
+                          model.showBuyPremiumBottomSheet();
+                        },
+                      ),
+                      SettingsTile(
+                        icon: SizedBox(
+                          height: 30,
+                          width: 30,
+                          child: Icon(Icons.share, color: iconColor),
+                        ),
+                        title: "Tell a Friend",
+                        subTitle: "TODO add subtitle",
+                        isClickable: true,
+                        onPressed: () {
+                          final RenderBox box = context.findRenderObject();
+                          Share.share(
+                              'OU Notes is the best App to find all lastest Academic Material for Osmania University including\n 1. Notes (PDF , e-books etc.)\n 2. Syllabus\n 3. Previous Question Papers\n 4. Resources (helpful links for learning online)\n. Check it out on Google Play!\n https://play.google.com/store/apps/details?id=com.notes.ounotes',
+                              sharePositionOrigin:
+                                  box.localToGlobal(Offset.zero) & box.size);
+                        },
+                      ),
+                      SettingsTile(
+                        title: "Check us out on Github",
+                        subTitle: "TODO add subtitle ",
+                        isClickable: true,
+                        onPressed: () async {
+                          const url =
+                              'https://github.com/AbdulMalikDev/ounotes';
+                          if (await canLaunch(url)) {
+                            await launch(url);
+                          } else {
+                            throw 'Could not launch $url';
+                          }
+                        },
+                        icon: SizedBox(
+                          height: 30,
+                          width: 30,
+                          child: ClipRRect(
+                            child: Image.asset(
+                              "assets/images/github-logo.png",
+                              color: iconColor,
                             ),
                           ),
-                          divider(),
-                        ],
+                        ),
                       ),
-                    ),
-                    SettingsTextFormFieldView(
-                      textEditingController: controllerForEmail,
-                      labelText: "Email",
-                      preIcon: Icon(Icons.email),
-                    ),
-                    SettingsTextFormFieldView(
-                      textEditingController: controllerForSem,
-                      labelText: "Semester",
-                      preIcon: Icon(Icons.calendar_today),
-                    ),
-                    SettingsTextFormFieldView(
-                      textEditingController: controllerForBranch,
-                      labelText: "Branch",
-                      preIcon: Icon(Icons.person),
-                    ),
-                    SettingsTextFormFieldView(
-                      textEditingController: controllerForCollege,
-                      labelText: "College",
-                      preIcon: Icon(Icons.school_sharp),
-                    ),
-                  ],
+                      SettingsTile(
+                        title: "Join us on telegram",
+                        subTitle: "TODO add subtitle ",
+                        isClickable: true,
+                        onPressed: () async {
+                          const url = 'https://t.me/ounotes';
+                          if (await canLaunch(url)) {
+                            await launch(url);
+                          } else {
+                            throw 'Could not launch $url';
+                          }
+                        },
+                        icon: SizedBox(
+                          height: 30,
+                          width: 30,
+                          child: ClipRRect(
+                            child: Image.asset(
+                              "assets/images/telegram-logo.png",
+                              //TODO update telegram logo
+                              // color: AppStateNotifier.isDarkModeOn
+                              //     ? theme.iconTheme.color
+                              //     : Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
                 SizedBox(
                   height: 10,
@@ -236,101 +375,6 @@ class _SettingsViewState extends State<SettingsView> {
                 // SizedBox(
                 //   height: 10,
                 // ),
-                Container(
-                  height: App(context).appHeight(0.08),
-                  margin: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: theme.scaffoldBackgroundColor,
-                    border: Border.all(
-                      color: primary,
-                      width: 1.5,
-                    ),
-                  ),
-                  child: Center(
-                    child: ListTile(
-                      leading: SizedBox(
-                        height: 30,
-                        width: 40,
-                        child: ClipRRect(
-                          child: Image.asset("assets/images/github-logo.png"),
-                        ),
-                      ),
-                      title: Row(
-                        children: [
-                          Expanded(
-                            child: Text(
-                              "Check us out on Github",
-                              style: subtitle1,
-                            ),
-                          ),
-                          Icon(
-                            Icons.arrow_forward_ios,
-                            color: theme.primaryColor,
-                            size: 20,
-                          ),
-                        ],
-                      ),
-                      onTap: () async {
-                        const url = 'https://github.com/AbdulMalikDev/ounotes';
-                        if (await canLaunch(url)) {
-                          await launch(url);
-                        } else {
-                          throw 'Could not launch $url';
-                        }
-                      },
-                    ),
-                  ),
-                ),
-                Container(
-                  height: App(context).appHeight(0.08),
-                  margin: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: theme.scaffoldBackgroundColor,
-                    border: Border.all(
-                      color: primary,
-                      width: 1.5,
-                    ),
-                  ),
-                  child: Center(
-                    child: ListTile(
-                      leading: SizedBox(
-                        height: 30,
-                        width: 40,
-                        child: ClipRRect(
-                            child:
-                                Image.asset("assets/images/telegram-logo.png")
-                            //)
-                            ),
-                      ),
-                      title: Row(
-                        children: [
-                          Expanded(
-                            child: Text(
-                              "Join us on telegram",
-                              style: subtitle1,
-                            ),
-                          ),
-                          Icon(
-                            Icons.arrow_forward_ios,
-                            color: theme.primaryColor,
-                            size: 20,
-                          ),
-                        ],
-                      ),
-                      onTap: () async {
-                        const url = 'https://t.me/ounotes';
-                        if (await canLaunch(url)) {
-                          model.recordTelegramVisit();
-                          await launch(url);
-                        } else {
-                          throw 'Could not launch $url';
-                        }
-                      },
-                    ),
-                  ),
-                ),
                 SizedBox(
                   height: 15,
                 ),
@@ -350,12 +394,35 @@ class _SettingsViewState extends State<SettingsView> {
                       style: TextStyle(color: Colors.white),
                     ),
                     onPressed: () {
-                      model.handleSignOut();
+                      model.changeProfileData();
                     },
                   ),
                 ),
                 SizedBox(
-                  height: 70,
+                  height: hp * 0.05,
+                ),
+                Container(
+                  margin: EdgeInsets.all(10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "App Version:1.5.023",
+                        style: theme.textTheme.bodyText2
+                            .copyWith(color: iconColor),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          model.handleSignOut(context);
+                        },
+                        child: Text(
+                          "Logout",
+                          style: theme.textTheme.bodyText2.copyWith(
+                              color: theme.primaryColor, fontSize: 20),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
@@ -365,49 +432,98 @@ class _SettingsViewState extends State<SettingsView> {
       viewModelBuilder: () => SettingsViewModel(),
     );
   }
+
+  Widget divider() {
+    return Container(
+      height: 1,
+      color: Theme.of(context).colorScheme.primary,
+    );
+  }
 }
 
-Widget divider() {
-  return Container(
-    margin: EdgeInsets.symmetric(horizontal: 10),
-    height: 1,
-    color: Colors.black.withOpacity(0.6),
-  );
-}
+class SettingsTile extends StatelessWidget {
+  final String title;
+  final String subTitle;
+  final Widget icon;
+  final bool isClickable;
+  final Function onPressed;
+  final bool largeSubtitle;
+  const SettingsTile({
+    Key key,
+    @required this.title,
+    this.subTitle,
+    @required this.icon,
+    this.isClickable = false,
+    this.onPressed,
+    this.largeSubtitle = false,
+  }) : super(key: key);
 
-Widget buildTile(String title, String subtitle, BuildContext context) {
-  return Container(
-    margin: const EdgeInsets.symmetric(vertical: 5),
-    child: ListTile(
-      leading: Padding(
-        padding: const EdgeInsets.only(top: 8.0, left: 20.0),
-        child: Icon(
-          FontAwesomeIcons.solidCircle,
-          size: 12.0,
-          color: Theme.of(context).colorScheme.primary,
+  @override
+  Widget build(BuildContext context) {
+    double hp = App(context).appHeight(1);
+    double wp = App(context).appWidth(1);
+    var theme = Theme.of(context);
+    return GestureDetector(
+      behavior: HitTestBehavior.translucent,
+      onTap: onPressed ?? () {},
+      child: Container(
+        margin: EdgeInsets.symmetric(vertical: 10),
+        child: Column(
+          children: [
+            Container(
+              child: Row(
+                children: [
+                  icon ?? Container(),
+                  SizedBox(
+                    width: wp * 0.04,
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        title,
+                        style: theme.textTheme.headline6.copyWith(
+                          fontSize: 15,
+                        ),
+                      ),
+                      SizedBox(
+                        height: 3,
+                      ),
+                      Container(
+                        height: largeSubtitle ? hp * 0.032 : hp * 0.02,
+                        width: isClickable ? wp * 0.68 : wp * 0.75,
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          subTitle ?? "",
+                          style:
+                              theme.textTheme.bodyText2.copyWith(fontSize: 12),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
+                  ),
+                  if (isClickable)
+                    Icon(
+                      Icons.arrow_forward_ios,
+                      color: theme.iconTheme.color.withOpacity(0.8),
+                      size: 20,
+                    ),
+                ],
+              ),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Container(
+              height: 1,
+              color: Theme.of(context).colorScheme.primary,
+            ),
+          ],
         ),
       ),
-      title: Text(
-        title,
-        style: Theme.of(context)
-            .textTheme
-            .subtitle1
-            .copyWith(fontSize: 20, color: Colors.deepOrange),
-      ),
-      subtitle: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          SizedBox(
-            height: 5,
-          ),
-          Text(
-            subtitle,
-            style: Theme.of(context).textTheme.subtitle1.copyWith(fontSize: 18),
-          ),
-        ],
-      ),
-    ),
-  );
+    );
+  }
 }
 
 class SettingsTextFormFieldView extends StatelessWidget {

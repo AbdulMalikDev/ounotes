@@ -1,7 +1,5 @@
 import 'dart:convert';
-
 import 'package:FSOUNotes/app/app.locator.dart';
-import 'package:FSOUNotes/app/app.logger.dart';
 import 'package:FSOUNotes/app/app.router.dart';
 import 'package:FSOUNotes/enums/enums.dart';
 import 'package:FSOUNotes/misc/course_info.dart';
@@ -15,22 +13,24 @@ import 'package:stacked_services/stacked_services.dart';
 class FDInputViewModel extends BaseViewModel {
   String titleOfNotes =
       "We are committed to bring you the best Notes of each and every subject.\nGo explore!";
-  String titleOfQuestions =
-      "Are you confused with the syllabus?\ncheck out previous year question papers!";
-  String titleOfSyllabus =
-      "Are you confused with the chapters to study?check out Syllabus!";
-  String titleOfLinks =
-      "Are you confused with where to study from?check out links!";
+
   NavigationService _navigationService = locator<NavigationService>();
   SharedPreferencesService _sharedPreferencesService =
       locator<SharedPreferencesService>();
   String _title;
   String get title => _title;
+  Document _documentType = Document.Notes;
+  Document get documentType => _documentType;
+
+  set setDocumentType(Document selectedType) {
+    _documentType = selectedType;
+    notifyListeners();
+  }
 
   List<DropdownMenuItem<String>> _dropDownMenuItemsofsemester;
   List<DropdownMenuItem<String>> _dropDownMenuItemsofBranch;
-  String _selectedSemester;
-  String _selectedBranch;
+  String _selectedSemester = CourseInfo.semesters[0];
+  String _selectedBranch = CourseInfo.branch[0];
 
   String get sem => _selectedSemester;
   String get br => _selectedBranch;
@@ -70,25 +70,14 @@ class FDInputViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  setTitleAccordingtoPath(Document path) {
-    init();
-    if (path == Document.Notes) {
-      _title = titleOfNotes;
-    } else if (path == Document.QuestionPapers) {
-      _title = titleOfQuestions;
-    } else if (path == Document.Syllabus) {
-      _title = titleOfSyllabus;
-    } else {
-      _title = titleOfLinks;
-    }
-    notifyListeners();
-  }
-
-  onTap(Document path) {
+  onSearchButtonPressed() {
     _navigationService.navigateTo(
       Routes.fDSubjectView,
       arguments: FDSubjectViewArguments(
-          sem: _selectedSemester, br: _selectedBranch, path: path),
+        sem: _selectedSemester,
+        br: _selectedBranch,
+        path: _documentType,
+      ),
     );
   }
 }

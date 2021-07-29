@@ -21,7 +21,6 @@ import 'package:FSOUNotes/services/state_services/notes_service.dart';
 import 'package:FSOUNotes/services/state_services/question_paper_service.dart';
 import 'package:FSOUNotes/services/state_services/subjects_service.dart';
 import 'package:FSOUNotes/services/state_services/syllabus_service.dart';
-import 'package:FSOUNotes/services/state_services/vote_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cuid/cuid.dart';
 import 'package:FSOUNotes/ui/shared/strings.dart';
@@ -69,7 +68,6 @@ class FirestoreService {
   QuestionPaperService _questionPaperService = locator<QuestionPaperService>();
   SyllabusService _syllabusService = locator<SyllabusService>();
   LinksService _linksService = locator<LinksService>();
-  VoteService _voteServie = locator<VoteService>();
   AnalyticsService _analyticsService = locator<AnalyticsService>();
   BottomSheetService _bottomSheetService = locator<BottomSheetService>();
   SharedPreferencesService _sharedPreferencesService =

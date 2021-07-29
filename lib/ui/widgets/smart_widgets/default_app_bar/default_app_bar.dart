@@ -1,3 +1,4 @@
+import 'package:FSOUNotes/AppTheme/AppStateNotifier.dart';
 import 'package:FSOUNotes/enums/constants.dart';
 import 'package:FSOUNotes/ui/shared/app_config.dart';
 import 'package:flutter/material.dart';
@@ -29,14 +30,18 @@ class DefaultAppBarView extends StatelessWidget with PreferredSizeWidget {
         Widget child,
       ) {
         return Container(
-          color: Colors.white,
+          color: AppStateNotifier.isDarkModeOn
+              ? Theme.of(context).scaffoldBackgroundColor
+              : Colors.white,
           child: SafeArea(
             bottom: false,
             child: Container(
               // height: hp * 0.06,
               height: 60.0,
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: AppStateNotifier.isDarkModeOn
+                    ? Theme.of(context).scaffoldBackgroundColor
+                    : Colors.white,
                 boxShadow: [
                   defaultAppBarShadow,
                 ],

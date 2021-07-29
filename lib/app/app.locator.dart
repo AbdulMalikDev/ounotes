@@ -33,7 +33,6 @@ import '../services/state_services/question_paper_service.dart';
 import '../services/state_services/report_service.dart';
 import '../services/state_services/subjects_service.dart';
 import '../services/state_services/syllabus_service.dart';
-import '../services/state_services/vote_service.dart';
 import '../utils/file_picker_service.dart';
 import '../utils/permission_handler.dart';
 
@@ -69,6 +68,5 @@ void setupLocator() {
   locator.registerLazySingleton(() => SnackbarService());
   locator.registerLazySingleton(() => SubjectsService());
   locator.registerLazySingleton(() => SyllabusService());
-  locator.registerLazySingleton(() => VoteService());
   locator.registerLazySingleton(() => PDFService());
 }

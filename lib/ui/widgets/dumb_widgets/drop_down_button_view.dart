@@ -21,18 +21,17 @@ class DropDownButtonView extends StatelessWidget {
     return Align(
       alignment: Alignment.centerRight,
       child: Container(
-        margin: const EdgeInsets.fromLTRB(20, 20, 30, 10),
-        padding: const EdgeInsets.fromLTRB(10, 0, 8, 0),
-        width: App(context).appWidth(0.38),
+        padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
+        width: App(context).appWidth(0.3),
         height: App(context).appHeight(0.05),
         decoration: BoxDecoration(
-          borderRadius:
-              borderRadius != null ? borderRadius : BorderRadius.circular(25),
-          border: Border.all(
-            width: 1.5,
-            color: dropDownColor,
-          ),
-        ),
+            // borderRadius:
+            //     borderRadius != null ? borderRadius : BorderRadius.circular(10),
+            // border: Border.all(
+            //   width: 1.5,
+            //   color: dropDownColor,
+            // ),
+            ),
         child: DropdownButtonHideUnderline(
           child: ButtonTheme(
             child: DropdownButton(
@@ -43,12 +42,11 @@ class DropDownButtonView extends StatelessWidget {
               value: selectedItem,
               iconSize: 25,
               icon: Icon(
-                Icons.keyboard_arrow_down,
-                color: dropDownColor,
+                Icons.expand_more_rounded,
+                color: Theme.of(context).iconTheme.color,
               ),
               style: Theme.of(context).textTheme.subtitle1.copyWith(
                     fontSize: 15,
-                    color: dropDownColor,
                   ),
             ),
           ),

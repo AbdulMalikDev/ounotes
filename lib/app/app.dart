@@ -22,7 +22,6 @@ import 'package:FSOUNotes/services/state_services/question_paper_service.dart';
 import 'package:FSOUNotes/services/state_services/report_service.dart';
 import 'package:FSOUNotes/services/state_services/subjects_service.dart';
 import 'package:FSOUNotes/services/state_services/syllabus_service.dart';
-import 'package:FSOUNotes/services/state_services/vote_service.dart';
 import 'package:FSOUNotes/ui/views/FilterDocuments/FD_DocumentDisplay/fd_documentview.dart';
 import 'package:FSOUNotes/ui/views/FilterDocuments/FD_InputScreen/fd_inputView.dart';
 import 'package:FSOUNotes/ui/views/FilterDocuments/FD_subjectdisplay/fd_subjectview.dart';
@@ -119,7 +118,6 @@ import 'package:stacked_services/stacked_services.dart';
   LazySingleton(classType: SnackbarService),
   LazySingleton(classType: SubjectsService),
   LazySingleton(classType: SyllabusService),
-  LazySingleton(classType: VoteService),
   LazySingleton(classType: PDFService),
 ])
 class App {

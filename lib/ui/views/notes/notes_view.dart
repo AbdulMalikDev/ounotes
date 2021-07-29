@@ -204,7 +204,7 @@ class _NotesViewState extends State<NotesView>
   bool get wantKeepAlive => true;
 
   _initState(NotesViewModel model) async {
-    model.fetchNotesAndVotes(widget.subjectName);
+    model.fetchNotes(widget.subjectName);
     try {
       // model.admobService.shouldAdBeShown();
     } catch (e) {

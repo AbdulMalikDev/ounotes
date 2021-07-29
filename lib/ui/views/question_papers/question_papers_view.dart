@@ -2,6 +2,7 @@ import 'package:FSOUNotes/ui/shared/app_config.dart';
 import 'package:FSOUNotes/ui/views/question_papers/question_papers_viewmodel.dart';
 import 'package:FSOUNotes/ui/widgets/dumb_widgets/drop_down_button_view.dart';
 import 'package:flutter/material.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:stacked/stacked.dart';
 
 class QuestionPapersView extends StatefulWidget {
@@ -78,28 +79,39 @@ class _QuestionPapersViewState extends State<QuestionPapersView>
                       children: [
                         Container(
                           padding: const EdgeInsets.only(right: 10),
+                          margin: const EdgeInsets.symmetric(
+                              vertical: 5, horizontal: 20),
                           child: Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Spacer(),
-                              // Text(
-                              //   "Sort by :",
-                              //   style: Theme.of(context)
-                              //       .textTheme
-                              //       .headline5
-                              //       .copyWith(
-                              //           fontSize: 18,
-                              //           fontWeight: FontWeight.w500),
-                              // ),
-                              Flexible(
-                                child: DropDownButtonView(
-                                  selectedItem: model.selectedSortingMethod,
-                                  dropDownMenuItems:
-                                      model.dropdownofsortingmethods,
-                                  changedDropDownItem: model
-                                      .changedDropDownItemOfQuestionSortType,
-                                  dropDownColor: Theme.of(context).primaryColor,
-                                ),
+                              Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    "Sort by ",
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .subtitle1
+                                        .copyWith(
+                                          fontSize: 15,
+                                        ),
+                                  ),
+                                  Flexible(
+                                    child: DropDownButtonView(
+                                      selectedItem: model.selectedSortingMethod,
+                                      dropDownMenuItems:
+                                          model.dropdownofsortingmethods,
+                                      changedDropDownItem: model
+                                          .changedDropDownItemOfQuestionSortType,
+                                      dropDownColor:
+                                          Theme.of(context).primaryColor,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Icon(
+                                MdiIcons.filterVariant,
+                                color: Theme.of(context).iconTheme.color,
                               ),
                             ],
                           ),
