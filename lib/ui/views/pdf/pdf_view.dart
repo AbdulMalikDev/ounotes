@@ -1,4 +1,3 @@
-
 import 'dart:io';
 import 'package:FSOUNotes/app/app.locator.dart';
 import 'package:FSOUNotes/app/app.logger.dart';
@@ -29,8 +28,8 @@ Logger log = getLogger("PDFScreen");
 class PDFScreen extends StatefulWidget {
   final String pathPDF;
   final AbstractDocument doc;
-  final bool askBookMarks;
-  PDFScreen({this.pathPDF, this.doc, @required this.askBookMarks});
+  final bool isUploadingDoc;
+  PDFScreen({this.pathPDF, this.doc, this.isUploadingDoc = false});
 
   @override
   _PDFScreenState createState() => _PDFScreenState();
@@ -54,65 +53,134 @@ class _PDFScreenState extends State<PDFScreen> {
   @override
   Widget build(BuildContext context) {
     //* The app bar is a bit annoying when in landscape
+    print(widget.isUploadingDoc);
+    print(widget.doc.path == Document.Notes);
     bool isLandscape =
         MediaQuery.of(context).orientation == Orientation.landscape;
     return Scaffold(
-      //Book marks
-      
-      floatingActionButton: 
-          widget.askBookMarks && (widget.doc.path == Document.Notes)
-          ? Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: FloatingActionButton(
-                child: const Icon(Icons.bookmark),
-                onPressed: () async {
-                  if(widget.doc.type == Constants.notes)
-                  showBottomSeetForBookMarks(false);
-                },
-                backgroundColor: Theme.of(context).accentColor,
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: widget.isUploadingDoc
+          ? Container(
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+              margin: const EdgeInsets.symmetric(horizontal: 15),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: Colors.grey[800],
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: Text(
+                      "Are you sure you want to upload this document?",
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Container(
+                    child: Row(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Expanded(
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              primary: Theme.of(context).primaryColor,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                            ),
+                            onPressed: () {
+                              Navigator.pop(context, true);
+                            },
+                            child: Text(
+                              "Yes",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          width: 20,
+                        ),
+                        Expanded(
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              primary: Theme.of(context).primaryColor,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                            ),
+                            child: Text(
+                              "No",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            onPressed: () {
+                              Navigator.pop(context, false);
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                ],
               ),
             )
           : null,
       appBar: isLandscape
           ? null
           : AppBar(
-            toolbarHeight: MediaQuery.of(context).size.height * 0.070,
+              toolbarHeight: MediaQuery.of(context).size.height * 0.070,
               flexibleSpace: Toolbar(
-                  showTooltip: true,
-                  controller: _pdfViewerController,
-                  onTap: (Object toolbarItem) {
-                    if (toolbarItem.toString() != 'Bookmarks') {
-                      _checkAndCloseContextMenu();
-                      _pdfViewerController.clearSelection();
+                showTooltip: true,
+                controller: _pdfViewerController,
+                onTap: (Object toolbarItem) {
+                  if (toolbarItem.toString() != 'Bookmarks') {
+                    _checkAndCloseContextMenu();
+                    _pdfViewerController.clearSelection();
+                  }
+                  if (_pdfViewerKey.currentState.isBookmarkViewOpen) {
+                    Navigator.pop(context);
+                  }
+                  if (toolbarItem != 'Jump to the page') {
+                    final currentFocus = FocusScope.of(context);
+                    if (!currentFocus.hasPrimaryFocus) {
+                      currentFocus.requestFocus(FocusNode());
                     }
-                    if (_pdfViewerKey.currentState.isBookmarkViewOpen) {
-                      Navigator.pop(context);
-                    }
-                    if (toolbarItem != 'Jump to the page') {
-                      final currentFocus = FocusScope.of(context);
-                      if (!currentFocus.hasPrimaryFocus) {
-                        currentFocus.requestFocus(FocusNode());
-                      }
-                    }
-                    if (toolbarItem is Documentf) {
-                      setState(() {
-                        _documentPath = toolbarItem.path;
-                      });
-                    }
-                    if (toolbarItem.toString() == 'Bookmarks') {
-                      setState(() {
-                        _showToolbar = false;
-                      });
-                      _pdfViewerKey.currentState?.openBookmarkView();
-                    } else if (toolbarItem.toString() == 'Search') {
-                      setState(() {
-                        _showToolbar = false;
-                        _showScrollHead = false;
-                        _ensureHistoryEntry();
-                      });
-                    }
-                  },
-                ),
+                  }
+                  if (toolbarItem is Documentf) {
+                    setState(() {
+                      _documentPath = toolbarItem.path;
+                    });
+                  }
+                  if (toolbarItem.toString() == 'Bookmarks') {
+                    setState(() {
+                      _showToolbar = false;
+                    });
+                    _pdfViewerKey.currentState?.openBookmarkView();
+                  } else if (toolbarItem.toString() == 'Search') {
+                    setState(() {
+                      _showToolbar = false;
+                      _showScrollHead = false;
+                      _ensureHistoryEntry();
+                    });
+                  }
+                },
+              ),
               automaticallyImplyLeading: false,
               backgroundColor:
                   SfPdfViewerTheme.of(context).bookmarkViewStyle.headerBarColor,
@@ -230,7 +298,7 @@ class _PDFScreenState extends State<PDFScreen> {
       ),
     );
   }
-  
+
   @override
   void initState() {
     super.initState();
@@ -242,12 +310,6 @@ class _PDFScreenState extends State<PDFScreen> {
     _contextMenuHeight = 48;
     _contextMenuWidth = 100;
     log.e(widget.pathPDF);
-    // Schedularb
-    SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
-      if (widget.askBookMarks && widget.doc.type == Constants.notes) {
-        showBottomSeetForBookMarks(true);
-      }
-    });
   }
 
   showBottomSeetForBookMarks(bool initial) async {
@@ -330,8 +392,7 @@ class _PDFScreenState extends State<PDFScreen> {
                 _checkAndCloseContextMenu();
                 _pdfViewerController.clearSelection();
                 if (_textSearchKey.currentState?.pdfTextSearchResult != null &&
-                    _textSearchKey
-                        .currentState.pdfTextSearchResult.hasResult) {
+                    _textSearchKey.currentState.pdfTextSearchResult.hasResult) {
                   setState(() {
                     _showToolbar = false;
                   });
@@ -377,6 +438,4 @@ class _PDFScreenState extends State<PDFScreen> {
       _overlayEntry = null;
     }
   }
-
 }
-

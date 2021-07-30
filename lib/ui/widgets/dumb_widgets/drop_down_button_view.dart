@@ -7,6 +7,7 @@ class DropDownButtonView extends StatelessWidget {
   final String selectedItem;
   final Color dropDownColor;
   final BorderRadius borderRadius;
+  final double width;
 
   const DropDownButtonView({
     Key key,
@@ -15,6 +16,7 @@ class DropDownButtonView extends StatelessWidget {
     this.selectedItem,
     @required this.dropDownColor,
     this.borderRadius,
+    this.width,
   }) : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -22,7 +24,7 @@ class DropDownButtonView extends StatelessWidget {
       alignment: Alignment.centerRight,
       child: Container(
         padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
-        width: App(context).appWidth(0.3),
+        width: width != null ? width : App(context).appWidth(0.3),
         height: App(context).appHeight(0.05),
         decoration: BoxDecoration(
             // borderRadius:

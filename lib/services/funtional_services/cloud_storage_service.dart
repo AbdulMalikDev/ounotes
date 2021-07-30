@@ -170,7 +170,7 @@ class CloudStorageService {
       log.e(note.toJson(), fileToUpload.path);
       await _navigationService.navigateTo(Routes.pDFScreen,
           arguments: PDFScreenArguments(
-              doc: note, pathPDF: fileToUpload.path, askBookMarks: true));
+              doc: note, pathPDF: fileToUpload.path, isUploadingDoc: true));
 
       //*Set info on document and upload
       String fileName = assignFileName(note);

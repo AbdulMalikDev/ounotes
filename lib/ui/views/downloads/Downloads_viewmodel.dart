@@ -68,6 +68,6 @@ class DownLoadViewModel extends BaseViewModel {
     );
     _navigationService.navigateTo(Routes.pDFScreen,
         arguments: PDFScreenArguments(
-            pathPDF: download.path, doc: note, askBookMarks: false));
+            pathPDF: download.path, doc: note, isUploadingDoc: false));
   }
 }

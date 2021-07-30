@@ -320,7 +320,7 @@ class NotesViewModel extends BaseViewModel {
           setLoading(false);
           _navigationService.navigateTo(Routes.pDFScreen,
               arguments: PDFScreenArguments(
-                  pathPDF: path, doc: note, askBookMarks: false));
+                  pathPDF: path, doc: note, isUploadingDoc: false));
         },
       );
     } catch (e) {
@@ -375,7 +375,7 @@ class NotesViewModel extends BaseViewModel {
     }
     setLoading(false);
     _navigationService.navigateTo(Routes.pDFScreen,
-        arguments: PDFScreenArguments(pathPDF: PDFpath, askBookMarks: false));
+        arguments: PDFScreenArguments(pathPDF: PDFpath, isUploadingDoc: false));
   }
 
   downloadFile({
