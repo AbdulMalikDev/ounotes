@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:stacked/stacked.dart';
 
-import '../recently_opened_notes_tile.dart';
+import 'recently_opened_notes_tile.dart';
 import 'recently_added_notes_viewmodel.dart';
 
 class RecentlyAddedNotesView extends StatefulWidget {

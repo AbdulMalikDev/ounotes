@@ -87,6 +87,10 @@ class UploadSelectionView extends StatelessWidget {
                                 onTap: model.navigateToLinks,
                                 text: "LINKS",
                               ),
+                              SaveButtonView(
+                                onTap: model.navigateToGDRIVELinks,
+                                text: "GDRIVE LINK",
+                              ),
                             ],
                           ),
                         ),

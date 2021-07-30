@@ -58,4 +58,13 @@ class UploadSelectionViewModel extends BaseViewModel {
           path2: _path,
         ));
   }
+  navigateToGDRIVELinks() {
+    _navigationService.navigateTo(Routes.uploadView,
+        arguments: UploadViewArguments(
+          textFieldsMap: Constants.GDRIVELink,
+          path: Document.GDRIVE,
+          subjectName: _subjectName,
+          path2: _path,
+        ));
+  }
 }

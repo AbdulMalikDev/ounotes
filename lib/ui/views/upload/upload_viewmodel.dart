@@ -144,7 +144,7 @@ class UploadViewModel extends BaseViewModel {
     _selectedSemester = _dropDownMenuItemsofsemester[0].value;
     _selectedBranch = _dropDownMenuItemsofBranch[0].value;
     _selectedyeartype = _dropDownMenuItemForTypeYear[0].value;
-    _document = Constants.getDocumentNameFromEnum(path);
+    _document = Constants.getDocumentNameFromEnum(path??Document.GDRIVE);
     await setUser();
     notifyListeners();
   }

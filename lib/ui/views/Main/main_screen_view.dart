@@ -61,7 +61,9 @@ class _MainViewState extends State<MainView> {
             child: SafeArea(
               child: Scaffold(
                 // drawer: DrawerView(),
-                appBar: DefaultAppBarView(),
+                appBar: DefaultAppBarView(
+                  showUploadButton: _selectedIndex == 0,
+                ),
                 backgroundColor: Theme.of(context).scaffoldBackgroundColor,
                 // appBar: model.isEditPressed
                 //     ? AppBar(

@@ -40,6 +40,7 @@ class _UploadViewState extends State<UploadView> {
     return ViewModelBuilder<UploadViewModel>.reactive(
       onModelReady: (model) {
         model.initialise(widget.path);
+        print(widget.path);
         if (widget.subjectName != null) {
           controllerOfSub.text = widget.subjectName;
         }
@@ -135,7 +136,9 @@ class _UploadViewState extends State<UploadView> {
                                     ),
                                   ),
                                   SizedBox(height: 50.0),
-                                  subjectNameField(model),
+                                  if (widget.textFieldsMap !=
+                                      Constants.GDRIVELink)
+                                    subjectNameField(model),
                                   widget.textFieldsMap == Constants.Syllabus
                                       ? buildSyllabusEntries(model)
                                       : widget.textFieldsMap ==
@@ -361,10 +364,59 @@ class _UploadViewState extends State<UploadView> {
   Widget buildLinkAndNotesEntries(UploadViewModel model, Map textFieldsMap) {
     return Column(
       children: <Widget>[
-        TextFieldView(
-            heading: widget.textFieldsMap["TextFieldHeading1"],
-            labelText: widget.textFieldsMap["TextFieldHeadingLabel1"],
-            textFieldController: textFieldController1),
+        if (textFieldsMap == Constants.GDRIVELink)
+          Container(
+            decoration: Constants.mdecoration.copyWith(
+                color: Theme.of(context).colorScheme.background, boxShadow: []),
+            padding: const EdgeInsets.all(10),
+            margin: const EdgeInsets.all(10),
+            child: Column(
+              children: [
+                Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 15),
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    "Note:",
+                    style: Theme.of(context)
+                        .textTheme
+                        .headline6
+                        .copyWith(color: primary),
+                  ),
+                ),
+                Container(
+                  margin:
+                      const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                  decoration: BoxDecoration(),
+                  child: RichText(
+                    text: TextSpan(
+                      style: Theme.of(context).textTheme.bodyText2,
+                      children: [
+                        //TODO add note Malik
+                        TextSpan(text: 'TODO add note'),
+                        // WidgetSpan(
+                        //   child: Padding(
+                        //     padding:
+                        //         const EdgeInsets.symmetric(horizontal: 2.0),
+                        //     child: Icon(Icons.file_download, size: 18),
+                        //   ),
+                        // ),
+                        // TextSpan(text: ' you can find them in your '),
+                        // TextSpan(
+                        //     text: 'Internal Storage > Downloads',
+                        //     style: TextStyle(fontWeight: FontWeight.bold)),
+                        // TextSpan(text: ' folder of your mobile'),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        if (textFieldsMap != Constants.GDRIVELink)
+          TextFieldView(
+              heading: widget.textFieldsMap["TextFieldHeading1"],
+              labelText: widget.textFieldsMap["TextFieldHeadingLabel1"],
+              textFieldController: textFieldController1),
         SizedBox(
           height: 30.0,
         ),
@@ -423,24 +475,25 @@ class _UploadViewState extends State<UploadView> {
 
   Widget uploadButtonWidget(UploadViewModel model) {
     return Column(children: [
-      Row(
-        children: [
-          Container(
-            child: Checkbox(
-              value: model.canUseUploaderUserName,
-              onChanged: model.changeCheckMark2,
-              activeColor: Colors.amber,
+      if (widget.textFieldsMap != Constants.GDRIVELink)
+        Row(
+          children: [
+            Container(
+              child: Checkbox(
+                value: model.canUseUploaderUserName,
+                onChanged: model.changeCheckMark2,
+                activeColor: Colors.amber,
+              ),
             ),
-          ),
-          //TODO malik add dummy string here
-          Flexible(
-            child: Text(
-              "Hey, ${model.user.username}...can we show your name as uploader below this note?",
-              style: TextStyle(color: Colors.white, fontSize: 15),
-            ),
-          )
-        ],
-      ),
+            //TODO malik add dummy string here
+            Flexible(
+              child: Text(
+                "Hey, ${model.user.username}...can we show your name as uploader below this note?",
+                style: TextStyle(color: Colors.white, fontSize: 15),
+              ),
+            )
+          ],
+        ),
       SizedBox(
         height: 10,
       ),
