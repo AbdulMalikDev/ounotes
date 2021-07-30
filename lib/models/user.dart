@@ -104,7 +104,7 @@ class User{
     _parseDate(date){
       DateTime purchaseDate;
       log.e(purchaseDate);
-      try{purchaseDate = DateTime.parse(date?.toDate()?.toString() ?? DateTime.now().toString());}
+      try{purchaseDate = DateTime.parse(date?.toString() ?? DateTime.now().toString());}
       catch(e){log.e(e.toString());return null;}
       return purchaseDate;
     }

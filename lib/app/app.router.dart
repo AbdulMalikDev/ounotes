@@ -19,6 +19,7 @@ import '../models/verifier.dart';
 import '../ui/views/FilterDocuments/FD_DocumentDisplay/fd_documentview.dart';
 import '../ui/views/FilterDocuments/FD_InputScreen/fd_inputView.dart';
 import '../ui/views/FilterDocuments/FD_subjectdisplay/fd_subjectview.dart';
+import '../ui/views/Main/main_screen_view.dart';
 import '../ui/views/Settings/account_info/account_info_view.dart';
 import '../ui/views/Settings/settings_view.dart';
 import '../ui/views/about_us/about_us_view.dart';
@@ -91,6 +92,7 @@ class Routes {
   static const String notificationView = '/notification-view';
   static const String recentlyAddedNotesView = '/recently-added-notes-view';
   static const String accountInfoView = '/account-info-view';
+  static const String mainView = '/main-view';
   static const all = <String>{
     splashView,
     introView,
@@ -128,6 +130,7 @@ class Routes {
     notificationView,
     recentlyAddedNotesView,
     accountInfoView,
+    mainView,
   };
 }
 
@@ -171,6 +174,7 @@ class StackedRouter extends RouterBase {
     RouteDef(Routes.notificationView, page: NotificationView),
     RouteDef(Routes.recentlyAddedNotesView, page: RecentlyAddedNotesView),
     RouteDef(Routes.accountInfoView, page: AccountInfoView),
+    RouteDef(Routes.mainView, page: MainView),
   ];
   @override
   Map<Type, StackedRouteFactory> get pagesMap => _pagesMap;
@@ -212,12 +216,14 @@ class StackedRouter extends RouterBase {
       );
     },
     PDFScreen: (data) {
-      var args = data.getArgs<PDFScreenArguments>(nullOk: false);
+      var args = data.getArgs<PDFScreenArguments>(
+        orElse: () => PDFScreenArguments(),
+      );
       return MaterialPageRoute<dynamic>(
         builder: (context) => PDFScreen(
           pathPDF: args.pathPDF,
           doc: args.doc,
-          askBookMarks: args.askBookMarks,
+          isUploadingDoc: args.isUploadingDoc,
         ),
         settings: data,
       );
@@ -487,6 +493,12 @@ class StackedRouter extends RouterBase {
         settings: data,
       );
     },
+    MainView: (data) {
+      return MaterialPageRoute<dynamic>(
+        builder: (context) => const MainView(),
+        settings: data,
+      );
+    },
   };
 }
 
@@ -516,8 +528,8 @@ class AllDocumentsViewArguments {
 class PDFScreenArguments {
   final String pathPDF;
   final AbstractDocument doc;
-  final bool askBookMarks;
-  PDFScreenArguments({this.pathPDF, this.doc, @required this.askBookMarks});
+  final bool isUploadingDoc;
+  PDFScreenArguments({this.pathPDF, this.doc, this.isUploadingDoc});
 }
 
 /// NotesView arguments holder class

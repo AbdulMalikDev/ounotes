@@ -103,7 +103,7 @@ class Constants {
   //* making fields null so that null checks can be performed
   //* and displayed accordingly in views
   static Map Notes = {
-    "TextFieldHeading1": "Name",
+    "TextFieldHeading1": "Title",
     "TextFieldHeadingLabel1": "Unit 1...",
     "TextFieldHeading2": "Author",
     "TextFieldHeadingLabel2": "Sameer...",
@@ -111,7 +111,7 @@ class Constants {
     "TextFieldHeadingLabel3": null,
   };
   static Map EditNotes = {
-    "TextFieldHeading1": "Name",
+    "TextFieldHeading1": "Title",
     "TextFieldHeadingLabel1": "Unit 1...",
     "TextFieldHeading2": "Author",
     "TextFieldHeadingLabel2": "Sameer...",

@@ -1,10 +1,12 @@
+import 'dart:convert';
+
 import 'package:FSOUNotes/app/app.locator.dart';
 import 'package:FSOUNotes/app/app.logger.dart';
 import 'package:FSOUNotes/app/app.router.dart';
 import 'package:FSOUNotes/enums/bottom_sheet_type.dart';
-import 'package:FSOUNotes/misc/constants.dart';
-import 'package:FSOUNotes/enums/enums.dart';
 import 'package:FSOUNotes/enums/constants.dart' as enumConst;
+import 'package:FSOUNotes/enums/enums.dart';
+import 'package:FSOUNotes/misc/constants.dart';
 import 'package:FSOUNotes/misc/course_info.dart';
 import 'package:FSOUNotes/models/document.dart';
 import 'package:FSOUNotes/models/link.dart';
@@ -12,16 +14,20 @@ import 'package:FSOUNotes/models/notes.dart';
 import 'package:FSOUNotes/models/question_paper.dart';
 import 'package:FSOUNotes/models/subject.dart';
 import 'package:FSOUNotes/models/syllabus.dart';
+import 'package:FSOUNotes/models/user.dart';
 import 'package:FSOUNotes/services/funtional_services/cloud_storage_service.dart';
 import 'package:FSOUNotes/services/funtional_services/firebase_firestore/firestore_service.dart';
 import 'package:FSOUNotes/services/funtional_services/google_drive/google_drive_service.dart';
+import 'package:FSOUNotes/services/funtional_services/sharedpref_service.dart';
 import 'package:FSOUNotes/services/state_services/subjects_service.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:logger/logger.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
+import 'package:syncfusion_flutter_sliders/sliders.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class UploadViewModel extends BaseViewModel {
@@ -33,12 +39,15 @@ class UploadViewModel extends BaseViewModel {
   BottomSheetService _bottomSheetService = locator<BottomSheetService>();
   SubjectsService _subjectsService = locator<SubjectsService>();
   GoogleDriveService _googleDriveService = locator<GoogleDriveService>();
+  SharedPreferencesService _sharedPreferencesService =
+      locator<SharedPreferencesService>();
 
   List<DropdownMenuItem<String>> _dropDownMenuItemsofsemester;
 
   List<DropdownMenuItem<String>> _dropDownMenuItemsofBranch;
   List<DropdownMenuItem<String>> _dropDownMenuItemForTypeYear;
-  bool _ischecked = false;
+  bool _isTermsAndConditionschecked = false;
+  bool _canUseUploaderUserName = false;
 
   List<DropdownMenuItem<String>> get dropdownofsem =>
       _dropDownMenuItemsofsemester;
@@ -51,21 +60,32 @@ class UploadViewModel extends BaseViewModel {
   String _selectedBranch;
   String _selectedyeartype;
 
+  SfRangeValues _sfValues = SfRangeValues(2.0, 4.0);
+
   String _year = '2020';
 
   String get year => _year;
+  SfRangeValues get sfValues => _sfValues;
 
   set setYear(String year) {
     _year = year;
     notifyListeners();
   }
 
+  set setSfValues(SfRangeValues values) {
+    _sfValues = values;
+    notifyListeners();
+  }
+
+  User _user = User();
+  User get user => _user;
   String _document;
   String get document => _document;
   String get typeofyear => _selectedyeartype;
   String get sem => _selectedSemester;
   String get br => _selectedBranch;
-  bool get ischecked => _ischecked;
+  bool get isTermsAndConditionsChecked => _isTermsAndConditionschecked;
+  bool get canUseUploaderUserName => _canUseUploaderUserName;
 
   // set setDate(DateTime date) {
   //   if (date.year > DateTime.now().year) {
@@ -76,6 +96,17 @@ class UploadViewModel extends BaseViewModel {
   //   _year = date.year;
   //   notifyListeners();
   // }
+
+  Future setUser() async {
+    setBusy(true);
+    SharedPreferences prefs = await _sharedPreferencesService.store();
+    User user = User.fromData(
+        json.decode(prefs.getString("current_user_is_logged_in")));
+    print(user);
+    _user = user;
+    setBusy(false);
+    notifyListeners();
+  }
 
   List<String> getSuggestions(String query) {
     List<String> subList = getAllSubjectsList();
@@ -103,7 +134,7 @@ class UploadViewModel extends BaseViewModel {
     return subList;
   }
 
-  initialise(Document path) {
+  initialise(Document path) async {
     _dropDownMenuItemsofBranch =
         buildAndGetDropDownMenuItems(CourseInfo.branch);
     _dropDownMenuItemsofsemester =
@@ -114,10 +145,12 @@ class UploadViewModel extends BaseViewModel {
     _selectedBranch = _dropDownMenuItemsofBranch[0].value;
     _selectedyeartype = _dropDownMenuItemForTypeYear[0].value;
     _document = Constants.getDocumentNameFromEnum(path);
+    await setUser();
+    notifyListeners();
   }
 
   List<DropdownMenuItem<String>> buildAndGetDropDownMenuItems(List items) {
-    List<DropdownMenuItem<String>> i = List();
+    List<DropdownMenuItem<String>> i = [];
     items.forEach((item) {
       i.add(DropdownMenuItem(value: item, child: Text(item)));
     });
@@ -140,7 +173,13 @@ class UploadViewModel extends BaseViewModel {
   }
 
   void changeCheckMark(bool val) {
-    _ischecked = val;
+    _isTermsAndConditionschecked = val;
+    notifyListeners();
+  }
+
+  ///Change [_canUseUploaderUserName] check mark field
+  void changeCheckMark2(bool val) {
+    _canUseUploaderUserName = val;
     notifyListeners();
   }
 
@@ -152,44 +191,37 @@ class UploadViewModel extends BaseViewModel {
     _navigationService.navigateTo(Routes.termsAndConditionView);
   }
 
-  Future handleUpload
-  (
-    String text1, 
-    String text2, 
-    String text3, 
-    Document path,
-    String subjectName, 
-    BuildContext context
-  ) async {
-
+  Future handleUpload(String text1, String text2, String text3, Document path,
+      String subjectName, BuildContext context) async {
     setBusy(true);
     Subject subject = await _firestoreService.getSubjectByName(subjectName);
 
     AbstractDocument doc;
-    doc = _setDoc(doc,path,text1,text2,text3,subjectName,subject);
+    doc = _setDoc(doc, path, text1, text2, text3, subjectName, subject);
 
     if (doc.path == Document.Links) {
-
       _processLink(doc);
       setBusy(false);
-
-    }else{
-
+    } else {
       SheetResponse response = await _showDocTypeSelectionSheet();
-      if (response == null) {setBusy(false);return;}
-      String fileType = response.confirmed ? enumConst.Constants.pdf : enumConst.Constants.png;
+      if (response == null) {
+        setBusy(false);
+        return;
+      }
+      String fileType = response.confirmed
+          ? enumConst.Constants.pdf
+          : enumConst.Constants.png;
       // var result = await _cloudStorageService.uploadFile(note: doc, type: doc.type, uploadFileType: fileType);
       var result = await _googleDriveService.processFile(
-        doc: doc,
-        docEnum: doc.path,
-        note: doc, 
-        type: doc.type, 
-        uploadFileType: fileType
-      );
+          doc: doc,
+          docEnum: doc.path,
+          note: doc,
+          type: doc.type,
+          uploadFileType: fileType);
       log.w(result);
 
       //* Handle upload result
-      switch(result){
+      switch (result) {
         case "BLOCKED":
           await _showBannedDialog();
           setBusy(false);
@@ -202,7 +234,8 @@ class UploadViewModel extends BaseViewModel {
           break;
         case "error":
           setBusy(false);
-          Fluttertoast.showToast(msg: "An error occurred...please try again later");
+          Fluttertoast.showToast(
+              msg: "An error occurred...please try again later");
           break;
         case "file is not pdf":
           await _showFileIsNotPdfDialog(context);
@@ -211,6 +244,9 @@ class UploadViewModel extends BaseViewModel {
         case "Upload Successful":
           setBusy(false);
           _navigationService.navigateTo(Routes.thankYouForUploadingView);
+          break;
+        case "Invalid document":
+          setBusy(false);
           break;
         default:
           setBusy(false);
@@ -228,9 +264,14 @@ class UploadViewModel extends BaseViewModel {
     }
   }
 
-  AbstractDocument _setDoc(AbstractDocument doc,path,text1,text2,text3,subjectName,subject) {
+  AbstractDocument _setDoc(
+      AbstractDocument doc, path, text1, text2, text3, subjectName, subject) {
     String type;
+
     switch (path) {
+
+      ///TODO malik use [_sfValue] which is number of units and [_canUseUploaderUserName] boolean value
+      /// to set Notes data
       case Document.Notes:
         type = Constants.notes;
         doc = Note(
@@ -296,178 +337,176 @@ class UploadViewModel extends BaseViewModel {
 
   _showBannedDialog() async {
     await _dialogService.showDialog(
-            title: "BANNED",
-            description:
-                "You have been banned by admins for uploading irrelevant content or reporting documents with no issue again and again. Use the feedback option in the drawer to contact the admins if you think this is a mistake");
-        
+        title: "BANNED",
+        description:
+            "You have been banned by admins for uploading irrelevant content or reporting documents with no issue again and again. Use the feedback option in the drawer to contact the admins if you think this is a mistake");
   }
 
   void _showFileSizeExceededDialog(context) {
     showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20)),
-                  backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-                  title: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      Text(
-                        "Please compress the pdf",
-                        style: Theme.of(context)
-                            .textTheme
-                            .headline6
-                            .copyWith(fontSize: 18),
-                      ),
-                    ],
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20)),
+              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+              title: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Text(
+                    "Please compress the pdf",
+                    style: Theme.of(context)
+                        .textTheme
+                        .headline6
+                        .copyWith(fontSize: 18),
                   ),
-                  content: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      Text(
-                        "The file size has exceeded the limit of 35mb.You can use below link to compress the file",
-                        style: Theme.of(context)
-                            .textTheme
-                            .subtitle1
-                            .copyWith(fontSize: 18),
-                      ),
-                      RichText(
-                        text: TextSpan(
-                          children: [
-                            TextSpan(
-                              text: 'Link :',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .subtitle1
-                                  .copyWith(fontSize: 18),
-                            ),
-                            TextSpan(
-                              text: "https://www.ilovepdf.com/compress_pdf",
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .subtitle1
-                                  .copyWith(fontSize: 18, color: Colors.blue),
-                              recognizer: TapGestureRecognizer()
-                                ..onTap = () {
-                                  launchURL(
-                                      "https://www.ilovepdf.com/compress_pdf");
-                                },
-                            ),
-                          ],
-                        ),
-                      )
-                    ],
+                ],
+              ),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Text(
+                    "The file size has exceeded the limit of 35mb.You can use below link to compress the file",
+                    style: Theme.of(context)
+                        .textTheme
+                        .subtitle1
+                        .copyWith(fontSize: 18),
                   ),
-                  actions: <Widget>[
-                    FlatButton(
-                        child: Text(
-                          "Go Back",
+                  RichText(
+                    text: TextSpan(
+                      children: [
+                        TextSpan(
+                          text: 'Link :',
                           style: Theme.of(context)
                               .textTheme
-                              .subtitle2
-                              .copyWith(fontSize: 17),
+                              .subtitle1
+                              .copyWith(fontSize: 18),
                         ),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        }),
-                    FlatButton(
-                        child: Text(
-                          "Open Link",
+                        TextSpan(
+                          text: "https://www.ilovepdf.com/compress_pdf",
                           style: Theme.of(context)
                               .textTheme
-                              .subtitle2
-                              .copyWith(fontSize: 17),
+                              .subtitle1
+                              .copyWith(fontSize: 18, color: Colors.blue),
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = () {
+                              launchURL(
+                                  "https://www.ilovepdf.com/compress_pdf");
+                            },
                         ),
-                        onPressed: () {
-                          launchURL("https://www.ilovepdf.com/compress_pdf");
-                        }),
-                  ]);
-            });
+                      ],
+                    ),
+                  )
+                ],
+              ),
+              actions: <Widget>[
+                FlatButton(
+                    child: Text(
+                      "Go Back",
+                      style: Theme.of(context)
+                          .textTheme
+                          .subtitle2
+                          .copyWith(fontSize: 17),
+                    ),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    }),
+                FlatButton(
+                    child: Text(
+                      "Open Link",
+                      style: Theme.of(context)
+                          .textTheme
+                          .subtitle2
+                          .copyWith(fontSize: 17),
+                    ),
+                    onPressed: () {
+                      launchURL("https://www.ilovepdf.com/compress_pdf");
+                    }),
+              ]);
+        });
   }
 
   _showFileIsNotPdfDialog(BuildContext context) async {
     await showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20)),
-                  backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-                  title: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      Text(
-                        "Wrong file type",
-                        style: Theme.of(context)
-                            .textTheme
-                            .headline6
-                            .copyWith(fontSize: 18),
-                      ),
-                    ],
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20)),
+              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+              title: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Text(
+                    "Wrong file type",
+                    style: Theme.of(context)
+                        .textTheme
+                        .headline6
+                        .copyWith(fontSize: 18),
                   ),
-                  content: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      Text(
-                        "Please upload pdf file.You can use below link to convert your file to pdf",
-                        style: Theme.of(context)
-                            .textTheme
-                            .subtitle1
-                            .copyWith(fontSize: 18),
-                      ),
-                      RichText(
-                        text: TextSpan(
-                          children: [
-                            TextSpan(
-                              text: 'Link :',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .subtitle1
-                                  .copyWith(fontSize: 18),
-                            ),
-                            TextSpan(
-                              text: "https://www.ilovepdf.com/word_to_pdf",
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .subtitle1
-                                  .copyWith(fontSize: 18, color: Colors.blue),
-                              recognizer: TapGestureRecognizer()
-                                ..onTap = () {
-                                  launchURL(
-                                      "https://www.ilovepdf.com/word_to_pdf");
-                                },
-                            ),
-                          ],
-                        ),
-                      )
-                    ],
+                ],
+              ),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Text(
+                    "Please upload pdf file.You can use below link to convert your file to pdf",
+                    style: Theme.of(context)
+                        .textTheme
+                        .subtitle1
+                        .copyWith(fontSize: 18),
                   ),
-                  actions: <Widget>[
-                    FlatButton(
-                        child: Text(
-                          "Go Back",
+                  RichText(
+                    text: TextSpan(
+                      children: [
+                        TextSpan(
+                          text: 'Link :',
                           style: Theme.of(context)
                               .textTheme
-                              .subtitle2
-                              .copyWith(fontSize: 17),
+                              .subtitle1
+                              .copyWith(fontSize: 18),
                         ),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        }),
-                    FlatButton(
-                        child: Text(
-                          "Open Link",
+                        TextSpan(
+                          text: "https://www.ilovepdf.com/word_to_pdf",
                           style: Theme.of(context)
                               .textTheme
-                              .subtitle2
-                              .copyWith(fontSize: 17),
+                              .subtitle1
+                              .copyWith(fontSize: 18, color: Colors.blue),
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = () {
+                              launchURL("https://www.ilovepdf.com/word_to_pdf");
+                            },
                         ),
-                        onPressed: () {
-                          launchURL("https://www.ilovepdf.com/word_to_pdf");
-                        }),
-                  ]);
-            });
+                      ],
+                    ),
+                  )
+                ],
+              ),
+              actions: <Widget>[
+                FlatButton(
+                    child: Text(
+                      "Go Back",
+                      style: Theme.of(context)
+                          .textTheme
+                          .subtitle2
+                          .copyWith(fontSize: 17),
+                    ),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    }),
+                FlatButton(
+                    child: Text(
+                      "Open Link",
+                      style: Theme.of(context)
+                          .textTheme
+                          .subtitle2
+                          .copyWith(fontSize: 17),
+                    ),
+                    onPressed: () {
+                      launchURL("https://www.ilovepdf.com/word_to_pdf");
+                    }),
+              ]);
+        });
   }
 
   void _processLink(AbstractDocument doc) async {
@@ -493,11 +532,11 @@ class UploadViewModel extends BaseViewModel {
 
   Future<SheetResponse> _showDocTypeSelectionSheet() async {
     return await _bottomSheetService.showCustomSheet(
-          variant: BottomSheetType.filledStacks,
-          title: "What do you want to upload?",
-          description: "",
-          mainButtonTitle: "PDF",
-          secondaryButtonTitle: "Image",
-          customData: {"file_upload": true});
+        variant: BottomSheetType.filledStacks,
+        title: "What do you want to upload?",
+        description: "",
+        mainButtonTitle: "PDF",
+        secondaryButtonTitle: "Image",
+        customData: {"file_upload": true});
   }
 }

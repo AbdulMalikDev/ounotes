@@ -1,10 +1,10 @@
 import 'package:FSOUNotes/misc/constants.dart';
+import 'package:FSOUNotes/ui/views/Main/main_screen_view.dart';
 import 'package:FSOUNotes/ui/widgets/smart_widgets/thank_you_page/thank_you_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:open_file/open_file.dart';
 import 'package:stacked/stacked.dart';
 import 'package:confetti/confetti.dart';
-
 
 class ThankYouView extends StatefulWidget {
   final String filePath;
@@ -15,7 +15,7 @@ class ThankYouView extends StatefulWidget {
 
 class _ThankYouViewState extends State<ThankYouView> {
   ConfettiController _controllerCenter;
-   @override
+  @override
   void initState() {
     _controllerCenter =
         ConfettiController(duration: const Duration(seconds: 10));
@@ -28,6 +28,7 @@ class _ThankYouViewState extends State<ThankYouView> {
     _controllerCenter.dispose();
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<ThankYouViewModel>.reactive(
@@ -42,22 +43,22 @@ class _ThankYouViewState extends State<ThankYouView> {
             child: Stack(
               children: [
                 Align(
-          alignment: Alignment.topCenter,
-          child: ConfettiWidget(
-            confettiController: _controllerCenter,
-            blastDirectionality: BlastDirectionality
-                .explosive, // don't specify a direction, blast randomly
-            shouldLoop:
-                true, // start again as soon as the animation is finished
-            colors: const [
-              Colors.green,
-              Colors.blue,
-              Colors.pink,
-              Colors.orange,
-              Colors.purple
-            ], // manually specify the colors to be used
-          ),
-        ),
+                  alignment: Alignment.topCenter,
+                  child: ConfettiWidget(
+                    confettiController: _controllerCenter,
+                    blastDirectionality: BlastDirectionality
+                        .explosive, // don't specify a direction, blast randomly
+                    shouldLoop:
+                        true, // start again as soon as the animation is finished
+                    colors: const [
+                      Colors.green,
+                      Colors.blue,
+                      Colors.pink,
+                      Colors.orange,
+                      Colors.purple
+                    ], // manually specify the colors to be used
+                  ),
+                ),
                 Positioned(
                   top: -30,
                   left: 0,
@@ -99,20 +100,22 @@ class _ThankYouViewState extends State<ThankYouView> {
                           ),
                         ),
                       ),
-                      if(widget.filePath == null)
+                      if (widget.filePath == null)
+                        Text(
+                          "Congratulations !",
+                          style: Theme.of(context)
+                              .textTheme
+                              .headline6
+                              .copyWith(color: primary),
+                        ),
+                      if (widget.filePath == null)
+                        SizedBox(
+                          height: 20,
+                        ),
                       Text(
-                        "Congratulations !",
-                        style: Theme.of(context)
-                            .textTheme
-                            .headline6
-                            .copyWith(color: primary),
-                      ),
-                      if(widget.filePath == null)
-                      SizedBox(
-                        height: 20,
-                      ),
-                      Text(
-                        widget.filePath==null ? "You are a Premium User!" : "Thank you for downloading!",
+                        widget.filePath == null
+                            ? "You are a Premium User!"
+                            : "Thank you for downloading!",
                         style: Theme.of(context)
                             .textTheme
                             .headline6
@@ -121,75 +124,78 @@ class _ThankYouViewState extends State<ThankYouView> {
                       SizedBox(
                         height: 30,
                       ),
-                      if(widget.filePath!=null)
-                      Text(
-                        "You will receive a confimation",
-                        style: Theme.of(context)
-                            .textTheme
-                            .subtitle1
-                            .copyWith(color: Colors.teal.shade400),
-                      ),
-                      if(widget.filePath!=null)
-                      Text(
-                        "notification about your download.",
-                        style: Theme.of(context)
-                            .textTheme
-                            .subtitle1
-                            .copyWith(color: Colors.teal.shade400),
-                      ),
-                      if(widget.filePath!=null)
-                      SizedBox(height:5),
-                      if(widget.filePath!=null)
-                      Text(
-                        "Access this file in the ",
-                        style: Theme.of(context)
-                            .textTheme
-                            .subtitle1
-                            .copyWith(color: Colors.teal.shade400),
-                      ),
-                      if(widget.filePath!=null)
-                      Text(
-                        "Internal Storage > Downloads folder ",
-                        style: Theme.of(context)
-                            .textTheme
-                            .subtitle1
-                            .copyWith(color: Colors.teal.shade400),
-                      ),
-                      if(widget.filePath!=null)
-                      Text(
-                        "of your mobile",
-                        style: Theme.of(context)
-                            .textTheme
-                            .subtitle1
-                            .copyWith(color: Colors.teal.shade400),
-                      ),
-                      if(widget.filePath!=null)
-                      SizedBox(
-                        height: 50,
-                      ),
-                      FractionallySizedBox(
-                        widthFactor: 0.8,
-                        child: Container(
-                          height: 55,
-                          child: RaisedButton(
-                            onPressed: () {
-                              if(widget.filePath==null)
-                              model.navigateToHome();
-                              else
+                      if (widget.filePath != null)
+                        Text(
+                          "You will receive a confimation",
+                          style: Theme.of(context)
+                              .textTheme
+                              .subtitle1
+                              .copyWith(color: Colors.teal.shade400),
+                        ),
+                      if (widget.filePath != null)
+                        Text(
+                          "notification about your download.",
+                          style: Theme.of(context)
+                              .textTheme
+                              .subtitle1
+                              .copyWith(color: Colors.teal.shade400),
+                        ),
+                      if (widget.filePath != null) SizedBox(height: 5),
+                      if (widget.filePath != null)
+                        Text(
+                          "Access this file in the ",
+                          style: Theme.of(context)
+                              .textTheme
+                              .subtitle1
+                              .copyWith(color: Colors.teal.shade400),
+                        ),
+                      if (widget.filePath != null)
+                        Text(
+                          "Internal Storage > Downloads folder ",
+                          style: Theme.of(context)
+                              .textTheme
+                              .subtitle1
+                              .copyWith(color: Colors.teal.shade400),
+                        ),
+                      if (widget.filePath != null)
+                        Text(
+                          "of your mobile",
+                          style: Theme.of(context)
+                              .textTheme
+                              .subtitle1
+                              .copyWith(color: Colors.teal.shade400),
+                        ),
+                      if (widget.filePath != null)
+                        SizedBox(
+                          height: 50,
+                        ),
+                      Container(
+                        height: 55,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            print(widget.filePath);
+                            if (widget.filePath == null)
+                              Navigator.of(context).pop();
+                            else
                               OpenFile.open(widget.filePath);
-                            },
-                            textColor: Colors.white,
-                            color: Colors.teal,
+                          },
+                          style: ElevatedButton.styleFrom(
+                            primary: Colors.teal,
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 25.0, vertical: 15),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(30),
                             ),
-                            child: new Text(
-                              widget.filePath!=null ? "Open File" : "Done",
-                              style: TextStyle(fontSize: 18),
-                            ),
                           ),
+                          child: new Text(
+                              widget.filePath != null ? "Open File" : "Done",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .headline5
+                                  .copyWith(
+                                    fontSize: 18,
+                                    color: Colors.white,
+                                  )),
                         ),
                       ),
                     ],

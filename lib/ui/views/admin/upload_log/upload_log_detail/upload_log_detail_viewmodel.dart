@@ -239,7 +239,7 @@ class UploadLogDetailViewModel extends FutureViewModel {
           setLoading(false);
           _navigationService.navigateTo(Routes.pDFScreen,
               arguments: PDFScreenArguments(
-                  pathPDF: path, doc: note, askBookMarks: false));
+                  pathPDF: path, doc: note, isUploadingDoc: false));
         },
       );
     } catch (e) {
