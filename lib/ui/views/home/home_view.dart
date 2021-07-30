@@ -7,7 +7,7 @@ import 'package:FSOUNotes/models/recently_open_notes.dart';
 import 'package:FSOUNotes/ui/shared/app_config.dart';
 import 'package:FSOUNotes/ui/views/downloads/Downloads_view.dart';
 import 'package:FSOUNotes/ui/views/home/home_viewmodel.dart';
-import 'package:FSOUNotes/ui/views/home/recently_opened_notes_tile.dart';
+import 'package:FSOUNotes/ui/views/home/recently_added_notes/recently_opened_notes_tile.dart';
 import 'package:FSOUNotes/ui/views/search/search_view.dart';
 import 'package:FSOUNotes/ui/widgets/dumb_widgets/no_subjects_overlay.dart';
 import 'package:FSOUNotes/ui/widgets/smart_widgets/user_subject_list/user_subject_list_view.dart';
@@ -59,13 +59,13 @@ class _HomeViewState extends State<HomeView> {
             margin: const EdgeInsets.all(10),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 15),
                   child: SizedBox(
                     height: hp * 0.07,
-                    width: wp * 0.6,
+                    width: wp * 0.75,
                     child: TextField(
                       onTap: () {
                         showSearch(
@@ -114,49 +114,69 @@ class _HomeViewState extends State<HomeView> {
                     ),
                   ),
                 ),
-                Flexible(
-                  child: GestureDetector(
-                    onTap: () {
-                      homeViewModel.navigateToUserUploadScreen();
-                    },
-                    child: Container(
-                      height: hp * 0.052,
-                      width: wp * 0.3,
-                      alignment: Alignment.center,
-                      margin: EdgeInsets.only(bottom: hp*0.012),
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 10,
-                        vertical: 5,
+                IconButton(
+                  onPressed: () {},
+                  icon: Container(
+                    height: hp * 0.1,
+                    width: wp * 0.2,
+                    alignment: Alignment.center,
+                    // margin: EdgeInsets.only(bottom: 10),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color:
+                            Theme.of(context).iconTheme.color.withOpacity(0.8),
                       ),
-                      decoration: BoxDecoration(
-                        color: Colors.amber,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Flexible(
-                            child: Text(
-                              "UPLOAD",
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 10,
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                            width: 10,
-                          ),
-                          Icon(
-                            Icons.upload_file_rounded,
-                            size: 25,
-                          ),
-                        ],
-                      ),
+                    ),
+                    child: Icon(
+                      MdiIcons.bellOutline,
+                      color: Theme.of(context).iconTheme.color.withOpacity(0.8),
                     ),
                   ),
                 ),
+                // Flexible(
+                //   child: GestureDetector(
+                //     onTap: () {
+                //       homeViewModel.navigateToUserUploadScreen();
+                //     },
+                //     child: Container(
+                //       height: hp * 0.052,
+                //       width: wp * 0.3,
+                //       alignment: Alignment.center,
+                //       margin: EdgeInsets.only(bottom: hp*0.012),
+                //       padding: EdgeInsets.symmetric(
+                //         horizontal: 10,
+                //         vertical: 5,
+                //       ),
+                //       decoration: BoxDecoration(
+                //         color: Colors.amber,
+                //         borderRadius: BorderRadius.circular(10),
+                //       ),
+                //       child: Row(
+                //         mainAxisSize: MainAxisSize.min,
+                //         children: [
+                //           Flexible(
+                //             child: Text(
+                //               "UPLOAD",
+                //               style: TextStyle(
+                //                 color: Colors.white,
+                //                 fontWeight: FontWeight.bold,
+                //                 fontSize: 10,
+                //               ),
+                //             ),
+                //           ),
+                //           SizedBox(
+                //             width: 10,
+                //           ),
+                //           Icon(
+                //             Icons.upload_file_rounded,
+                //             size: 25,
+                //           ),
+                //         ],
+                //       ),
+                //     ),
+                //   ),
+                // ),
               ],
             ),
           ),
@@ -177,7 +197,7 @@ class _HomeViewState extends State<HomeView> {
                         Container(
                           margin: EdgeInsets.only(left: 15),
                           child: Text(
-                            "🔁 Study These Again",
+                            "🔁  Study These Again",
                             style: Theme.of(context)
                                 .textTheme
                                 .headline6
@@ -209,7 +229,7 @@ class _HomeViewState extends State<HomeView> {
                                 onTap: () {},
                                 child: Container(
                                   margin: EdgeInsets.symmetric(
-                                      horizontal: 10, vertical: 10),
+                                      horizontal: 15, vertical: 15),
                                   decoration: AppStateNotifier.isDarkModeOn
                                       ? Constants.mdecoration.copyWith(
                                           color: Theme.of(context)
@@ -234,7 +254,7 @@ class _HomeViewState extends State<HomeView> {
                       ),
                     ),
                     SizedBox(
-                      height: 20,
+                      height: 25,
                     ),
                   ],
                 );
@@ -301,7 +321,7 @@ class _HomeViewState extends State<HomeView> {
                     Container(
                       margin: EdgeInsets.only(left: 15),
                       child: Text(
-                        "📝 My Subjects",
+                        "📝  My Subjects",
                         style: Theme.of(context).textTheme.headline6.copyWith(
                             fontWeight: FontWeight.bold, fontSize: 17),
                       ),
@@ -317,6 +337,7 @@ class _HomeViewState extends State<HomeView> {
                     ),
                   ],
                 ),
+          SizedBox(height: 5),
           Expanded(
             child: ValueListenableBuilder(
               valueListenable: homeViewModel.userSubjects,

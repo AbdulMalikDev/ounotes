@@ -33,6 +33,7 @@ class Constants {
   static String questionPapers = "Question Papers";
   static String syllabus = "Syllabus";
   static String links = "Links";
+  static String gdriveLink = "GDRIVE Link";
   static String none = 'none';
   static String upvote = 'upvote';
   static String downvote = 'downvote';
@@ -60,7 +61,7 @@ class Constants {
     ],
   );
 
- static  BoxDecoration kdecoration = BoxDecoration(
+  static BoxDecoration kdecoration = BoxDecoration(
     borderRadius: BorderRadius.circular(32),
     color: Colors.white,
     boxShadow: [
@@ -152,6 +153,16 @@ class Constants {
     "TextFieldHeading4": null,
     "TextFieldHeadingLabel4": null,
   };
+  static Map GDRIVELink = {
+    "TextFieldHeading1": null,
+    "TextFieldHeadingLabel1": null,
+    "TextFieldHeading2": "GDRIVE LINK",
+    "TextFieldHeadingLabel2": "...",
+    "TextFieldHeading3": "Description",
+    "TextFieldHeadingLabel3": "...",
+    "TextFieldHeading4": null,
+    "TextFieldHeadingLabel4": null,
+  };
 
   static Map<int, String> semlist = {
     1: "Semester 1",
@@ -178,6 +189,8 @@ class Constants {
       case Document.Links:
         return links;
         break;
+      case Document.GDRIVE:
+        return gdriveLink;
       case Document.None:
       case Document.Drawer:
       case Document.UploadLog:
