@@ -41,6 +41,7 @@ class _UploadLogEditViewState extends State<UploadLogEditView> {
             TextEditingController(text: widget.uploadLog?.subjectName ?? "");
         titleController = TextEditingController(
             text: widget.uploadLog?.fileName?.toString() ?? "");
+        //TODO malik dekhle
         switch (model.documentEnum) {
           case Document.Notes:
             authorController =
