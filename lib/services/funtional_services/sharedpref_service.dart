@@ -80,7 +80,8 @@ class SharedPreferencesService {
     String modeofview = prefs.getString("modeofview");
     return modeofview;
   }
-
+ 
+  //TODO notes view ka dekhna hai
   updateView(String docId) async {
     SharedPreferences prefs = await this.store();
     //if notes_view is not present in the local storage then add the current view with docId with currTime

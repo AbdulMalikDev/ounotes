@@ -1,4 +1,5 @@
 import 'package:FSOUNotes/ui/views/about_us/about_us_viewmodel.dart';
+import 'package:FSOUNotes/ui/widgets/smart_widgets/default_app_bar/back_icon_title_appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 import 'package:FSOUNotes/ui/shared/app_config.dart';
@@ -12,11 +13,8 @@ class AboutUsView extends StatelessWidget {
     return ViewModelBuilder<AboutUsViewModel>.reactive(
       builder: (context, model, child) => Scaffold(
         backgroundColor: theme.scaffoldBackgroundColor,
-        appBar: AppBar(
-          title: Text(
-            "About Us",
-            style: theme.appBarTheme.textTheme.headline6,
-          ),
+        appBar: BackIconTitleAppBar(
+          title: "About Us",
         ),
         body: Container(
           height: App(context).appScreenHeightWithOutSafeArea(1),

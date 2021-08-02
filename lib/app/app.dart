@@ -21,13 +21,15 @@ import 'package:FSOUNotes/services/state_services/download_service.dart';
 import 'package:FSOUNotes/services/state_services/links_service.dart';
 import 'package:FSOUNotes/services/state_services/notes_service.dart';
 import 'package:FSOUNotes/services/state_services/question_paper_service.dart';
+import 'package:FSOUNotes/services/state_services/recently_opened_notes_service.dart';
 import 'package:FSOUNotes/services/state_services/report_service.dart';
 import 'package:FSOUNotes/services/state_services/subjects_service.dart';
 import 'package:FSOUNotes/services/state_services/syllabus_service.dart';
-import 'package:FSOUNotes/services/state_services/vote_service.dart';
 import 'package:FSOUNotes/ui/views/FilterDocuments/FD_DocumentDisplay/fd_documentview.dart';
 import 'package:FSOUNotes/ui/views/FilterDocuments/FD_InputScreen/fd_inputView.dart';
 import 'package:FSOUNotes/ui/views/FilterDocuments/FD_subjectdisplay/fd_subjectview.dart';
+import 'package:FSOUNotes/ui/views/Main/main_screen_view.dart';
+import 'package:FSOUNotes/ui/views/Settings/account_info/account_info_view.dart';
 import 'package:FSOUNotes/ui/views/Settings/settings_view.dart';
 import 'package:FSOUNotes/ui/views/about_us/about_us_view.dart';
 import 'package:FSOUNotes/ui/views/about_us/privacy_policy/privacy_policyview.dart';
@@ -41,9 +43,11 @@ import 'package:FSOUNotes/ui/views/all_documents/all_documents_view.dart';
 import 'package:FSOUNotes/ui/views/downloads/Downloads_view.dart';
 import 'package:FSOUNotes/ui/views/edit/edit_view.dart';
 import 'package:FSOUNotes/ui/views/home/home_view.dart';
+import 'package:FSOUNotes/ui/views/home/recently_added_notes/recently_added_notes_view.dart';
 import 'package:FSOUNotes/ui/views/intro/intro_view.dart';
 import 'package:FSOUNotes/ui/views/links/links_view.dart';
 import 'package:FSOUNotes/ui/views/notes/notes_view.dart';
+import 'package:FSOUNotes/ui/views/notification/notification_view.dart';
 import 'package:FSOUNotes/ui/views/pdf/pdf_view.dart';
 import 'package:FSOUNotes/ui/views/question_papers/question_papers_view.dart';
 import 'package:FSOUNotes/ui/views/splash/spash_view.dart';
@@ -98,6 +102,10 @@ import 'package:stacked_services/stacked_services.dart';
   MaterialRoute(page: VerifierPanelView),
   MaterialRoute(page: VerifyDocumentsView),
   MaterialRoute(page: ReportedDocumentsView),
+  MaterialRoute(page: NotificationView),
+  MaterialRoute(page: RecentlyAddedNotesView),
+  MaterialRoute(page: AccountInfoView),
+  MaterialRoute(page: MainView),
 ], dependencies: [
   LazySingleton(classType: BottomSheetService),
   LazySingleton(classType: AdmobService),
@@ -110,6 +118,7 @@ import 'package:stacked_services/stacked_services.dart';
   LazySingleton(classType: DBService),
   LazySingleton(classType: DialogService),
   LazySingleton(classType: DownloadService),
+  LazySingleton(classType: RecentlyOpenedNotesService),
   LazySingleton(classType: FilePickerService),
   LazySingleton(classType: FirestoreService),
   LazySingleton(classType: GoogleDriveService),
@@ -128,7 +137,6 @@ import 'package:stacked_services/stacked_services.dart';
   LazySingleton(classType: SnackbarService),
   LazySingleton(classType: SubjectsService),
   LazySingleton(classType: SyllabusService),
-  LazySingleton(classType: VoteService),
   LazySingleton(classType: PDFService),
   LazySingleton(classType: CloudFunctionsService),
   LazySingleton(classType: DocumentService),

@@ -241,7 +241,7 @@ class DocumentService{
       return null;
     }
     if(navigate)_navigationService.navigateTo(Routes.pDFScreen,
-        arguments: PDFScreenArguments(pathPDF: PDFpath, askBookMarks: false));
+        arguments: PDFScreenArguments(pathPDF: PDFpath));
     return file;
 
   }
@@ -267,7 +267,7 @@ class DocumentService{
         onDownloadedCallback: (path, note) {
           _navigationService.navigateTo(Routes.pDFScreen,
               arguments: PDFScreenArguments(
-                  pathPDF: path, doc: note, askBookMarks: false));
+                  pathPDF: path, doc: note));
         },
       );
       return;

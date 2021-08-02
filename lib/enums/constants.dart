@@ -10,12 +10,8 @@ class Constants {
   static const String uploadLog = "Upload Log";
   static const String report = "Report";
   static const String userStats = "user_stats";
-  static const String none = 'none';
-  static const String upvote = 'upvote';
-  static const String downvote = 'downvote';
   static const String openInBrowser = 'openInBrowser';
   static const String openInApp = 'openInApp';
-
 
   //firebase collection names
   static const String firebase_notes = "Notes";
@@ -29,7 +25,19 @@ class Constants {
   static const String jpeg = 'jpeg';
   static const String jpg = 'jpg';
 
-  //Notification Events [ Make sure Cloud Functions file has exact same constants ]
+  //images path
+  static const String appIcon = "assets/images/apnaicon.png";
+  static const String adminImage = "assets/images/admin.jpg";
+  static const String githubIcon = "assets/images/github-logo.png";
+  static const String donateIcon = "assets/images/donate-icon.png";
+  static const String pdfIcon = "assets/images/pdf.png";
+
+  //Hive Box Names
+  static const String ouNotes = "OUNOTES";
+  static const String downloads = "downloads";
+  static const String recentlyOpenedNotes = "recentlyOpenedNotes";
+
+  //Notification Events [ Make sure Cloud Functions file has same constants ]
   static const String notificationEventNotesUpload =
       "notificationEventNotesUpload";
   static const String notificationEventGrantVerifierAccess =
@@ -145,7 +153,6 @@ class Constants {
       case Document.None:
       case Document.Drawer:
       case Document.Random:
-
         return "";
         break;
     }

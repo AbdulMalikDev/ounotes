@@ -17,22 +17,25 @@ class DownloadAdapter extends TypeAdapter<Download> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return Download(
-      fields[0] as String,
-      fields[1] as String,
-      fields[2] as String,
-      fields[3] as String,
-      fields[4] as String,
-      fields[5] as int,
-      fields[6] as int,
-      fields[7] as String,
-      fields[8] as DateTime,
+      id: fields[0] as String,
+      path: fields[1] as String,
+      title: fields[2] as String,
+      subjectName: fields[3] as String,
+      author: fields[4] as String,
+      view: fields[5] as int,
+      pages: fields[6] as int,
+      size: fields[7] as String,
+      uploadDate: fields[8] as DateTime,
+      semester: fields[9] as String,
+      branch: fields[10] as String,
+      year: fields[11] as String,
     );
   }
 
   @override
   void write(BinaryWriter writer, Download obj) {
     writer
-      ..writeByte(9)
+      ..writeByte(12)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -50,7 +53,13 @@ class DownloadAdapter extends TypeAdapter<Download> {
       ..writeByte(7)
       ..write(obj.size)
       ..writeByte(8)
-      ..write(obj.uploadDate);
+      ..write(obj.uploadDate)
+      ..writeByte(9)
+      ..write(obj.semester)
+      ..writeByte(10)
+      ..write(obj.branch)
+      ..writeByte(11)
+      ..write(obj.year);
   }
 
   @override

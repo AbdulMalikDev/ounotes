@@ -74,7 +74,7 @@ class _SelectionCardState extends State<SelectionCard> {
                       onChanged: widget.onChange,
                       selectedValue: widget.value,
                       showDivider: false,
-                      maxLongSide: MediaQuery.of(context).size.height * 0.72,
+                      maxLongSide: MediaQuery.of(context).size.height * 0.7,
                       cancelText: "",
                       backgroundColor:
                           Theme.of(context).scaffoldBackgroundColor,

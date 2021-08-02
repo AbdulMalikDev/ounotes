@@ -8,7 +8,6 @@ import 'package:FSOUNotes/models/download.dart';
 import 'package:FSOUNotes/models/notes.dart';
 import 'package:FSOUNotes/models/subject.dart';
 import 'package:FSOUNotes/models/user.dart';
-import 'package:FSOUNotes/models/vote.dart';
 import 'package:FSOUNotes/services/funtional_services/admob_service.dart';
 import 'package:FSOUNotes/services/funtional_services/authentication_service.dart';
 import 'package:FSOUNotes/services/funtional_services/firebase_firestore/firestore_service.dart';
@@ -18,7 +17,6 @@ import 'package:FSOUNotes/services/funtional_services/notification_service.dart'
 import 'package:FSOUNotes/services/funtional_services/remote_config_service.dart';
 import 'package:FSOUNotes/services/funtional_services/sharedpref_service.dart';
 import 'package:FSOUNotes/services/state_services/subjects_service.dart';
-import 'package:FSOUNotes/services/state_services/vote_service.dart';
 import 'package:FSOUNotes/enums/bottom_sheet_type.dart';
 import 'package:FSOUNotes/ui/widgets/smart_widgets/notes_tile/notes_tile_view.dart';
 import 'package:cuid/cuid.dart';
@@ -38,10 +36,8 @@ import 'package:hive/hive.dart';
 class NotesViewModel extends BaseViewModel {
   Logger log = getLogger("Notes view model");
   String table = 'uservoted_subjects';
-  List<Vote> userVotedNotesList = [];
   List<Download> downloadedNotes = [];
-  ValueNotifier<List<Widget>> _notesTiles =
-      new ValueNotifier(new List<Widget>());
+  ValueNotifier<List<Widget>> _notesTiles = new ValueNotifier([]);
 
   FirestoreService _firestoreService = locator<FirestoreService>();
   AdmobService _admobService = locator<AdmobService>();
@@ -52,7 +48,6 @@ class NotesViewModel extends BaseViewModel {
   NotificationService _notificationService = locator<NotificationService>();
   SharedPreferencesService _sharedPreferencesService =
       locator<SharedPreferencesService>();
-  VoteService _voteService = locator<VoteService>();
   SubjectsService _subjectsService = locator<SubjectsService>();
   BottomSheetService _bottomSheetService = locator<BottomSheetService>();
   GoogleDriveService _googleDriveService = locator<GoogleDriveService>();
@@ -65,7 +60,6 @@ class NotesViewModel extends BaseViewModel {
   String get notetitle => _notetitle;
   Note notificationNote;
   List<Widget> mainListOfNotes = [];
-  List<Vote> get voteslist => userVotedNotesList;
   AdmobService get admobService => _admobService;
   RemoteConfigService get remoteConfig => _remoteConfigService;
   String get ADMOB_AD_BANNER_ID => _admobService.ADMOB_AD_BANNER_ID;
@@ -75,7 +69,6 @@ class NotesViewModel extends BaseViewModel {
   bool isloading = false;
   bool get loading => isloading;
   Box box;
-  ValueNotifier<List<Vote>> get userVotesBySub => _voteService.votesBySub;
   ValueNotifier<double> get downloadProgress =>
       _googleDriveService.downloadProgress;
 
@@ -156,7 +149,7 @@ class NotesViewModel extends BaseViewModel {
 
   List<Note> get notes => _notes;
 
-  Future fetchNotesAndVotes(String subjectName) async {
+  Future fetchNotes(String subjectName) async {
     setBusy(true);
     _notes = await _firestoreService.loadNotesFromFirebase(subjectName);
     if (_notes is String) {
@@ -165,9 +158,6 @@ class NotesViewModel extends BaseViewModel {
               "You are facing an error in loading the notes. If you are facing this error more than once, please let us know by using the 'feedback' option in the app drawer.");
       return;
     }
-    await _voteService.fetchAndSetVotesBySubject(subjectName);
-    // await _downloadService.fetchAndSetDownloads();
-    userVotedNotesList = _voteService.userVotesList;
 
     //> Populate Notes list
     bool notesForNotificationDisplay = false;
@@ -251,60 +241,62 @@ class NotesViewModel extends BaseViewModel {
       );
     }
     setBusy(false);
+    print(_notesTiles.value);
     notifyListeners();
   }
 
   void openDoc(Note note) async {
-    User user = await _authenticationService.getUser();
+    _sharedPreferencesService.updateView(note.id);
+    Helper.launchURL(note.GDriveLink);
+    // User user = await _authenticationService.getUser();
     // if (_admobService.adDue && !user.isPremiumUser ??
     //     false || _admobService.shouldAdBeShown()) {
     //   _navigationService.navigateTo(Routes.watchAdToContinueView);
     //   return;
     // }
-    SharedPreferences prefs = await _sharedPreferencesService.store();
-    if (prefs.containsKey("openDocChoice")) {
-      String button = prefs.getString("openDocChoice");
-      if (button == "Open In App") {
-        navigateToPDFView(note);
-      } else {
-        _sharedPreferencesService.updateView(note.id);
-        Helper.launchURL(note.GDriveLink);
-      }
-      return;
-    }
+    // SharedPreferences prefs = await _sharedPreferencesService.store();
+    // if (prefs.containsKey("openDocChoice")) {
+    //   String button = prefs.getString("openDocChoice");
+    //   if (button == "Open In App") {
+    //     navigateToPDFView(note);
+    //   } else {
+    //   _sharedPreferencesService.updateView(note.id);
+    //   Helper.launchURL(note.GDriveLink);
+    // }
+    //   return;
+    // }
 
-    SheetResponse response = await _bottomSheetService.showCustomSheet(
-      variant: BottomSheetType.floating2,
-      title: 'Where do you want to open the file?',
-      description: "",
-      mainButtonTitle: 'Open In Browser',
-      secondaryButtonTitle: 'Open In App',
-    );
-    log.i("openDoc BottomSheetResponse ");
-    if (response == null) return;
-    if (!response.confirmed ?? false) {
-      return;
-    }
+    // SheetResponse response = await _bottomSheetService.showCustomSheet(
+    //   variant: BottomSheetType.floating2,
+    //   title: 'Where do you want to open the file?',
+    //   description: "",
+    //   mainButtonTitle: 'Open In Browser',
+    //   secondaryButtonTitle: 'Open In App',
+    // );
+    // log.i("openDoc BottomSheetResponse ");
+    // if (response == null) return;
+    // if (!response.confirmed ?? false) {
+    //   return;
+    // }
 
-    if (response.responseData['checkBox']) {
-      prefs.setString(
-        "openDocChoice",
-        response.responseData['buttonText'],
-      );
+    // if (response.responseData['checkBox']) {
+    //   prefs.setString(
+    //     "openDocChoice",
+    //     response.responseData['buttonText'],
+    //   );
 
-      SheetResponse response2 = await _bottomSheetService.showBottomSheet(
-        title: "Settings Saved !",
-        description: "You can change this anytime in settings screen.",
-      );
+    //   SheetResponse response2 = await _bottomSheetService.showBottomSheet(
+    //     title: "Settings Saved !",
+    //     description: "You can change this anytime in settings screen.",
+    //   );
 
-      if (response2.confirmed) {
-        navigateToPDFScreen(response.responseData['buttonText'], note);
-        return;
-      }
-    } else {
-      navigateToPDFScreen(response.responseData['buttonText'], note);
-    }
-
+    //   if (response2.confirmed) {
+    //     navigateToPDFScreen(response.responseData['buttonText'], note);
+    //     return;
+    //   }
+    // } else {
+    //   navigateToPDFScreen(response.responseData['buttonText'], note);
+    // }
     return;
   }
 
@@ -328,7 +320,7 @@ class NotesViewModel extends BaseViewModel {
           setLoading(false);
           _navigationService.navigateTo(Routes.pDFScreen,
               arguments: PDFScreenArguments(
-                  pathPDF: path, doc: note, askBookMarks: false));
+                  pathPDF: path, doc: note, isUploadingDoc: false));
         },
       );
     } catch (e) {
@@ -383,7 +375,7 @@ class NotesViewModel extends BaseViewModel {
     }
     setLoading(false);
     _navigationService.navigateTo(Routes.pDFScreen,
-        arguments: PDFScreenArguments(pathPDF: PDFpath, askBookMarks: false));
+        arguments: PDFScreenArguments(pathPDF: PDFpath, isUploadingDoc: false));
   }
 
   downloadFile({
@@ -438,15 +430,15 @@ class NotesViewModel extends BaseViewModel {
     return InkWell(
       child: NotesTileView(
         note: note,
-        votes: _voteService.votesBySub.value,
         notification: notification,
         isPinned: isPinned,
         refresh: refresh,
         onDownloadCallback: handleDownloadPurchase,
+       
       ),
       onTap: () async {
         // await incrementViewForAd();
-        openDoc(note);
+        // openDoc(note);
       },
     );
   }

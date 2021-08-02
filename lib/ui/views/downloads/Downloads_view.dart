@@ -26,19 +26,6 @@ class _DownLoadViewState extends State<DownLoadView> {
         model.getUser();
       },
       builder: (context, model, child) => Scaffold(
-        appBar: AppBar(
-          iconTheme: IconThemeData(color: Colors.white),
-          title: Text('My Downloads',
-              style: Theme.of(context).appBarTheme.textTheme.headline6),
-          leading: IconButton(
-            icon: Icon(
-              Icons.arrow_back,
-            ),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ),
-        ),
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         body: buildDownloadList(model),
       ),
@@ -51,7 +38,7 @@ class _DownLoadViewState extends State<DownLoadView> {
       child: Column(
         children: [
           ValueListenableBuilder(
-            valueListenable: Hive.box('downloads').listenable(),
+            valueListenable: Hive.box<Download>('downloads').listenable(),
             builder: (context, donwloadsBox, widget) {
               return Container(
                 // height: model.user?.isPremiumUser ?? false
@@ -93,7 +80,7 @@ class _DownLoadViewState extends State<DownLoadView> {
                               decoration: BoxDecoration(),
                               child: RichText(
                                 text: TextSpan(
-                                  style: Theme.of(context).textTheme.bodyText1,
+                                  style: Theme.of(context).textTheme.bodyText2,
                                   children: [
                                     TextSpan(
                                         text:

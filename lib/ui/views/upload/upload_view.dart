@@ -5,10 +5,12 @@ import 'package:FSOUNotes/ui/shared/app_config.dart';
 import 'package:FSOUNotes/ui/views/upload/upload_viewmodel.dart';
 import 'package:FSOUNotes/ui/widgets/dumb_widgets/SaveButtonView.dart';
 import 'package:FSOUNotes/ui/widgets/dumb_widgets/TextFieldView.dart';
+import 'package:FSOUNotes/ui/widgets/dumb_widgets/drop_down_button_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:stacked/stacked.dart';
+import 'package:syncfusion_flutter_sliders/sliders.dart';
 
 class UploadView extends StatefulWidget {
   final Map textFieldsMap;
@@ -38,111 +40,123 @@ class _UploadViewState extends State<UploadView> {
     return ViewModelBuilder<UploadViewModel>.reactive(
       onModelReady: (model) {
         model.initialise(widget.path);
+        print(widget.path);
         if (widget.subjectName != null) {
           controllerOfSub.text = widget.subjectName;
         }
       },
-      builder: (context, model, child) => Scaffold(
-        body: Container(
-          child: GestureDetector(
-            onTap: () => FocusScope.of(context).unfocus(),
-            child: Stack(
-              children: <Widget>[
-                Container(
-                  height: double.infinity,
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [
-                        Color(0xFF73AEF5),
-                        Color(0xFF61A4F1),
-                        Color(0xFF478DE0),
-                        Color(0xFF398AE5),
-                      ],
-                      stops: [0.1, 0.4, 0.7, 0.9],
+      builder: (context, model, child) => WillPopScope(
+        onWillPop: () async {
+          //TODO change this after testing is done
+          // return !model.isBusy;
+          return true;
+        },
+        child: Scaffold(
+          body: Container(
+            child: GestureDetector(
+              onTap: () => FocusScope.of(context).unfocus(),
+              child: Stack(
+                children: <Widget>[
+                  Container(
+                    height: double.infinity,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          Color(0xFF73AEF5),
+                          Color(0xFF61A4F1),
+                          Color(0xFF478DE0),
+                          Color(0xFF398AE5),
+                        ],
+                        stops: [0.1, 0.4, 0.7, 0.9],
+                      ),
                     ),
                   ),
-                ),
-                model.isBusy
-                    ? Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            CircularProgressIndicator(
-                              strokeWidth: 5,
-                              valueColor: AlwaysStoppedAnimation(Colors.white),
-                            ),
-                            SizedBox(
-                              height: 20,
-                            ),
-                            Column(
-                              children: <Widget>[
-                                Text(
-                                  "Please wait...",
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 20,
+                  model.isBusy
+                      ? Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              CircularProgressIndicator(
+                                strokeWidth: 5,
+                                valueColor:
+                                    AlwaysStoppedAnimation(Colors.white),
+                              ),
+                              SizedBox(
+                                height: 20,
+                              ),
+                              Column(
+                                children: <Widget>[
+                                  Text(
+                                    "Please wait...",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 20,
+                                    ),
                                   ),
-                                ),
-                                SizedBox(
-                                  height: 20,
-                                ),
-                                Text(
-                                  "Large files may take some time...",
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 17,
+                                  SizedBox(
+                                    height: 20,
                                   ),
-                                )
-                              ],
-                            )
-                          ],
-                        ),
-                      )
-                    : Form(
-                        key: this._formKey,
-                        child: Container(
-                          height: double.infinity,
-                          child: SingleChildScrollView(
-                            physics: AlwaysScrollableScrollPhysics(),
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 40.0,
-                              vertical: 80.0,
-                            ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                SizedBox(height: 30),
-                                Text(
-                                  "UPLOAD ${model.document.toUpperCase()}",
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    letterSpacing: -0.03,
-                                    fontFamily: 'Montserrat',
-                                    fontSize: 30.0,
-                                    fontWeight: FontWeight.bold,
+                                  Text(
+                                    "Large files may take some time...",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 17,
+                                    ),
+                                  )
+                                ],
+                              )
+                            ],
+                          ),
+                        )
+                      : Form(
+                          key: this._formKey,
+                          child: Container(
+                            height: double.infinity,
+                            child: SingleChildScrollView(
+                              physics: AlwaysScrollableScrollPhysics(),
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 40.0,
+                                vertical: 80.0,
+                              ),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  SizedBox(height: 30),
+                                  Text(
+                                    "UPLOAD ${model.document.toUpperCase()}",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      letterSpacing: -0.03,
+                                      fontFamily: 'Montserrat',
+                                      fontSize: 30.0,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
-                                ),
-                                SizedBox(height: 50.0),
-                                subjectNameField(model),
-                                widget.textFieldsMap == Constants.Syllabus
-                                    ? buildSyllabusEntries(model)
-                                    : widget.textFieldsMap ==
-                                            Constants.QuestionPaper
-                                        ? buildQuestionPaperEntries(model)
-                                        : buildLinkEntries(model),
-                                SizedBox(
-                                  height: 20,
-                                ),
-                                uploadButtonWidget(model)
-                              ],
+                                  SizedBox(height: 50.0),
+                                  if (widget.textFieldsMap !=
+                                      Constants.GDRIVELink)
+                                    subjectNameField(model),
+                                  widget.textFieldsMap == Constants.Syllabus
+                                      ? buildSyllabusEntries(model)
+                                      : widget.textFieldsMap ==
+                                              Constants.QuestionPaper
+                                          ? buildQuestionPaperEntries(model)
+                                          : buildLinkAndNotesEntries(
+                                              model, widget.textFieldsMap),
+                                  SizedBox(
+                                    height: 20,
+                                  ),
+                                  uploadButtonWidget(model)
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                      )
-              ],
+                        )
+                ],
+              ),
             ),
           ),
         ),
@@ -347,13 +361,62 @@ class _UploadViewState extends State<UploadView> {
     );
   }
 
-  Widget buildLinkEntries(UploadViewModel model) {
+  Widget buildLinkAndNotesEntries(UploadViewModel model, Map textFieldsMap) {
     return Column(
       children: <Widget>[
-        TextFieldView(
-            heading: widget.textFieldsMap["TextFieldHeading1"],
-            labelText: widget.textFieldsMap["TextFieldHeadingLabel1"],
-            textFieldController: textFieldController1),
+        if (textFieldsMap == Constants.GDRIVELink)
+          Container(
+            decoration: Constants.mdecoration.copyWith(
+                color: Theme.of(context).colorScheme.background, boxShadow: []),
+            padding: const EdgeInsets.all(10),
+            margin: const EdgeInsets.all(10),
+            child: Column(
+              children: [
+                Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 15),
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    "Note:",
+                    style: Theme.of(context)
+                        .textTheme
+                        .headline6
+                        .copyWith(color: primary),
+                  ),
+                ),
+                Container(
+                  margin:
+                      const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                  decoration: BoxDecoration(),
+                  child: RichText(
+                    text: TextSpan(
+                      style: Theme.of(context).textTheme.bodyText2,
+                      children: [
+                        //TODO add note Malik
+                        TextSpan(text: 'TODO add note'),
+                        // WidgetSpan(
+                        //   child: Padding(
+                        //     padding:
+                        //         const EdgeInsets.symmetric(horizontal: 2.0),
+                        //     child: Icon(Icons.file_download, size: 18),
+                        //   ),
+                        // ),
+                        // TextSpan(text: ' you can find them in your '),
+                        // TextSpan(
+                        //     text: 'Internal Storage > Downloads',
+                        //     style: TextStyle(fontWeight: FontWeight.bold)),
+                        // TextSpan(text: ' folder of your mobile'),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        if (textFieldsMap != Constants.GDRIVELink)
+          TextFieldView(
+              heading: widget.textFieldsMap["TextFieldHeading1"],
+              labelText: widget.textFieldsMap["TextFieldHeadingLabel1"],
+              textFieldController: textFieldController1),
         SizedBox(
           height: 30.0,
         ),
@@ -370,18 +433,77 @@ class _UploadViewState extends State<UploadView> {
               heading: widget.textFieldsMap["TextFieldHeading3"],
               labelText: widget.textFieldsMap["TextFieldHeadingLabel3"],
               textFieldController: textFieldController3),
+        if (textFieldsMap == Constants.Notes)
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(height: 30),
+              Padding(
+                padding: const EdgeInsets.only(left: 13.0),
+                child: Text(
+                  "Number of Units",
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+              SfRangeSlider(
+                min: 1.0,
+                max: 5.0,
+                interval: 1,
+                stepSize: 1,
+                showTicks: true,
+                showLabels: true,
+                values: model.sfValues,
+                enableTooltip: true,
+                activeColor: Theme.of(context).primaryColor,
+                inactiveColor: Colors.white,
+                onChanged: (dynamic newValue) {
+                  model.setSfValues = newValue;
+                },
+              ),
+              SizedBox(height: 20),
+            ],
+          ),
       ],
     );
   }
 
   Widget uploadButtonWidget(UploadViewModel model) {
     return Column(children: [
+      if (widget.textFieldsMap != Constants.GDRIVELink)
+        Row(
+          children: [
+            Container(
+              child: Checkbox(
+                value: model.canUseUploaderUserName,
+                onChanged: model.changeCheckMark2,
+                activeColor: Colors.amber,
+              ),
+            ),
+            //TODO malik add dummy string here
+            Flexible(
+              child: Text(
+                "Hey, ${model.user.username}...can we show your name as uploader below this note?",
+                style: TextStyle(color: Colors.white, fontSize: 15),
+              ),
+            )
+          ],
+        ),
+      SizedBox(
+        height: 10,
+      ),
       Row(
         children: <Widget>[
           Container(
             child: Checkbox(
-              value: model.ischecked,
+              value: model.isTermsAndConditionsChecked,
               onChanged: model.changeCheckMark,
+              activeColor: Colors.amber,
             ),
           ),
           SizedBox(
@@ -398,11 +520,13 @@ class _UploadViewState extends State<UploadView> {
                   ),
                   Container(
                     height: 20,
-                    child: FlatButton(
+                    child: TextButton(
                       onPressed: () {
                         model.navigatetoPrivacyPolicy();
                       },
-                      padding: EdgeInsets.all(0),
+                      style: TextButton.styleFrom(
+                        padding: EdgeInsets.all(0),
+                      ),
                       child: Text(
                         "Privacy policy",
                         style: TextStyle(
@@ -426,11 +550,13 @@ class _UploadViewState extends State<UploadView> {
                   ),
                   Container(
                     height: 20,
-                    child: FlatButton(
+                    child: TextButton(
                       onPressed: () {
                         model.navigateToTermsAndConditionView();
                       },
-                      padding: EdgeInsets.all(0),
+                      style: TextButton.styleFrom(
+                        padding: EdgeInsets.all(0),
+                      ),
                       child: Text(
                         'Terms and condition',
                         style: TextStyle(
@@ -455,13 +581,13 @@ class _UploadViewState extends State<UploadView> {
             // Invalid!
             return;
           }
-          if (!model.ischecked) {
+          if (!model.isTermsAndConditionsChecked) {
             Fluttertoast.showToast(
                 msg: "Please tick the box to Agree Terms and conditions ");
             return;
           }
-          //Here i have access to all TextFieldControllers therfore
-          //i can extract the text and perform my upload logic
+          //Here I have access to all TextFieldControllers therfore
+          //I can extract the text and perform my upload logic
           model.typeofyear == CourseInfo.yeartype[0]
               ? model.setYear = controllerOfYear.text
               : model.setYear =
@@ -496,17 +622,23 @@ class _UploadViewState extends State<UploadView> {
             borderRadius: BorderRadius.circular(16),
             color: Colors.white,
           ),
-          padding: EdgeInsets.all(20),
+          // padding: EdgeInsets.all(20),
           margin: EdgeInsets.all(5),
-          height: App(context).appHeight(0.08),
-          child: DropdownButton(
-            focusColor: Colors.transparent,
-            value: typeofyear,
-            items: dropdownofyear,
-            onChanged: changedropdownitemofyear,
-            style: TextStyle(color: Colors.black, fontSize: 20),
-            dropdownColor: Colors.white,
-            iconEnabledColor: Colors.black,
+          height: App(context).appHeight(0.05),
+          width: App(context).appWidth(0.4),
+          child: DropDownButtonView(
+            selectedItem: typeofyear,
+            dropDownColor: Colors.white,
+            changedDropDownItem: changedropdownitemofyear,
+            dropDownMenuItems: dropdownofyear,
+            width: App(context).appWidth(0.35),
+            // focusColor: Colors.transparent,
+            // value: ,
+            // items: ,
+            // onChanged: ,
+            // style: TextStyle(color: Colors.black, fontSize: 20),
+            // dropdownColor: ,
+            // iconEnabledColor: Colors.black,
           ),
         ),
         SizedBox(height: 10.0),

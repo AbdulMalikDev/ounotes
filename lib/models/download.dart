@@ -21,8 +21,14 @@ class Download extends HiveObject {
   final String size;
   @HiveField(8)
   final DateTime uploadDate;
+  @HiveField(9)
+  final String semester;
+  @HiveField(10)
+  final String branch;
+  @HiveField(11)
+  final String year;
 
-  Download(
+  Download({
     this.id,
     this.path,
     this.title,
@@ -32,5 +38,8 @@ class Download extends HiveObject {
     this.pages,
     this.size,
     this.uploadDate,
-  );
+    this.semester,
+    this.branch,
+    this.year,
+  });
 }

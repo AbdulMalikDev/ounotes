@@ -17,6 +17,7 @@ class FilterSubjectsView extends StatelessWidget {
         builder: (context, model, child) => Container(
               height: MediaQuery.of(context).size.height,
               width: MediaQuery.of(context).size.width,
+              margin: EdgeInsets.only(bottom: 20),
               child: ListView.builder(
                   itemCount: data.length,
                   itemBuilder: (context, index) {

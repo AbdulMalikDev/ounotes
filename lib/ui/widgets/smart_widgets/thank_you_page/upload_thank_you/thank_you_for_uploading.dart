@@ -4,15 +4,15 @@ import 'package:stacked/stacked.dart';
 import 'package:confetti/confetti.dart';
 import 'thank_you_for_uploading_viewmodel.dart';
 
-
 class ThankYouForUploadingView extends StatefulWidget {
   @override
-  _ThankYouForUploadingViewState createState() => _ThankYouForUploadingViewState();
+  _ThankYouForUploadingViewState createState() =>
+      _ThankYouForUploadingViewState();
 }
 
 class _ThankYouForUploadingViewState extends State<ThankYouForUploadingView> {
   ConfettiController _controllerCenter;
-   @override
+  @override
   void initState() {
     _controllerCenter =
         ConfettiController(duration: const Duration(seconds: 10));
@@ -25,6 +25,7 @@ class _ThankYouForUploadingViewState extends State<ThankYouForUploadingView> {
     _controllerCenter.dispose();
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<ThankYouForUploadingViewModel>.reactive(
@@ -39,22 +40,22 @@ class _ThankYouForUploadingViewState extends State<ThankYouForUploadingView> {
             child: Stack(
               children: [
                 Align(
-          alignment: Alignment.topCenter,
-          child: ConfettiWidget(
-            confettiController: _controllerCenter,
-            blastDirectionality: BlastDirectionality
-                .explosive, // don't specify a direction, blast randomly
-            shouldLoop:
-                true, // start again as soon as the animation is finished
-            colors: const [
-              Colors.green,
-              Colors.blue,
-              Colors.pink,
-              Colors.orange,
-              Colors.purple
-            ], // manually specify the colors to be used
-          ),
-        ),
+                  alignment: Alignment.topCenter,
+                  child: ConfettiWidget(
+                    confettiController: _controllerCenter,
+                    blastDirectionality: BlastDirectionality
+                        .explosive, // don't specify a direction, blast randomly
+                    shouldLoop:
+                        true, // start again as soon as the animation is finished
+                    colors: const [
+                      Colors.green,
+                      Colors.blue,
+                      Colors.pink,
+                      Colors.orange,
+                      Colors.purple
+                    ], // manually specify the colors to be used
+                  ),
+                ),
                 Positioned(
                   top: -30,
                   left: 0,
@@ -116,7 +117,7 @@ class _ThankYouForUploadingViewState extends State<ThankYouForUploadingView> {
                       SizedBox(
                         height: 30,
                       ),
-                      
+
                       Text(
                         "You will receive a confimation",
                         style: Theme.of(context)
@@ -145,20 +146,27 @@ class _ThankYouForUploadingViewState extends State<ThankYouForUploadingView> {
                         widthFactor: 0.8,
                         child: Container(
                           height: 55,
-                          child: RaisedButton(
+                          child: ElevatedButton(
                             onPressed: () {
                               model.navigateToHome();
                             },
-                            textColor: Colors.white,
-                            color: Colors.teal,
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 25.0, vertical: 15),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(30),
+                            style: ElevatedButton.styleFrom(
+                              primary: Colors.teal,
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 25.0, vertical: 15),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(30),
+                              ),
                             ),
                             child: new Text(
                               "Done",
-                              style: TextStyle(fontSize: 18),
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .headline5
+                                  .copyWith(
+                                    fontSize: 18,
+                                    color: Colors.white,
+                                  ),
                             ),
                           ),
                         ),

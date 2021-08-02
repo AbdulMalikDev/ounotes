@@ -166,7 +166,7 @@ class _DrawerViewState extends State<DrawerView> {
                                     : Colors.grey[700],
                               ),
                               onTap: () async {
-                                model.showRateMyAppDialog(context);
+                                // model.showRateMyAppDialog(context);
                               }),
                           NavItem(
                               Icons.arrow_drop_down_circle,
@@ -209,12 +209,12 @@ class _DrawerViewState extends State<DrawerView> {
                             },
                           ),
                           if (model.isAdmin)
-                            NavItem(
-                                Icons.equalizer,
-                                "Admin Panel",
-                                subtitle1,
-                                model.navigateToAdminUploadScreen,
-                                Document.Drawer),
+                            // NavItem(
+                            //     Icons.equalizer,
+                            //     "Admin Panel",
+                            //     subtitle1,
+                            //     model.navigateToAdminUploadScreen,
+                            //     Document.Drawer),
                           if (model.isVerifier)
                             NavItem(
                                 Icons.account_balance,
@@ -282,8 +282,8 @@ class _DrawerViewState extends State<DrawerView> {
                                           box.size);
                             },
                           ),
-                          NavItem(Icons.import_contacts, "About Us", subtitle1,
-                              model.navigateToAboutUsScreen, Document.None),
+                          // NavItem(Icons.import_contacts, "About Us", subtitle1,
+                          //     model.navigateToAboutUsScreen, Document.None),
                           ListTile(
                             leading: Icon(
                               Icons.logout,
@@ -294,7 +294,7 @@ class _DrawerViewState extends State<DrawerView> {
                               style: subtitle1,
                             ),
                             onTap: () {
-                              model.handleSignOut(context);
+                              // model.handleSignOut(context);
                             },
                           ),
                           SizedBox(

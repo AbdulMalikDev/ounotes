@@ -9,6 +9,7 @@ enum Document {
   QuestionPapers,
   Syllabus,
   Links,
+  GDRIVE,
   Drawer,
   UploadLog,
   Report,

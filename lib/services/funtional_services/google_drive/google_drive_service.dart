@@ -56,12 +56,11 @@ part './CRUD/google_drive_delete.dart';
 // If its not making a call directly it goes here
 part './google_drive_extra/google_drive_functions.dart';
 
-
 Logger log = getLogger("GoogleDriveService");
 
 class GoogleDriveService {
-
-  String _chars = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
+  String _chars =
+      'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
   math.Random _rnd = math.Random();
 
   RemoteConfigService _remoteConfigService = locator<RemoteConfigService>();
@@ -82,18 +81,18 @@ class GoogleDriveService {
 
   ValueNotifier<double> downloadProgress = new ValueNotifier(0);
 
-  /// Function to Process and Upload [ File ] 
-  /// 
+  /// Function to Process and Upload [ File ]
+  ///
   /// `@return values`
-  /// 
+  ///
   ///   - "BLOCKED"
-  /// 
+  ///
   ///   - "File is null"
-  /// 
+  ///
   ///   - "file is not compatible. Please make sure you uploaded a PDF"
-  /// 
+  ///
   ///   - "Upload Successful";
-  /// 
+  ///
   processFile({
     @required dynamic doc,
     @required Document docEnum,
@@ -110,28 +109,28 @@ class GoogleDriveService {
     String GDrive_URL;
     ga.File gDriveFileToUpload;
     ga.File response;
-    if(type==null)
-    type = note.type;
+    if (type == null) type = note.type;
 
     /// TODO
     /// handle return of string
     /// add pdf compress library
-    
+
     //>> Pre-Upload Check
     bool result1 = await _firestoreService.areUsersAllowed();
-    bool result2 =
-        await _firestoreService.refreshUser().then((user) => user.isUserAllowedToUpload);
+    bool result2 = await _firestoreService
+        .refreshUser()
+        .then((user) => user.isUserAllowedToUpload);
     if (!result1 || !result2) {
       return "BLOCKED";
     }
-    _logValuesToConsole(note,type);
+    _logValuesToConsole(note, type);
 
     //>> 1. Initiate Upload Logic
     try {
-
       //>> 1.1 Select file, sanitize extension and create a PDF Object
-      
-      String tempPath = (await _localPath()) + "/${DateTime.now().millisecondsSinceEpoch}";
+
+      String tempPath =
+          (await _localPath()) + "/${DateTime.now().millisecondsSinceEpoch}";
       //Not defining type since it could be List of files or just one file
       List result =
           await _filePickerService.selectFile(uploadFileType: uploadFileType);
@@ -156,7 +155,7 @@ class GoogleDriveService {
       }
 
       //>> 1.2 Find size of file, make sure not more than 35 MB
-      
+
       int lengthOfDoc = isImage
           ? await _getLengthOfImages(document)
           : await document.length();
@@ -171,27 +170,33 @@ class GoogleDriveService {
       }
 
       //>> 1.3 Verify intent of File Upload with user
-      
+
       File fileToUpload = isImage ? null : document;
       if (fileToUpload == null) fileToUpload = File(tempPath);
-      await _navigationService.navigateTo(Routes.pDFScreen,
-          arguments: PDFScreenArguments(
-              doc: note, pathPDF: fileToUpload.path, askBookMarks: true));
-      
+      final validDocument = await _navigationService.navigateTo(
+        Routes.pDFScreen,
+        arguments: PDFScreenArguments(
+            doc: note, pathPDF: fileToUpload.path, isUploadingDoc: true),
+      );
+      log.i(validDocument);
+      if (!validDocument) {
+        return "Invalid document";
+      }
+
       //>> 1.4 Compress PDF
       String outputPath = await getOutputPath();
       log.e(outputPath);
-      await PdfCompressor.compressPdfFile(docPath, outputPath, CompressQuality.MEDIUM);
+      await PdfCompressor.compressPdfFile(
+          docPath, outputPath, CompressQuality.MEDIUM);
       fileToUpload = File(outputPath);
 
-      //>> 1.5 Upload to Google Drive 
-      
+      //>> 1.5 Upload to Google Drive
+
       log.i("Uploading File to Google Drive");
       log.i(doc);
       log.i(document);
 
       try {
-
         //>> 1.5.1 initialize http client and GDrive API
         final accountCredentials = new ServiceAccountCredentials.fromJson(
             _remote.remoteConfig.getString("GDRIVE"));
@@ -216,7 +221,8 @@ class GoogleDriveService {
         log.e(fileToUpload);
         response = await drive.files.create(
           gDriveFileToUpload,
-          uploadMedia: ga.Media(fileToUpload.openRead(), fileToUpload.lengthSync()),
+          uploadMedia:
+              ga.Media(fileToUpload.openRead(), fileToUpload.lengthSync()),
         );
 
         ///>> 1.5.4 Create and Set Data to access the uploaded file
@@ -231,9 +237,8 @@ class GoogleDriveService {
 
 
       } catch (e) {
-
-        return _errorHandling(e,
-            "While UPLOADING Notes to Google Drive , Error occurred");
+        return _errorHandling(
+            e, "While UPLOADING Notes to Google Drive , Error occurred");
       }
 
       //>> 1.6 Set Metadata of the file to store in Database
@@ -250,10 +255,9 @@ class GoogleDriveService {
       fileToUpload.delete();
       _firestoreService.saveNotes(note);
       return "Upload Successful";
-
     } catch (e) {
-      return _errorHandling(e,
-            "While UPLOADING Notes to Google Drive , Error occurred (outer)");
+      return _errorHandling(
+          e, "While UPLOADING Notes to Google Drive , Error occurred (outer)");
     }
   }
 
@@ -264,11 +268,11 @@ class GoogleDriveService {
       final accountCredentials = new ServiceAccountCredentials.fromJson(
           _remote.remoteConfig.getString("GDRIVE"));
       final scopes = ['https://www.googleapis.com/auth/drive'];
-      
+
       AutoRefreshingAuthClient gdriveAuthClient =
           await clientViaServiceAccount(accountCredentials, scopes);
       var drive = ga.DriveApi(gdriveAuthClient);
-       await _firestoreService.deleteDocument(doc);
+      await _firestoreService.deleteDocument(doc);
       await drive.files.delete(doc.GDriveID);
       return "delete successful";
     } catch (e) {
@@ -315,16 +319,18 @@ class GoogleDriveService {
       log.e(note.GDriveNotesFolderID);
 
       //*Download file
-      ga.Media file = await drive.files.get(fileID, downloadOptions: ga.DownloadOptions.fullMedia);
+      ga.Media file = await drive.files
+          .get(fileID, downloadOptions: ga.DownloadOptions.fullMedia);
       log.e(note.GDriveNotesFolderID);
 
       //*Figure out size from note.size property to show proper loading indicator
-      double contentLength = double.parse(note.size==null?'0.0':note.size.split(" ")[0]);
+      double contentLength =
+          double.parse(note.size == null ? '0.0' : note.size.split(" ")[0]);
       contentLength = note.size == null
-          ? 0 
+          ? 0
           : note.size.split(" ")[1] == 'KB'
-          ? contentLength * 1000
-          : contentLength * 1000000;
+              ? contentLength * 1000
+              : contentLength * 1000000;
       int downloadedLength = 0;
       downloadProgress.value = 0;
       List<int> dataStore = [];
@@ -341,18 +347,18 @@ class GoogleDriveService {
         localFile = File(filePath);
         await localFile.writeAsBytes(dataStore);
         _insertBookmarks(filePath, note);
-        Download downloadObject = Download(
-          note.id,
-          filePath,
-          note.title,
-          note.subjectName,
-          note.author,
-          note.view,
-          note.pages,
-          note.size,
-          note.uploadDate,
-        );
-        _downloadService.addDownload(download: downloadObject);
+        // Download downloadObject = Download(
+        //   note.id,
+        //   filePath,
+        //   note.title,
+        //   note.subjectName,
+        //   note.author,
+        //   note.view,
+        //   note.pages,
+        //   note.size,
+        //   note.uploadDate,
+        // );
+        // _downloadService.addDownload(download: downloadObject);
         await Future.delayed(Duration(seconds: 1));
         downloadProgress.value = 0;
         onDownloadedCallback(localFile.path, note);
@@ -380,7 +386,8 @@ class GoogleDriveService {
     var drive = ga.DriveApi(gdriveAuthClient);
     //*Download file
     String fileID = note.GDriveID;
-    ga.Media file = await drive.files.get(fileID, downloadOptions: ga.DownloadOptions.fullMedia);
+    ga.Media file = await drive.files
+        .get(fileID, downloadOptions: ga.DownloadOptions.fullMedia);
     var dir = await ExtStorage.getExternalStoragePublicDirectory(
         ExtStorage.DIRECTORY_DOWNLOADS);
 
@@ -414,7 +421,7 @@ class GoogleDriveService {
       await localFile.writeAsBytes(dataStore);
       await Future.delayed(Duration(seconds: 1));
       downloadProgress.value = 0;
-      onDownloadedCallback(localFile.path,fileName);
+      onDownloadedCallback(localFile.path, fileName);
       log.e("DOWNLOAD DONE");
     });
   }
@@ -675,7 +682,6 @@ uploadFileToGoogleDriveAfterVerification(File fileToUpload, Document docEnum, do
     //Disposes the document
     document.dispose();
   }
-
 }
 
 class GoogleHttpClient extends IOClient {

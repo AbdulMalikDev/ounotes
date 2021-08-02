@@ -7,7 +7,7 @@ import 'package:stacked/stacked.dart';
 
 import 'notes_viewmodel.dart';
 
-class NotesView extends StatefulWidget {
+class   NotesView extends StatefulWidget {
   final String subjectName;
   final String path;
   final String newDocIDUploaded;
@@ -204,7 +204,7 @@ class _NotesViewState extends State<NotesView>
   bool get wantKeepAlive => true;
 
   _initState(NotesViewModel model) async {
-    model.fetchNotesAndVotes(widget.subjectName);
+    model.fetchNotes(widget.subjectName);
     try {
       // model.admobService.shouldAdBeShown();
     } catch (e) {

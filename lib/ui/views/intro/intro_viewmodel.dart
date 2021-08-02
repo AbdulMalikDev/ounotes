@@ -43,7 +43,7 @@ class IntroViewModel extends BaseViewModel {
   }
 
   List<String> buildAndGetDropDownMenuItems(List items) {
-    List<String> i = List();
+    List<String> i = [];
     items.forEach((element) {
       i.add(element);
     });

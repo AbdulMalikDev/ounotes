@@ -27,7 +27,7 @@ class LinksTileView extends StatelessWidget {
                 elevation: 5,
                 contentPadding:
                     const EdgeInsets.symmetric(horizontal: 12.0, vertical: 5),
-                baseColor:Theme.of(context).colorScheme.background,
+                baseColor: Theme.of(context).colorScheme.background,
                 expandedColor: AppStateNotifier.isDarkModeOn
                     ? Theme.of(context).colorScheme.background
                     : Colors.white,
@@ -94,13 +94,6 @@ class LinksTileView extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          Text(
-                            'Subject: $subjectName',
-                            style: Theme.of(context)
-                                .textTheme
-                                .subtitle1
-                                .copyWith(fontSize: 15),
-                          ),
                           SizedBox(
                             height: 10,
                           ),
@@ -116,8 +109,11 @@ class LinksTileView extends StatelessWidget {
                           ),
                           Align(
                             alignment: Alignment.center,
-                            child: FlatButton(
-                              color: Theme.of(context).primaryColor,
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                  primary: Theme.of(context).primaryColor,
+                                  padding:
+                                      EdgeInsets.symmetric(horizontal: 15)),
                               child: Text(
                                 'Open Link',
                                 style: Theme.of(context)
@@ -135,32 +131,51 @@ class LinksTileView extends StatelessWidget {
                     ),
                   ),
                   model.isAdmin
-                            ? 
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                Container(
-                                  child: RaisedButton(
-                                    child: Text("EDIT",
-                                        style: TextStyle(color: Colors.white)),
-                                    color: Colors.blue,
-                                    onPressed: () async {
-                                      await model.navigateToEditView(link);
-                                    },
-                                  ),
+                      ? Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                              TextButton(
+                                onPressed: () async {
+                                  await model.navigateToEditView(link);
+                                },
+                                child: Row(
+                                  children: [
+                                    Icon(Icons.edit, color: Colors.blue),
+                                    SizedBox(
+                                      width: 5,
+                                    ),
+                                    Text(
+                                      "EDIT",
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyText2
+                                          .copyWith(color: Colors.blue),
+                                    )
+                                  ],
                                 ),
-                                Container(
-                                  child: RaisedButton(
-                                    child: Text("DELETE",
-                                        style: TextStyle(color: Colors.white)),
-                                    color: Colors.red,
-                                    onPressed: () async {
-                                      await model.delete(link);
-                                    },
-                                  ),
+                              ),
+                              TextButton(
+                                onPressed: () async {
+                                  await model.delete(link);
+                                },
+                                child: Row(
+                                  children: [
+                                    Icon(Icons.delete, color: Colors.red),
+                                    SizedBox(
+                                      width: 5,
+                                    ),
+                                    Text(
+                                      "DELETE",
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyText2
+                                          .copyWith(color: Colors.red),
+                                    )
+                                  ],
                                 ),
-                              ])
-                            : Container(),
+                              ),
+                            ])
+                      : Container(),
                 ],
               ),
             ),

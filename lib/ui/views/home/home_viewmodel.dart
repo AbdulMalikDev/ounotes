@@ -26,7 +26,6 @@ import 'package:FSOUNotes/services/funtional_services/app_info_service.dart';
 import 'package:FSOUNotes/models/user.dart';
 import 'package:package_info/package_info.dart';
 import 'package:FSOUNotes/app/app.locator.dart';
-import 'package:FSOUNotes/app/app.logger.dart';
 import 'package:FSOUNotes/app/app.router.dart';
 import 'package:FSOUNotes/services/funtional_services/authentication_service.dart';
 
@@ -36,6 +35,8 @@ class HomeViewModel extends BaseViewModel {
   AdmobService _admobService = locator<AdmobService>();
   SubjectsService _subjectsService = locator<SubjectsService>();
   BottomSheetService _bottomSheetService = locator<BottomSheetService>();
+  NavigationService _navigationService = locator<NavigationService>();
+
   ValueNotifier<List<Subject>> get userSubjects =>
       _subjectsService.userSubjects;
   ValueNotifier<List<Subject>> get userSelectedSubjects =>
@@ -58,6 +59,17 @@ class HomeViewModel extends BaseViewModel {
 
   resetUserSelectedSubjects() {
     _subjectsService.resetUserSelectedSubjects();
+  }
+
+  navigateToUserUploadScreen() {
+    _navigationService.navigateTo(
+      Routes.uploadSelectionView,
+      arguments: UploadSelectionViewArguments(),
+    );
+  }
+
+  navigateToRecentlyOpenedSeeAllScreen() {
+    _navigationService.navigateTo(Routes.recentlyAddedNotesView);
   }
 
   deleteSelectedSubjects() {

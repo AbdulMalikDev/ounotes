@@ -55,76 +55,8 @@ class DrawerViewModel extends BaseViewModel {
  bool get isVerifier => _authenticationService.user.isVerifier;
  bool get isAdmin => _authenticationService.user.isAdmin;
 
-  dispatchEmail() async {
-    await EmailService.emailFunc(
-      subject: "OU Notes Feedback",
-      body:
-          "[if you are facing errors please attach Screen Shots or Screen Recordings]",
-    );
-  }
 
-  RateMyApp rateMyApp = RateMyApp(
-    preferencesPrefix: 'rateMyApp_',
-    // minDays: 0, // Show rate popup on first day of install,
-    // minLaunches:
-    //     3, // Show rate popup after 3 launches of app after minDays is passed.
-    // remindDays: 7,
-    // remindLaunches: 10,
-    googlePlayIdentifier: 'com.notes.ounotes',
-    appStoreIdentifier: 'com.notes.ounotes',
-  );
 
-  showRateMyAppDialog(BuildContext context) {
-    rateMyApp.init().then(
-      (_) {
-        rateMyApp.showStarRateDialog(context,
-            title: 'Rate this app', // The dialog title.
-            message:
-                'You like this app ? Then take a little bit of your time to leave a rating :', // The dialog message.
-            // contentBuilder: (context, defaultContent) => content, // This one allows you to change the default dialog content.
-            actionsBuilder: (context, stars) {
-          // Triggered when the user updates the star rating.
-          return [
-            // Return a list of actions (that will be shown at the bottom of the dialog).
-            FlatButton(
-              child: Text('OK'),
-              onPressed: () async {
-                print('Thanks for the ' +
-                    (stars == null ? '0' : stars.round().toString()) +
-                    ' star(s) !');
-                Navigator.pop<RateMyAppDialogButton>(
-                    context, RateMyAppDialogButton.rate);
-                if (stars < 4) {
-                  dispatchEmail();
-                } else {
-                  OpenAppstore.launch(
-                      androidAppId: 'com.notes.ounotes',
-                      iOSAppId: 'com.notes.ounotes');
-                }
-                // This allows to mimic the behavior of the default "Rate" button. See "Advanced > Broadcasting events" for more information :
-                await rateMyApp.callEvent(RateMyAppEventType.rateButtonPressed);
-                Navigator.pop<RateMyAppDialogButton>(
-                    context, RateMyAppDialogButton.rate);
-              },
-            ),
-          ];
-        },
-            ignoreNativeDialog: Platform
-                .isAndroid, // Set to false if you want to show the Apple's native app rating dialog on iOS or Google's native app rating dialog (depends on the current Platform).
-            dialogStyle: DialogStyle(
-              // Custom dialog styles.
-              titleAlign: TextAlign.center,
-              messageAlign: TextAlign.center,
-              messagePadding: EdgeInsets.only(bottom: 20),
-            ),
-            starRatingOptions:
-                StarRatingOptions(), // Custom star bar rating options.
-            onDismissed:
-                () {} // Called when the user dismissed the dialog (either by taping outside or by pressing the "back" button).
-            );
-      },
-    );
-  }
 
   updateAppTheme(boolVal) async {
     _appStateNotifier.updateTheme(boolVal);
@@ -141,9 +73,6 @@ class DrawerViewModel extends BaseViewModel {
     _navigationService.navigateTo(Routes.settingsView);
   }
 
-  navigateToAboutUsScreen(Document p1) {
-    _navigationService.navigateTo(Routes.aboutUsView);
-  }
 
   navigateToUserUploadScreen(Document p1) {
     _navigationService.navigateTo(
@@ -157,14 +86,14 @@ class DrawerViewModel extends BaseViewModel {
   }
 
   navigateToFDIntroScreen(Document path) {
-    _navigationService.navigateTo(Routes.fDInputView,
-        arguments: FDInputViewArguments(path: path));
+    // _navigationService.navigateTo(Routes.fDInputView,
+    //     arguments: FDInputViewArguments(path: path));
   }
 
-  navigateToAdminUploadScreen(Document path) {
-    _navigationService.navigateTo(Routes.adminView,
-        arguments: FDInputViewArguments(path: path));
-  }
+  // navigateToAdminUploadScreen(Document path) {
+  //   _navigationService.navigateTo(Routes.adminView,
+  //       arguments: FDInputViewArguments(path: path));
+  // }
   navigateToVerifierPanelScreen(Document path) {
     _navigationService.navigateTo(Routes.verifierPanelView);
   }
@@ -180,75 +109,6 @@ class DrawerViewModel extends BaseViewModel {
     return _user;
   }
 
-  handleSignOut(BuildContext context) async {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
-          ),
-          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-          title: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              Expanded(
-                child: Text(
-                  "Are you sure, you want to logout?",
-                  style: Theme.of(context)
-                      .textTheme
-                      .headline6
-                      .copyWith(fontSize: 20),
-                  overflow: TextOverflow.clip,
-                ),
-              ),
-            ],
-          ),
-          actions: <Widget>[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                FlatButton(
-                  child: Text(
-                    "GO BACK",
-                    style: Theme.of(context)
-                        .textTheme
-                        .subtitle1
-                        .copyWith(fontSize: 15),
-                  ),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
-                FlatButton(
-                  child: Text(
-                    "PROCEED",
-                    style: Theme.of(context)
-                        .textTheme
-                        .subtitle1
-                        .copyWith(fontSize: 15),
-                  ),
-                  onPressed: () async {
-                    Navigator.of(context).pop();
-                    setBusy(true);
-                    await _authenticationService.handleSignOut().then((value) {
-                      if (value ?? true) {
-                        _navigationService.navigateTo(Routes.introView);
-                      } else
-                        Fluttertoast.showToast(
-                            msg: "Sign Out failed ,please try again later");
-                    });
-                    setBusy(false);
-                    notifyListeners();
-                  },
-                ),
-              ],
-            ),
-          ],
-        );
-      },
-    );
-  }
 
   openDownloadBox() async {
     await Hive.openBox("downloads");

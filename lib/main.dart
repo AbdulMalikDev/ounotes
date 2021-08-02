@@ -2,12 +2,14 @@ import 'dart:async';
 
 import 'package:FSOUNotes/AppTheme/AppStateNotifier.dart';
 import 'package:FSOUNotes/AppTheme/AppTheme.dart';
+import 'package:FSOUNotes/models/recently_open_notes.dart';
 import 'package:FSOUNotes/services/funtional_services/admob_service.dart';
 import 'package:FSOUNotes/services/funtional_services/crashlytics_service.dart';
 import 'package:FSOUNotes/services/funtional_services/google_in_app_payment_service.dart';
 import 'package:FSOUNotes/services/funtional_services/notification_service.dart';
 import 'package:FSOUNotes/services/funtional_services/remote_config_service.dart';
 import 'package:FSOUNotes/ui/widgets/smart_widgets/bottom_sheet/bottom_sheet_ui_view.dart';
+import 'package:animated_theme_switcher/animated_theme_switcher.dart';
 import 'package:feature_discovery/feature_discovery.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
@@ -28,6 +30,7 @@ import 'package:wiredash/wiredash.dart';
 import 'app/app.locator.dart';
 import 'app/app.logger.dart';
 import 'app/app.router.dart';
+import 'enums/constants.dart';
 import 'models/download.dart';
 
 Logger log = getLogger("main");
@@ -42,15 +45,17 @@ void main() async {
   final appDir = await getApplicationDocumentsDirectory();
   Hive.init(appDir.path);
   Hive.registerAdapter<Download>(DownloadAdapter());
-  await Hive.openBox("OUNOTES");
-  await Hive.openBox('downloads');
+  Hive.registerAdapter<RecentlyOpenedNotes>(RecentlyOpenedNotesAdapter());
+  await Hive.openBox(Constants.ouNotes);
+  await Hive.openBox<Download>(Constants.downloads);
+  await Hive.openBox<RecentlyOpenedNotes>(Constants.recentlyOpenedNotes);
   RemoteConfigService _remoteConfigService = locator<RemoteConfigService>();
   // CrashlyticsService _crashlyticsService = locator<CrashlyticsService>();
   // AdmobService _admobService = locator<AdmobService>();
   // InAppPaymentService _inAppPaymentService= locator<InAppPaymentService>();
   // NotificationService _notificationService = locator<NotificationService>();
   // GoogleInAppPaymentService _googleInAppPaymentService =
-      // locator<GoogleInAppPaymentService>();
+  // locator<GoogleInAppPaymentService>();
   // await _inAppPaymentService.fetchData();
   await _remoteConfigService.init();
   // await _admobService.init();
@@ -162,22 +167,32 @@ class MyApp extends StatelessWidget {
     return ViewModelBuilder<AppStateNotifier>.reactive(
       builder: (context, model, child) => FeatureDiscovery(
         child: Wiredash(
-          projectId: _remoteConfigService.remoteConfig
-              .getString("WIREDASH_PROJECT_ID"),
-          secret:
-              _remoteConfigService.remoteConfig.getString("WIREDASH_SECRET"),
+          projectId: "Sometid",
+          secret: "sdsdsd",
+          // projectId: _remoteConfigService.remoteConfig
+          //     .getString("WIREDASH_PROJECT_ID"),
+          // secret:
+          //     _remoteConfigService.remoteConfig.getString("WIREDASH_SECRET"),
           navigatorKey: StackedService.navigatorKey,
-          child: MaterialApp(
-            navigatorObservers: <NavigatorObserver>[observer],
-            title: 'OU Notes',
-            debugShowCheckedModeBanner: false,
-            theme: AppTheme.lightTheme,
-            darkTheme: AppTheme.darkTheme,
-            themeMode: AppStateNotifier.isDarkModeOn
-                ? ThemeMode.dark
-                : ThemeMode.light,
-            onGenerateRoute: StackedRouter().onGenerateRoute,
-            navigatorKey: StackedService.navigatorKey,
+          child: ThemeProvider(
+            initTheme: AppStateNotifier.isDarkModeOn
+                ? AppTheme.darkTheme
+                : AppTheme.lightTheme,
+            child: Builder(builder: (context) {
+              return MaterialApp(
+                navigatorObservers: <NavigatorObserver>[observer],
+                title: 'OU Notes',
+                debugShowCheckedModeBanner: false,
+                theme: ThemeProvider.of(context),
+                // theme: AppTheme.lightTheme,
+                // darkTheme: ThemeProvider.of(context),
+                // themeMode: AppStateNotifier.isDarkModeOn
+                //     ? ThemeMode.dark
+                //     : ThemeMode.light,
+                onGenerateRoute: StackedRouter().onGenerateRoute,
+                navigatorKey: StackedService.navigatorKey,
+              );
+            }),
           ),
         ),
       ),

@@ -1,13 +1,12 @@
 part of './../firestore_service.dart';
 
-extension FirestoreReads on FirestoreService{
-
+extension FirestoreReads on FirestoreService {
   areUsersAllowed() async {
     bool areUsersAllowedToUpload = true;
-    QuerySnapshot snapshot =
-        await _confidentialCollectionReference.get();
+    QuerySnapshot snapshot = await _confidentialCollectionReference.get();
     snapshot.docs.forEach((doc) {
-      areUsersAllowedToUpload = (doc.data() as Map)["areUsersAllowedToUpload"] ?? true;
+      areUsersAllowedToUpload =
+          (doc.data() as Map)["areUsersAllowedToUpload"] ?? true;
     });
     log.w("Users allowed to upload : $areUsersAllowedToUpload");
     return areUsersAllowedToUpload;
@@ -21,8 +20,7 @@ extension FirestoreReads on FirestoreService{
 
   Future<User> refreshUser() async {
     User user = await _sharedPreferencesService.getUser();
-    DocumentSnapshot doc =
-        await _usersCollectionReference.doc(user.id).get();
+    DocumentSnapshot doc = await _usersCollectionReference.doc(user.id).get();
     User newUser = User.fromData(doc.data());
     _sharedPreferencesService.saveUserLocally(newUser);
     return newUser;
@@ -30,8 +28,7 @@ extension FirestoreReads on FirestoreService{
 
   loadSubjectsFromFirebase() async {
     try {
-      QuerySnapshot snapshot =
-          await _subjectsCollectionReference.get();
+      QuerySnapshot snapshot = await _subjectsCollectionReference.get();
       List<Subject> subjects =
           snapshot.docs.map((doc) => Subject.fromData(doc.data())).toList();
       subjects.removeWhere((sub) => sub.name == null.toString());
@@ -65,7 +62,6 @@ extension FirestoreReads on FirestoreService{
       notes.forEach((note) {
         noOfVotes[note.title] = note.votes;
       });
-      _voteServie.setNumberOfVotes = noOfVotes;
 
       return notes;
     } catch (e) {
