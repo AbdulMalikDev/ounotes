@@ -2,8 +2,8 @@ part of './../firestore_service.dart';
 
 extension FirestoreDeletes on FirestoreService{
 
-  deleteReport(Report report) async {
-    await _reportCollectionReference.doc(report.id).delete();
+  deleteReport(Report report,{String id}) async {
+    await _reportCollectionReference.doc(report?.id ?? id).delete();
   }
 
   deleteUploadLog(UploadLog report) async {
@@ -121,7 +121,7 @@ extension FirestoreDeletes on FirestoreService{
     }
   }
 
-  deleteLinkById(int subId,String id) async {
+  deleteLinkById(String id) async {
     // await _subjectsCollectionReference
     //       .document(subId.toString())
     //       .collection(Constants.firebase_links)

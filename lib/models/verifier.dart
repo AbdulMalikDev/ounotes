@@ -38,7 +38,7 @@ class  Verifier {
     branch = user.branch;
     college = user.college;
     photoUrl = user.photoUrl;
-    fcmToken = user.fcmToken ?? "";
+    if(user.fcmToken!=null)fcmToken = user.fcmToken;
     isAdmin = user.isAdmin;
     isBanned = false;
   }

@@ -17,18 +17,19 @@ class UploadLog {
   String uploader_name;
   bool notificationSent = false;
   bool isReport = false;
+  bool isPassed = false;
 
   //Addition info or comments from verifiers to be viewed by admin
   String additionalInfo;
   List additionalInfoFromVerifiers;
 
-  bool isVerifierVerified;
+  bool isVerifierVerified = false;
   // If uploaded by Verifier wont show to admins
   bool isUploadedByVerifier;
 
   String verifier_id;
 
-  bool isAdminVerified;
+  bool isAdminVerified = false;
 
   UploadLog(
       {this.id,
@@ -47,7 +48,6 @@ class UploadLog {
       subjectName                 = data['subjectName'].toString();
       id                          = data['id'].toString() ?? "";
       type                        = data["type"].toString();
-      date                        = _parseUploadDate(data["uploadedAt"]);
       email                       = data["email"].toString();
       size                        = data["size"].toString() ?? "0";
       uploader_id                 = data["uploader_id"];
@@ -57,8 +57,10 @@ class UploadLog {
       notificationSent            = data["notificationSent"] ?? false;
       isVerifierVerified          = data["isVerifierVerified"] ?? false;
       isAdminVerified             = data["isAdminVerified"] ?? false;
-      isReport             = data["isReport"];
-
+      isReport             = data["isReport"] ?? false;
+      isPassed             = data["isPassed"] ?? false;
+      log.e(isReport);
+      date                        = data["uploadedAt"]!=null ? _parseUploadDate(data["uploadedAt"]) : null;
     } catch (e) {
       log.e("While DESERIALIZING uploadLog model from Firebase , Error occurred");
       String error;
@@ -94,6 +96,7 @@ class UploadLog {
       "isVerifierVerified"         : isVerifierVerified,
       "isAdminVerified"            : isAdminVerified,
       "isReport"            : isReport,
+      "isPassed"            : isPassed,
       "additionalInfoFromVerifiers": additionalInfoFromVerifiers,
     };
   }

@@ -170,6 +170,7 @@ extension FirestoreReads on FirestoreService{
           .orderBy("uploadedAt", descending: true)
           .get();
       }
+      log.e(snapshot.docs.length);
       List<UploadLog> uploadLogs = snapshot.docs
           .map((doc) => UploadLog.fromData(doc.data()))
           .toList();
@@ -243,7 +244,6 @@ extension FirestoreReads on FirestoreService{
   }
 
   Future<User> getUserById(String id) async {
-    log.e("User id : " + id);
     DocumentSnapshot doc = await _usersCollectionReference.doc(id).get();
     return User.fromData(doc.data());
   }

@@ -103,6 +103,13 @@ class ReportedDocumentsView extends StatelessWidget {
                                           ),
                                       TextSpan(
                                         text: 'Press this to forward this document to the admin. This is typically used when there is a confusion. Enter your query in the additional info input to voice your concern THAN press the button.\n'),
+                                      TextSpan(text:'\n'),
+                                      TextSpan(
+                                          text:'USELESS REPORT : ',
+                                          style: TextStyle(fontWeight: FontWeight.bold)
+                                          ),
+                                      TextSpan(
+                                        text: 'Press this when you think the document is acceptable and the user reported it for an invalid reason.This will delete the report but not the document.\n'),
                                       // TextSpan(text:'\n'),
                                     ],
                                   ),
@@ -248,6 +255,22 @@ class ReportedDocumentsView extends StatelessWidget {
                                                         child: FittedBox(child: Text("PASS",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),)),
                                                         onPressed: () {
                                                           model.pass(report,index,additionalInfoController);
+                                                        },
+                                                      ),
+                                                          )),
+                                                          
+                                                    ],
+                                                  ),
+                                                  Row(
+                                                    children: [
+                                                      Expanded(
+                                                          child: Padding(
+                                                            padding: const EdgeInsets.all(8.0),
+                                                            child: RaisedButton(
+                                                            color: Colors.teal,
+                                                        child: FittedBox(child: Text("USELESS REPORT",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),)),
+                                                        onPressed: () {
+                                                          model.uselessReport(report,index);
                                                         },
                                                       ),
                                                           )),

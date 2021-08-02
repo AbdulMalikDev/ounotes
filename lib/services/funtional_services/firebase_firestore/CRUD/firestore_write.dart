@@ -264,22 +264,25 @@ extension FirestoreWrites on FirestoreService{
     }
   }
 
-  updateVerifierInFirebase(Verifier user, {bool updateLocally = true}) async {
+  updateVerifierInFirebase(Verifier user, {bool updateNumbers = true}) async {
+    log.i("Verifier being updated in firebase");
     Map<String, dynamic> data = user.toJson();
+    if(updateNumbers){
     data.addAll({
       "docsVerified": FieldValue.arrayUnion([user.docIdBeingVerified]),
       "numOfVerifiedDocs": FieldValue.increment(user.numOfVerifiedDocs),
       "numOfReportedDocs": FieldValue.increment(user.numOfReportedDocs),
-    });
+    });}
+
     try {
-      if (user != null && user.docIdBeingVerified!=null){
+      // if (user != null && user.docIdBeingVerified!=null){
         log.e(user.id);
         await _verifiersCollectionReference
             .doc(user.id)
-            .set(user.toJson(), SetOptions(merge: true));
-      } else {
-        log.e("User is Null, not found in Local Storage");
-      }
+            .set(data, SetOptions(merge: true));
+      // } else {
+      //   log.e("Verifier Null");
+      // }
     } on Exception catch (e) {
       log.e(e.toString());
     }

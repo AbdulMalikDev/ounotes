@@ -128,9 +128,8 @@ class UploadLogDetailView extends StatelessWidget {
                                   margin: EdgeInsets.symmetric(
                                       horizontal: 20, vertical: 10),
                                   child: Card(
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .background,
+                                    color: logItem.isReport??false?Colors.red[200] : Colors.green[200],
+                                      shadowColor: logItem.isReport??false?Colors.red[400] : Colors.green[500],
                                     elevation: 10,
                                     child: ListTile(
                                       contentPadding: EdgeInsets.all(15),
@@ -427,6 +426,21 @@ class UploadLogDetailView extends StatelessWidget {
                                                           ],
                                                         ),
                                                       ),
+                                                      Text(""),
+                                                      Text("Verifier Additional Info : ",style: TextStyle(fontWeight: FontWeight.w600),),
+                                                      logItem?.additionalInfoFromVerifiers == null
+                                                      ? Container()
+                                                      : Column(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          children: logItem
+                                                              .additionalInfoFromVerifiers
+                                                              .map((text) =>
+                                                                  Text(text))
+                                                              .toList(),
+                                                        ),
+                                                  Text(""),
                                                     ],
                                                   );
                                                 } else {

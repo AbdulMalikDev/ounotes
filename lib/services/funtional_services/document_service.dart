@@ -11,6 +11,7 @@ import 'package:FSOUNotes/models/UploadLog.dart';
 import 'package:FSOUNotes/models/link.dart' as linkModel;
 import 'package:FSOUNotes/models/document.dart';
 import 'package:FSOUNotes/models/notes.dart';
+import 'package:FSOUNotes/models/report.dart';
 import 'package:FSOUNotes/models/subject.dart';
 import 'package:FSOUNotes/models/verifier.dart';
 import 'package:FSOUNotes/services/funtional_services/authentication_service.dart';
@@ -39,8 +40,8 @@ class DocumentService{
 
   ValueNotifier<double> downloadProgress = new ValueNotifier(0);
 
-
-  viewDocument(UploadLog logItem) async {
+  ///Function to view any document regardless of where it is uploaded
+  viewDocument(UploadLog logItem,{bool viewInBrowser = false}) async {
     //>> Extract document from firebase
     AbstractDocument doc = await _firestoreService.getDocumentById(logItem.subjectName, logItem.id, Constants.getDocFromConstant(logItem.type));
     Document docType = Constants.getDocFromConstant(logItem.type);
@@ -53,75 +54,17 @@ class DocumentService{
     
     if(doc.GDriveLink == null){
       //>> Document exists in firebase storage
-      await viewDocumentfromFirebase(logItem,doc);
+      await _viewDocumentfromFirebase(logItem,doc);
     }else{
       //>> Document exists in Google Drive storage
-      await viewDocumentFromGoogleDrive(logItem,doc);
+      await _viewDocumentFromGoogleDrive(logItem,doc,viewInBrowser);
 
     }
   }
 
-
-  viewDocumentfromFirebase(UploadLog logItem, AbstractDocument doc) async {
-    log.i("Viewing document from Firebase");
-    downloadProgress.value = 0;
-    File file = await _cloudStorageService.downloadFile(
-      notesName: logItem.fileName, 
-      subName: logItem.subjectName,
-      type: logItem.type,
-      note: doc,
-    );
-    String PDFpath = file?.path;
-    log.e("FilePath : " + file.path);
-    if (PDFpath == null) {
-      await Fluttertoast.showToast(
-          msg:
-              'An error has occurred while downloading document from Firebase...Please Verify your internet connection.');
-      return;
-    }
-    _navigationService.navigateTo(Routes.pDFScreen,
-        arguments: PDFScreenArguments(pathPDF: PDFpath, askBookMarks: false));
-
-  }
-
-  viewDocumentFromGoogleDrive(UploadLog logItem,AbstractDocument doc) async {
-    log.i("Viewing document from Google Drive");
-    Document docType = Constants.getDocFromConstant(logItem.type);
-
-    if(docType != Document.Notes){
-      Helper.launchURL(doc.GDriveLink);
-    }
-
-    //>> Download Notes from GDrive [As of time of writing this function was limited to Notes only]
-    try {
-      await _googleDriveService.downloadFile(
-        loading:downloadProgress,
-        note: doc,
-        startDownload: () {
-        },
-        onDownloadedCallback: (path, note) {
-          _navigationService.navigateTo(Routes.pDFScreen,
-              arguments: PDFScreenArguments(
-                  pathPDF: path, doc: note, askBookMarks: false));
-        },
-      );
-      return;
-    } catch (e) {
-      Fluttertoast.showToast(
-          msg: "An error Occurred while downloading pdf..." +
-              "Please check you internet connection and try again later");
-      return;
-    }
-
-
-  }
-
-  void _viewLink(linkModel.Link link) async {
-    FlutterClipboard.copy(link.linkUrl);
-    await _dialogService.showDialog(title: "Link Content" , description: link.linkUrl);
-  }
-
-
+  /// Used when the verifier thinks the document should be uploaded
+  /// 
+  /// Typically invoked from the Verifier Panel > Docs to Verify Screen
   Future<UploadLog> verifyDocument(UploadLog logItem) async {
 
     SheetResponse response = await _bottomSheetService.showBottomSheet(title: "Are you sure?",description: "");
@@ -171,6 +114,9 @@ class DocumentService{
     return logItem;
   }
 
+  /// Used when the verifier is confused and wants to forward the document to the admin
+  /// 
+  /// Typically invoked from the Verifier Panel Screens
   Future<UploadLog> passDocument(UploadLog logItem,String additionalInfo) async {
     SheetResponse response = await _bottomSheetService.showBottomSheet(title: "Are you sure?",description: "");
     if(response==null || !response.confirmed)return null;
@@ -178,6 +124,7 @@ class DocumentService{
     logItem.verifier_id = _authenticationService.user.id;
     logItem.additionalInfo = additionalInfo;
     logItem.isVerifierVerified = true;
+    log.e(logItem.isPassed);
     _firestoreService.updateDocument(logItem, Document.UploadLog);
     Verifier verifier = _updateVerifier(Verifier.fromUser(_authenticationService.user),logItem.id); 
     await _firestoreService.updateVerifierInFirebase(verifier);
@@ -185,14 +132,11 @@ class DocumentService{
     return logItem;
   }
 
-
-  Verifier _updateVerifier(Verifier verifier,id,{bool isReport = false}){
-    if(!isReport){verifier.numOfVerifiedDocs = 1;verifier.numOfReportedDocs = 0;}
-    else {verifier.numOfReportedDocs = 1;verifier.numOfVerifiedDocs = 0;}
-    verifier.docIdBeingVerified = id;
-    return verifier;
-  }
-
+  /// Used when the verifier thinks the document should be deleted
+  /// essentially agreeing with the user who has reported this document.
+  /// The document wont be deleted but it will be forwarded to the admin for one last check.
+  /// 
+  /// Typically invoked from the Verifier Panel > Rerported Docs Screen
   deleteDocumentForVerifier(UploadLog logItem) async {
     SheetResponse response = await _bottomSheetService.showBottomSheet(title: "Are you sure?",description: "");
     if(response==null || !response.confirmed)return null;
@@ -201,9 +145,156 @@ class DocumentService{
     logItem.isVerifierVerified = true;
     _firestoreService.updateDocument(logItem, Document.UploadLog);
     Verifier verifier = _updateVerifier(Verifier.fromUser(_authenticationService.user),logItem.id,isReport: true);
-    log.e(verifier.toJson()); 
     await _firestoreService.updateVerifierInFirebase(verifier);
     await _bottomSheetService.showBottomSheet(title: "FORWARDED TO ADMIN",description: "Document has been passed to admin ✔️ ");
+    await _firestoreService.deleteReport(null,id:logItem.id);
     return logItem;
   }
+
+  /// Function to delete reports that are useless
+  deleteReport(Report report) async {
+    SheetResponse response = await _bottomSheetService.showBottomSheet(title: "Are you sure?",description: "");
+    if(response==null || !response.confirmed)return null;
+    Verifier verifier = _updateVerifier(Verifier.fromUser(_authenticationService.user),report.id,isReport: true);
+    await _firestoreService.deleteReport(report);
+    await _firestoreService.updateVerifierInFirebase(verifier);
+    await _bottomSheetService.showBottomSheet(title: "REPORT DELETED",description: "Nice Work ✔️ ");
+    return report;
+  }
+  
+  /// Function to upload any document
+  uploadDocument(UploadLog logItem) async {
+    //>> Extract document from firebase
+    AbstractDocument doc = await _firestoreService.getDocumentById(logItem.subjectName, logItem.id, Constants.getDocFromConstant(logItem.type));
+    Document docType = Constants.getDocFromConstant(logItem.type);
+
+    if(docType == Document.Links){
+      log.i("Link being shown");
+      await _uploadLink(doc);
+      return;
+    }
+    
+    if(doc.GDriveLink == null){
+      //>> Document exists in firebase storage
+      File file = await _viewDocumentfromFirebase(logItem, doc,navigate: false);
+      await _googleDriveService.uploadFileToGoogleDriveAfterVerification(file, docType, doc);
+      _dialogService.showDialog(title: "OUTPUT" , description: "");
+    }else{
+      //>> Document exists in Google Drive storage
+      await _firestoreService.updateDocument(doc, Constants.getDocFromConstant(logItem.type));
+
+    }
+    
+  }
+
+  deleteDocument(UploadLog logItem) async {
+    try {
+      SheetResponse response = await _bottomSheetService.showBottomSheet(title: "Are you sure you want to delete?",description: "");
+      if(response==null || !response.confirmed)return null;
+      //>> Extract document from firebase
+      AbstractDocument doc = await _firestoreService.getDocumentById(logItem.subjectName, logItem.id, Constants.getDocFromConstant(logItem.type));
+      Document docType = Constants.getDocFromConstant(logItem.type);
+
+      if(docType == Document.Links){
+        log.i("Link being shown");
+        await _deleteLink(doc);
+        return;
+      }
+      if(doc==null){log.e("Doc null");return;}
+      
+      if(doc.GDriveLink == null){
+        await _cloudStorageService.deleteDocument(doc);
+      }else{
+        await _googleDriveService.deleteFile(doc: doc);
+        _dialogService.showDialog(title: "Deleted" , description: "Success");
+      }
+    } catch (e) {
+       _bottomSheetService.showBottomSheet(
+        title: "OOPS",
+        description: e.toString(),
+      );
+    }
+  }
+
+  Verifier _updateVerifier(Verifier verifier,id,{bool isReport = false}){
+    if(!isReport){verifier.numOfVerifiedDocs = 1;verifier.numOfReportedDocs = 0;}
+    else {verifier.numOfReportedDocs = 1;verifier.numOfVerifiedDocs = 0;}
+    verifier.docIdBeingVerified = id;
+    return verifier;
+  }
+
+   Future<File> _viewDocumentfromFirebase(UploadLog logItem, AbstractDocument doc,{bool navigate = true}) async {
+    log.i("Viewing document from Firebase");
+    downloadProgress.value = 0;
+    File file = await _cloudStorageService.downloadFile(
+      notesName: logItem.fileName, 
+      subName: logItem.subjectName,
+      type: logItem.type,
+      note: doc,
+    );
+    String PDFpath = file?.path;
+    log.e("FilePath : " + file.path);
+    if (PDFpath == null) {
+      await Fluttertoast.showToast(
+          msg:
+              'An error has occurred while downloading document from Firebase...Please Verify your internet connection.');
+      return null;
+    }
+    if(navigate)_navigationService.navigateTo(Routes.pDFScreen,
+        arguments: PDFScreenArguments(pathPDF: PDFpath, askBookMarks: false));
+    return file;
+
+  }
+
+  _viewDocumentFromGoogleDrive(UploadLog logItem,AbstractDocument doc,bool viewInBrowser) async {
+    log.i("Viewing document from Google Drive");
+    Document docType = Constants.getDocFromConstant(logItem.type);
+
+    if(viewInBrowser){Helper.launchURL(doc.GDriveLink);return;}
+
+    if(docType != Document.Notes){
+      Helper.launchURL(doc.GDriveLink);
+      return;
+    }
+
+    //>> Download Notes from GDrive [As of time of writing this function was limited to Notes only]
+    try {
+      await _googleDriveService.downloadFile(
+        loading:downloadProgress,
+        note: doc,
+        startDownload: () {
+        },
+        onDownloadedCallback: (path, note) {
+          _navigationService.navigateTo(Routes.pDFScreen,
+              arguments: PDFScreenArguments(
+                  pathPDF: path, doc: note, askBookMarks: false));
+        },
+      );
+      return;
+    } catch (e) {
+      Fluttertoast.showToast(
+          msg: "An error Occurred while downloading pdf..." +
+              "Please check you internet connection and try again later");
+      return;
+    }
+
+
+  }
+
+  void _viewLink(linkModel.Link link) async {
+    FlutterClipboard.copy(link.linkUrl);
+    await _dialogService.showDialog(title: "Link Content" , description: link.linkUrl);
+  }
+
+  _uploadLink(linkModel.Link link) async {
+    if(link.uploaded == true){await _dialogService.showDialog(title: "ERROR" , description: "ALREADY UPLOADED");return;}
+    link.uploaded = true;
+    await _firestoreService.updateDocument(link, Document.Links);
+  }
+
+  _deleteLink(linkModel.Link link) async {
+    await _firestoreService.deleteLinkById(link.id);
+    SheetResponse response = await _bottomSheetService.showBottomSheet(title: "Link Deleted ✔️",description: "");
+  }
+
 }

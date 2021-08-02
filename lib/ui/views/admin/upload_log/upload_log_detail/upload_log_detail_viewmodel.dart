@@ -73,7 +73,7 @@ class UploadLogDetailViewModel extends FutureViewModel {
   viewDocument(UploadLog logItem) async {
     setBusy(true);
     log.e("going in");
-    await _documentService.viewDocument(logItem);
+    await _documentService.viewDocument(logItem,viewInBrowser: true);
     // NotesViewModel notesViewModel = NotesViewModel();
     //  AbstractDocument doc = await _firestoreService.getDocumentById(logItem.subjectName, logItem.id, Constants.getDocFromConstant(logItem.type));
     //  log.e(doc?.path);
@@ -91,6 +91,15 @@ class UploadLogDetailViewModel extends FutureViewModel {
   uploadDocument(UploadLog logItem) async {
     setBusy(true);
     try {
+
+      if(logItem.isReport){
+        _bottomSheetService.showBottomSheet(
+          title: "OOPS",
+          description: "This is a report ⚠️ !",
+        );  
+        return;
+      }
+
       List<String> docsToUploadIds;
       docsToUploadIds = OnboardingService.box.get("upload_docs") ?? [];
       if (!docsToUploadIds.contains(logItem.id))
@@ -98,21 +107,6 @@ class UploadLogDetailViewModel extends FutureViewModel {
       OnboardingService.box.put("upload_docs", docsToUploadIds);
       log.e(docsToUploadIds);
       Fluttertoast.showToast(msg: "Added to upload list !");
-      // GoogleDriveService _googleDriveService = locator<GoogleDriveService>();
-      // dynamic doc = await _firestoreService.getDocumentById(logItem.subjectName,logItem.id,Constants.getDocFromConstant(logItem.type));
-      // if(doc == null){await _dialogService.showDialog(title:"Oops",description: "Can't find this document");setBusy(false);return;}
-
-      // if (logItem.type == Constants.links){
-      //   if(doc.uploaded == true){await _dialogService.showDialog(title: "ERROR" , description: "ALREADY UPLOADED");setBusy(false);return;}
-      //   doc.uploaded = true;
-      //   await _firestoreService.updateDocument(doc, Document.Links);
-      // }else{
-
-      //   if(doc.GDriveLink != null){await _dialogService.showDialog(title: "ERROR" , description: "ALREADY UPLOADED");setBusy(false);return;}
-      //   String result = await _googleDriveService.processFile(doc: doc, docEnum:Constants.getDocFromConstant(logItem.type),note: doc,type: doc.type);
-      //   _dialogService.showDialog(title: "OUTPUT" , description: result);
-      // }
-      // deleteLogItem(logItem);
 
     } catch (e) {
       _bottomSheetService.showBottomSheet(
@@ -125,40 +119,11 @@ class UploadLogDetailViewModel extends FutureViewModel {
 
   void deleteDocument(UploadLog logItem) async {
     setBusy(true);
-    log.e(logItem);
-    log.e(logItem.type);
-
-    if (logItem.type == Constants.links) {
-      log.e("document to be deleted is a link");
-      _deleteDocument(logItem);
-      setBusy(false);
-      return;
-    }
-
-    GoogleDriveService _googleDriveService = locator<GoogleDriveService>();
-    dynamic doc = await _firestoreService.getDocumentById(logItem.subjectName,logItem.id,Constants.getDocFromConstant(logItem.type));
-    if(doc!=null)
-    {
-      await _googleDriveService.deleteFile(doc: doc);
-      _dialogService.showDialog(title: "Deleted" , description: "Success");
-    }
+    await _documentService.deleteDocument(logItem);
     deleteLogItem(logItem,showDialog: false);
     setBusy(false);
   }
-
-  void _showLink(UploadLog logItem) async {
-    Subject sub = _subjectsService.getSubjectByName(logItem.subjectName);
-    log.e(sub);
-    Link link = await _firestoreService.getLinkById(sub.id,logItem.id);
-    log.e(link.linkUrl);
-    _dialogService.showDialog(title: "Link Content" , description: link.linkUrl);
-  }
-
-  void _deleteDocument(UploadLog logItem) async {
-    Subject sub = _subjectsService.getSubjectByName(logItem.subjectName);
-    await _firestoreService.deleteLinkById(sub.id,logItem.id);
-  }
-
+  
   Future<String> getUploadStatus(UploadLog logItem) async {
     var document = await _firestoreService.getDocumentById(logItem.subjectName,logItem.id,Constants.getDocFromConstant(logItem.type));
     if (logItem.type != Constants.links){
@@ -192,12 +157,10 @@ class UploadLogDetailViewModel extends FutureViewModel {
   }
 
   void navigateToEditScreen(UploadLog logItem) {
-    // _navigationService.navigateTo(
-    //   Routes.uploadLogEditView,
-    //   arguments: UploadLogEditViewArguments(uploadLog: logItem),
-    // );
-    log.e(_remoteConfigService.remoteConfig.getString("GDRIVE"));
-    log.e(_remoteConfigService.remoteConfig.getString("APP_VERSION"));
+    _navigationService.navigateTo(
+      Routes.uploadLogEditView,
+      arguments: UploadLogEditViewArguments(uploadLog: logItem),
+    );
   }
 
   //  void accept(UploadLog uploadLog) async {

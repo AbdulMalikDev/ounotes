@@ -226,8 +226,8 @@ class GoogleDriveService {
         doc = _setLinkToDocument(
             doc, GDrive_URL, response.id, subjectSubFolderID, docEnum);
         log.w(doc.toJson());
-        // update in firestore with GDrive Link
-        await _firestoreService.updateDocument(doc, docEnum);
+        // // update in firestore with GDrive Link
+        // await _firestoreService.updateDocument(doc, docEnum);
 
 
       } catch (e) {
@@ -418,6 +418,89 @@ class GoogleDriveService {
       log.e("DOWNLOAD DONE");
     });
   }
+
+//This function is used to upload verified documents that are in Firebase, to Google Drive
+uploadFileToGoogleDriveAfterVerification(File fileToUpload, Document docEnum, doc) async {
+  try {
+      ga.File gDriveFileToUpload;
+      ga.File response;
+      String GDrive_URL;
+      AbstractDocument note = doc;
+
+      //>> 1.4 Compress PDF
+      String outputPath = await getOutputPath();
+      log.e(outputPath);
+      await PdfCompressor.compressPdfFile(fileToUpload.path, outputPath, CompressQuality.MEDIUM);
+      fileToUpload = File(outputPath);
+
+      //>> 1.5 Upload to Google Drive 
+      
+      log.i("Uploading File to Google Drive");
+
+      try {
+
+        //>> 1.5.1 initialize http client and GDrive API
+        final accountCredentials = new ServiceAccountCredentials.fromJson(
+            _remote.remoteConfig.getString("GDRIVE"));
+        final scopes = ['https://www.googleapis.com/auth/drive'];
+        AutoRefreshingAuthClient gdriveAuthClient =
+            await clientViaServiceAccount(accountCredentials, scopes);
+        var drive = ga.DriveApi(gdriveAuthClient);
+        Subject subject = _subjectsService.getSubjectByName(doc.subjectName);
+        String subjectSubFolderID = _getFolderIDForType(subject, docEnum);
+        if (subject == null) {
+          log.e("Subject is Null");
+          return;
+        }
+
+        //>> 1.5.2 Set metadata for the GDrive File
+        gDriveFileToUpload = ga.File();
+        gDriveFileToUpload.parents = [subjectSubFolderID];
+        gDriveFileToUpload.name = doc.title;
+        gDriveFileToUpload.copyRequiresWriterPermission = true;
+
+        //>> 1.5.3 Commence Upload
+        log.e(fileToUpload);
+        response = await drive.files.create(
+          gDriveFileToUpload,
+          uploadMedia: ga.Media(fileToUpload.openRead(), fileToUpload.lengthSync()),
+        );
+
+        ///>> 1.5.4 Create and Set Data to access the uploaded file
+        GDrive_URL =
+            "https://drive.google.com/file/d/${response.id}/view?usp=sharing";
+        log.w("GDrive Link : " + GDrive_URL);
+        doc = _setLinkToDocument(
+            doc, GDrive_URL, response.id, subjectSubFolderID, docEnum);
+        log.w(doc.toJson());
+        // update in firestore with GDrive Link
+        await _firestoreService.updateDocument(doc, docEnum);
+
+
+      } catch (e) {
+
+        return _errorHandling(e,
+            "While UPLOADING Notes to Google Drive , Error occurred");
+      }
+
+      //>> 1.6 Set Metadata of the file to store in Database
+      String fileName = assignFileName(note);
+      note.setTitle = fileName;
+      note.setUrl = GDrive_URL;
+      note.setSize = _formatBytes(fileToUpload.lengthSync(), 2);
+      note.setDate = DateTime.now();
+      // note.setPages = pdf.pages.count;
+      log.e(note.toJson());
+
+      //>> Post-Upload Sanitization and finishing touches
+      // pdf.dispose();
+      fileToUpload.delete();
+      return "Upload Successful";
+
+  } catch (e) {
+    log.e(e);
+  }
+}
 
   Future<Subject> createSubjectFolders(Subject subject) async {
     log.i("${subject.name} folders being created in GDrive");
