@@ -101,6 +101,7 @@ dependencies:
   googleapis_auth: ^1.1.0
   google_mobile_ads: ^0.12.1+1
   in_app_purchase: ^0.5.2
+  # cloud_firestore_web: ^2.3.0
 
   # packages of other services being used
   onesignal_flutter: ^3.1.0
