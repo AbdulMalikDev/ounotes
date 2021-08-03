@@ -44,7 +44,7 @@ void main() async {
   await Hive.openBox(Constants.ouNotes);
   await Hive.openBox<Download>(Constants.downloads);
   await Hive.openBox<RecentlyOpenedNotes>(Constants.recentlyOpenedNotes);
-  RemoteConfigService _remoteConfigService = locator<RemoteConfigService>();
+  // RemoteConfigService _remoteConfigService = locator<RemoteConfigService>();
   // CrashlyticsService _crashlyticsService = locator<CrashlyticsService>();
   // AdmobService _admobService = locator<AdmobService>();
   // InAppPaymentService _inAppPaymentService= locator<InAppPaymentService>();
@@ -52,7 +52,9 @@ void main() async {
   // GoogleInAppPaymentService _googleInAppPaymentService =
   // locator<GoogleInAppPaymentService>();
   // await _inAppPaymentService.fetchData();
-  await _remoteConfigService.init();
+
+  // await _remoteConfigService.init();
+
   // await _admobService.init();
   //Sentry provides crash reporting
   // _crashlyticsService.sentryClient = SentryClient(

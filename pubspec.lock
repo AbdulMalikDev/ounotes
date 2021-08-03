@@ -736,7 +736,7 @@ packages:
       name: google_sign_in_web
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.10.0"
+    version: "0.10.0+1"
   googleapis:
     dependency: "direct main"
     description:
