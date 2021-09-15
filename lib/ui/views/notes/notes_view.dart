@@ -7,7 +7,7 @@ import 'package:stacked/stacked.dart';
 
 import 'notes_viewmodel.dart';
 
-class   NotesView extends StatefulWidget {
+class NotesView extends StatefulWidget {
   final String subjectName;
   final String path;
   final String newDocIDUploaded;
@@ -61,7 +61,6 @@ class _NotesViewState extends State<NotesView>
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         Container(
-                          constraints: BoxConstraints(maxWidth: 180),
                           child: progress < 100
                               ? Text(
                                   'Downloading...' +

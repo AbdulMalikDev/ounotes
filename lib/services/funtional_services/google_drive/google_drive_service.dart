@@ -342,8 +342,17 @@ class GoogleDriveService {
         localFile = File(filePath);
         await localFile.writeAsBytes(dataStore);
         _insertBookmarks(filePath, note);
-        // Download downloadObject = Download(
-        //   note.id,
+        Download downloadObject = Download(
+          id: note.id,
+          path: filePath,
+          author: note.author,
+          view: note.view,
+          size: note.size,
+          subjectName: note.subjectName,
+          title: note.title,
+          uploadDate: note.uploadDate,
+        );
+        //  note.id,
         //   filePath,
         //   note.title,
         //   note.subjectName,
@@ -352,8 +361,7 @@ class GoogleDriveService {
         //   note.pages,
         //   note.size,
         //   note.uploadDate,
-        // );
-        // _downloadService.addDownload(download: downloadObject);
+        _downloadService.addDownload(download: downloadObject);
         await Future.delayed(Duration(seconds: 1));
         downloadProgress.value = 0;
         onDownloadedCallback(localFile.path, note);

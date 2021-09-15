@@ -9,7 +9,7 @@ class DefaultAppBarView extends StatelessWidget with PreferredSizeWidget {
   @override
   final Size preferredSize;
   final bool showUploadButton;
-  DefaultAppBarView({Key key, this.showUploadButton=false})
+  DefaultAppBarView({Key key, this.showUploadButton = false})
       : preferredSize = Size.fromHeight(60.0),
         super(key: key);
 
@@ -94,7 +94,7 @@ class DefaultAppBarView extends StatelessWidget with PreferredSizeWidget {
                   if (showUploadButton)
                     Align(
                       alignment: Alignment.centerRight,
-                      child: GestureDetector(
+                      child: InkWell(
                         onTap: () {
                           model.navigateToUserUploadScreen();
                         },

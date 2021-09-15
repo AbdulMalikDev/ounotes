@@ -1,6 +1,7 @@
 
 import 'package:FSOUNotes/app/app.locator.dart';
 import 'package:FSOUNotes/app/app.logger.dart';
+import 'package:FSOUNotes/enums/constants.dart';
 import 'package:FSOUNotes/models/download.dart';
 import 'package:FSOUNotes/models/user.dart';
 import 'package:FSOUNotes/services/funtional_services/authentication_service.dart';
@@ -19,7 +20,7 @@ class DownloadService {
     AuthenticationService _authenticationService =
         locator<AuthenticationService>();
     this.user = await _authenticationService.getUser();
-    Box downloadBox = Hive.box('downloads');
+    Box downloadBox = Hive.box(Constants.notesDownloads);
     downloadBox.add(download);
     // if (downloadBox.length > 3 && !user.isPremiumUser) {
     //   //if downloads list length is > 3 and he is not a premium user then delete the oldest download which is at index 0

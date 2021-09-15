@@ -4,11 +4,11 @@ import 'package:FSOUNotes/models/download.dart';
 import 'package:FSOUNotes/ui/shared/app_config.dart';
 import 'package:FSOUNotes/ui/views/downloads/Downloads_viewmodel.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:stacked/stacked.dart';
 
 class DownLoadView extends StatefulWidget {
@@ -18,22 +18,77 @@ class DownLoadView extends StatefulWidget {
   _DownLoadViewState createState() => _DownLoadViewState();
 }
 
-class _DownLoadViewState extends State<DownLoadView> {
+class _DownLoadViewState extends State<DownLoadView>
+    with SingleTickerProviderStateMixin, WidgetsBindingObserver {
+  TabController _tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = new TabController(vsync: this, length: 3);
+    SchedulerBinding.instance.addPostFrameCallback((timeStamp) {});
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
+    var theme = Theme.of(context);
     return ViewModelBuilder<DownLoadViewModel>.reactive(
       onModelReady: (model) {
         model.getUser();
       },
       builder: (context, model, child) => Scaffold(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        body: buildDownloadList(model),
+        body: Column(
+          children: [
+            Container(
+              color: theme.primaryColor,
+              child: TabBar(
+                // TabBar
+                controller: _tabController,
+                labelColor: Colors.amber,
+                indicatorColor: Theme.of(context).accentColor,
+                unselectedLabelColor: Colors.white,
+                labelStyle: Theme.of(context)
+                    .textTheme
+                    .bodyText2
+                    .copyWith(color: Colors.white, fontSize: 13),
+                tabs: <Widget>[
+                  Tab(
+                    text: "NOTES",
+                    icon: Icon(Icons.description),
+                  ),
+                  Tab(
+                    text: "Question Papers",
+                    icon: Icon(Icons.note),
+                  ),
+                  Tab(text: "Syllabus", icon: Icon(Icons.event_note)),
+                ],
+              ),
+            ),
+            Expanded(
+              child: TabBarView(
+                controller: _tabController,
+                children: [
+                  buildNotesDownloadList(model),
+                  Container(),
+                  Container(),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
       viewModelBuilder: () => DownLoadViewModel(),
     );
   }
 
-  Widget buildDownloadList(DownLoadViewModel model) {
+  Widget buildNotesDownloadList(DownLoadViewModel model) {
     return SingleChildScrollView(
       child: Column(
         children: [
@@ -41,72 +96,69 @@ class _DownLoadViewState extends State<DownLoadView> {
             valueListenable: Hive.box<Download>('downloads').listenable(),
             builder: (context, donwloadsBox, widget) {
               return Container(
-                // height: model.user?.isPremiumUser ?? false
-                height: true
-                    ? App(context).appHeight(1)
-                    : App(context).appHeight(0.18) * donwloadsBox.length,
                 child: SingleChildScrollView(
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Container(
-                        decoration: AppStateNotifier.isDarkModeOn
-                            ? Constants.mdecoration.copyWith(
-                                color: Theme.of(context).colorScheme.background,
-                                boxShadow: [],
-                              )
-                            : Constants.mdecoration.copyWith(
-                                color: Theme.of(context).colorScheme.background,
-                              ),
-                        padding: const EdgeInsets.all(10),
-                        margin: const EdgeInsets.all(10),
-                        child: Column(
-                          children: [
-                            Container(
-                              margin:
-                                  const EdgeInsets.symmetric(horizontal: 15),
-                              alignment: Alignment.centerLeft,
-                              child: Text(
-                                "Note:",
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .headline6
-                                    .copyWith(color: primary),
-                              ),
-                            ),
-                            Container(
-                              margin: const EdgeInsets.symmetric(
-                                  horizontal: 15, vertical: 10),
-                              decoration: BoxDecoration(),
-                              child: RichText(
-                                text: TextSpan(
-                                  style: Theme.of(context).textTheme.bodyText2,
-                                  children: [
-                                    TextSpan(
-                                        text:
-                                            'Notes which have been opened in the app will be shown here. If you have downloaded the notes by pressing the download icon '),
-                                    WidgetSpan(
-                                      child: Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 2.0),
-                                        child:
-                                            Icon(Icons.file_download, size: 18),
-                                      ),
-                                    ),
-                                    TextSpan(
-                                        text: ' you can find them in your '),
-                                    TextSpan(
-                                        text: 'Internal Storage > Downloads',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold)),
-                                    TextSpan(text: ' folder of your mobile'),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
+                      // Container(
+                      //   decoration: AppStateNotifier.isDarkModeOn
+                      //       ? Constants.mdecoration.copyWith(
+                      //           color: Theme.of(context).colorScheme.background,
+                      //           boxShadow: [],
+                      //         )
+                      //       : Constants.mdecoration.copyWith(
+                      //           color: Theme.of(context).colorScheme.background,
+                      //         ),
+                      //   padding: const EdgeInsets.all(10),
+                      //   margin: const EdgeInsets.all(10),
+                      //   child: Column(
+                      //     children: [
+                      //       Container(
+                      //         margin:
+                      //             const EdgeInsets.symmetric(horizontal: 15),
+                      //         alignment: Alignment.centerLeft,
+                      //         child: Text(
+                      //           "Note:",
+                      //           style: Theme.of(context)
+                      //               .textTheme
+                      //               .headline6
+                      //               .copyWith(color: primary),
+                      //         ),
+                      //       ),
+                      //       Container(
+                      //         margin: const EdgeInsets.symmetric(
+                      //             horizontal: 15, vertical: 10),
+                      //         decoration: BoxDecoration(),
+                      //         child: RichText(
+                      //           text: TextSpan(
+                      //             style: Theme.of(context).textTheme.bodyText2,
+                      //             children: [
+                      //               TextSpan(
+                      //                   text:
+                      //                       'Notes which have been opened in the app will be shown here. If you have downloaded the notes by pressing the download icon '),
+                      //               WidgetSpan(
+                      //                 child: Padding(
+                      //                   padding: const EdgeInsets.symmetric(
+                      //                       horizontal: 2.0),
+                      //                   child:
+                      //                       Icon(Icons.file_download, size: 18),
+                      //                 ),
+                      //               ),
+                      //               TextSpan(
+                      //                   text: ' you can find them in your '),
+                      //               TextSpan(
+                      //                   text: 'Internal Storage > Downloads',
+                      //                   style: TextStyle(
+                      //                       fontWeight: FontWeight.bold)),
+                      //               TextSpan(text: ' folder of your mobile'),
+                      //             ],
+                      //           ),
+                      //         ),
+                      //       ),
+                      //     ],
+                      //   ),
+                      // ),
+
                       ListView.builder(
                         physics: NeverScrollableScrollPhysics(),
                         shrinkWrap: true,
