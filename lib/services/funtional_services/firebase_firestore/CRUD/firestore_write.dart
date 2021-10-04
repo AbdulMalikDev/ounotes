@@ -35,7 +35,7 @@ extension FirestoreWrites on FirestoreService{
       log.i(note.path);
       log.i(note.id);
       log.i(note.toJson());
-      await ref.doc(note.id).set(note.toJson());
+      await ref.doc(note.id).set(note.toJson(),SetOptions(merge: true));
       await _uploadLogCollectionReference
           .doc(note.id)
           .set(await createUploadLog(note, user));

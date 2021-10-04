@@ -55,6 +55,13 @@ class UploadLogViewModel extends FutureViewModel {
   }
 
   processDocument(UploadLog logItem) async {
+    
+    //If additional work needs to be done for the document
+    //do not upload yet
+    if(logItem.isPassed){
+      return;
+    }
+
     if(logItem.isReport){
       deleteDocument(logItem);
     }else{

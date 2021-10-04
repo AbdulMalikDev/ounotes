@@ -136,104 +136,108 @@ class UploadLogEditViewModel extends BaseViewModel {
     setBusy(true);
     Subject subject =
         _subjectsService.getSubjectByName(subjectNameController.text);
-    // AbstractDocument docUploaded = await _firestoreService.getDocumentById(
-    //     uploadLog.subjectName,
-    //     uploadLog.id,
-    //     Constants.getDocFromConstant(uploadLog.type));
+    AbstractDocument docUploaded = await _firestoreService.getDocumentById(
+        uploadLog.subjectName,
+        uploadLog.id,
+        Constants.getDocFromConstant(uploadLog.type));
     AbstractDocument doc;
-    // switch (_documentEnum) {
-    //   case Document.Notes:
-    //     doc = Note(
-    //       subjectName: subjectNameController.text,
-    //       path: Document.Notes,
-    //       title: titleController.text,
-    //       author: authorController.text,
-    //       type: Constants.getConstantFromDoc(_documentEnum),
-    //       subjectId: subject?.id,
-    //       size: uploadLog.size,
-    //       uploader_id: uploadLog.uploader_id,
-    //       view: 0,
-    //       votes: 0,
-    //       uploadDate: DateTime.now(),
-    //       url: docUploaded.url,
-    //     );
-    //     log.e(doc.toJson());
-    //     break;
-    //   case Document.QuestionPapers:
-    //     doc = QuestionPaper(
-    //       subjectName: subjectNameController.text,
-    //       path: Document.QuestionPapers,
-    //       title: titleController.text,
-    //       branch: _selectedBranch,
-    //       year: yearController.text,
-    //       type: Constants.getConstantFromDoc(_documentEnum),
-    //       subjectId: subject?.id,
-    //       size: uploadLog.size,
-    //       uploader_id: uploadLog.uploader_id,
-    //       uploadDate: DateTime.now(),
-    //       url: docUploaded.url,
-    //     );
-    //     log.e(doc.toJson());
-    //     break;
-    //   case Document.Syllabus:
-    //     doc = Syllabus(
-    //       title: titleController.text,
-    //       subjectName: subjectNameController.text,
-    //       path: Document.Syllabus,
-    //       type: Constants.getConstantFromDoc(_documentEnum),
-    //       semester: _selectedSemester,
-    //       branch: _selectedBranch,
-    //       year: yearController.text,
-    //       subjectId: subject?.id,
-    //       size: uploadLog.size,
-    //       uploader_id: uploadLog.uploader_id,
-    //       uploadDate: DateTime.now(),
-    //       url: docUploaded.url,
-    //     );
-    //     log.e(doc.toJson());
-    //     break;
-    //   case Document.Links:
-    //     doc = Link(
-    //       subjectName: subjectNameController.text,
-    //       title: titleController.text,
-    //       path: Document.Links,
-    //       subjectId: subject?.id,
-    //       uploader_id: uploadLog.uploader_id,
-    //     );
-    //     log.e(doc.toJson());
-    //     break;
-    //   case Document.None:
-    //   case Document.Drawer:
-    //   case Document.UploadLog:
-    //   case Document.Report:
-    //   case Document.UploadLog:
-    //   case Document.Report:
-    //   case Document.Random:
-    //     break;
-    // }
-    // if (doc.path != Document.Links) {
-    //   SheetResponse response = await _bottomSheetService.showBottomSheet(
-    //     title: "Are you sure you want to update?",
-    //     description: "",
-    //   );
-    //   log.e(response?.confirmed);
-    //   if (response == null || (response != null && !response.confirmed)) {
-    //     setBusy(false);
-    //     return;
-    //   }
-    //   //Delete old firestore objects
-    //   await _firestoreService.deleteTempDocumentById(
-    //       uploadLog.id, Constants.getDocFromConstant(uploadLog.type));
-    //   await _firestoreService.deleteTempDocumentById(
-    //       uploadLog.id, Document.UploadLog);
-    //   //Upload new objects
-    //   if (doc.path != Document.Links)
-    //     await _firestoreService.saveNotes(doc);
-    //   else
-    //     await _firestoreService.saveLink(doc);
-    //   log.e(_documentEnum);
-    //   log.e(doc.toJson());
-    // }
+    switch (_documentEnum) {
+      case Document.Notes:
+        doc = Note(
+          subjectName: subjectNameController.text,
+          path: Document.Notes,
+          title: titleController.text,
+          author: authorController.text,
+          type: Constants.getConstantFromDoc(_documentEnum),
+          subjectId: subject?.id,
+          size: uploadLog.size,
+          uploader_id: uploadLog.uploader_id,
+          view: 0,
+          votes: 0,
+          uploadDate: DateTime.now(),
+          url: docUploaded.url,
+        );
+        log.e(doc.toJson());
+        break;
+      case Document.QuestionPapers:
+        doc = QuestionPaper(
+          subjectName: subjectNameController.text,
+          path: Document.QuestionPapers,
+          title: titleController.text,
+          branch: _selectedBranch,
+          year: yearController.text,
+          type: Constants.getConstantFromDoc(_documentEnum),
+          subjectId: subject?.id,
+          size: uploadLog.size,
+          uploader_id: uploadLog.uploader_id,
+          uploadDate: DateTime.now(),
+          url: docUploaded.url,
+        );
+        log.e(doc.toJson());
+        break;
+      case Document.Syllabus:
+        doc = Syllabus(
+          title: titleController.text,
+          subjectName: subjectNameController.text,
+          path: Document.Syllabus,
+          type: Constants.getConstantFromDoc(_documentEnum),
+          semester: _selectedSemester,
+          branch: _selectedBranch,
+          year: yearController.text,
+          subjectId: subject?.id,
+          size: uploadLog.size,
+          uploader_id: uploadLog.uploader_id,
+          uploadDate: DateTime.now(),
+          url: docUploaded.url,
+        );
+        log.e(doc.toJson());
+        break;
+      case Document.Links:
+        doc = Link(
+          subjectName: subjectNameController.text,
+          title: titleController.text,
+          path: Document.Links,
+          subjectId: subject?.id,
+          uploader_id: uploadLog.uploader_id,
+        );
+        log.e(doc.toJson());
+        break;
+      case Document.None:
+      case Document.Drawer:
+      case Document.UploadLog:
+      case Document.Report:
+      case Document.UploadLog:
+      case Document.Report:
+      case Document.Random:
+        break;
+      case Document.GDRIVE:
+        break;
+    }
+    if (doc.path != Document.Links) {
+      SheetResponse response = await _bottomSheetService.showBottomSheet(
+        title: "Are you sure you want to update?",
+        description: "",
+      );
+      log.e(response?.confirmed);
+      if (response == null || (response != null && !response.confirmed)) {
+        setBusy(false);
+        return;
+      }
+      
+      //Delete old firestore objects and it's upload log
+      await _firestoreService.deleteTempDocumentById(
+          uploadLog.id, Constants.getDocFromConstant(uploadLog.type));
+      await _firestoreService.deleteTempDocumentById(
+          uploadLog.id, Document.UploadLog);
+
+      //Upload new objects
+      if (doc.path != Document.Links)
+        await _firestoreService.saveNotes(doc);
+      else
+        await _firestoreService.saveLink(doc);
+      log.e(_documentEnum);
+      log.e(doc.toJson());
+    }
     setBusy(false);
   }
 }

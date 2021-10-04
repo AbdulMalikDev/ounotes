@@ -91,10 +91,6 @@ class _UploadLogViewState extends State<UploadLogView> {
                                 itemCount: model.logs.length,
                                 itemBuilder: (ctx, index) {
                                   UploadLog logItem = model.logs[index];
-                                  if(logItem.isPassed){
-                                    print("***********************");
-                                  }
-                                  print(logItem.isPassed);
                                   return Container(
                                     //height: 300,
                                     margin: EdgeInsets.symmetric(
