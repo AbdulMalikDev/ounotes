@@ -61,6 +61,7 @@ dependencies:
   package_info: ^2.0.0
   path_provider: ^2.0.1
   permission_handler: ^7.0.0
+  clipboard: ^0.1.3
   share: ^2.0.1
   connection_verify: ^1.0.4
   flutter_windowmanager: ^0.0.2
@@ -84,7 +85,7 @@ dependencies:
   stacked_services: ^0.8.5
   shared_preferences: ^2.0.5
   # purchases_flutter: ^2.0.0
-  awesome_notifications: ^0.0.6
+  awesome_notifications: ^0.0.6+10
 
   # firebase/google packages
   firebase_admob: ^0.11.2
