@@ -2,6 +2,7 @@
 import 'package:FSOUNotes/app/app.locator.dart';
 import 'package:FSOUNotes/enums/bottom_sheet_type.dart';
 import 'package:FSOUNotes/models/user.dart' as userModel;
+import 'package:FSOUNotes/models/verifier.dart';
 import 'package:FSOUNotes/services/funtional_services/analytics_service.dart';
 import 'package:FSOUNotes/services/funtional_services/firebase_firestore/firestore_service.dart';
 import 'package:FSOUNotes/services/funtional_services/onboarding_service.dart';
@@ -97,6 +98,7 @@ class AuthenticationService {
     }
     if(isVerifier){
       _user.setVerifier = true;
+      _firestoreService.updateVerifierInFirebase(Verifier.fromUser(_user),updateNumbers:false);
     }
 
     //Add User to Firebase

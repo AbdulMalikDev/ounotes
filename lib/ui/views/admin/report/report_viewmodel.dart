@@ -1,7 +1,9 @@
 import 'package:FSOUNotes/app/app.locator.dart';
 import 'package:FSOUNotes/app/app.logger.dart';
+import 'package:FSOUNotes/app/app.router.dart';
 import 'package:FSOUNotes/enums/constants.dart';
 import 'package:FSOUNotes/enums/enums.dart';
+import 'package:FSOUNotes/misc/helper.dart';
 import 'package:FSOUNotes/models/link.dart';
 import 'package:FSOUNotes/models/question_paper.dart';
 import 'package:FSOUNotes/models/report.dart';
@@ -98,8 +100,9 @@ class ReportViewModel extends FutureViewModel {
     if (report.type == Constants.links) {
       _showLink(report);
     } else {
-      //  var document = await _firestoreService.getDocumentById(report.subjectName,report.id, Constants.getDocFromConstant(report.type));
-      //    _navigationService.navigateTo(Routes.webViewWidgetRoute,arguments: WebViewWidgetArguments(url: document.GDriveLink));
+       var document = await _firestoreService.getDocumentById(report.subjectName,report.id, Constants.getDocFromConstant(report.type));
+       Helper.launchURL(document.GDriveLink);
+        //  _navigationService.navigateTo(Routes.webViewWidgetRoute,arguments: WebViewWidgetArguments(url: document.GDriveLink));
 
     }
     setBusy(false);

@@ -68,7 +68,7 @@ class PushNotificationService {
 
     if (shouldNavigate) {
       isDocInReview
-          ? _navigationService.navigateTo(Routes.uploadLogView)
+          ? _navigationService.navigateTo(Routes.verifierPanelView)
           : _navigationService.navigateTo(Routes.allDocumentsView,
               arguments: AllDocumentsViewArguments(
                   subjectName: subjectName, newDocIDUploaded: notesID));

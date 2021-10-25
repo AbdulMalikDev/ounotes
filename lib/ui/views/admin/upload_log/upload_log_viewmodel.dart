@@ -4,6 +4,7 @@ import 'package:FSOUNotes/app/app.router.dart';
 import 'package:FSOUNotes/enums/constants.dart';
 import 'package:FSOUNotes/enums/enums.dart';
 import 'package:FSOUNotes/models/UploadLog.dart';
+import 'package:FSOUNotes/services/funtional_services/document_service.dart';
 import 'package:FSOUNotes/services/funtional_services/firebase_firestore/firestore_service.dart';
 import 'package:FSOUNotes/services/funtional_services/google_drive/google_drive_service.dart';
 import 'package:FSOUNotes/services/funtional_services/onboarding_service.dart';
@@ -18,13 +19,14 @@ class UploadLogViewModel extends FutureViewModel {
   NavigationService _navigationService = locator<NavigationService>();
   DialogService _dialogService = locator<DialogService>();
   BottomSheetService _bottomSheetService = locator<BottomSheetService>();
+  DocumentService _documentService = locator<DocumentService>();
 
   List<UploadLog> _logs;
 
   List<UploadLog> get logs => _logs;
 
   fetchUploadLogs() async {
-    _logs = await _firestoreService.loadUploadLogFromFirebase();
+    _logs = await _firestoreService.loadUploadLogFromFirebase(isAdmin: true);
   }
 
   @override
@@ -52,22 +54,32 @@ class UploadLogViewModel extends FutureViewModel {
         : Future.value("NOT SENT");
   }
 
+  processDocument(UploadLog logItem) async {
+    
+    //If additional work needs to be done for the document
+    //do not upload yet
+    if(logItem.isPassed){
+      return;
+    }
+
+    if(logItem.isReport){
+      deleteDocument(logItem);
+    }else{
+      uploadDocument(logItem);
+    }
+  }
+
+  deleteDocument(UploadLog logItem) async {
+    setBusy(true);
+    var result = await _documentService.deleteDocument(logItem);
+    deleteLogItem(logItem);
+    setBusy(false);
+  }
+
   uploadDocument(UploadLog logItem) async {
     setBusy(true);
     try {
-      dynamic doc = await _firestoreService.getDocumentById(logItem.subjectName,logItem.id,Constants.getDocFromConstant(logItem.type));
-      if(doc == null){await _dialogService.showDialog(title:"Oops",description: "Can't find this document");setBusy(false);return;}
-
-      if (logItem.type == Constants.links){
-
-        if(doc.uploaded == true){await _dialogService.showDialog(title: "ERROR" , description: "ALREADY UPLOADED");setBusy(false);return;}
-        doc.uploaded = true;
-        await _firestoreService.updateDocument(doc, Document.Links);
-      }else{
-
-        await _firestoreService.updateDocument(doc, Constants.getDocFromConstant(logItem.type));
-      }
-      
+      var result = await _documentService.uploadDocument(logItem);
       deleteLogItem(logItem);
 
     } catch (e) {
@@ -84,14 +96,6 @@ class UploadLogViewModel extends FutureViewModel {
   }
 
   deleteLogItem(UploadLog report) async {
-    // var dialogResult = await _dialogService.showConfirmationDialog(
-    //   title: "Are you sure?",
-    //   description:
-    //       "Upload Log will be deleted. As an admin please make sure to take necessary steps",
-    //   cancelTitle: "WAIT",
-    //   confirmationTitle: "Apne baap ku mat sikha"
-    // );
-    // if(dialogResult.confirmed)
     await _firestoreService.deleteUploadLog(report);
   }
 
@@ -107,7 +111,13 @@ class UploadLogViewModel extends FutureViewModel {
     }
 
     for (UploadLog log in (uploadLogs ?? [])) {
-      await this.uploadDocument(log);
+      await this.processDocument(log);
+    }
+  }
+
+  uploadAllDocuments() async {
+    for (UploadLog log in _logs) {
+      await this.processDocument(log);
     }
   }
 }

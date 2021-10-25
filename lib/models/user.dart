@@ -33,8 +33,8 @@ class User{
   List uploads;
 
   //Upload stats of user
-  int numOfUploads;
-  int numOfAcceptedUploads;
+  int numOfUploads = 0;
+  int numOfAcceptedUploads = 0;
 
   // FCM token
   String fcmToken;
@@ -58,9 +58,9 @@ class User{
     photoUrl              = data['photoUrl'];
     downloads             = data["downloads"] ?? [];
     createdAt             = data['createdAt'].toString();
-    numOfUploads          = data["numOfUploads"];
+    numOfUploads          = data["numOfUploads"] ?? 0;
     isPremiumUser         = data['isPremiumUser'] ?? false;
-    numOfAcceptedUploads  = data["numOfAcceptedUploads"];
+    numOfAcceptedUploads  = data["numOfAcceptedUploads"] ?? 0;
     isUserAllowedToUpload = data['isUserAllowedToUpload'] ?? true;
   }
 

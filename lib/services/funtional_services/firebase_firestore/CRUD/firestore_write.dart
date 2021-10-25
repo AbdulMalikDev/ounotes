@@ -35,7 +35,7 @@ extension FirestoreWrites on FirestoreService{
       log.i(note.path);
       log.i(note.id);
       log.i(note.toJson());
-      await ref.doc(note.id).set(note.toJson());
+      await ref.doc(note.id).set(note.toJson(),SetOptions(merge: true));
       await _uploadLogCollectionReference
           .doc(note.id)
           .set(await createUploadLog(note, user));
@@ -219,13 +219,18 @@ extension FirestoreWrites on FirestoreService{
     }
   }
 
-  updateUploadLogInFirebase(Map note) async {
-    log.e(note["id"]);
-
+  updateUploadLogInFirebase(UploadLog logItem) async {
+    Map<String, dynamic> data = logItem.toJson();
     try {
+      data.addAll({
+        "verifiers" : FieldValue.increment(1),
+        if(logItem.additionalInfo!=null)
+        "additionalInfoFromVerifiers": FieldValue.arrayUnion([logItem.additionalInfo]),
+      });
       await _uploadLogCollectionReference
-          .doc(note["id"])
-          .set(note,SetOptions(merge: true));
+          .doc(data["id"])
+          .set(data,SetOptions(merge: true));
+          
     } on Exception catch (e) {
       log.e(e.toString());
     }
@@ -254,6 +259,30 @@ extension FirestoreWrites on FirestoreService{
       } else {
         log.e("User is Null, not found in Local Storage");
       }
+    } on Exception catch (e) {
+      log.e(e.toString());
+    }
+  }
+
+  updateVerifierInFirebase(Verifier user, {bool updateNumbers = true}) async {
+    log.i("Verifier being updated in firebase");
+    Map<String, dynamic> data = user.toJson();
+    if(updateNumbers){
+    data.addAll({
+      "docsVerified": FieldValue.arrayUnion([user.docIdBeingVerified]),
+      "numOfVerifiedDocs": FieldValue.increment(user.numOfVerifiedDocs),
+      "numOfReportedDocs": FieldValue.increment(user.numOfReportedDocs),
+    });}
+
+    try {
+      // if (user != null && user.docIdBeingVerified!=null){
+        log.e(user.id);
+        await _verifiersCollectionReference
+            .doc(user.id)
+            .set(data, SetOptions(merge: true));
+      // } else {
+      //   log.e("Verifier Null");
+      // }
     } on Exception catch (e) {
       log.e(e.toString());
     }

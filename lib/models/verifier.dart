@@ -1,6 +1,6 @@
 import 'package:FSOUNotes/models/user.dart';
 
-class Verifier {
+class  Verifier {
   String id;
   String name;
   String email;
@@ -13,6 +13,9 @@ class Verifier {
   bool isBanned = false;
   int numOfVerifiedDocs = 0;
   int numOfReportedDocs = 0;
+  //User uploads
+  String docIdBeingVerified;
+  List docsVerified;
 
   Verifier(
       {this.id,
@@ -35,7 +38,7 @@ class Verifier {
     branch = user.branch;
     college = user.college;
     photoUrl = user.photoUrl;
-    fcmToken = user.fcmToken ?? "";
+    if(user.fcmToken!=null)fcmToken = user.fcmToken;
     isAdmin = user.isAdmin;
     isBanned = false;
   }
@@ -53,6 +56,7 @@ class Verifier {
     isBanned = json['isBanned'];
     numOfVerifiedDocs = json['numOfVerifiedDocs'];
     numOfReportedDocs = json['numOfReportedDocs'];
+    docsVerified = json['docsVerified'];
   }
 
   Map<String, dynamic> toJson() {
@@ -67,6 +71,7 @@ class Verifier {
     data['fcmToken'] = this.fcmToken;
     data['isAdmin'] = this.isAdmin;
     data['isBanned'] = this.isBanned;
+    data['docsVerified'] = this.docsVerified;
     data['numOfVerifiedDocs'] = this.numOfVerifiedDocs;
     data['numOfReportedDocs'] = this.numOfReportedDocs;
     return data;

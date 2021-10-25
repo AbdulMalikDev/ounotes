@@ -20,22 +20,7 @@ class _UploadLogViewState extends State<UploadLogView> {
           backgroundColor: Colors.white,
           elevation: 0.0,
           automaticallyImplyLeading: false,
-          actions: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: RaisedButton(
-                color: Colors.teal,
-                child: Text(
-                  "UPLOAD SELECTED DOCUMENTS",
-                  style: TextStyle(
-                      color: Colors.white, fontWeight: FontWeight.bold),
-                ),
-                onPressed: () async {
-                  await model.uploadSelectedDocuments();
-                },
-              ),
-            )
-          ],
+          actions: [],
         ),
         body: SafeArea(
           child: Container(
@@ -49,6 +34,48 @@ class _UploadLogViewState extends State<UploadLogView> {
                       //mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: RaisedButton(
+                                  color: Colors.teal,
+                                  child: FittedBox(
+                                    child: Text(
+                                      "📤  ALL DOCS",
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                  onPressed: () async {
+                                    await model.uploadAllDocuments();
+                                  },
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: RaisedButton(
+                                  color: Colors.teal,
+                                  child: FittedBox(
+                                    child: Text(
+                                      "📤  SELECTED DOCS",
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                  onPressed: () async {
+                                    await model.uploadSelectedDocuments();
+                                  },
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                         SizedBox(
                           height: 24,
                         ),
@@ -69,9 +96,18 @@ class _UploadLogViewState extends State<UploadLogView> {
                                     margin: EdgeInsets.symmetric(
                                         horizontal: 20, vertical: 10),
                                     child: Card(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .background,
+                                      // color: Colors.red[200],
+                                      // shadowColor: Colors.red[400],
+                                      color: logItem.isReport ?? false
+                                          ? Colors.red[200]
+                                          : logItem.isPassed
+                                          ? Colors.grey[700]
+                                          : Colors.green[200],
+                                      shadowColor: logItem.isReport ?? false
+                                          ? Colors.red[400]
+                                          : logItem.isPassed
+                                          ? Colors.grey[900]
+                                          : Colors.green[500],
                                       elevation: 10,
                                       child: ListTile(
                                         contentPadding: EdgeInsets.all(15),

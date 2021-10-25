@@ -18,6 +18,7 @@ import '../services/funtional_services/cloud_functions_service.dart';
 import '../services/funtional_services/cloud_storage_service.dart';
 import '../services/funtional_services/crashlytics_service.dart';
 import '../services/funtional_services/db_service.dart';
+import '../services/funtional_services/document_service.dart';
 import '../services/funtional_services/firebase_firestore/firestore_service.dart';
 import '../services/funtional_services/google_drive/google_drive_service.dart';
 import '../services/funtional_services/google_in_app_payment_service.dart';
@@ -73,4 +74,5 @@ void setupLocator() {
   locator.registerLazySingleton(() => SyllabusService());
   locator.registerLazySingleton(() => PDFService());
   locator.registerLazySingleton(() => CloudFunctionsService());
+  locator.registerLazySingleton(() => DocumentService());
 }

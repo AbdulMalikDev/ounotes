@@ -87,6 +87,7 @@ extension FirestoreFunctions on FirestoreService{
     if(id == null){log.e("getDocumentById called with null id");return;}
     SubjectsService _subjectsService = locator<SubjectsService>();
     Subject subject = _subjectsService.getSubjectByName(subjectName);
+    if(subject == null){log.e("Subject not found");return;}
     switch (document) {
       case Document.Notes:
         return await this.getNoteById(subject.id, id);

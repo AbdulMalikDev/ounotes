@@ -60,7 +60,7 @@ class _AdminViewState extends State<AdminView>
                       ),
                       SelectionContainer(
                         leading: Icon(Icons.note),
-                        title: "Upload Log",
+                        title: "Process Docs (Ex-Upload Log)",
                         onTap: () => Navigator.of(context).push(
                           MaterialPageRoute(
                             builder: (ctx) => UploadLogView(),
