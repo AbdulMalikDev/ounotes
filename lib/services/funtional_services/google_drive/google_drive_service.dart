@@ -164,58 +164,72 @@ class GoogleDriveService {
   }
 
   Future downloadPuchasedPdf(
-      {Note note,
+      {var note,
       Function(String, String) onDownloadedCallback,
       Function startDownload}) async {
-    PermissionStatus status = await Permission.storage.request();
-    log.e(status.isGranted);
-    int downloadedLength = 0;
-    downloadProgress.value = 0;
-    List<int> dataStore = [];
 
-    startDownload();
-
-    //*Google Drive Set Up
-    var drive = _initializeHttpClientAndGDriveAPI();
-
-    //>> Download file
-    String fileID = note.GDriveID;
-    ga.Media file = await drive.files
-        .get(fileID, downloadOptions: ga.DownloadOptions.fullMedia);
-    var dir = await ExtStorage.getExternalStoragePublicDirectory(
-        ExtStorage.DIRECTORY_DOWNLOADS);
-
-    String fileName = "${note.subjectName}_${note.title}.pdf";
-    String filePath = dir + fileName;
-
-    //*Figure out size from note.size property to show proper loading indicator
-    File localFile;
-    double contentLength = double.parse(note.size.split(" ")[0]);
-    contentLength = note.size.split(" ")[1] == 'KB'
-        ? contentLength * 1000
-        : contentLength * 1000000;
-    log.e("Size in numbers : " + contentLength.toString());
-    
-
-    //*Start the download
-    file.stream.listen((data) {
-      downloadedLength += data.length;
-      downloadProgress.value = (downloadedLength / contentLength) * 100;
-      log.e(downloadedLength);
-      log.e(contentLength);
-      print("loading.. : " + downloadProgress.value.toString());
-      // if(downloadProgress.value < 1)
-      // EasyLoading.showProgress(downloadProgress.value, status: 'downloading...');
-      dataStore.insertAll(dataStore.length, data);
-    }, onDone: () async {
-      // EasyLoading.dismiss();
-      localFile = File(filePath);
-      await localFile.writeAsBytes(dataStore);
-      await Future.delayed(Duration(seconds: 1));
+    try {
+      
+      PermissionStatus status = await Permission.storage.request();
+      log.e(status.isGranted);
+      int downloadedLength = 0;
       downloadProgress.value = 0;
-      onDownloadedCallback(localFile.path, fileName);
-      log.e("DOWNLOAD DONE");
-    });
+      List<int> dataStore = [];
+
+      startDownload();
+
+      //*Google Drive Set Up
+      ga.DriveApi drive = await _initializeHttpClientAndGDriveAPI();
+      print(drive);
+
+      //>> Download file
+      String fileID = note.GDriveID;
+      ga.Media file = await drive.files
+          .get(fileID, downloadOptions: ga.DownloadOptions.fullMedia);
+      var dir = await ExtStorage.getExternalStoragePublicDirectory(
+          ExtStorage.DIRECTORY_DOWNLOADS)+ "/OUNotes/" + note.subjectName + "/" + note.type.replaceAll(' ', '') + "/";
+      _createPath(dir);
+
+      String fileName = "${note.subjectName}_${note.title}.pdf";
+      String filePath = dir + fileName;
+      log.e(filePath);           
+      //*Figure out size from note.size property to show proper loading indicator
+      File localFile;
+      double contentLength;
+      if (note.size != null){
+        contentLength = double.parse(note.size.split(" ")[0]);
+        contentLength = note.size?.split(" ")[1] == 'KB'
+            ? contentLength * 1000
+            : contentLength * 1000000;
+        log.e("Size in numbers : " + contentLength.toString());
+      }else{
+        contentLength = 0.0;
+      }
+
+      //*Start the download
+      file.stream.listen((data) {
+        downloadedLength += data.length;
+        downloadProgress.value = (downloadedLength / contentLength) * 100;
+        // log.e(downloadedLength);
+        // log.e(contentLength);
+        print("loading.. : " + downloadProgress.value.toString());
+        // if(downloadProgress.value < 1)
+        // EasyLoading.showProgress(downloadProgress.value, status: 'downloading...');
+        dataStore.insertAll(dataStore.length, data);
+      }, onDone: () async {
+        // EasyLoading.dismiss();
+        localFile = File(filePath);
+        await localFile.writeAsBytes(dataStore);
+        await Future.delayed(Duration(seconds: 1));
+        await onDownloadedCallback(localFile.path, fileName);
+        log.e("DOWNLOAD DONE");
+        downloadProgress.value = 0;
+      });
+
+    } catch (e) {
+      print("error");
+      log.e(e);
+    }
   }
 
 //This function is used to upload verified documents that are in Firebase, to Google Drive

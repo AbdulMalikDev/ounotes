@@ -47,6 +47,15 @@ extension GoogleDriveFunctions on GoogleDriveService{
     
   }
 
+  /// Creates [Path] if does not exist in external storage
+  _createPath(String dir) async {
+    final path = Directory(dir);
+    log.e(await path.exists());
+    if (!(await path.exists())){
+      var result = await path.create(recursive: true);
+    }
+  }
+
   _getSubjectFolderID({String subjectName,Document docEnum}){
     Subject subject = _subjectsService.getSubjectByName(subjectName);
     String subjectSubFolderID = _getFolderIDForType(subject, docEnum);

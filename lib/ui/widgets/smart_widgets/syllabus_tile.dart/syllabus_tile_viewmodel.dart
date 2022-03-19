@@ -1,6 +1,7 @@
 import 'package:FSOUNotes/enums/constants.dart';
 import 'package:FSOUNotes/enums/enums.dart';
 import 'package:FSOUNotes/models/document.dart';
+import 'package:FSOUNotes/services/funtional_services/document_service.dart';
 import 'package:FSOUNotes/services/funtional_services/google_drive/google_drive_service.dart';
 import 'package:stacked/stacked.dart';
 import 'package:FSOUNotes/models/report.dart';
@@ -27,10 +28,20 @@ class SyllabusTileViewModel extends BaseViewModel {
   GoogleDriveService _googleDriveService = locator<GoogleDriveService>();
   NavigationService _navigationService = locator<NavigationService>();
   BottomSheetService _bottomSheetService = locator<BottomSheetService>();
+  DocumentService _documentService = locator<DocumentService>();
 
   bool get isAdmin => _authenticationService.user.isAdmin;
   bool _isSyllabusdownloaded = false;
   bool get isSyllabusdownloaded => _isSyllabusdownloaded;
+  bool isloading = false;
+  ValueNotifier<double> get downloadProgress =>
+      _googleDriveService.downloadProgress;
+
+  setLoading(bool val) {
+    isloading = val;
+    setBusy(val);
+    notifyListeners();
+  }
 
   void reportNote({@required AbstractDocument doc}) async {
     //Collect reason of reporting from user
@@ -98,6 +109,13 @@ class SyllabusTileViewModel extends BaseViewModel {
         backgroundColor: Colors.red,
         textColor: Colors.white,
         fontSize: 16.0);
+  }
+
+
+  download(AbstractDocument doc) async {
+    setLoading(true);
+    await _documentService.downloadDocument(note:doc);
+    setLoading(false);
   }
 
   navigateToEditView(Syllabus note) {

@@ -2,26 +2,121 @@ import 'package:FSOUNotes/AppTheme/AppStateNotifier.dart';
 import 'package:FSOUNotes/misc/constants.dart';
 import 'package:FSOUNotes/models/syllabus.dart';
 import 'package:FSOUNotes/ui/shared/app_config.dart';
+import 'package:FSOUNotes/ui/widgets/dumb_widgets/progress.dart';
 import 'package:FSOUNotes/ui/widgets/smart_widgets/syllabus_tile.dart/syllabus_tile_viewmodel.dart';
 import 'package:flutter/material.dart';
+import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:share/share.dart';
 import 'package:stacked/stacked.dart';
 
-class SyllabusTileView extends StatelessWidget {
+class SyllabusTileView extends StatefulWidget {
   final Syllabus syllabus;
   const SyllabusTileView({Key key, this.syllabus}) : super(key: key);
 
   @override
+  _SyllabusTileViewState createState() => _SyllabusTileViewState();
+}
+
+class _SyllabusTileViewState extends State<SyllabusTileView> {
+  @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final primary = Theme.of(context).colorScheme.onPrimary;
-    final String title = syllabus.subjectName;
-    final String semester = syllabus.semester;
+    final String title = widget.syllabus.subjectName;
+    final String semester = widget.syllabus.semester;
     double hp = App(context).appHeight(1);
     double wp = App(context).appWidth(1);
-    final String branch = syllabus.branch?.toUpperCase() ?? "";
+    final String branch = widget.syllabus.branch?.toUpperCase() ?? "";
     return ViewModelBuilder<SyllabusTileViewModel>.reactive(
-        builder: (context, model, child) => FractionallySizedBox(
+        builder: (context, model, child) =>
+        model.isBusy
+        ? circularProgress()
+        : ModalProgressHUD(
+          inAsyncCall: model.isBusy,
+          progressIndicator: Center(
+            child: ValueListenableBuilder(
+              valueListenable: model.downloadProgress,
+              builder: (context, progress, child) => Container(
+                decoration: BoxDecoration(
+                  color: Theme.of(context).scaffoldBackgroundColor,
+                  borderRadius: BorderRadius.circular(30),
+                ),
+                padding: EdgeInsets.all(10),
+                height: App(context).appHeight(0.17),
+                width: App(context).appWidth(0.87),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    circularProgress(),
+                    SizedBox(
+                      width: 20,
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Container(
+                          constraints: BoxConstraints(maxWidth: 180),
+                          child: progress < 100
+                              ? Text(
+                                  'Downloading...' +
+                                      progress.toStringAsFixed(0) +
+                                      '%',
+                                  overflow: TextOverflow.clip,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .subtitle1
+                                      .copyWith(fontSize: 15),
+                                )
+                              : Text(
+                                  'Downloading...' + '100%',
+                                  overflow: TextOverflow.clip,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .subtitle1
+                                      .copyWith(fontSize: 15),
+                                ),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Container(
+                          constraints: BoxConstraints(maxWidth: 180),
+                          child: Text(
+                            'Large files may take some time...',
+                            overflow: TextOverflow.clip,
+                            style: Theme.of(context)
+                                .textTheme
+                                .subtitle1
+                                .copyWith(fontSize: 12),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Container(
+                          constraints: BoxConstraints(maxWidth: 180),
+                          child: Text(
+                            'Access downloads from Drawer > My Downloads',
+                            overflow: TextOverflow.clip,
+                            style: Theme.of(context)
+                                .textTheme
+                                .subtitle1
+                                .copyWith(fontSize: 12),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          child: FractionallySizedBox(
               widthFactor: 0.99,
               child: Container(
                 margin: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
@@ -133,7 +228,9 @@ class SyllabusTileView extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           TextButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              model.download(widget.syllabus);
+                            },
                             child: Row(
                               children: [
                                 Icon(
@@ -159,7 +256,7 @@ class SyllabusTileView extends StatelessWidget {
                             onPressed: () {
                               final RenderBox box = context.findRenderObject();
                               Share.share(
-                                  "Syllabus Branch: ${syllabus.branch}\n\nSubject Name: ${syllabus.subjectName}\n\nLink:${syllabus.GDriveLink}\n\nFind Latest Notes | Question Papers | Syllabus | Resources for Osmania University at the OU NOTES App\n\nhttps://play.google.com/store/apps/details?id=com.notes.ounotes",
+                                  "Syllabus Branch: ${widget.syllabus.branch}\n\nSubject Name: ${widget.syllabus.subjectName}\n\nLink:${widget.syllabus.GDriveLink}\n\nFind Latest Notes | Question Papers | Syllabus | Resources for Osmania University at the OU NOTES App\n\nhttps://play.google.com/store/apps/details?id=com.notes.ounotes",
                                   sharePositionOrigin:
                                       box.localToGlobal(Offset.zero) &
                                           box.size);
@@ -186,7 +283,7 @@ class SyllabusTileView extends StatelessWidget {
                           TextButton(
                             onPressed: () {
                               model.reportNote(
-                                doc: syllabus,
+                                doc: widget.syllabus,
                               );
                             },
                             child: Row(
@@ -214,7 +311,7 @@ class SyllabusTileView extends StatelessWidget {
                             children: [
                                 TextButton(
                                   onPressed: () async {
-                                    await model.navigateToEditView(syllabus);
+                                    await model.navigateToEditView(widget.syllabus);
                                   },
                                   child: Row(
                                     children: [
@@ -234,7 +331,7 @@ class SyllabusTileView extends StatelessWidget {
                                 ),
                                 TextButton(
                                   onPressed: () async {
-                                    await model.delete(syllabus);
+                                    await model.delete(widget.syllabus);
                                   },
                                   child: Row(
                                     children: [
@@ -257,6 +354,7 @@ class SyllabusTileView extends StatelessWidget {
                   ],
                 ),
               ),
+            ),
             ),
         viewModelBuilder: () => SyllabusTileViewModel());
   }

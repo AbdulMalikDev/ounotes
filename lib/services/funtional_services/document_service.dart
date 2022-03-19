@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:FSOUNotes/app/app.locator.dart';
 import 'package:FSOUNotes/app/app.logger.dart';
 import 'package:FSOUNotes/app/app.router.dart';
+import 'package:FSOUNotes/enums/bottom_sheet_type.dart';
 import 'package:FSOUNotes/enums/constants.dart';
 import 'package:FSOUNotes/enums/enums.dart';
 import 'package:FSOUNotes/misc/helper.dart';
@@ -13,11 +14,13 @@ import 'package:FSOUNotes/models/document.dart';
 import 'package:FSOUNotes/models/notes.dart';
 import 'package:FSOUNotes/models/report.dart';
 import 'package:FSOUNotes/models/subject.dart';
+import 'package:FSOUNotes/models/user.dart';
 import 'package:FSOUNotes/models/verifier.dart';
 import 'package:FSOUNotes/services/funtional_services/authentication_service.dart';
 import 'package:FSOUNotes/services/funtional_services/cloud_storage_service.dart';
 import 'package:FSOUNotes/services/funtional_services/firebase_firestore/firestore_service.dart';
 import 'package:FSOUNotes/services/funtional_services/google_drive/google_drive_service.dart';
+import 'package:FSOUNotes/services/funtional_services/notification_service.dart';
 import 'package:FSOUNotes/services/state_services/subjects_service.dart';
 import 'package:clipboard/clipboard.dart';
 import 'package:flutter/cupertino.dart';
@@ -37,6 +40,7 @@ class DocumentService{
   SubjectsService _subjectsService = locator<SubjectsService>();
   GoogleDriveService _googleDriveService = locator<GoogleDriveService>();
   AuthenticationService _authenticationService = locator<AuthenticationService>();
+  NotificationService _notificationService = locator<NotificationService>();
 
   ValueNotifier<double> downloadProgress = new ValueNotifier(0);
 
@@ -185,6 +189,58 @@ class DocumentService{
 
     }
     
+  }
+
+  downloadDocument({AbstractDocument note}) async {
+    SheetResponse response = await _bottomSheetService.showCustomSheet(
+        variant: BottomSheetType.filledStacks,
+        title: "⬇",
+        description: "Sure you want to download ${note.title} ?",
+        mainButtonTitle: "YES",
+        secondaryButtonTitle: "NO",
+        customData: {"download": true});
+    print(response?.confirmed);
+    if (response == null || !response.confirmed) return;
+    await _googleDriveService.downloadPuchasedPdf(
+      note: note,
+      startDownload: () {
+        // setLoading(true);
+      },
+      onDownloadedCallback: (path, fileName) async {
+        // setLoading(false);
+        await _notificationService.dispatchLocalNotification(
+            NotificationService.download_purchase_notify, {
+          "title": "Downloaded " + fileName,
+          "body":
+              "PDF File has been downloaded in the downloads folder. Thank you for using the OU Notes app.",
+          "payload": {"path": path, "id": note.id},
+        });
+        User user = await _authenticationService.getUser();
+        user.addDownload("${note.subjectId}_${note.id}");
+        _navigationService.navigateTo(Routes.thankYouView,
+            arguments: ThankYouViewArguments(filePath: path));
+      },
+    );
+    return true;
+
+    // -- Legacy Code used for premium in-app  feature--
+    //
+    // ProductDetails prod = _googleInAppPaymentService
+    //     .getProduct(GoogleInAppPaymentService.pdfProductID);
+    // //Show download floating sheet
+    // SheetResponse response = await _bottomSheetService.showCustomSheet(
+    //     variant: BottomSheetType.downloadPdf,
+    //     title: "Download PDF",
+    //     customData: {"price": prod?.price ?? "10"});
+
+    // if (response?.confirmed ?? false) {
+    //   if (prod == null) {
+    //     return;
+    //   }
+    //   await _googleInAppPaymentService.buyProduct(prod: prod, note: note);
+    //   log.e("Download started");
+    // }
+  
   }
 
   deleteDocument(UploadLog logItem) async {
