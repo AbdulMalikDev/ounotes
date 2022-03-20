@@ -386,13 +386,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "9.0.1"
-  firebase_admob:
-    dependency: "direct main"
-    description:
-      name: firebase_admob
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.11.2"
   firebase_analytics:
     dependency: "direct main"
     description:
@@ -722,7 +715,7 @@ packages:
       name: google_mobile_ads
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.12.2+1"
+    version: "1.1.0"
   google_sign_in:
     dependency: "direct main"
     description:

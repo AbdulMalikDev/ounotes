@@ -88,7 +88,7 @@ dependencies:
   awesome_notifications: ^0.0.6+10
 
   # firebase/google packages
-  firebase_admob: ^0.11.2
+  # firebase_admob: ^0.11.2
   firebase_analytics: ^8.2.0
   firebase_auth: ^3.0.1
   firebase_messaging: ^10.0.4
@@ -100,7 +100,7 @@ dependencies:
   google_sign_in: ^5.0.5
   googleapis: ^4.0.0
   googleapis_auth: ^1.1.0
-  google_mobile_ads: ^0.12.1+1
+  google_mobile_ads: ^1.1.0
   in_app_purchase: ^0.5.2
 
   # packages of other services being used

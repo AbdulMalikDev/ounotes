@@ -64,7 +64,7 @@ class NotesViewModel extends BaseViewModel {
   List<Widget> mainListOfNotes = [];
   AdmobService get admobService => _admobService;
   RemoteConfigService get remoteConfig => _remoteConfigService;
-  String get ADMOB_AD_BANNER_ID => _admobService.ADMOB_AD_BANNER_ID;
+  // String get ADMOB_AD_BANNER_ID => _admobService.ADMOB_AD_BANNER_ID;
   String get ADMOB_APP_ID => _admobService.ADMOB_APP_ID;
   List<Note> _notes = [];
   ValueNotifier<List<Widget>> get notesTiles => _notesTiles;

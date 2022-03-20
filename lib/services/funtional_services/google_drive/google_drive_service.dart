@@ -19,6 +19,7 @@ import 'package:FSOUNotes/enums/enums.dart';
 import 'package:FSOUNotes/services/state_services/syllabus_service.dart';
 import 'package:FSOUNotes/utils/file_picker_service.dart';
 import 'package:ext_storage/ext_storage.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mime/mime.dart';
 import 'package:pdf_compressor/pdf_compressor.dart';
 import 'package:permission_handler/permission_handler.dart';

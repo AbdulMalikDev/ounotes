@@ -8,6 +8,7 @@ import 'package:FSOUNotes/models/UploadLog.dart';
 import 'package:FSOUNotes/models/document.dart';
 import 'package:FSOUNotes/models/link.dart';
 import 'package:FSOUNotes/models/notes.dart' hide log;
+import 'package:FSOUNotes/models/notification.dart';
 import 'package:FSOUNotes/models/question_paper.dart' hide log;
 import 'package:FSOUNotes/models/report.dart' hide log;
 import 'package:FSOUNotes/models/subject.dart' hide log;
@@ -67,6 +68,8 @@ class FirestoreService {
       FirebaseFirestore.instance.collection("confidential");
   final CollectionReference _uploadLogCollectionReference =
       FirebaseFirestore.instance.collection("uploadLog");
+  final CollectionReference _notificationsCollectionReference =
+      FirebaseFirestore.instance.collection("Notifications");
 
   NotesService _notesService = locator<NotesService>();
   QuestionPaperService _questionPaperService = locator<QuestionPaperService>();

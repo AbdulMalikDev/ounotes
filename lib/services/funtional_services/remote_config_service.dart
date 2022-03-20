@@ -17,7 +17,7 @@ class RemoteConfigService{
         minimumFetchInterval: Duration.zero,
       ));
       RemoteConfigValue(null, ValueSource.valueStatic);
-      _remoteConfig.fetchAndActivate();
+      await _remoteConfig.fetchAndActivate();
       // //TODO DEV CHECKLIST
       //FIXME 
       // await remoteConfig.setConfigSettings(RemoteConfigSettings(minimumFetchInterval: const Duration(hours: 4)));

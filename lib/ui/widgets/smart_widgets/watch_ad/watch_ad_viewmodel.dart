@@ -32,11 +32,8 @@ class WatchAdToContinueViewModel extends BaseViewModel {
   }
 
   showAd() async {
-    //TODO implement show ads
-    // await _admobService.watchAdNow();
-    // if(_admobService.adDue && !_admobService.adShown)await _admobService.showInterstitialAd();
-    // await Future.delayed(Duration(seconds: 1));
-    // _navigationService.popRepeated(1);
-
+    await _admobService.showInterstitialAd();
+    _admobService.incrementNumberOfTimeNotesOpened();
+    _navigationService.popRepeated(1);
   }
 }

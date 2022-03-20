@@ -14,6 +14,7 @@ import 'package:feature_discovery/feature_discovery.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 import 'package:flutter/material.dart';
@@ -36,6 +37,7 @@ import 'models/download.dart';
 Logger log = getLogger("main");
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  MobileAds.instance.initialize();
   await Firebase.initializeApp();
   //Dynamic Injection
   setupLocator();

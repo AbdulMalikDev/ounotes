@@ -84,9 +84,7 @@ extension GoogleDriveWrites on GoogleDriveService{
       log.i("suffix of size" + bytesuffix);
       log.i("size of file" + bytes);
       var suffix = ["MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
-      if (double.parse(bytes) > 35 && suffix.contains(bytesuffix)) {
-        return "File size more than 35mb";
-      }
+      bool largerSizeThanAllowed = double.parse(bytes) > 35 && suffix.contains(bytesuffix);
 
       //>> 1.3 Verify intent of File Upload with user to make sure 
       //>>     they haven't uploaded the wrong file by mistake
@@ -102,12 +100,20 @@ extension GoogleDriveWrites on GoogleDriveService{
         return "Invalid document";
       }
 
-      //>> 1.4 Compress PDF
-      String outputPath = await getOutputPath();
-      log.e(outputPath);
-      await PdfCompressor.compressPdfFile(
-          docPath, outputPath, CompressQuality.MEDIUM);
-      fileToUpload = File(outputPath);
+      //>> 1.4 Compress PDF (only if it is notes)
+      if(largerSizeThanAllowed){
+
+        if(docEnum != Document.Notes){
+          Fluttertoast.showToast(msg:"File size too large!");
+          return;
+        }
+        String outputPath = await getOutputPath();
+        await PdfCompressor.compressPdfFile(
+            docPath, outputPath, CompressQuality.MEDIUM);
+        fileToUpload = File(outputPath);
+        Fluttertoast.showToast(msg: "File Size too large! compressing document... This may decrease quality.",toastLength: Toast.LENGTH_LONG);
+        
+      }
 
       //>> 1.5 Upload to Google Drive
       log.i("Uploading File to Google Drive");
