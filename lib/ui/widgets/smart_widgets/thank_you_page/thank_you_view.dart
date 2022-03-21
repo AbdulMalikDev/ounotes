@@ -151,7 +151,7 @@ class _ThankYouViewState extends State<ThankYouView> {
                         ),
                       if (widget.filePath != null)
                         Text(
-                          "Internal Storage > Downloads folder ",
+                          "Internal Storage > Downloads > OUNotes folder ",
                           style: Theme.of(context)
                               .textTheme
                               .subtitle1

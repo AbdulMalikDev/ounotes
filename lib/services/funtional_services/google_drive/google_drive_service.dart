@@ -1,10 +1,17 @@
 import 'dart:io';
 import 'dart:math' as math;
-import 'dart:ui' as ui;
+
 import 'package:FSOUNotes/app/app.locator.dart';
+import 'package:FSOUNotes/app/app.logger.dart';
 import 'package:FSOUNotes/app/app.router.dart';
+import 'package:FSOUNotes/enums/constants.dart';
+import 'package:FSOUNotes/enums/enums.dart';
 import 'package:FSOUNotes/models/document.dart';
 import 'package:FSOUNotes/models/download.dart';
+import 'package:FSOUNotes/models/notes.dart';
+import 'package:FSOUNotes/models/question_paper.dart';
+import 'package:FSOUNotes/models/subject.dart';
+import 'package:FSOUNotes/models/syllabus.dart';
 import 'package:FSOUNotes/services/funtional_services/authentication_service.dart';
 import 'package:FSOUNotes/services/funtional_services/cloud_storage_service.dart';
 import 'package:FSOUNotes/services/funtional_services/firebase_firestore/firestore_service.dart';
@@ -14,44 +21,32 @@ import 'package:FSOUNotes/services/state_services/download_service.dart';
 import 'package:FSOUNotes/services/state_services/notes_service.dart';
 import 'package:FSOUNotes/services/state_services/question_paper_service.dart';
 import 'package:FSOUNotes/services/state_services/subjects_service.dart';
-import 'package:FSOUNotes/enums/constants.dart';
-import 'package:FSOUNotes/enums/enums.dart';
 import 'package:FSOUNotes/services/state_services/syllabus_service.dart';
 import 'package:FSOUNotes/utils/file_picker_service.dart';
-// import 'package:ext_storage/ext_storage.dart';
-import 'package:mime/mime.dart';
-import 'package:pdf_compressor/pdf_compressor.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'package:stacked_services/stacked_services.dart';
-import 'package:syncfusion_flutter_pdf/pdf.dart';
-import 'package:FSOUNotes/models/notes.dart';
-import 'package:FSOUNotes/models/question_paper.dart';
-import 'package:FSOUNotes/models/subject.dart';
-import 'package:FSOUNotes/models/syllabus.dart';
-import 'package:FSOUNotes/ui/views/notes/notes_viewmodel.dart';
+import 'package:ext_storage/ext_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:googleapis_auth/auth.dart';
-import 'package:googleapis_auth/auth_io.dart';
-import 'package:http/io_client.dart';
-import 'package:FSOUNotes/app/app.logger.dart';
-
-import 'package:logger/logger.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:googleapis/drive/v3.dart' as ga;
+import 'package:googleapis_auth/auth_io.dart';
 import 'package:http/http.dart' as http;
+import 'package:http/io_client.dart';
+import 'package:logger/logger.dart';
+import 'package:mime/mime.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:pdf_compressor/pdf_compressor.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:stacked_services/stacked_services.dart';
+import 'package:syncfusion_flutter_pdf/pdf.dart';
 
-// All top level Variables and Serivces needed are stored in this file
-// For specific functions explore the files below
-
+// Contains all Google Drive delete function calls
+part './CRUD/google_drive_delete.dart';
 // Contains all Google Drive read function calls
 part './CRUD/google_drive_read.dart';
 // Contains all Google Drive create and update function calls
 part './CRUD/google_drive_write.dart';
-// Contains all Google Drive delete function calls
-part './CRUD/google_drive_delete.dart';
 // Contains all other functions and switch cases
 // If its not making a call directly it goes here
 part './google_drive_extra/google_drive_functions.dart';
@@ -171,58 +166,72 @@ class GoogleDriveService {
   }
 
   Future downloadPuchasedPdf(
-      {Note note,
+      {var note,
       Function(String, String) onDownloadedCallback,
       Function startDownload}) async {
-    PermissionStatus status = await Permission.storage.request();
-    log.e(status.isGranted);
-    int downloadedLength = 0;
-    downloadProgress.value = 0;
-    List<int> dataStore = [];
 
-    startDownload();
-
-    //*Google Drive Set Up
-    var drive = _initializeHttpClientAndGDriveAPI();
-
-    //>> Download file
-    String fileID = note.GDriveID;
-    ga.Media file = await drive.files
-        .get(fileID, downloadOptions: ga.DownloadOptions.fullMedia);
-    // var dir = await ExtStorage.getExternalStoragePublicDirectory(
-    //     ExtStorage.DIRECTORY_DOWNLOADS);
-    var dir;
-
-    String fileName = "${note.subjectName}_${note.title}.pdf";
-    String filePath = dir + fileName;
-
-    //*Figure out size from note.size property to show proper loading indicator
-    File localFile;
-    double contentLength = double.parse(note.size.split(" ")[0]);
-    contentLength = note.size.split(" ")[1] == 'KB'
-        ? contentLength * 1000
-        : contentLength * 1000000;
-    log.e("Size in numbers : " + contentLength.toString());
-
-    //*Start the download
-    file.stream.listen((data) {
-      downloadedLength += data.length;
-      downloadProgress.value = (downloadedLength / contentLength) * 100;
-      log.e(downloadedLength);
-      log.e(contentLength);
-      print("loading.. : " + downloadProgress.value.toString());
-      // if(downloadProgress.value < 1)
-      // EasyLoading.showProgress(downloadProgress.value, status: 'downloading...');
-      dataStore.insertAll(dataStore.length, data);
-    }, onDone: () async {
-      // EasyLoading.dismiss();
-      localFile = File(filePath);
-      await localFile.writeAsBytes(dataStore);
-      await Future.delayed(Duration(seconds: 1));
+    try {
+      
+      PermissionStatus status = await Permission.storage.request();
+      log.e(status.isGranted);
+      int downloadedLength = 0;
       downloadProgress.value = 0;
-      onDownloadedCallback(localFile.path, fileName);
-      log.e("DOWNLOAD DONE");
-    });
+      List<int> dataStore = [];
+
+      startDownload();
+
+      //*Google Drive Set Up
+      ga.DriveApi drive = await _initializeHttpClientAndGDriveAPI();
+      print(drive);
+
+      //>> Download file
+      String fileID = note.GDriveID;
+      ga.Media file = await drive.files
+          .get(fileID, downloadOptions: ga.DownloadOptions.fullMedia);
+      var dir = await ExtStorage.getExternalStoragePublicDirectory(
+          ExtStorage.DIRECTORY_DOWNLOADS)+ "/OUNotes/" + note.subjectName + "/" + note.type.replaceAll(' ', '') + "/";
+      _createPath(dir);
+
+      String fileName = "${note.subjectName}_${note.title}.pdf";
+      String filePath = dir + fileName;
+      log.e(filePath);           
+      //*Figure out size from note.size property to show proper loading indicator
+      File localFile;
+      double contentLength;
+      if (note.size != null){
+        contentLength = double.parse(note.size.split(" ")[0]);
+        contentLength = note.size?.split(" ")[1] == 'KB'
+            ? contentLength * 1000
+            : contentLength * 1000000;
+        log.e("Size in numbers : " + contentLength.toString());
+      }else{
+        contentLength = 0.0;
+      }
+
+      //*Start the download
+      file.stream.listen((data) {
+        downloadedLength += data.length;
+        downloadProgress.value = (downloadedLength / contentLength) * 100;
+        // log.e(downloadedLength);
+        // log.e(contentLength);
+        print("loading.. : " + downloadProgress.value.toString());
+        // if(downloadProgress.value < 1)
+        // EasyLoading.showProgress(downloadProgress.value, status: 'downloading...');
+        dataStore.insertAll(dataStore.length, data);
+      }, onDone: () async {
+        // EasyLoading.dismiss();
+        localFile = File(filePath);
+        await localFile.writeAsBytes(dataStore);
+        await Future.delayed(Duration(seconds: 1));
+        await onDownloadedCallback(localFile.path, fileName);
+        log.e("DOWNLOAD DONE");
+        downloadProgress.value = 0;
+      });
+
+    } catch (e) {
+      print("error");
+      log.e(e);
+    }
   }
 
 //This function is used to upload verified documents that are in Firebase, to Google Drive

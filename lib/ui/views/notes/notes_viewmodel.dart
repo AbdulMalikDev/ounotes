@@ -10,6 +10,7 @@ import 'package:FSOUNotes/models/subject.dart';
 import 'package:FSOUNotes/models/user.dart';
 import 'package:FSOUNotes/services/funtional_services/admob_service.dart';
 import 'package:FSOUNotes/services/funtional_services/authentication_service.dart';
+import 'package:FSOUNotes/services/funtional_services/document_service.dart';
 import 'package:FSOUNotes/services/funtional_services/firebase_firestore/firestore_service.dart';
 import 'package:FSOUNotes/services/funtional_services/google_drive/google_drive_service.dart';
 import 'package:FSOUNotes/services/funtional_services/google_in_app_payment_service.dart';
@@ -50,6 +51,7 @@ class NotesViewModel extends BaseViewModel {
   SharedPreferencesService _sharedPreferencesService =
       locator<SharedPreferencesService>();
   SubjectsService _subjectsService = locator<SubjectsService>();
+  DocumentService _documentService = locator<DocumentService>();
   BottomSheetService _bottomSheetService = locator<BottomSheetService>();
   GoogleDriveService _googleDriveService = locator<GoogleDriveService>();
 
@@ -63,7 +65,7 @@ class NotesViewModel extends BaseViewModel {
   List<Widget> mainListOfNotes = [];
   AdmobService get admobService => _admobService;
   RemoteConfigService get remoteConfig => _remoteConfigService;
-  String get ADMOB_AD_BANNER_ID => _admobService.ADMOB_AD_BANNER_ID;
+  // String get ADMOB_AD_BANNER_ID => _admobService.ADMOB_AD_BANNER_ID;
   String get ADMOB_APP_ID => _admobService.ADMOB_APP_ID;
   List<Note> _notes = [];
   ValueNotifier<List<Widget>> get notesTiles => _notesTiles;
@@ -235,7 +237,7 @@ class NotesViewModel extends BaseViewModel {
       });
     }
 
-    //> Adding this in the end so that it doesn't mess up the pinned notes
+    //> Adding this in the start so that it doesn't mess up the pinned notes
     if (notesForNotificationDisplay) {
       _notesTiles.value.insert(
         0,
@@ -243,7 +245,6 @@ class NotesViewModel extends BaseViewModel {
       );
     }
     setBusy(false);
-    print(_notesTiles.value);
     notifyListeners();
   }
 
@@ -440,7 +441,7 @@ class NotesViewModel extends BaseViewModel {
         notification: notification,
         isPinned: isPinned,
         refresh: refresh,
-        onDownloadCallback: handleDownloadPurchase,
+        onDownloadCallback: handleDownload,
       ),
       onTap: () async {
         // await incrementViewForAd();
@@ -454,53 +455,10 @@ class NotesViewModel extends BaseViewModel {
     _subjectsService.setBox(box);
   }
 
-  void handleDownloadPurchase({Note note}) async {
-    SheetResponse response = await _bottomSheetService.showCustomSheet(
-        variant: BottomSheetType.filledStacks,
-        title: "⬇",
-        description: "Sure you want to download ${note.title} ?",
-        mainButtonTitle: "YES",
-        secondaryButtonTitle: "NO",
-        customData: {"download": true});
-    print(response?.confirmed);
-    if (response == null || !response.confirmed) return;
-    await _googleDriveService.downloadPuchasedPdf(
-      note: note,
-      startDownload: () {
-        setLoading(true);
-      },
-      onDownloadedCallback: (path, fileName) async {
-        setLoading(false);
-        await _notificationService.dispatchLocalNotification(
-            NotificationService.download_purchase_notify, {
-          "title": "Downloaded " + fileName,
-          "body":
-              "PDF File has been downloaded in the downloads folder. Thank you for using the OU Notes app.",
-          "payload": {"path": path, "id": note.id},
-        });
-        User user = await _authenticationService.getUser();
-        user.addDownload("${note.subjectId}_${note.id}");
-        _navigationService.navigateTo(Routes.thankYouView,
-            arguments: ThankYouViewArguments(filePath: path));
-      },
-    );
-
-    // -- Legacy Code used for premium in-app  feature--
-    //
-    // ProductDetails prod = _googleInAppPaymentService
-    //     .getProduct(GoogleInAppPaymentService.pdfProductID);
-    // //Show download floating sheet
-    // SheetResponse response = await _bottomSheetService.showCustomSheet(
-    //     variant: BottomSheetType.downloadPdf,
-    //     title: "Download PDF",
-    //     customData: {"price": prod?.price ?? "10"});
-
-    // if (response?.confirmed ?? false) {
-    //   if (prod == null) {
-    //     return;
-    //   }
-    //   await _googleInAppPaymentService.buyProduct(prod: prod, note: note);
-    //   log.e("Download started");
-    // }
+  void handleDownload({Note note}) async {
+    setLoading(true);
+    await _documentService.downloadDocument(note:note);
+    setLoading(false);
   }
+
 }

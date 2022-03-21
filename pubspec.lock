@@ -371,7 +371,11 @@ packages:
       name: firebase
       url: "https://pub.dartlang.org"
     source: hosted
+<<<<<<< HEAD
     version: "9.0.2"
+=======
+    version: "9.0.1"
+>>>>>>> 6b69a439e48f37920f604acf3a05ac21ccb8fee4
   firebase_analytics:
     dependency: "direct main"
     description:

@@ -178,6 +178,20 @@ extension FirestoreReads on FirestoreService {
     }
   }
 
+  loadNotificationsFromFirebase() async {
+    try {
+      QuerySnapshot snapshot = await _notificationsCollectionReference
+          .orderBy("date", descending: true)
+          .get();
+      List<Notification> reports =
+          snapshot.docs.map((doc) => Notification.fromData(doc.data())).toList();
+      return reports;
+    } catch (e) {
+      return _errorHandling(e,
+          "While retreiving NOTIFICATIONS from Firebase , Error occurred");
+    }
+  }
+
   Future<Note> getNoteById(int subId, String id) async {
     // DocumentSnapshot doc = await _subjectsCollectionReference
     //       .doc(subId.toString())
