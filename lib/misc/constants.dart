@@ -37,6 +37,7 @@ class Constants {
   static String none = 'none';
   static String upvote = 'upvote';
   static String downvote = 'downvote';
+  static String downloadAndOpenInApp = "Download & Open In App";
   static TextStyle kHintTextStyle = TextStyle(
     color: Colors.grey,
   );

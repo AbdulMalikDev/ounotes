@@ -6,6 +6,7 @@ import 'package:FSOUNotes/app/app.logger.dart';
 import 'package:FSOUNotes/app/app.router.dart';
 import 'package:FSOUNotes/enums/constants.dart';
 import 'package:FSOUNotes/enums/enums.dart';
+import 'package:external_path/external_path.dart';
 import 'package:FSOUNotes/models/document.dart';
 import 'package:FSOUNotes/models/download.dart';
 import 'package:FSOUNotes/models/notes.dart';
@@ -23,7 +24,6 @@ import 'package:FSOUNotes/services/state_services/question_paper_service.dart';
 import 'package:FSOUNotes/services/state_services/subjects_service.dart';
 import 'package:FSOUNotes/services/state_services/syllabus_service.dart';
 import 'package:FSOUNotes/utils/file_picker_service.dart';
-import 'package:ext_storage/ext_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -169,9 +169,7 @@ class GoogleDriveService {
       {var note,
       Function(String, String) onDownloadedCallback,
       Function startDownload}) async {
-
     try {
-      
       PermissionStatus status = await Permission.storage.request();
       log.e(status.isGranted);
       int downloadedLength = 0;
@@ -188,23 +186,23 @@ class GoogleDriveService {
       String fileID = note.GDriveID;
       ga.Media file = await drive.files
           .get(fileID, downloadOptions: ga.DownloadOptions.fullMedia);
-      var dir = await ExtStorage.getExternalStoragePublicDirectory(
-          ExtStorage.DIRECTORY_DOWNLOADS)+ "/OUNotes/" + note.subjectName + "/" + note.type.replaceAll(' ', '') + "/";
+      var dir = await ExternalPath.getExternalStoragePublicDirectory(
+          ExternalPath.DIRECTORY_DOWNLOADS)+ "/OUNotes/" + note.subjectName + "/" + note.type.replaceAll(' ', '') + "/";
       _createPath(dir);
 
       String fileName = "${note.subjectName}_${note.title}.pdf";
       String filePath = dir + fileName;
-      log.e(filePath);           
+      log.e(filePath);
       //*Figure out size from note.size property to show proper loading indicator
       File localFile;
       double contentLength;
-      if (note.size != null){
+      if (note.size != null) {
         contentLength = double.parse(note.size.split(" ")[0]);
         contentLength = note.size?.split(" ")[1] == 'KB'
             ? contentLength * 1000
             : contentLength * 1000000;
         log.e("Size in numbers : " + contentLength.toString());
-      }else{
+      } else {
         contentLength = 0.0;
       }
 
@@ -227,7 +225,6 @@ class GoogleDriveService {
         log.e("DOWNLOAD DONE");
         downloadProgress.value = 0;
       });
-
     } catch (e) {
       print("error");
       log.e(e);

@@ -1,5 +1,4 @@
 import 'package:FSOUNotes/AppTheme/AppStateNotifier.dart';
-import 'package:FSOUNotes/misc/constants.dart';
 import 'package:FSOUNotes/models/download.dart';
 import 'package:FSOUNotes/ui/shared/app_config.dart';
 import 'package:FSOUNotes/ui/views/downloads/Downloads_viewmodel.dart';
@@ -10,6 +9,8 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
 import 'package:stacked/stacked.dart';
+
+import '../../../enums/constants.dart';
 
 class DownLoadView extends StatefulWidget {
   const DownLoadView({Key key}) : super(key: key);
@@ -47,13 +48,13 @@ class _DownLoadViewState extends State<DownLoadView>
         body: Column(
           children: [
             Container(
-              color: theme.primaryColor,
+              color:theme.colorScheme.background,
               child: TabBar(
                 // TabBar
                 controller: _tabController,
                 labelColor: Colors.amber,
                 indicatorColor: Theme.of(context).accentColor,
-                unselectedLabelColor: Colors.white,
+                unselectedLabelColor: theme.appBarTheme.iconTheme.color,
                 labelStyle: Theme.of(context)
                     .textTheme
                     .bodyText2
@@ -61,13 +62,13 @@ class _DownLoadViewState extends State<DownLoadView>
                 tabs: <Widget>[
                   Tab(
                     text: "NOTES",
-                    icon: Icon(Icons.description),
                   ),
                   Tab(
                     text: "Question Papers",
-                    icon: Icon(Icons.note),
                   ),
-                  Tab(text: "Syllabus", icon: Icon(Icons.event_note)),
+                  Tab(
+                    text: "Syllabus",
+                  ),
                 ],
               ),
             ),
@@ -93,7 +94,8 @@ class _DownLoadViewState extends State<DownLoadView>
       child: Column(
         children: [
           ValueListenableBuilder(
-            valueListenable: Hive.box<Download>('downloads').listenable(),
+            valueListenable:
+                Hive.box<Download>(Constants.notesDownloads).listenable(),
             builder: (context, donwloadsBox, widget) {
               return Container(
                 child: SingleChildScrollView(

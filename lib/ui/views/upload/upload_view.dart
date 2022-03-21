@@ -15,12 +15,9 @@ import 'package:syncfusion_flutter_sliders/sliders.dart';
 class UploadView extends StatefulWidget {
   final Map textFieldsMap;
   //used to know whether user selected notes,syllabus,question paper or  links after opening upload selection view
-  final Document path;
+  final Document uploadType;
   final String subjectName;
-  //used to know whether user opened uploadview from inside document view or from drawer
-  final Document path2;
-  UploadView(
-      {this.textFieldsMap, @required this.subjectName, this.path, this.path2});
+  UploadView({this.textFieldsMap, @required this.subjectName, this.uploadType});
 
   @override
   _UploadViewState createState() => _UploadViewState();
@@ -30,17 +27,23 @@ class _UploadViewState extends State<UploadView> {
   final TextEditingController textFieldController1 = TextEditingController();
   final TextEditingController textFieldController2 = TextEditingController();
   final TextEditingController textFieldController3 = TextEditingController();
-  final TextEditingController controllerOfSub = TextEditingController();
+  TextEditingController controllerOfSub = TextEditingController();
   final TextEditingController controllerOfYear = TextEditingController();
   final TextEditingController controllerOfYear2 = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
   @override
+  void initState() {
+    super.initState();
+    controllerOfSub = TextEditingController(text: widget.subjectName);
+  }
+
+  @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<UploadViewModel>.reactive(
       onModelReady: (model) {
-        model.initialise(widget.path);
-        print(widget.path);
+        model.initialise(widget.uploadType);
+        print(widget.uploadType);
         if (widget.subjectName != null) {
           controllerOfSub.text = widget.subjectName;
         }
@@ -596,7 +599,7 @@ class _UploadViewState extends State<UploadView> {
             textFieldController1.text,
             textFieldController2.text,
             textFieldController3.text,
-            widget.path,
+            widget.uploadType,
             controllerOfSub.text,
             context,
           );

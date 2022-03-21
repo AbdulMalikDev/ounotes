@@ -37,7 +37,7 @@ class MainScreenViewModel extends BaseViewModel {
         key: ValueKey("Home"),
       ),
       FDInputView(key: ValueKey("input")),
-      UploadSelectionView(key: ValueKey("upload")),
+      UploadSelectionView(key: ValueKey("upload"),isFromMainScreen: true,),
       DownLoadView(key: ValueKey("download")),
       SettingsView(key: ValueKey("settings")),
     ];

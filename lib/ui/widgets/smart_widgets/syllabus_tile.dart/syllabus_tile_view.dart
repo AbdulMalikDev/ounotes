@@ -11,7 +11,9 @@ import 'package:stacked/stacked.dart';
 
 class SyllabusTileView extends StatefulWidget {
   final Syllabus syllabus;
-  const SyllabusTileView({Key key, this.syllabus}) : super(key: key);
+  final Function openDoc;
+  const SyllabusTileView({Key key,@required this.openDoc, this.syllabus})
+      : super(key: key);
 
   @override
   _SyllabusTileViewState createState() => _SyllabusTileViewState();
@@ -213,7 +215,9 @@ class _SyllabusTileViewState extends State<SyllabusTileView> {
                                         borderRadius: BorderRadius.circular(10),
                                       ),
                                     ),
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      widget.openDoc();
+                                    },
                                     child: Text(
                                       "Open",
                                       style: Theme.of(context)

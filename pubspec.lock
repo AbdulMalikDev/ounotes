@@ -323,13 +323,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.0"
-  ext_storage:
+  external_path:
     dependency: "direct main"
     description:
-      name: ext_storage
+      name: external_path
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.3"
+    version: "1.0.1"
   fake_async:
     dependency: transitive
     description:
@@ -364,18 +364,14 @@ packages:
       name: file_picker
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.3"
+    version: "3.0.4"
   firebase:
     dependency: transitive
     description:
       name: firebase
       url: "https://pub.dartlang.org"
     source: hosted
-<<<<<<< HEAD
     version: "9.0.2"
-=======
-    version: "9.0.1"
->>>>>>> 6b69a439e48f37920f604acf3a05ac21ccb8fee4
   firebase_analytics:
     dependency: "direct main"
     description:
@@ -796,7 +792,7 @@ packages:
       name: hive
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.6"
+    version: "2.1.0"
   hive_flutter:
     dependency: "direct main"
     description:

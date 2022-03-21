@@ -19,6 +19,7 @@ class NotesTileView extends StatelessWidget {
   final bool notification;
   final bool isPinned;
   final Function refresh;
+  final Function onTap;
   final Function({Note note}) onDownloadCallback;
 
   const NotesTileView({
@@ -28,6 +29,7 @@ class NotesTileView extends StatelessWidget {
     this.isPinned = false,
     this.refresh,
     this.onDownloadCallback,
+    @required this.onTap,
   }) : super(key: key);
 
   @override
@@ -80,6 +82,7 @@ class NotesTileView extends StatelessWidget {
                               model: model,
                               isPinned: isPinned,
                               onDownloadCallback: onDownloadCallback,
+                              openDoc: onTap,
                             ),
                           )
                         : NotesColumnWidget(
@@ -96,6 +99,7 @@ class NotesTileView extends StatelessWidget {
                             model: model,
                             isPinned: isPinned,
                             onDownloadCallback: onDownloadCallback,
+                            openDoc: onTap,
                           ),
                   ),
           );
@@ -119,6 +123,7 @@ class NotesColumnWidget extends StatelessWidget {
     @required this.model,
     @required this.isPinned,
     @required this.refresh,
+    @required this.openDoc,
     this.onDownloadCallback,
   }) : super(key: key);
 
@@ -134,6 +139,7 @@ class NotesColumnWidget extends StatelessWidget {
   final NotesTileViewModel model;
   final bool isPinned;
   final Function refresh;
+  final Function openDoc;
   final Function({Note note}) onDownloadCallback;
 
   @override
@@ -330,7 +336,7 @@ class NotesColumnWidget extends StatelessWidget {
                         ),
                       ),
                       onPressed: () {
-                        model.openDoc(note);
+                        openDoc();
                       },
                       child: Text(
                         "Open",
