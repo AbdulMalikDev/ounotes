@@ -38,6 +38,7 @@ class NotesViewModel extends BaseViewModel {
   String table = 'uservoted_subjects';
   List<Download> downloadedNotes = [];
   ValueNotifier<List<Widget>> _notesTiles = new ValueNotifier([]);
+  bool _showAdminFeatures = false;
 
   FirestoreService _firestoreService = locator<FirestoreService>();
   AdmobService _admobService = locator<AdmobService>();
@@ -68,6 +69,7 @@ class NotesViewModel extends BaseViewModel {
   ValueNotifier<List<Widget>> get notesTiles => _notesTiles;
   bool isloading = false;
   bool get loading => isloading;
+  bool get showAdminFeatures => _showAdminFeatures;
   Box box;
   ValueNotifier<double> get downloadProgress =>
       _googleDriveService.downloadProgress;
@@ -300,6 +302,11 @@ class NotesViewModel extends BaseViewModel {
     return;
   }
 
+  onShowAdminFeature(bool val) {
+    _showAdminFeatures = val;
+    notifyListeners();
+  }
+
   navigateToPDFScreen(String buttonText, Note note) {
     if (buttonText == 'Open In App') {
       navigateToPDFView(note);
@@ -434,7 +441,6 @@ class NotesViewModel extends BaseViewModel {
         isPinned: isPinned,
         refresh: refresh,
         onDownloadCallback: handleDownloadPurchase,
-       
       ),
       onTap: () async {
         // await incrementViewForAd();

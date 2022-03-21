@@ -7,7 +7,8 @@ import 'package:stacked/stacked.dart';
 class UploadSelectionView extends StatelessWidget {
   final String subjectName;
   final Document path;
-  UploadSelectionView({this.subjectName, this.path});
+  
+  UploadSelectionView({key,this.subjectName, this.path}):super(key:key);
 
   @override
   Widget build(BuildContext context) {

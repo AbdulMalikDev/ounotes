@@ -175,25 +175,24 @@ class MyApp extends StatelessWidget {
           //     _remoteConfigService.remoteConfig.getString("WIREDASH_SECRET"),
           navigatorKey: StackedService.navigatorKey,
           child: ThemeProvider(
-            initTheme: AppStateNotifier.isDarkModeOn
-                ? AppTheme.darkTheme
-                : AppTheme.lightTheme,
-            child: Builder(builder: (context) {
-              return MaterialApp(
-                navigatorObservers: <NavigatorObserver>[observer],
-                title: 'OU Notes',
-                debugShowCheckedModeBanner: false,
-                theme: ThemeProvider.of(context),
-                // theme: AppTheme.lightTheme,
-                // darkTheme: ThemeProvider.of(context),
-                // themeMode: AppStateNotifier.isDarkModeOn
-                //     ? ThemeMode.dark
-                //     : ThemeMode.light,
-                onGenerateRoute: StackedRouter().onGenerateRoute,
-                navigatorKey: StackedService.navigatorKey,
-              );
-            }),
-          ),
+              initTheme: AppStateNotifier.isDarkModeOn
+                  ? AppTheme.darkTheme
+                  : AppTheme.lightTheme,
+              builder: (context, myTheme) {
+                return MaterialApp(
+                  navigatorObservers: <NavigatorObserver>[observer],
+                  title: 'OU Notes',
+                  debugShowCheckedModeBanner: false,
+                  theme: myTheme,
+                  // theme: AppTheme.lightTheme,
+                  // darkTheme: ThemeProvider.of(context),
+                  // themeMode: AppStateNotifier.isDarkModeOn
+                  //     ? ThemeMode.dark
+                  //     : ThemeMode.light,
+                  onGenerateRoute: StackedRouter().onGenerateRoute,
+                  navigatorKey: StackedService.navigatorKey,
+                );
+              }),
         ),
       ),
       viewModelBuilder: () => locator<AppStateNotifier>(),

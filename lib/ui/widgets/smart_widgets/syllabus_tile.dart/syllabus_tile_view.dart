@@ -127,91 +127,142 @@ class SyllabusTileView extends StatelessWidget {
                       margin: const EdgeInsets.symmetric(horizontal: 10),
                       color: theme.colorScheme.onBackground,
                     ),
-                    Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 10),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          TextButton(
-                            onPressed: () {},
-                            child: Row(
-                              children: [
-                                Icon(
-                                  Icons.download,
-                                  color: Colors.orange,
-                                ),
-                                SizedBox(
-                                  width: 5,
-                                ),
-                                Text(
-                                  "Download",
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodyText2
-                                      .copyWith(
-                                        color: Colors.orange,
-                                      ),
-                                )
-                              ],
+                    if (!model.isAdmin)
+                      Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 10),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            TextButton(
+                              onPressed: () {},
+                              child: Row(
+                                children: [
+                                  Icon(
+                                    Icons.download,
+                                    color: Colors.orange,
+                                  ),
+                                  SizedBox(
+                                    width: 5,
+                                  ),
+                                  Text(
+                                    "Download",
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyText2
+                                        .copyWith(
+                                          color: Colors.orange,
+                                        ),
+                                  )
+                                ],
+                              ),
                             ),
-                          ),
-                          TextButton(
-                            onPressed: () {
-                              final RenderBox box = context.findRenderObject();
-                              Share.share(
-                                  "Syllabus Branch: ${syllabus.branch}\n\nSubject Name: ${syllabus.subjectName}\n\nLink:${syllabus.GDriveLink}\n\nFind Latest Notes | Question Papers | Syllabus | Resources for Osmania University at the OU NOTES App\n\nhttps://play.google.com/store/apps/details?id=com.notes.ounotes",
-                                  sharePositionOrigin:
-                                      box.localToGlobal(Offset.zero) &
-                                          box.size);
-                            },
-                            child: Row(
-                              children: [
-                                Icon(Icons.share,
-                                    color: Theme.of(context).primaryColor),
-                                SizedBox(
-                                  width: 5,
-                                ),
-                                Text(
-                                  "Share",
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodyText2
-                                      .copyWith(
-                                          color:
-                                              Theme.of(context).primaryColor),
-                                )
-                              ],
+                            TextButton(
+                              onPressed: () {
+                                final RenderBox box =
+                                    context.findRenderObject();
+                                Share.share(
+                                    "Syllabus Branch: ${syllabus.branch}\n\nSubject Name: ${syllabus.subjectName}\n\nLink:${syllabus.GDriveLink}\n\nFind Latest Notes | Question Papers | Syllabus | Resources for Osmania University at the OU NOTES App\n\nhttps://play.google.com/store/apps/details?id=com.notes.ounotes",
+                                    sharePositionOrigin:
+                                        box.localToGlobal(Offset.zero) &
+                                            box.size);
+                              },
+                              child: Row(
+                                children: [
+                                  Icon(Icons.share,
+                                      color: Theme.of(context).primaryColor),
+                                  SizedBox(
+                                    width: 5,
+                                  ),
+                                  Text(
+                                    "Share",
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyText2
+                                        .copyWith(
+                                            color:
+                                                Theme.of(context).primaryColor),
+                                  )
+                                ],
+                              ),
                             ),
-                          ),
-                          TextButton(
-                            onPressed: () {
-                              model.reportNote(
-                                doc: syllabus,
-                              );
-                            },
-                            child: Row(
-                              children: [
-                                Icon(Icons.report, color: Colors.red),
-                                SizedBox(
-                                  width: 5,
-                                ),
-                                Text(
-                                  "Report",
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodyText2
-                                      .copyWith(color: Colors.red),
-                                )
-                              ],
+                            TextButton(
+                              onPressed: () {
+                                model.reportNote(
+                                  doc: syllabus,
+                                );
+                              },
+                              child: Row(
+                                children: [
+                                  Icon(Icons.report, color: Colors.red),
+                                  SizedBox(
+                                    width: 5,
+                                  ),
+                                  Text(
+                                    "Report",
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyText2
+                                        .copyWith(color: Colors.red),
+                                  )
+                                ],
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                    model.isAdmin
-                        ? Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
+                    if (model.isAdmin)
+                      Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 10),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            TextButton(
+                              onPressed: () {},
+                              child: Row(
+                                children: [
+                                  Icon(
+                                    Icons.download,
+                                    color: Colors.orange,
+                                  ),
+                                ],
+                              ),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                final RenderBox box =
+                                    context.findRenderObject();
+                                Share.share(
+                                    "Syllabus Branch: ${syllabus.branch}\n\nSubject Name: ${syllabus.subjectName}\n\nLink:${syllabus.GDriveLink}\n\nFind Latest Notes | Question Papers | Syllabus | Resources for Osmania University at the OU NOTES App\n\nhttps://play.google.com/store/apps/details?id=com.notes.ounotes",
+                                    sharePositionOrigin:
+                                        box.localToGlobal(Offset.zero) &
+                                            box.size);
+                              },
+                              child: Row(
+                                children: [
+                                  Icon(Icons.share,
+                                      color: Theme.of(context).primaryColor),
+                                  SizedBox(
+                                    width: 5,
+                                  ),
+                                ],
+                              ),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                model.reportNote(doc: syllabus);
+                              },
+                              child: Row(
+                                children: [
+                                  Icon(Icons.report, color: Colors.red),
+                                  SizedBox(
+                                    width: 5,
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
                                 TextButton(
                                   onPressed: () async {
                                     await model.navigateToEditView(syllabus);
@@ -222,13 +273,6 @@ class SyllabusTileView extends StatelessWidget {
                                       SizedBox(
                                         width: 5,
                                       ),
-                                      Text(
-                                        "EDIT",
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyText2
-                                            .copyWith(color: Colors.blue),
-                                      )
                                     ],
                                   ),
                                 ),
@@ -242,18 +286,14 @@ class SyllabusTileView extends StatelessWidget {
                                       SizedBox(
                                         width: 5,
                                       ),
-                                      Text(
-                                        "DELETE",
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyText2
-                                            .copyWith(color: Colors.red),
-                                      )
                                     ],
                                   ),
                                 ),
-                              ])
-                        : Container(),
+                              ],
+                            )
+                          ],
+                        ),
+                      ),
                   ],
                 ),
               ),

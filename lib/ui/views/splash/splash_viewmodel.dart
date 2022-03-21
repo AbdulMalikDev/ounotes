@@ -45,7 +45,7 @@ class SplashViewModel extends FutureViewModel {
       // if(isUserOnline)_navigationService.replaceWith(Routes.homeView,arguments:HomeViewArguments(shouldShowUpdateDialog: result["doesUserNeedUpdate"],versionDetails: result));
       // else _navigationService.replaceWith(Routes.homeView);
       _navigationService.navigateToView(
-        MainView(),
+        MainScreenView(),
       );
     } else {
       log.e("user is null");

@@ -124,6 +124,7 @@ class _NotesViewState extends State<NotesView>
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
+               
                 Container(
                   child: model.isBusy
                       ? Center(

@@ -4,17 +4,21 @@ import 'package:FSOUNotes/enums/constants.dart';
 import 'package:FSOUNotes/enums/enums.dart';
 import 'package:FSOUNotes/misc/helper.dart';
 import 'package:FSOUNotes/models/recently_open_notes.dart';
+import 'package:FSOUNotes/services/funtional_services/onboarding_service.dart';
 import 'package:FSOUNotes/ui/shared/app_config.dart';
 import 'package:FSOUNotes/ui/views/downloads/Downloads_view.dart';
 import 'package:FSOUNotes/ui/views/home/home_viewmodel.dart';
 import 'package:FSOUNotes/ui/views/home/recently_added_notes/recently_opened_notes_tile.dart';
 import 'package:FSOUNotes/ui/views/search/search_view.dart';
 import 'package:FSOUNotes/ui/widgets/dumb_widgets/no_subjects_overlay.dart';
+import 'package:FSOUNotes/ui/widgets/smart_widgets/subjects_dialog/subjects_dialog_view.dart';
 import 'package:FSOUNotes/ui/widgets/smart_widgets/user_subject_list/user_subject_list_view.dart';
+import 'package:feature_discovery/feature_discovery.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:logger/logger.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:pimp_my_button/pimp_my_button.dart';
 import 'package:stacked/stacked.dart';
 
 Logger log = getLogger("HomeView");
@@ -52,152 +56,297 @@ class _HomeViewState extends State<HomeView> {
         model.showIntroDialog(context);
         // model.showTelgramDialog(context);
       },
-      builder: (context, homeViewModel, child) => Column(
-        children: [
-          Container(
-            alignment: Alignment.center,
-            margin: const EdgeInsets.all(10),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 15),
-                  child: SizedBox(
-                    height: hp * 0.07,
-                    width: wp * 0.75,
-                    child: TextField(
-                      onTap: () {
-                        showSearch(
-                          context: context,
-                          delegate: SearchView(path: Path.Appbar),
-                        );
-                      },
-                      readOnly: true,
-                      decoration: InputDecoration(
-                        fillColor: Theme.of(context).colorScheme.background,
-                        filled: true,
-                        hintText: "Search Subject",
-                        hintStyle: TextStyle(
-                          fontFamily: "Montserrat",
-                          fontSize: hp * 0.015,
-                        ),
-                        contentPadding: EdgeInsets.symmetric(
-                          vertical: 2,
-                          horizontal: 18,
-                        ),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(05),
-                          borderSide: BorderSide(
-                            color: Colors.transparent,
-                          ),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide(
-                            color: Colors.transparent,
-                          ),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide(
-                            color: Colors.transparent,
-                          ),
-                        ),
-                        prefixIcon: Icon(
-                          Icons.search,
-                          color: Theme.of(context).iconTheme.color,
-                        ),
-                      ),
-                      style: Theme.of(context).textTheme.headline5,
-                      onChanged: (value) {},
-                    ),
-                  ),
-                ),
-                IconButton(
-                  onPressed: () {},
-                  icon: Container(
-                    height: hp * 0.1,
-                    width: wp * 0.2,
-                    alignment: Alignment.center,
-                    // margin: EdgeInsets.only(bottom: 10),
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                        color:
-                            Theme.of(context).iconTheme.color.withOpacity(0.8),
-                      ),
-                    ),
-                    child: Icon(
-                      MdiIcons.bellOutline,
-                      color: Theme.of(context).iconTheme.color.withOpacity(0.8),
-                    ),
-                  ),
-                ),
-                // Flexible(
-                //   child: GestureDetector(
-                //     onTap: () {
-                //       homeViewModel.navigateToUserUploadScreen();
-                //     },
-                //     child: Container(
-                //       height: hp * 0.052,
-                //       width: wp * 0.3,
-                //       alignment: Alignment.center,
-                //       margin: EdgeInsets.only(bottom: hp*0.012),
-                //       padding: EdgeInsets.symmetric(
-                //         horizontal: 10,
-                //         vertical: 5,
-                //       ),
-                //       decoration: BoxDecoration(
-                //         color: Colors.amber,
-                //         borderRadius: BorderRadius.circular(10),
-                //       ),
-                //       child: Row(
-                //         mainAxisSize: MainAxisSize.min,
-                //         children: [
-                //           Flexible(
-                //             child: Text(
-                //               "UPLOAD",
-                //               style: TextStyle(
-                //                 color: Colors.white,
-                //                 fontWeight: FontWeight.bold,
-                //                 fontSize: 10,
-                //               ),
-                //             ),
-                //           ),
-                //           SizedBox(
-                //             width: 10,
-                //           ),
-                //           Icon(
-                //             Icons.upload_file_rounded,
-                //             size: 25,
-                //           ),
-                //         ],
-                //       ),
-                //     ),
-                //   ),
-                // ),
-              ],
+      builder: (context, homeViewModel, child) => Scaffold(
+        floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
+        floatingActionButton: Padding(
+          padding: const EdgeInsets.only(bottom: 80.0),
+          child: DescribedFeatureOverlay(
+            featureId: OnboardingService
+                .floating_action_button_to_add_subjects, // Unique id that identifies this overlay.
+            tapTarget: const Icon(Icons
+                .add), // The widget that will be displayed as the tap target.
+            title: Text('Add Your Subjects !'),
+            description: Text(
+                'Please use \"+\" button to add subjects and swipe left or right to delete them'),
+            backgroundColor: Theme.of(context).primaryColor,
+            targetColor: Theme.of(context).accentColor,
+            textColor: Colors.white,
+            child: PimpedButton(
+              particle: DemoParticle(),
+              pimpedWidgetBuilder: (context, controller) {
+                return FloatingActionButton(
+                  onPressed: () async {
+                    controller.forward(from: 0.4);
+                    await Future.delayed(Duration(milliseconds: 290));
+                    showModalBottomSheet(
+                      context: context,
+                      isScrollControlled: true,
+                      backgroundColor: Colors.transparent,
+                      builder: (BuildContext context) => SubjectsDialogView(),
+                    );
+                  },
+                  child: const Icon(Icons.add),
+                  backgroundColor: Theme.of(context).accentColor,
+                );
+              },
             ),
           ),
-          ValueListenableBuilder(
-              valueListenable:
-                  Hive.box<RecentlyOpenedNotes>(Constants.recentlyOpenedNotes)
-                      .listenable(),
-              builder: (context,
-                  Box<RecentlyOpenedNotes> recentlyOpenedNotesBox, widget) {
-                if (recentlyOpenedNotesBox.isEmpty) {
-                  return Container();
-                }
-                return Column(
+        ),
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              Container(
+                alignment: Alignment.center,
+                margin: const EdgeInsets.symmetric(vertical: 10),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 15),
+                      child: SizedBox(
+                        height: hp * 0.07,
+                        width: wp * 0.9,
+                        child: TextField(
+                          onTap: () {
+                            showSearch(
+                              context: context,
+                              delegate: SearchView(path: Path.Appbar),
+                            );
+                          },
+                          readOnly: true,
+                          decoration: InputDecoration(
+                            fillColor: Theme.of(context).colorScheme.background,
+                            filled: true,
+                            hintText: "Search Subject",
+                            hintStyle: TextStyle(
+                              fontFamily: "Montserrat",
+                              fontSize: hp * 0.015,
+                            ),
+                            contentPadding: EdgeInsets.symmetric(
+                              vertical: 2,
+                              horizontal: 18,
+                            ),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(05),
+                              borderSide: BorderSide(
+                                color: Colors.transparent,
+                              ),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: BorderSide(
+                                color: Colors.transparent,
+                              ),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: BorderSide(
+                                color: Colors.transparent,
+                              ),
+                            ),
+                            prefixIcon: Icon(
+                              Icons.search,
+                              color: Theme.of(context).iconTheme.color,
+                            ),
+                          ),
+                          style: Theme.of(context).textTheme.headline5,
+                          onChanged: (value) {},
+                        ),
+                      ),
+                    ),
+                    // Flexible(
+                    //   child: GestureDetector(
+                    //     onTap: () {
+                    //       homeViewModel.navigateToUserUploadScreen();
+                    //     },
+                    //     child: Container(
+                    //       height: hp * 0.052,
+                    //       width: wp * 0.3,
+                    //       alignment: Alignment.center,
+                    //       margin: EdgeInsets.only(bottom: hp*0.012),
+                    //       padding: EdgeInsets.symmetric(
+                    //         horizontal: 10,
+                    //         vertical: 5,
+                    //       ),
+                    //       decoration: BoxDecoration(
+                    //         color: Colors.amber,
+                    //         borderRadius: BorderRadius.circular(10),
+                    //       ),
+                    //       child: Row(
+                    //         mainAxisSize: MainAxisSize.min,
+                    //         children: [
+                    //           Flexible(
+                    //             child: Text(
+                    //               "UPLOAD",
+                    //               style: TextStyle(
+                    //                 color: Colors.white,
+                    //                 fontWeight: FontWeight.bold,
+                    //                 fontSize: 10,
+                    //               ),
+                    //             ),
+                    //           ),
+                    //           SizedBox(
+                    //             width: 10,
+                    //           ),
+                    //           Icon(
+                    //             Icons.upload_file_rounded,
+                    //             size: 25,
+                    //           ),
+                    //         ],
+                    //       ),
+                    //     ),
+                    //   ),
+                    // ),
+                  ],
+                ),
+              ),
+              ValueListenableBuilder(
+                  valueListenable: Hive.box<RecentlyOpenedNotes>(
+                          Constants.recentlyOpenedNotes)
+                      .listenable(),
+                  builder: (context,
+                      Box<RecentlyOpenedNotes> recentlyOpenedNotesBox, widget) {
+                    if (recentlyOpenedNotesBox.isEmpty) {
+                      return Container();
+                    }
+                    return Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Container(
+                              margin: EdgeInsets.only(left: 15),
+                              child: Text(
+                                "🔁  Study These Again",
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .headline6
+                                    .copyWith(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 17),
+                              ),
+                            ),
+                            Container(
+                              margin: EdgeInsets.only(right: 10),
+                              child: TextButton(
+                                child: Text("See All"),
+                                onPressed: () {
+                                  homeViewModel
+                                      .navigateToRecentlyOpenedSeeAllScreen();
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                        Container(
+                          child: SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Row(
+                              children: [
+                                for (int i = recentlyOpenedNotesBox.length - 1;
+                                    i >= 0 &&
+                                        i > recentlyOpenedNotesBox.length - 5;
+                                    i--)
+                                  GestureDetector(
+                                    onTap: () {},
+                                    child: Container(
+                                      margin: EdgeInsets.symmetric(
+                                          horizontal: 15, vertical: 15),
+                                      decoration: AppStateNotifier.isDarkModeOn
+                                          ? Constants.mdecoration.copyWith(
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .background,
+                                              boxShadow: [],
+                                            )
+                                          : Constants.mdecoration.copyWith(
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .background,
+                                            ),
+                                      child: RecentlyOpenedNotesTile(
+                                        recentlyOpenedNotes:
+                                            recentlyOpenedNotesBox.getAt(i),
+                                        index: i,
+                                      ),
+                                    ),
+                                  )
+                              ],
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                      ],
+                    );
+                  }),
+              homeViewModel.isEditPressed
+                  ? Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            SizedBox(
+                              width: 10,
+                            ),
+                            IconButton(
+                              onPressed: () {
+                                homeViewModel.setIsEditPressed = false;
+                              },
+                              icon: Icon(Icons.close),
+                            ),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Container(
+                              margin: EdgeInsets.only(left: 10),
+                              child: ValueListenableBuilder(
+                                valueListenable:
+                                    homeViewModel.userSelectedSubjects,
+                                builder:
+                                    (context, userSelectedSubjects, child) {
+                                  return Text(
+                                    "${userSelectedSubjects.length} Selected",
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .headline6
+                                        .copyWith(fontWeight: FontWeight.bold),
+                                  );
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                        IconButton(
+                          icon: Icon(
+                            Icons.delete,
+                            color: Theme.of(context).iconTheme.color,
+                          ),
+                          onPressed: () {
+                            print('delete pressed');
+                            Helper.showDeleteConfirmDialog(
+                              context: context,
+                              onDeletePressed: () {
+                                homeViewModel.setIsEditPressed = false;
+                                Navigator.pop(context);
+                                homeViewModel.deleteSelectedSubjects();
+                              },
+                              msg:
+                                  "Are you sure you want to delete these subjects?",
+                            );
+                          },
+                        ),
+                      ],
+                    )
+                  : Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Container(
                           margin: EdgeInsets.only(left: 15),
                           child: Text(
-                            "🔁  Study These Again",
+                            "📝  My Subjects",
                             style: Theme.of(context)
                                 .textTheme
                                 .headline6
@@ -205,152 +354,35 @@ class _HomeViewState extends State<HomeView> {
                                     fontWeight: FontWeight.bold, fontSize: 17),
                           ),
                         ),
-                        Container(
-                          margin: EdgeInsets.only(right: 10),
-                          child: TextButton(
-                            child: Text("See All"),
-                            onPressed: () {
-                              homeViewModel
-                                  .navigateToRecentlyOpenedSeeAllScreen();
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
-                    Container(
-                      child: SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Row(
-                          children: [
-                            for (int i = recentlyOpenedNotesBox.length - 1;
-                                i >= 0 && i > recentlyOpenedNotesBox.length - 5;
-                                i--)
-                              GestureDetector(
-                                onTap: () {},
-                                child: Container(
-                                  margin: EdgeInsets.symmetric(
-                                      horizontal: 15, vertical: 15),
-                                  decoration: AppStateNotifier.isDarkModeOn
-                                      ? Constants.mdecoration.copyWith(
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .background,
-                                          boxShadow: [],
-                                        )
-                                      : Constants.mdecoration.copyWith(
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .background,
-                                        ),
-                                  child: RecentlyOpenedNotesTile(
-                                    recentlyOpenedNotes:
-                                        recentlyOpenedNotesBox.getAt(i),
-                                    index: i,
-                                  ),
-                                ),
-                              )
-                          ],
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 25,
-                    ),
-                  ],
-                );
-              }),
-          homeViewModel.isEditPressed
-              ? Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        SizedBox(
-                          width: 10,
-                        ),
                         IconButton(
-                          onPressed: () {
-                            homeViewModel.setIsEditPressed = false;
-                          },
-                          icon: Icon(Icons.close),
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Container(
-                          margin: EdgeInsets.only(left: 10),
-                          child: ValueListenableBuilder(
-                            valueListenable: homeViewModel.userSelectedSubjects,
-                            builder: (context, userSelectedSubjects, child) {
-                              return Text(
-                                "${userSelectedSubjects.length} Selected",
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .headline6
-                                    .copyWith(fontWeight: FontWeight.bold),
-                              );
-                            },
+                          icon: Icon(
+                            MdiIcons.pencil,
+                            color: Theme.of(context).iconTheme.color,
                           ),
+                          onPressed: () {
+                            homeViewModel.setIsEditPressed = true;
+                          },
                         ),
                       ],
                     ),
-                    IconButton(
-                      icon: Icon(
-                        Icons.delete,
-                        color: Theme.of(context).iconTheme.color,
-                      ),
-                      onPressed: () {
-                        print('delete pressed');
-                        Helper.showDeleteConfirmDialog(
-                          context: context,
-                          onDeletePressed: () {
-                            homeViewModel.setIsEditPressed = false;
-                            Navigator.pop(context);
-                            homeViewModel.deleteSelectedSubjects();
-                          },
-                          msg:
-                              "Are you sure you want to delete these subjects?",
-                        );
-                      },
-                    ),
-                  ],
-                )
-              : Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Container(
-                      margin: EdgeInsets.only(left: 15),
-                      child: Text(
-                        "📝  My Subjects",
-                        style: Theme.of(context).textTheme.headline6.copyWith(
-                            fontWeight: FontWeight.bold, fontSize: 17),
-                      ),
-                    ),
-                    IconButton(
-                      icon: Icon(
-                        MdiIcons.pencil,
-                        color: Theme.of(context).iconTheme.color,
-                      ),
-                      onPressed: () {
-                        homeViewModel.setIsEditPressed = true;
-                      },
-                    ),
-                  ],
-                ),
-          SizedBox(height: 5),
-          Expanded(
-            child: ValueListenableBuilder(
-              valueListenable: homeViewModel.userSubjects,
-              builder: (context, userSubjects, child) {
-                return homeViewModel.userSubjects.value.length == 0
-                    ? NoSubjectsOverlay()
-                    : UserSubjectListView(
-                        isEditPressed: homeViewModel.isEditPressed,
-                      );
-              },
-            ),
+              SizedBox(height: 5),
+              ValueListenableBuilder(
+                  valueListenable: homeViewModel.userSubjects,
+                  builder: (context, userSubjects, child) {
+                    if (homeViewModel.userSubjects.value.length == 0)
+                      return NoSubjectsOverlay();
+                    return Container();
+                  }),
+              Column(
+                children: [
+                  UserSubjectListView(
+                      isEditPressed: homeViewModel.isEditPressed),
+                  SizedBox(height: hp * 0.15),
+                ],
+              ),
+            ],
           ),
-        ],
+        ),
       ),
       viewModelBuilder: () => HomeViewModel(),
     );

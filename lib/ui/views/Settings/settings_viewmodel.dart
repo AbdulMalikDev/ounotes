@@ -93,7 +93,7 @@ class SettingsViewModel extends BaseViewModel {
 
     ThemeSwitcher.of(context).changeTheme(
       theme: isDarkModeEnabled ? AppTheme.darkTheme : AppTheme.lightTheme,
-      reverseAnimation: !isDarkModeEnabled,
+      isReversed: !isDarkModeEnabled,
     );
     notifyListeners();
   }

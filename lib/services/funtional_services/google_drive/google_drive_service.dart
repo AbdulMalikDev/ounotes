@@ -18,7 +18,7 @@ import 'package:FSOUNotes/enums/constants.dart';
 import 'package:FSOUNotes/enums/enums.dart';
 import 'package:FSOUNotes/services/state_services/syllabus_service.dart';
 import 'package:FSOUNotes/utils/file_picker_service.dart';
-import 'package:ext_storage/ext_storage.dart';
+// import 'package:ext_storage/ext_storage.dart';
 import 'package:mime/mime.dart';
 import 'package:pdf_compressor/pdf_compressor.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -85,9 +85,9 @@ class GoogleDriveService {
   /// Merge the verified document upload to gdrive with the normal wala function
   /// Merge Download and DownloadPurchased functions
 
-  /// Difference betweeen downloadFile and downloadPuchasedPdf seems to be that 
-  /// in download file we are making sure it hasnt been downloaded before and 
-  /// for purchased pdfs we are ensuring that its downloaded in the external directory 
+  /// Difference betweeen downloadFile and downloadPuchasedPdf seems to be that
+  /// in download file we are making sure it hasnt been downloaded before and
+  /// for purchased pdfs we are ensuring that its downloaded in the external directory
   /// where its visible. Both should be clubbed into one.
 
   downloadFile(
@@ -133,8 +133,7 @@ class GoogleDriveService {
       //>> Start the download
       file.stream.listen((data) {
         downloadedLength += data.length;
-        downloadProgress.value =
-            ((downloadedLength / contentLength) * 100);
+        downloadProgress.value = ((downloadedLength / contentLength) * 100);
         loading.value = downloadProgress.value;
         print(downloadProgress.value);
         dataStore.insertAll(dataStore.length, data);
@@ -190,8 +189,9 @@ class GoogleDriveService {
     String fileID = note.GDriveID;
     ga.Media file = await drive.files
         .get(fileID, downloadOptions: ga.DownloadOptions.fullMedia);
-    var dir = await ExtStorage.getExternalStoragePublicDirectory(
-        ExtStorage.DIRECTORY_DOWNLOADS);
+    // var dir = await ExtStorage.getExternalStoragePublicDirectory(
+    //     ExtStorage.DIRECTORY_DOWNLOADS);
+    var dir;
 
     String fileName = "${note.subjectName}_${note.title}.pdf";
     String filePath = dir + fileName;
@@ -203,7 +203,6 @@ class GoogleDriveService {
         ? contentLength * 1000
         : contentLength * 1000000;
     log.e("Size in numbers : " + contentLength.toString());
-    
 
     //*Start the download
     file.stream.listen((data) {
@@ -227,8 +226,9 @@ class GoogleDriveService {
   }
 
 //This function is used to upload verified documents that are in Firebase, to Google Drive
-uploadFileToGoogleDriveAfterVerification(File fileToUpload, Document docEnum, doc) async {
-  try {
+  uploadFileToGoogleDriveAfterVerification(
+      File fileToUpload, Document docEnum, doc) async {
+    try {
       ga.File gDriveFileToUpload;
       ga.File response;
       String subjectSubFolderID;
@@ -237,42 +237,41 @@ uploadFileToGoogleDriveAfterVerification(File fileToUpload, Document docEnum, do
       //>> 1.4 Compress PDF
       fileToUpload = await _compressPDF(fileToCompress: fileToUpload);
 
-      //>> 1.5 Upload to Google Drive 
+      //>> 1.5 Upload to Google Drive
       log.i("Uploading File to Google Drive");
 
       try {
-
         //>> 1.5.1 initialize http client and GDrive API
         var drive = _initializeHttpClientAndGDriveAPI();
-        subjectSubFolderID = _getSubjectFolderID(subjectName:doc.subjectName,docEnum:docEnum);
-        gDriveFileToUpload = _setMetadataToGDriveFile(gDriveFileToUpload,subjectSubFolderID,doc);
-        
+        subjectSubFolderID =
+            _getSubjectFolderID(subjectName: doc.subjectName, docEnum: docEnum);
+        gDriveFileToUpload = _setMetadataToGDriveFile(
+            gDriveFileToUpload, subjectSubFolderID, doc);
+
         //>> 1.5.3 Commence Upload
         log.e(fileToUpload);
         response = await drive.files.create(
           gDriveFileToUpload,
-          uploadMedia: ga.Media(fileToUpload.openRead(), fileToUpload.lengthSync()),
+          uploadMedia:
+              ga.Media(fileToUpload.openRead(), fileToUpload.lengthSync()),
         );
 
         ///>> 1.5.4 Create and Set Data to access the uploaded file
-        _setDataForUploadedFile(response,subjectSubFolderID,docEnum,doc,note,fileToUpload);
-
+        _setDataForUploadedFile(
+            response, subjectSubFolderID, docEnum, doc, note, fileToUpload);
       } catch (e) {
-
-        return _errorHandling(e,
-            "While UPLOADING Notes to Google Drive , Error occurred");
+        return _errorHandling(
+            e, "While UPLOADING Notes to Google Drive , Error occurred");
       }
 
       //>> Post-Upload Sanitization and finishing touches
       // pdf.dispose();
       fileToUpload.delete();
       return "Upload Successful";
-
-  } catch (e) {
-    log.e(e);
+    } catch (e) {
+      log.e(e);
+    }
   }
-}
-
 }
 
 class GoogleHttpClient extends IOClient {
