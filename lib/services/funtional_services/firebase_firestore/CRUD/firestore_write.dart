@@ -137,12 +137,12 @@ extension FirestoreWrites on FirestoreService{
 
   //******************************           UPDATES           ****************************************/ 
 
-  updateSubjectInFirebase(Map subject) async {
+  updateSubjectInFirebase(Subject subject) async {
     try {
       await FirebaseFirestore.instance
           .collection("Subjects")
-          .doc(subject["id"].toString())
-          .set(subject);
+          .doc(subject.id.toString())
+          .update(subject.toJson());
     } on Exception catch (e) {
       log.e(e.toString());
     }
@@ -310,7 +310,8 @@ extension FirestoreWrites on FirestoreService{
     } catch (e) {
       log.e(e.toString());
     }
-    log.e("uploaded");
+    log.e("NEW SUBJECT ADDED : " + subject.name);
+    log.e(subject.toJson());
   }
 
   Future<Subject> getSubjectByName(String subjectName) async {

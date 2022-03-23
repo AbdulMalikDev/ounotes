@@ -4,13 +4,17 @@ import 'package:FSOUNotes/enums/enums.dart';
 import 'package:FSOUNotes/misc/course_info.dart';
 import 'package:FSOUNotes/models/subject.dart';
 import 'package:FSOUNotes/services/funtional_services/firebase_firestore/firestore_service.dart';
+import 'package:FSOUNotes/services/state_services/subjects_service.dart';
 import 'package:FSOUNotes/ui/shared/app_config.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:stacked/stacked.dart';
+import 'package:stacked_services/stacked_services.dart';
 
 class AddEditSubjectViewModel extends BaseViewModel {
-  FirestoreService _firestoreService = locator<FirestoreService>();
+  SubjectsService _subjectsService = locator<SubjectsService>();
+  NavigationService _navigationService = locator<NavigationService>();
+  BottomSheetService _bottomSheetService = locator<BottomSheetService>(); 
   List<Widget> _children = [];
 
   List<Widget> get children => _children;
@@ -171,35 +175,49 @@ class AddEditSubjectViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  addSubject({String id, String subName}) {
-    CourseType courseType = _selectedCourseType as CourseType;
-    SubjectType subjectType = _selectedSubjectType as SubjectType;
-    Subject sub = new Subject(
-      int.parse(id),
+  addSubject({String subName}) async {
+
+    int id  = await _subjectsService.getNewSubjectID();
+    log.e("New subject ID" + id.toString());
+
+    CourseType courseType = Enum.getCourseTypeFromString(_selectedCourseType);
+    SubjectType subjectType = Enum.getSubjectTypeFromString(_selectedSubjectType);
+    Subject subject = new Subject(
+      id,
       subName,
       branchToSem: _branchToSem,
       courseType: courseType,
       subjectType: subjectType,
     );
-    // _firestoreService.addSubject(sub);
+    log.e(subject.toJson());
+
+    String result = await _subjectsService.addSubject(subject);
+    if (result == "ERROR ADDING SUBJECT"){
+      await _bottomSheetService.showBottomSheet(title: result);
+    }else{
+      await _bottomSheetService.showBottomSheet(title: "Successful");
+    }
+    _navigationService.popRepeated(1);
   }
 
-  editSubject(
-    String id,
-    String name,
-  ) {
-    
-    Map<dynamic, dynamic> sub = {
-      "id": id,
-      "name": name,
-      "branchToSem": _branchToSem,
-      // "gdriveFolderID": gdriveFolderID,
-      // "gdriveNotesFolderID": gdriveNotesFolderID,
-      // "gdriveQuestionPapersFolderID": gdriveQuestionPapersFolderID,
-      // "gdriveSyllabusFolderID": gdriveSyllabusFolderID,
-      "subjectType": _selectedSubjectType,
-      "courseType": _selectedCourseType
-    };
-    // _firestoreService.updateSubjectInFirebase(sub);
+  editSubject(Subject subject, String name) async {
+    log.e("Existing subject ID" + subject.id.toString());
+    CourseType courseType = Enum.getCourseTypeFromString(_selectedCourseType);
+    SubjectType subjectType = Enum.getSubjectTypeFromString(_selectedSubjectType);
+    subject = Subject(
+      subject.id,
+      name,
+      branchToSem: _branchToSem,
+      subjectType: subjectType,
+      courseType : courseType,
+      );
+    log.e("Subject changed to " + subject.name);
+    String result = await _subjectsService.updateSubject(subject);
+    if (result == "SUCCESS ADDING SUBJECT"){
+      await _bottomSheetService.showBottomSheet(title: result);
+    }else{
+      await _bottomSheetService.showBottomSheet(title: "Some error occurred");
+    }
+    _navigationService.popRepeated(1);
   }
 }

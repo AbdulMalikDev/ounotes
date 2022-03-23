@@ -5,6 +5,7 @@ import 'package:FSOUNotes/app/app.locator.dart';
 import 'package:FSOUNotes/app/app.router.dart';
 import 'package:FSOUNotes/models/document.dart';
 import 'package:FSOUNotes/models/download.dart';
+import 'package:FSOUNotes/services/funtional_services/admob_service.dart';
 import 'package:FSOUNotes/services/funtional_services/authentication_service.dart';
 import 'package:FSOUNotes/services/funtional_services/cloud_storage_service.dart';
 import 'package:FSOUNotes/services/funtional_services/firebase_firestore/firestore_service.dart';
@@ -79,6 +80,7 @@ class GoogleDriveService {
   NotesService _notesService = locator<NotesService>();
   QuestionPaperService _questionPaperService = locator<QuestionPaperService>();
   SyllabusService _syllabusService = locator<SyllabusService>();
+  AdmobService _admobService = locator<AdmobService>();
 
   ValueNotifier<double> downloadProgress = new ValueNotifier(0);
 
@@ -170,7 +172,11 @@ class GoogleDriveService {
       Function startDownload}) async {
 
     try {
-      
+
+      //Display ads based on downloads
+      await _admobService.showAd();
+      if (_admobService.shouldShowAd()){return;}
+
       PermissionStatus status = await Permission.storage.request();
       log.e(status.isGranted);
       int downloadedLength = 0;

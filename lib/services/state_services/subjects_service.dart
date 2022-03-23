@@ -1,8 +1,10 @@
 import 'dart:convert';
 import 'package:FSOUNotes/app/app.locator.dart';
 import 'package:FSOUNotes/app/app.logger.dart';
+import 'package:FSOUNotes/enums/bottom_sheet_type.dart';
 import 'package:FSOUNotes/models/notes.dart';
 import 'package:FSOUNotes/models/subject.dart';
+import 'package:FSOUNotes/models/subjectStats.dart';
 import 'package:FSOUNotes/services/funtional_services/firebase_firestore/firestore_service.dart';
 import 'package:FSOUNotes/services/funtional_services/google_drive/google_drive_service.dart';
 import 'package:FSOUNotes/services/funtional_services/sharedpref_service.dart';
@@ -11,10 +13,12 @@ import 'package:flutter/services.dart';
 import 'package:logger/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:hive/hive.dart';
+import 'package:stacked_services/stacked_services.dart';
 
 class SubjectsService with ChangeNotifier {
   Logger log = getLogger("SubjectsService");
   FirestoreService _firestoreService = locator<FirestoreService>();
+  BottomSheetService _bottomSheetService = locator<BottomSheetService>(); 
   Note note;
   static List<Subject> fakeData = [
     Subject.namedParameter(id: 12, name: "ljsdlf", branchToSem: {})
@@ -141,7 +145,8 @@ class SubjectsService with ChangeNotifier {
     return sub;
   }
 
-  loadSubjects() async {
+  loadSubjects({bool updateSubjects = false}) async {
+    log.e("Loading Subjects");
     SharedPreferencesService pref = locator<SharedPreferencesService>();
     SharedPreferences prefs = await pref.store();
     _allSubjects.value = [];
@@ -150,7 +155,8 @@ class SubjectsService with ChangeNotifier {
     //*Try-catch block for retreiving All Subjects
     try {
       //Check if stored in local Storage and retreive
-      if (prefs.containsKey("all_BE_subjects")) {
+      //And subjects do not need to be updated
+      if (prefs.containsKey("all_BE_subjects") && !updateSubjects) {
         log.i("all subjects found in local storage");
         List allsubs = json.decode(prefs.getString("all_BE_subjects"));
         subjectObjects = allsubs
@@ -278,26 +284,75 @@ class SubjectsService with ChangeNotifier {
     return queryWords;
   }
 
-  addSubject(Subject subject) async {
+  ///Subject will be added to 
+  /// - Google Drive Folders
+  /// - Firestore DB for meta data
+  Future<String> addSubject(Subject subject) async {
+    //Double check user intent
+    SheetResponse response = await _bottomSheetService.showCustomSheet(
+        variant: BottomSheetType.filledStacks,
+        title: "Sure?",
+        description:
+            "Warning this will add a new subject. Are you sure?",
+        mainButtonTitle: "ok",
+        secondaryButtonTitle: "no");
+    if (response == null || !response.confirmed) {
+      return "false";
+    }
     GoogleDriveService _googleDriveService = locator<GoogleDriveService>();
     subject = await _googleDriveService.createSubjectFolders(subject);
     if (subject == null) return "ERROR ADDING SUBJECT";
-    //TODO Testing
-    // await _firestoreService.addSubject(subject);
+    await _firestoreService.addSubject(subject);
     return "SUCCESS ADDING SUBJECT";
   }
 
-  removeSubject(Subject subject) async {
+  ///Subject will be updated in 
+  /// - Firestore DB ONLY
+  /// - Google Drive folders will not be touched
+  ///   since its folder IDs are already stored
+  Future<String> updateSubject(Subject subject) async {
+    //Double check user intent
+    SheetResponse response = await _bottomSheetService.showCustomSheet(
+        variant: BottomSheetType.filledStacks,
+        title: "Sure?",
+        description:
+            "Warning this will update previous subject data.",
+        mainButtonTitle: "ok",
+        secondaryButtonTitle: "no");
+    if (response == null || !response.confirmed) {
+      return "false";
+    }
+    await _firestoreService.updateSubjectInFirebase(subject);
+    return "SUCCESS ADDING SUBJECT";
+  }
+
+  Future<bool> removeSubject(Subject subject) async {
     GoogleDriveService _googleDriveService = locator<GoogleDriveService>();
     String subjectName = subject.name;
     int id = subject.id;
+    bool result = false;
+
+    //Double check user intent
+    SheetResponse response = await _bottomSheetService.showCustomSheet(
+        variant: BottomSheetType.filledStacks,
+        title: "Sure?",
+        description:
+            "Warning this will delete all Notes,QPapers and syllabi having subject name that was entered",
+        mainButtonTitle: "ok",
+        secondaryButtonTitle: "no");
+    if (response == null || !response.confirmed) {
+      return false;
+    }
+    
     //Destroy from Gdrive
-    await _googleDriveService.deleteSubjectFolder(subject);
+    result = await _googleDriveService.deleteSubjectFolder(subject);
+    // if (!result){return false;}
     //Destroy from firebase with all notes syllabus and papers
-    // bool result = await _firestoreService.destroySubject(subjectName, id);
+    result = await _firestoreService.destroySubject(subjectName, id);
     log.e("DESTROYED");
     log.e("SubjectName : " + subjectName);
-    // log.e("Result : " + result.toString());
+    log.e("Result : " + result.toString());
+    return result;
   }
 
   addSemesterToSubject(Subject subject, String branch, String semester) {
@@ -314,5 +369,32 @@ class SubjectsService with ChangeNotifier {
     }
     subject.branchToSem[branch] = semesters;
     return subject;
+  }
+
+  Future<int> getNewSubjectID() async {
+    try {
+      
+      SubjectStats _subjectStats =  await _firestoreService.getSubjectStats();
+
+      // Fetching number of subjects, adding 300 to keep room for errors
+      int previousId = _subjectStats.subjects;
+      previousId += 300;
+
+      return previousId;
+      
+    } catch (e) {
+       _errorHandling(
+          e, "While creating subject ID , Error occurred");
+        return -1;
+    }
+  }
+
+  _errorHandling(e, String message) {
+    log.e(message);
+    String error;
+    if (e is PlatformException) error = e.message;
+    error = e.toString();
+    log.e(error);
+    return error;
   }
 }

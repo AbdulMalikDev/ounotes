@@ -1,3 +1,4 @@
+import 'package:FSOUNotes/app/app.locator.dart';
 import 'package:FSOUNotes/models/notification.dart';
 import 'package:FSOUNotes/services/funtional_services/firebase_firestore/firestore_service.dart';
 import 'package:stacked/stacked.dart';

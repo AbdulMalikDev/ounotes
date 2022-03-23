@@ -54,6 +54,18 @@ class _AdminSubjectListViewState extends State<AdminSubjectListView> {
                           },
                         ),
                       ),
+                      Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: IconButton(
+                          icon: Icon(
+                            Icons.download,
+                            size: 30,
+                          ),
+                          onPressed: () {
+                            model.refreshSubjects();
+                          },
+                        ),
+                      ),
                       Text(
                         "Subject List",
                         style: Theme.of(context).textTheme.headline6,
@@ -180,7 +192,7 @@ class _AdminSubjectListViewState extends State<AdminSubjectListView> {
                                     Helper.showDeleteConfirmDialog(
                                       context: context,
                                       onDeletePressed:
-                                          model.deleteSubject(subject.id),
+                                          model.deleteSubject(subject),
                                     );
                                   },
                                 ),

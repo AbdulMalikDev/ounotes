@@ -12,6 +12,7 @@ import 'package:FSOUNotes/models/notification.dart';
 import 'package:FSOUNotes/models/question_paper.dart' hide log;
 import 'package:FSOUNotes/models/report.dart' hide log;
 import 'package:FSOUNotes/models/subject.dart' hide log;
+import 'package:FSOUNotes/models/subjectStats.dart';
 import 'package:FSOUNotes/models/syllabus.dart' hide log;
 import 'package:FSOUNotes/models/user.dart';
 import 'package:FSOUNotes/models/verifier.dart';
@@ -19,6 +20,7 @@ import 'package:FSOUNotes/services/funtional_services/analytics_service.dart' hi
 import 'package:FSOUNotes/services/funtional_services/authentication_service.dart';
 import 'package:FSOUNotes/services/funtional_services/cloud_functions_service.dart';
 import 'package:FSOUNotes/services/funtional_services/sharedpref_service.dart';
+import 'package:FSOUNotes/services/services_info.dart';
 import 'package:FSOUNotes/services/state_services/links_service.dart';
 import 'package:FSOUNotes/services/state_services/notes_service.dart';
 import 'package:FSOUNotes/services/state_services/question_paper_service.dart';

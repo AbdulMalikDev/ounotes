@@ -24,6 +24,7 @@ class UserSubjectListViewModel extends BaseViewModel {
     log.i("Subject name pressed");
     try{
       await _admobService.showAd();
+      if(_admobService.shouldShowAd()){return;}
       // _admobService.incrementNumberOfTimeNotesOpened();
     }catch(e){}
     _navigationService.navigateTo(Routes.allDocumentsView,
