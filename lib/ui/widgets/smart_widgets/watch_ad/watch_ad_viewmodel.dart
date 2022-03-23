@@ -10,7 +10,7 @@ import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 Logger log = getLogger("WatchAdToContinueViewModel");
 class WatchAdToContinueViewModel extends BaseViewModel {
-  AdmobService _admobService = locator<AdmobService>();
+ // AdmobService _admobService = locator<AdmobService>();
   BottomSheetService _bottomSheetService = locator<BottomSheetService>();
   NavigationService _navigationService = locator<NavigationService>();
   GoogleInAppPaymentService _googleInAppPaymentService = locator<GoogleInAppPaymentService>();
@@ -32,8 +32,8 @@ class WatchAdToContinueViewModel extends BaseViewModel {
   }
 
   showAd() async {
-    await _admobService.showInterstitialAd();
-    _admobService.incrementNumberOfTimeNotesOpened();
+    // await _admobService.showInterstitialAd();
+    // _admobService.incrementNumberOfTimeNotesOpened();
     _navigationService.popRepeated(1);
   }
 }

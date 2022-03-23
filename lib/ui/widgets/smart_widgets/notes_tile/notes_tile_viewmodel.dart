@@ -30,7 +30,7 @@ class NotesTileViewModel extends BaseViewModel {
 
   FirestoreService _firestoreService = locator<FirestoreService>();
   NavigationService _navigationService = locator<NavigationService>();
-  AdmobService _admobService = locator<AdmobService>();
+  // AdmobService _admobService = locator<AdmobService>();
   AuthenticationService _authenticationService =
       locator<AuthenticationService>();
   ReportsService _reportsService = locator<ReportsService>();
@@ -45,7 +45,7 @@ class NotesTileViewModel extends BaseViewModel {
       locator<RecentlyOpenedNotesService>();
   bool _isnotedownloaded = false;
   bool get isnotedownloaded => _isnotedownloaded;
-  AdmobService get admobService => _admobService;
+  // AdmobService get admobService => _admobService;
 
   bool get isAdmin => _authenticationService.user.isAdmin;
 

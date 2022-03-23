@@ -14,11 +14,11 @@
   firebase.initializeApp(firebaseConfig);
   firebase.analytics();
 
-  const apiKey= "AIzaSyA9uFF4JKACvFGGNEG68PUEiWMSAzH_QeU",
-  const authDomain= "ou-notes.firebaseapp.com",
-  const databaseURL= "https://ou-notes.firebaseio.com",
-  const projectId= "ou-notes",
-  const storageBucket= "ou-notes.appspot.com",
-  const messagingSenderId= "605469233663",
-  const appId= "1:605469233663:web:7ae9c15283525dc04a57ca",
-  const measurementId= "G-B64EZPTWL8",
+  const apiKey= "AIzaSyA9uFF4JKACvFGGNEG68PUEiWMSAzH_QeU";
+  const authDomain= "ou-notes.firebaseapp.com";
+  const databaseURL= "https://ou-notes.firebaseio.com";
+  const projectId= "ou-notes";
+  const storageBucket= "ou-notes.appspot.com";
+  const messagingSenderId= "605469233663";
+  const appId= "1:605469233663:web:7ae9c15283525dc04a57ca";
+  const measurementId= "G-B64EZPTWL8";

@@ -44,7 +44,7 @@ class NotesViewModel extends BaseViewModel {
   bool _showAdminFeatures = false;
 
   FirestoreService _firestoreService = locator<FirestoreService>();
-  AdmobService _admobService = locator<AdmobService>();
+  //AdmobService _admobService = locator<AdmobService>();
   AuthenticationService _authenticationService =
       locator<AuthenticationService>();
   RemoteConfigService _remoteConfigService = locator<RemoteConfigService>();
@@ -65,10 +65,10 @@ class NotesViewModel extends BaseViewModel {
   String get notetitle => _notetitle;
   Note notificationNote;
   List<Widget> mainListOfNotes = [];
-  AdmobService get admobService => _admobService;
+  //AdmobService get admobService => _admobService;
   RemoteConfigService get remoteConfig => _remoteConfigService;
   // String get ADMOB_AD_BANNER_ID => _admobService.ADMOB_AD_BANNER_ID;
-  String get ADMOB_APP_ID => _admobService.ADMOB_APP_ID;
+  //String get ADMOB_APP_ID => _admobService.ADMOB_APP_ID;
   List<Note> _notes = [];
   ValueNotifier<List<Widget>> get notesTiles => _notesTiles;
   bool isloading = false;
@@ -463,7 +463,7 @@ class NotesViewModel extends BaseViewModel {
   }
 
   void incrementViewForAd() {
-    this.admobService.incrementNumberOfTimeNotesOpened();
+    //this.admobService.incrementNumberOfTimeNotesOpened();
     // this.admobService.shouldAdBeShown();
   }
 

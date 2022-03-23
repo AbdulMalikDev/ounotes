@@ -43,7 +43,7 @@ final locator = StackedLocator.instance;
 
 void setupLocator() {
   locator.registerLazySingleton(() => BottomSheetService());
-  locator.registerLazySingleton(() => AdmobService());
+  // locator.registerLazySingleton(() => AdmobService());
   locator.registerLazySingleton(() => AnalyticsService());
   locator.registerLazySingleton(() => AppInfoService());
   locator.registerLazySingleton(() => AppStateNotifier());

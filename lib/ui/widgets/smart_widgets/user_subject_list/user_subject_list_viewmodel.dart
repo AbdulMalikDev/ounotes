@@ -13,7 +13,7 @@ class UserSubjectListViewModel extends BaseViewModel {
   Logger log = getLogger("UserSubjectListViewModel");
   NavigationService _navigationService = locator<NavigationService>();
   SubjectsService _subjectsService = locator<SubjectsService>();
-  AdmobService _admobService = locator<AdmobService>();
+  //AdmobService _admobService = locator<AdmobService>();
   
   ValueNotifier<List<Subject>> get userSubjects =>
       _subjectsService.userSubjects;
@@ -23,7 +23,7 @@ class UserSubjectListViewModel extends BaseViewModel {
   void onTap(subjectName) async {
     log.i("Subject name pressed");
     try{
-      await _admobService.showAd();
+      // await _admobService.showAd();
       // _admobService.incrementNumberOfTimeNotesOpened();
     }catch(e){}
     _navigationService.navigateTo(Routes.allDocumentsView,

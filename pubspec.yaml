@@ -100,7 +100,7 @@ dependencies:
   google_sign_in: ^5.0.5
   googleapis: ^4.0.0
   googleapis_auth: ^1.1.0
-  google_mobile_ads: ^1.1.0
+  #google_mobile_ads: ^1.1.0
   in_app_purchase: ^0.5.2
 
   # packages of other services being used

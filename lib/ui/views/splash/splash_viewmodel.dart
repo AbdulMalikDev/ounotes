@@ -31,26 +31,27 @@ class SplashViewModel extends FutureViewModel {
       locator<PushNotificationService>();
 
   handleStartUpLogic() async {
-    bool isUserOnline = await ConnectionVerify.connectionStatus();
+    //bool isUserOnline = await ConnectionVerify.connectionStatus();
     // await _pushNotificationService.initialise();
-    var LoggedInUser = await _sharedPreferencesService.isUserLoggedIn();
+    // var LoggedInUser = await _sharedPreferencesService.isUserLoggedIn();
     //Check if user has outdated version if he/she is online
-    Map<String, dynamic> result;
-    // if(isUserOnline) result = await _checkForUpdatedVersionAndShowDialog();
-    if (LoggedInUser != null) {
-      if (LoggedInUser.isPremiumUser ?? false)
-        _checkPremiumPurchaseDate(LoggedInUser.id);
-      await _subjectsService.loadSubjects();
-      isUserOnline = false;
-      // if(isUserOnline)_navigationService.replaceWith(Routes.homeView,arguments:HomeViewArguments(shouldShowUpdateDialog: result["doesUserNeedUpdate"],versionDetails: result));
-      // else _navigationService.replaceWith(Routes.homeView);
-      _navigationService.navigateToView(
-        MainScreenView(),
-      );
-    } else {
-      log.e("user is null");
-      _navigationService.replaceWith(Routes.introView);
-    }
+    // Map<String, dynamic> result;
+    // // if(isUserOnline) result = await _checkForUpdatedVersionAndShowDialog();
+    // if (LoggedInUser != null) {
+    //   if (LoggedInUser.isPremiumUser ?? false)
+    //     _checkPremiumPurchaseDate(LoggedInUser.id);
+    //   await _subjectsService.loadSubjects();
+    //   isUserOnline = false;
+    //   // if(isUserOnline)_navigationService.replaceWith(Routes.homeView,arguments:HomeViewArguments(shouldShowUpdateDialog: result["doesUserNeedUpdate"],versionDetails: result));
+    //   // else _navigationService.replaceWith(Routes.homeView);
+    //   _navigationService.navigateToView(
+    //     MainScreenView(),
+    //   );
+    // } else {
+    //   log.e("user is null");
+    //   _navigationService.replaceWith(Routes.introView);
+    // }
+     _navigationService.replaceWith(Routes.uploadSelectionView);
   }
 
   _checkForUpdatedVersionAndShowDialog() async {

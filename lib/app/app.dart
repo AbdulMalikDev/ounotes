@@ -108,7 +108,7 @@ import 'package:stacked_services/stacked_services.dart';
   MaterialRoute(page: MainView),
 ], dependencies: [
   LazySingleton(classType: BottomSheetService),
-  LazySingleton(classType: AdmobService),
+  // LazySingleton(classType: AdmobService),
   LazySingleton(classType: AnalyticsService),
   LazySingleton(classType: AppInfoService),
   LazySingleton(classType: AppStateNotifier),

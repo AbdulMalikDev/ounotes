@@ -14,8 +14,9 @@ import 'package:feature_discovery/feature_discovery.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
+// import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:stacked_services/stacked_services.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -37,20 +38,22 @@ import 'models/download.dart';
 Logger log = getLogger("main");
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  MobileAds.instance.initialize();
+  //MobileAds.instance.initialize();
   await Firebase.initializeApp();
   //Dynamic Injection
   setupLocator();
   //Setting custom Bottom Sheet
   setUpBottomSheetUi();
-  //Setting up Hive DB
-  final appDir = await getApplicationDocumentsDirectory();
-  Hive.init(appDir.path);
-  Hive.registerAdapter<Download>(DownloadAdapter());
-  Hive.registerAdapter<RecentlyOpenedNotes>(RecentlyOpenedNotesAdapter());
-  await Hive.openBox(Constants.ouNotes);
-  await Hive.openBox<Download>(Constants.notesDownloads);
-  await Hive.openBox<RecentlyOpenedNotes>(Constants.recentlyOpenedNotes);
+  if (!kIsWeb) {
+    //Setting up Hive DB
+    final appDir = await getApplicationDocumentsDirectory();
+    Hive.init(appDir.path);
+  }
+  // Hive.registerAdapter<Download>(DownloadAdapter());
+  // Hive.registerAdapter<RecentlyOpenedNotes>(RecentlyOpenedNotesAdapter());
+  // await Hive.openBox(Constants.ouNotes);
+  // await Hive.openBox<Download>(Constants.notesDownloads);
+  // await Hive.openBox<RecentlyOpenedNotes>(Constants.recentlyOpenedNotes);
   RemoteConfigService _remoteConfigService = locator<RemoteConfigService>();
   // CrashlyticsService _crashlyticsService = locator<CrashlyticsService>();
   // AdmobService _admobService = locator<AdmobService>();
@@ -59,7 +62,7 @@ void main() async {
   // GoogleInAppPaymentService _googleInAppPaymentService =
   // locator<GoogleInAppPaymentService>();
   // await _inAppPaymentService.fetchData();
-  await _remoteConfigService.init();
+  // await _remoteConfigService.init();
   // await _admobService.init();
   //Sentry provides crash reporting
   // _crashlyticsService.sentryClient = SentryClient(
@@ -70,8 +73,8 @@ void main() async {
   //     .init(_remoteConfigService.remoteConfig.getString('ONESIGNAL_KEY'));
   // OneSignal.shared
   //     .setInFocusDisplayType(OSNotificationDisplayType.notification);
-  Logger.level = Level.verbose;
-  SharedPreferences prefs = await SharedPreferences.getInstance();
+  // Logger.level = Level.verbose;
+  // SharedPreferences prefs = await SharedPreferences.getInstance();
   // AppStateNotifier.isDarkModeOn = prefs.getBool('isdarkmodeon') ?? false;
   // await _notificationService.init();
   // InAppPurchaseConnection.enablePendingPurchases();

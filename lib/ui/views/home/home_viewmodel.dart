@@ -32,7 +32,7 @@ import 'package:FSOUNotes/services/funtional_services/authentication_service.dar
 class HomeViewModel extends BaseViewModel {
   AnalyticsService _analyticsService = locator<AnalyticsService>();
   FirestoreService _firestoreService = locator<FirestoreService>();
-  AdmobService _admobService = locator<AdmobService>();
+  //AdmobService _admobService = locator<AdmobService>();
   SubjectsService _subjectsService = locator<SubjectsService>();
   BottomSheetService _bottomSheetService = locator<BottomSheetService>();
   NavigationService _navigationService = locator<NavigationService>();
@@ -83,7 +83,7 @@ class HomeViewModel extends BaseViewModel {
   User user;
   PackageInfo packageInfo;
 
-  AdmobService get admobService => _admobService;
+  //AdmobService get admobService => _admobService;
   showTelgramDialog(BuildContext context) async {
     bool shouldShowTelegramDialog =
         await _sharedPreferencesService.shouldIShowTelegramDialog();
