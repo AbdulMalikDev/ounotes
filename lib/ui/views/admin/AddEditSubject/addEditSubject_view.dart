@@ -86,18 +86,18 @@ class _AddEditSubjectViewState extends State<AddEditSubjectView> {
                     SizedBox(
                       height: 20,
                     ),
-                    Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 10),
-                      child: TextFormFieldView(
-                        heading: 'Subject ID',
-                        hintText: 'Enter subject ID',
-                        controller: controllerForSubjectID,
-                        validator: (value) {
-                          if (value.length < 6) return 'Min length-6';
-                          return null;
-                        },
-                      ),
-                    ),
+                    // Container(
+                    //   margin: const EdgeInsets.symmetric(horizontal: 10),
+                    //   child: TextFormFieldView(
+                    //     heading: 'Subject ID',
+                    //     hintText: 'Enter subject ID',
+                    //     controller: controllerForSubjectID,
+                    //     validator: (value) {
+                    //       if (value.length < 6) return 'Min length-6';
+                    //       return null;
+                    //     },
+                    //   ),
+                    // ),
                     Container(
                       margin: const EdgeInsets.symmetric(horizontal: 10),
                       child: TextFormFieldView(
@@ -347,7 +347,9 @@ class _AddEditSubjectViewState extends State<AddEditSubjectView> {
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(25),
                                 child: FlatButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    model.editSubject(widget.subject,controllerForSubjectName.text.trim().toUpperCase());
+                                  },
                                   child: Text(
                                     "Edit Subject",
                                     style: listTitleDefaultTextStyle.copyWith(
@@ -366,7 +368,9 @@ class _AddEditSubjectViewState extends State<AddEditSubjectView> {
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(25),
                                 child: FlatButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    model.addSubject(subName: controllerForSubjectName.text.trim().toUpperCase());
+                                  },
                                   child: Text(
                                     "Add Subject",
                                     style: listTitleDefaultTextStyle.copyWith(

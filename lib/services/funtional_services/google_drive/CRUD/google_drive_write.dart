@@ -193,9 +193,13 @@ extension GoogleDriveWrites on GoogleDriveService{
     log.i("${subject.name} folders being created in GDrive");
     // initialize http client and GDrive API
     try {
+
+      //>> 1. Initiate Upload Logic
       var AuthHeaders = await _authenticationService.refreshSignInCredentials();
       var client = GoogleHttpClient(AuthHeaders);
       var drive = ga.DriveApi(client);
+
+      //>> 2. Create Subject Folder
       var subjectFolder = await drive.files.create(
         ga.File()
           ..name = subject.name
@@ -205,6 +209,8 @@ extension GoogleDriveWrites on GoogleDriveService{
           ..mimeType =
               'application/vnd.google-apps.folder', // this defines its folder
       );
+
+      //>> 3. Create Subject Folder > NOTES
       var notesFolder = await drive.files.create(
         ga.File()
           ..name = 'NOTES'
@@ -214,6 +220,8 @@ extension GoogleDriveWrites on GoogleDriveService{
           ..mimeType =
               'application/vnd.google-apps.folder', // this defines its folder
       );
+
+      //>> 4. Create Subject Folder > QUESTION PAPERS
       var questionPapersFolder = await drive.files.create(
         ga.File()
           ..name = 'QUESTION PAPERS'
@@ -223,6 +231,8 @@ extension GoogleDriveWrites on GoogleDriveService{
           ..mimeType =
               'application/vnd.google-apps.folder', // this defines its folder
       );
+
+      //>> 5. Create Subject Folder > SYLLABUS
       var syllabusFolder = await drive.files.create(
         ga.File()
           ..name = 'SYLLABUS'
@@ -233,6 +243,8 @@ extension GoogleDriveWrites on GoogleDriveService{
               'application/vnd.google-apps.folder', // this defines its folder
       );
 
+      //>> 6. Keep track of folder IDs in Subject Object.
+      //>>    Print in terminal for double check
       subject.addFolderID(subjectFolder.id);
       subject.addNotesFolderID(notesFolder.id);
       subject.addQuestionPapersFolderID(questionPapersFolder.id);
@@ -241,7 +253,9 @@ extension GoogleDriveWrites on GoogleDriveService{
       log.e(notesFolder.id);
       log.e(questionPapersFolder.id);
       log.e(syllabusFolder.id);
+
       return subject;
+      
     } catch (e) {
       log.e("Error while creating folders for new subject ${subject.name}");
       log.e(e.toString());

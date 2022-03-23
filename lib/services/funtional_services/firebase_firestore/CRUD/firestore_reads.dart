@@ -18,6 +18,12 @@ extension FirestoreReads on FirestoreService {
     return doc.data();
   }
 
+  Future<SubjectStats> getSubjectStats() async {
+    DocumentSnapshot doc =
+        await _subjectsCollectionReference.doc(FirestoreNames.subject_meta_data_document_ID).get();
+    return SubjectStats.fromJson(doc.data());
+  }
+
   Future<User> refreshUser() async {
     User user = await _sharedPreferencesService.getUser();
     DocumentSnapshot doc = await _usersCollectionReference.doc(user.id).get();

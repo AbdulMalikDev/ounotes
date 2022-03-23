@@ -42,8 +42,8 @@ extension FirestoreDeletes on FirestoreService{
     }
 
     //Delete subject
+    log.e("Destroying subject from Firebase");
     try {
-      await deleteSubjectById(subjectId);
       QuerySnapshot noteDocs = await _subjectsCollectionReference
           .doc(subjectId.toString())
           .collection(Constants.firebase_notes)
@@ -73,6 +73,7 @@ extension FirestoreDeletes on FirestoreService{
       linksDocs.docs.forEach((DocumentSnapshot doc) {
         doc.reference.delete();
       });
+      await deleteSubjectById(subjectId);
 
       return true;
     } catch (e) {

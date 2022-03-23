@@ -34,7 +34,7 @@ extension GoogleDriveDeletes on GoogleDriveService{
   ///
   ///   - None
   ///
-  deleteSubjectFolder(Subject subject) async {
+  Future<bool> deleteSubjectFolder(Subject subject) async {
     log.i("${subject.name} folders being DELETED in GDrive");
     // initialize http client and GDrive API
     try {
@@ -42,11 +42,11 @@ extension GoogleDriveDeletes on GoogleDriveService{
       var client = GoogleHttpClient(AuthHeaders);
       var drive = ga.DriveApi(client);
       await drive.files.delete(subject.gdriveFolderID);
-      //TODO
-      // handle firebase data of this particular subject
+      return true;
     } catch (e) {
       log.e("Error while DELETING folders for subject : ${subject.name}");
       log.e(e.toString());
+      return false;
     }
   }
 }

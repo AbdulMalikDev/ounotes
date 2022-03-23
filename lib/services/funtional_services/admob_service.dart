@@ -8,6 +8,7 @@ import 'package:FSOUNotes/app/app.locator.dart';
 import 'package:FSOUNotes/app/app.logger.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:googleapis/dfareporting/v3_4.dart';
 import 'package:logger/logger.dart';
 import 'package:stacked_services/stacked_services.dart';
 
@@ -23,14 +24,16 @@ class AdmobService{
   String get ADMOB_APP_ID => _remote.remoteConfig.getString("ADMOB_APP_ID");
   // String get ADMOB_AD_BANNER_ID => _remote.remoteConfig.getString("ADMOB_AD_BANNER_ID");
   String get ADMOB_AD_INTERSTITIAL_ID => _remote.remoteConfig.getString("ADMOB_AD_INTERSTITIAL_ID");
+  int get AD_COUNT => _remote.remoteConfig.getInt("NUMBER_OF_NOTES_FOR_AD");
   // String get ADMOB_AD_INTERSTITIAL_ID_TEST => "ca-app-pub-3940256099942544/1033173712";
   // String get ADMOB_REWARDED_AD_ID => _remoteConfigService.remoteConfig.getString("ADMOB_REWARDED_AD_ID");
+  bool shouldShowAd() => getNumberOfTimeNotesOpened() % AD_COUNT == 0;
 
   // BannerAd notes_view_banner_ad;
   InterstitialAd notes_view_interstitial_ad;
 
   int _NumberOfTimeNotesOpened = 1;
-  int _NumberOfAdsShown = 0;
+  // int _NumberOfAdsShown = 0;
   // String appId;
   // String adUnitId;
   // MobileAdTargetingInfo info;
@@ -64,9 +67,9 @@ class AdmobService{
   Future<bool> showAd() async {
 
     try{
-
+      log.e(AD_COUNT);
       log.e("Number of times notes screen opened : " + getNumberOfTimeNotesOpened().toString());
-      if (getNumberOfTimeNotesOpened() % 4 == 0){
+      if (getNumberOfTimeNotesOpened() % AD_COUNT == 0){
       // if (true){
 
         log.e("SHOW AD NOW");
@@ -77,9 +80,10 @@ class AdmobService{
           return true;
         }
 
+      }else{
+        incrementNumberOfTimeNotesOpened();
       }
 
-      incrementNumberOfTimeNotesOpened();
       return false;
 
     } catch (e) {

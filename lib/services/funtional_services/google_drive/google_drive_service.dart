@@ -6,13 +6,14 @@ import 'package:FSOUNotes/app/app.logger.dart';
 import 'package:FSOUNotes/app/app.router.dart';
 import 'package:FSOUNotes/enums/constants.dart';
 import 'package:FSOUNotes/enums/enums.dart';
-import 'package:external_path/external_path.dart';
-import 'package:FSOUNotes/models/document.dart';
-import 'package:FSOUNotes/models/download.dart';
 import 'package:FSOUNotes/models/notes.dart';
 import 'package:FSOUNotes/models/question_paper.dart';
 import 'package:FSOUNotes/models/subject.dart';
 import 'package:FSOUNotes/models/syllabus.dart';
+import 'package:external_path/external_path.dart';
+import 'package:FSOUNotes/models/document.dart';
+import 'package:FSOUNotes/models/download.dart';
+import 'package:FSOUNotes/services/funtional_services/admob_service.dart';
 import 'package:FSOUNotes/services/funtional_services/authentication_service.dart';
 import 'package:FSOUNotes/services/funtional_services/cloud_storage_service.dart';
 import 'package:FSOUNotes/services/funtional_services/firebase_firestore/firestore_service.dart';
@@ -73,6 +74,7 @@ class GoogleDriveService {
   NotesService _notesService = locator<NotesService>();
   QuestionPaperService _questionPaperService = locator<QuestionPaperService>();
   SyllabusService _syllabusService = locator<SyllabusService>();
+  AdmobService _admobService = locator<AdmobService>();
 
   ValueNotifier<double> downloadProgress = new ValueNotifier(0);
 
@@ -170,6 +172,11 @@ class GoogleDriveService {
       Function(String, String) onDownloadedCallback,
       Function startDownload}) async {
     try {
+
+      //Display ads based on downloads
+      await _admobService.showAd();
+      if (_admobService.shouldShowAd()){return;}
+
       PermissionStatus status = await Permission.storage.request();
       log.e(status.isGranted);
       int downloadedLength = 0;
