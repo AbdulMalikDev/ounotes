@@ -18,7 +18,7 @@ class UploadSelectionViewModel extends BaseViewModel {
     _navigationService.navigateTo(Routes.uploadView,
         arguments: UploadViewArguments(
           textFieldsMap: Constants.Notes,
-          path: Document.Notes,
+          uploadType: Document.Notes,
           subjectName: _subjectName,
         ));
   }
@@ -27,7 +27,7 @@ class UploadSelectionViewModel extends BaseViewModel {
     _navigationService.navigateTo(Routes.uploadView,
         arguments: UploadViewArguments(
           textFieldsMap: Constants.QuestionPaper,
-          path: Document.QuestionPapers,
+          uploadType: Document.QuestionPapers,
           subjectName: _subjectName,
         ));
   }
@@ -36,7 +36,7 @@ class UploadSelectionViewModel extends BaseViewModel {
     _navigationService.navigateTo(Routes.uploadView,
         arguments: UploadViewArguments(
           textFieldsMap: Constants.Syllabus,
-          path: Document.Syllabus,
+          uploadType: Document.Syllabus,
           subjectName: _subjectName,
         ));
   }
@@ -45,7 +45,7 @@ class UploadSelectionViewModel extends BaseViewModel {
     _navigationService.navigateTo(Routes.uploadView,
         arguments: UploadViewArguments(
           textFieldsMap: Constants.Links,
-          path: Document.Links,
+          uploadType: Document.Links,
           subjectName: _subjectName,
         ));
   }
@@ -54,7 +54,7 @@ class UploadSelectionViewModel extends BaseViewModel {
     _navigationService.navigateTo(Routes.uploadView,
         arguments: UploadViewArguments(
           textFieldsMap: Constants.GDRIVELink,
-          path: Document.GDRIVE,
+          uploadType: Document.GDRIVE,
           subjectName: _subjectName,
         ));
   }

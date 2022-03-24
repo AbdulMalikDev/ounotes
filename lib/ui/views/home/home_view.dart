@@ -1,21 +1,15 @@
-import 'package:FSOUNotes/AppTheme/AppStateNotifier.dart';
 import 'package:FSOUNotes/app/app.logger.dart';
-import 'package:FSOUNotes/enums/constants.dart';
 import 'package:FSOUNotes/enums/enums.dart';
 import 'package:FSOUNotes/misc/helper.dart';
-import 'package:FSOUNotes/models/recently_open_notes.dart';
 import 'package:FSOUNotes/services/funtional_services/onboarding_service.dart';
 import 'package:FSOUNotes/ui/shared/app_config.dart';
-import 'package:FSOUNotes/ui/views/downloads/Downloads_view.dart';
 import 'package:FSOUNotes/ui/views/home/home_viewmodel.dart';
-import 'package:FSOUNotes/ui/views/home/recently_added_notes/recently_opened_notes_tile.dart';
 import 'package:FSOUNotes/ui/views/search/search_view.dart';
 import 'package:FSOUNotes/ui/widgets/dumb_widgets/no_subjects_overlay.dart';
 import 'package:FSOUNotes/ui/widgets/smart_widgets/subjects_dialog/subjects_dialog_view.dart';
 import 'package:FSOUNotes/ui/widgets/smart_widgets/user_subject_list/user_subject_list_view.dart';
 import 'package:feature_discovery/feature_discovery.dart';
 import 'package:flutter/material.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 import 'package:logger/logger.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:pimp_my_button/pimp_my_button.dart';
@@ -201,87 +195,6 @@ class _HomeViewState extends State<HomeView> {
                   ],
                 ),
               ),
-              ValueListenableBuilder(
-                  valueListenable: Hive.box<RecentlyOpenedNotes>(
-                          Constants.recentlyOpenedNotes)
-                      .listenable(),
-                  builder: (context,
-                      Box<RecentlyOpenedNotes> recentlyOpenedNotesBox, widget) {
-                    if (recentlyOpenedNotesBox.isEmpty) {
-                      return Container();
-                    }
-                    return Column(
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Container(
-                              margin: EdgeInsets.only(left: 15),
-                              child: Text(
-                                "🔁  Study These Again",
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .headline6
-                                    .copyWith(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 17),
-                              ),
-                            ),
-                            Container(
-                              margin: EdgeInsets.only(right: 10),
-                              child: TextButton(
-                                child: Text("See All"),
-                                onPressed: () {
-                                  homeViewModel
-                                      .navigateToRecentlyOpenedSeeAllScreen();
-                                },
-                              ),
-                            ),
-                          ],
-                        ),
-                        Container(
-                          child: SingleChildScrollView(
-                            scrollDirection: Axis.horizontal,
-                            child: Row(
-                              children: [
-                                for (int i = recentlyOpenedNotesBox.length - 1;
-                                    i >= 0 &&
-                                        i > recentlyOpenedNotesBox.length - 5;
-                                    i--)
-                                  GestureDetector(
-                                    onTap: () {},
-                                    child: Container(
-                                      margin: EdgeInsets.symmetric(
-                                          horizontal: 15, vertical: 15),
-                                      decoration: AppStateNotifier.isDarkModeOn
-                                          ? Constants.mdecoration.copyWith(
-                                              color: Theme.of(context)
-                                                  .colorScheme
-                                                  .background,
-                                              boxShadow: [],
-                                            )
-                                          : Constants.mdecoration.copyWith(
-                                              color: Theme.of(context)
-                                                  .colorScheme
-                                                  .background,
-                                            ),
-                                      child: RecentlyOpenedNotesTile(
-                                        recentlyOpenedNotes:
-                                            recentlyOpenedNotesBox.getAt(i),
-                                        index: i,
-                                      ),
-                                    ),
-                                  )
-                              ],
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                      ],
-                    );
-                  }),
               homeViewModel.isEditPressed
                   ? Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,

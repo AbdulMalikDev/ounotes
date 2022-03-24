@@ -43,7 +43,6 @@ import 'package:FSOUNotes/ui/views/all_documents/all_documents_view.dart';
 import 'package:FSOUNotes/ui/views/downloads/Downloads_view.dart';
 import 'package:FSOUNotes/ui/views/edit/edit_view.dart';
 import 'package:FSOUNotes/ui/views/home/home_view.dart';
-import 'package:FSOUNotes/ui/views/home/recently_added_notes/recently_added_notes_view.dart';
 import 'package:FSOUNotes/ui/views/intro/intro_view.dart';
 import 'package:FSOUNotes/ui/views/links/links_view.dart';
 import 'package:FSOUNotes/ui/views/notes/notes_view.dart';
@@ -103,7 +102,6 @@ import 'package:stacked_services/stacked_services.dart';
   MaterialRoute(page: VerifyDocumentsView),
   MaterialRoute(page: ReportedDocumentsView),
   MaterialRoute(page: NotificationView),
-  MaterialRoute(page: RecentlyAddedNotesView),
   MaterialRoute(page: AccountInfoView),
   MaterialRoute(page: MainView),
 ], dependencies: [

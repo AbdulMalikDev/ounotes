@@ -50,7 +50,6 @@ void main() async {
   Hive.registerAdapter<RecentlyOpenedNotes>(RecentlyOpenedNotesAdapter());
   await Hive.openBox(Constants.ouNotes);
   
-  await Hive.openBox<RecentlyOpenedNotes>(Constants.recentlyOpenedNotes);
   RemoteConfigService _remoteConfigService = locator<RemoteConfigService>();
   GoogleInAppPaymentService _googleInAppPaymentService =
   locator<GoogleInAppPaymentService>();

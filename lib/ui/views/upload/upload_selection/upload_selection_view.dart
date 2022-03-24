@@ -1,4 +1,5 @@
 import 'package:FSOUNotes/AppTheme/AppStateNotifier.dart';
+import 'package:FSOUNotes/ui/shared/app_config.dart';
 import 'package:FSOUNotes/ui/views/upload/upload_selection/upload_selection_viewmodel.dart';
 import 'package:FSOUNotes/ui/widgets/dumb_widgets/SaveButtonView.dart';
 import 'package:flutter/material.dart';
@@ -51,7 +52,7 @@ class UploadSelectionView extends StatelessWidget {
                                             .textTheme
                                             .headline6),
                                     SizedBox(
-                                      height: 15,
+                                      height: 18,
                                     ),
                                     SaveButtonMainView(
                                       onTap: model.navigateToNotes,
@@ -151,10 +152,10 @@ class UploadSelectionView extends StatelessWidget {
                                       onTap: model.navigateToLinks,
                                       text: "LINKS",
                                     ),
-                                    SaveButtonView(
-                                      onTap: model.navigateToGDRIVELinks,
-                                      text: "GDRIVE LINK",
-                                    ),
+                                    // SaveButtonView(
+                                    //   onTap: model.navigateToGDRIVELinks,
+                                    //   text: "GDRIVE LINK",
+                                    // ),
                                   ],
                                 ),
                               ),
@@ -179,6 +180,8 @@ class SaveButtonMainView extends StatelessWidget {
       onTap: onTap,
       child: Container(
         padding: EdgeInsets.symmetric(vertical: 15.0),
+        margin: EdgeInsets.symmetric(vertical: 10),
+        height: App(context).appScreenWidthWithOutSafeArea(0.23),
         width: double.infinity,
         child: Container(
           padding: EdgeInsets.all(15.0),

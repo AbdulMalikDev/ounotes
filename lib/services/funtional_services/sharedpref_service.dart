@@ -108,12 +108,12 @@ class SharedPreferencesService {
     Duration currStartTimediff = DateTime.now().difference(startTime);
     print(currStartTimediff.inDays);
     if (currStartTimediff.inHours > 24) {
-      FirestoreService _firestoreService = locator<FirestoreService>();
+     
       log.i("Updating views to server");
       //update views to the server
       notesView.views.forEach((docId, view) {
         if (view != 0) {
-          _firestoreService.incrementView(docId, view);
+          // _firestoreService.incrementView(docId, view);
         }
         notesView.views[docId] = 0;
       });

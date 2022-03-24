@@ -251,7 +251,8 @@ class NotesViewModel extends BaseViewModel {
   }
 
   void openDoc(Note note) async {
-    _sharedPreferencesService.updateView(note.id);
+    //increment view
+    _firestoreService.incrementView(note.id, note.view);
     User user = await _authenticationService.getUser();
     //TODO show ad
     // if (_admobService.adDue && !user.isPremiumUser ??
@@ -259,7 +260,6 @@ class NotesViewModel extends BaseViewModel {
     //   _navigationService.navigateTo(Routes.watchAdToContinueView);
     //   return;
     // }
-
     //Check if used already saved his choice of actions
     SharedPreferences prefs = await _sharedPreferencesService.store();
     if (prefs.containsKey("openDocChoice")) {
@@ -287,7 +287,7 @@ class NotesViewModel extends BaseViewModel {
       return;
     }
 
-    //if he clicked the checkbox to remember his choice the save the changes locally
+    //if he clicked the checkbox to remember his choice then save the changes locally
     if (response.data['checkBox']) {
       prefs.setString(
         "openDocChoice",
@@ -316,7 +316,7 @@ class NotesViewModel extends BaseViewModel {
   }
 
   navigateToPDFScreen(String buttonText, Note note) {
-    if (buttonText == 'Open In App') {
+    if (buttonText == Constants.downloadAndOpenInApp) {
       navigateToPDFView(note);
     } else {
       _sharedPreferencesService.updateView(note.id);
@@ -472,6 +472,6 @@ class NotesViewModel extends BaseViewModel {
   }
 
   void handleDownload({Note note}) async {
-    await _documentService.downloadDocument(note: note,setLoading: setLoading);
+    await _documentService.downloadDocument(note: note, setLoading: setLoading);
   }
 }
