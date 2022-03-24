@@ -338,6 +338,52 @@ class _SettingsViewState extends State<SettingsView> {
                     ],
                   ),
                 ),
+                Center(
+                  child: Container(
+                    height: App(context).appHeight(0.12),
+                    width: App(context).appWidth(1) - 40,
+                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                    margin: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                    // decoration: BoxDecoration(
+                    //   borderRadius: BorderRadius.circular(16),
+                    //   color: theme.scaffoldBackgroundColor,
+                    //   border: Border.all(
+                    //     color: primary,
+                    //     width: 1.5,
+                    //   ),
+                    // ),
+                    child: Column(
+                      children: <Widget>[
+                        Text(
+                          "Open pdf in",
+                          style: Theme.of(context)
+                              .textTheme
+                              .headline6
+                              .copyWith(fontSize: 16),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Flexible(
+                          child: DropdownButton(
+                            elevation: 15,
+                            value: model.userOption,
+                            items: model.dropDownOfOpenPDF,
+                            onChanged: model.changedDropDownItemOfOpenPdfChoice,
+                            dropdownColor:
+                                Theme.of(context).colorScheme.background,
+                            focusColor:
+                                Theme.of(context).colorScheme.background,
+                            style: Theme.of(context)
+                                .textTheme
+                                .subtitle1
+                                .copyWith(fontSize: 13),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
                 SizedBox(
                   height: hp * 0.05,
                 ),
@@ -444,10 +490,12 @@ class SettingsTile extends StatelessWidget {
                     ],
                   ),
                   if (isClickable)
-                    Icon(
-                      Icons.arrow_forward_ios,
-                      color: theme.iconTheme.color.withOpacity(0.8),
-                      size: 20,
+                    Flexible(
+                      child: Icon(
+                        Icons.arrow_forward_ios,
+                        color: theme.iconTheme.color.withOpacity(0.8),
+                        size: 20,
+                      ),
                     ),
                 ],
               ),

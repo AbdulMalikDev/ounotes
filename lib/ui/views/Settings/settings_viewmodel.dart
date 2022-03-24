@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:FSOUNotes/AppTheme/AppStateNotifier.dart';
 import 'package:FSOUNotes/AppTheme/AppTheme.dart';
 import 'package:FSOUNotes/enums/bottom_sheet_type.dart';
+import 'package:FSOUNotes/misc/constants.dart';
 import 'package:FSOUNotes/services/funtional_services/analytics_service.dart';
 import 'package:FSOUNotes/services/funtional_services/app_info_service.dart';
 import 'package:FSOUNotes/services/funtional_services/email_service.dart';
@@ -128,12 +129,24 @@ class SettingsViewModel extends BaseViewModel {
 
   Future setUser() async {
     SharedPreferences prefs = await _sharedPreferencesService.store();
+    if (prefs.containsKey("openDocChoice")) {
+      _userOption = prefs.getString("openDocChoice");
+    } else {
+      _userOption = "Ask me before opening pdf";
+    }
+    List<String> items = [
+      "Open In Browser",
+      Constants.downloadAndOpenInApp,
+      "Ask me before opening pdf"
+    ];
+    _dropDownOfOpenPDF = buildAndGetDropDownMenuItems(items);
     User user = User.fromData(
         json.decode(prefs.getString("current_user_is_logged_in")));
-    print(user);
     _user = user;
     notifyListeners();
   }
+
+  init() {}
 
   handleSignOut(BuildContext context) async {
     showDialog(

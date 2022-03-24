@@ -1,4 +1,5 @@
 import 'package:FSOUNotes/models/syllabus.dart';
+import 'package:FSOUNotes/services/funtional_services/google_drive/google_drive_service.dart';
 import 'package:FSOUNotes/ui/widgets/smart_widgets/syllabus_tile.dart/syllabus_tile_view.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:logger/logger.dart';
@@ -22,6 +23,7 @@ class SyllabusViewModel extends BaseViewModel {
   SharedPreferencesService _sharedPreferencesService =
       locator<SharedPreferencesService>();
   BottomSheetService _bottomSheetService = locator<BottomSheetService>();
+  GoogleDriveService _googleDriveService = locator<GoogleDriveService>();
 
   List<Widget> _syllabusTiles = [];
 
@@ -106,11 +108,33 @@ class SyllabusViewModel extends BaseViewModel {
   }
 
   navigateToPDFScreen(String buttonText, Syllabus syllabus) {
-    if (buttonText == 'Open In App') {
-      navigateToWebView(syllabus);
+    if (buttonText == "Download & Open In App") {
+      navigateToPDFView(syllabus);
     } else {
       _sharedPreferencesService.updateView(syllabus.id);
       Helper.launchURL(syllabus.GDriveLink);
+    }
+  }
+  void navigateToPDFView(Syllabus syllabus) async {
+    try {
+      _googleDriveService.downloadPuchasedPdf(
+        note: syllabus,
+        startDownload: () {
+          setBusy(true);
+        },
+        onDownloadedCallback: (path, _) {
+          setBusy(false);
+          _navigationService.navigateTo(Routes.pDFScreen,
+              arguments: PDFScreenArguments(
+                  pathPDF: path, doc: syllabus, isUploadingDoc: false));
+        },
+      );
+    } catch (e) {
+      setBusy(false);
+      Fluttertoast.showToast(
+          msg: "An error Occurred while downloading pdf..." +
+              "Please check you internet connection and try again later");
+      return;
     }
   }
 

@@ -34,7 +34,6 @@ import '../ui/views/all_documents/all_documents_view.dart';
 import '../ui/views/downloads/Downloads_view.dart';
 import '../ui/views/edit/edit_view.dart';
 import '../ui/views/home/home_view.dart';
-import '../ui/views/home/recently_added_notes/recently_added_notes_view.dart';
 import '../ui/views/intro/intro_view.dart';
 import '../ui/views/links/links_view.dart';
 import '../ui/views/notes/notes_view.dart';
@@ -172,7 +171,6 @@ class StackedRouter extends RouterBase {
     RouteDef(Routes.verifyDocumentsView, page: VerifyDocumentsView),
     RouteDef(Routes.reportedDocumentsView, page: ReportedDocumentsView),
     RouteDef(Routes.notificationView, page: NotificationView),
-    RouteDef(Routes.recentlyAddedNotesView, page: RecentlyAddedNotesView),
     RouteDef(Routes.accountInfoView, page: AccountInfoView),
     RouteDef(Routes.mainView, page: MainView),
   ];
@@ -291,6 +289,7 @@ class StackedRouter extends RouterBase {
         builder: (context) => UploadView(
           textFieldsMap: args.textFieldsMap,
           subjectName: args.subjectName,
+          uploadType: args.uploadType,
         ),
         settings: data,
       );
@@ -478,12 +477,6 @@ class StackedRouter extends RouterBase {
         settings: data,
       );
     },
-    RecentlyAddedNotesView: (data) {
-      return MaterialPageRoute<dynamic>(
-        builder: (context) => const RecentlyAddedNotesView(),
-        settings: data,
-      );
-    },
     AccountInfoView: (data) {
       return MaterialPageRoute<dynamic>(
         builder: (context) => const AccountInfoView(),
@@ -568,10 +561,12 @@ class LinksViewArguments {
 class UploadViewArguments {
   final Map<dynamic, dynamic> textFieldsMap;
   final String subjectName;
-  final Document path;
-  final Document path2;
-  UploadViewArguments(
-      {this.textFieldsMap, @required this.subjectName, this.path, this.path2});
+  final Document uploadType;
+  UploadViewArguments({
+    this.textFieldsMap,
+    @required this.subjectName,
+    this.uploadType,
+  });
 }
 
 /// UploadSelectionView arguments holder class

@@ -92,41 +92,41 @@ class DefaultAppBarView extends StatelessWidget with PreferredSizeWidget {
                   //     ),
                   //   ),
                   // )
-                  if (showNotificationButton)
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          IconButton(
-                            onPressed: () {},
-                            icon: Container(
-                              height: hp * 0.18,
-                              width: wp * 0.25,
-                              alignment: Alignment.center,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                border: Border.all(
-                                  color: Theme.of(context)
-                                      .iconTheme
-                                      .color
-                                      .withOpacity(0.8),
-                                ),
-                              ),
-                              child: Icon(
-                                MdiIcons.bellOutline,
-                                size: hp*0.023,
-                                color: Theme.of(context)
-                                    .iconTheme
-                                    .color
-                                    .withOpacity(0.8),
-                              ),
-                            ),
-                          ),
-                          SizedBox(width: 10,)
-                        ],
-                      ),
-                    ),
+                  // if (showNotificationButton)
+                  //   Align(
+                  //     alignment: Alignment.centerRight,
+                  //     child: Row(
+                  //       mainAxisSize: MainAxisSize.min,
+                  //       children: [
+                  //         IconButton(
+                  //           onPressed: () {},
+                  //           icon: Container(
+                  //             height: hp * 0.18,
+                  //             width: wp * 0.25,
+                  //             alignment: Alignment.center,
+                  //             decoration: BoxDecoration(
+                  //               shape: BoxShape.circle,
+                  //               border: Border.all(
+                  //                 color: Theme.of(context)
+                  //                     .iconTheme
+                  //                     .color
+                  //                     .withOpacity(0.8),
+                  //               ),
+                  //             ),
+                  //             child: Icon(
+                  //               MdiIcons.bellOutline,
+                  //               size: hp*0.023,
+                  //               color: Theme.of(context)
+                  //                   .iconTheme
+                  //                   .color
+                  //                   .withOpacity(0.8),
+                  //             ),
+                  //           ),
+                  //         ),
+                  //         SizedBox(width: 10,)
+                  //       ],
+                  //     ),
+                  //   ),
                 ],
               ),
             ),
