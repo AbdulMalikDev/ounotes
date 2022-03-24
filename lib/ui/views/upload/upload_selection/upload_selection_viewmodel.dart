@@ -9,14 +9,9 @@ import 'package:stacked_services/stacked_services.dart';
 class UploadSelectionViewModel extends BaseViewModel {
   NavigationService _navigationService = locator<NavigationService>();
   String _subjectName;
-  Document _path;
 
   set subjectName(String name) {
     _subjectName = name;
-  }
-
-  set path(Document path) {
-    _path = path;
   }
 
   navigateToNotes() {
@@ -25,7 +20,6 @@ class UploadSelectionViewModel extends BaseViewModel {
           textFieldsMap: Constants.Notes,
           path: Document.Notes,
           subjectName: _subjectName,
-          path2: _path,
         ));
   }
 
@@ -35,7 +29,6 @@ class UploadSelectionViewModel extends BaseViewModel {
           textFieldsMap: Constants.QuestionPaper,
           path: Document.QuestionPapers,
           subjectName: _subjectName,
-          path2: _path,
         ));
   }
 
@@ -45,7 +38,6 @@ class UploadSelectionViewModel extends BaseViewModel {
           textFieldsMap: Constants.Syllabus,
           path: Document.Syllabus,
           subjectName: _subjectName,
-          path2: _path,
         ));
   }
 
@@ -55,16 +47,15 @@ class UploadSelectionViewModel extends BaseViewModel {
           textFieldsMap: Constants.Links,
           path: Document.Links,
           subjectName: _subjectName,
-          path2: _path,
         ));
   }
+
   navigateToGDRIVELinks() {
     _navigationService.navigateTo(Routes.uploadView,
         arguments: UploadViewArguments(
           textFieldsMap: Constants.GDRIVELink,
           path: Document.GDRIVE,
           subjectName: _subjectName,
-          path2: _path,
         ));
   }
 }

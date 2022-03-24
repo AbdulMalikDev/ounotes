@@ -59,30 +59,36 @@ class SyllabusTileViewModel extends BaseViewModel {
     log.i("Report BottomSheetResponse " + reportResponse.responseData);
 
     //Generate report with appropriate data
-    Report report = Report(doc.id, doc.subjectName, doc.type, doc.title, _authenticationService.user.email,reportReason: reportResponse.responseData);
+    Report report = Report(doc.id, doc.subjectName, doc.type, doc.title,
+        _authenticationService.user.email,
+        reportReason: reportResponse.responseData);
 
     //Check whether user is banned
     User user = await _firestoreService.refreshUser();
-    if(!user.isUserAllowedToUpload){_userIsNotAllowedNotToReport();setBusy(false); return;}
+    if (!user.isUserAllowedToUpload) {
+      _userIsNotAllowedNotToReport();
+      setBusy(false);
+      return;
+    }
 
     // If user is reporting the same document 2nd time the result will be a String
     var result = await _reportsService.addReport(report);
-      if (result is String) {
-        _dialogService.showDialog(
-            title: "Thank you for reporting", description: result);
-      } else {
-        // await _firestoreService.reportNote(report: report, doc: doc);
-        Fluttertoast.showToast(
-            msg: "Your report has been recorded. The admins will look into this.",
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.CENTER,
-            timeInSecForIosWeb: 1,
-            backgroundColor: Colors.teal,
-            textColor: Colors.white,
-            fontSize: 16.0);
-      }
+    if (result is String) {
+      _dialogService.showDialog(
+          title: "Thank you for reporting", description: result);
+    } else {
+      // await _firestoreService.reportNote(report: report, doc: doc);
+      Fluttertoast.showToast(
+          msg: "Your report has been recorded. The admins will look into this.",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.teal,
+          textColor: Colors.white,
+          fontSize: 16.0);
+    }
 
-      setBusy(false);
+    setBusy(false);
   }
 
   Future delete(AbstractDocument doc) async {
@@ -111,11 +117,14 @@ class SyllabusTileViewModel extends BaseViewModel {
         fontSize: 16.0);
   }
 
-
-  download(AbstractDocument doc) async {
-    setLoading(true);
-    await _documentService.downloadDocument(note:doc);
-    setLoading(false);
+  download(Syllabus doc) async {
+    await _documentService.downloadDocument(
+      note: doc,
+      setLoading: setLoading,
+      sem: doc.semester,
+      branch: doc.branch,
+      boxName: Constants.syllabusDownloads,
+    );
   }
 
   navigateToEditView(Syllabus note) {

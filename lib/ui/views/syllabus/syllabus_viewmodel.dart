@@ -60,7 +60,7 @@ class SyllabusViewModel extends BaseViewModel {
     if (prefs.containsKey("openDocChoice")) {
       String button = prefs.getString("openDocChoice");
       if (button == "Open In App") {
-        navigateToWebView(syllabus);
+        // navigateToWebView(syllabus);
       } else {
         _sharedPreferencesService.updateView(syllabus.id);
         Helper.launchURL(syllabus.GDriveLink);
@@ -68,36 +68,39 @@ class SyllabusViewModel extends BaseViewModel {
       return;
     }
 
+    //Ask user to select his choice, whether to open in browser or app
     SheetResponse response = await _bottomSheetService.showCustomSheet(
       variant: BottomSheetType.floating2,
       title: 'Where do you want to open the file?',
-      description:
-          "",
+      description: "",
       mainButtonTitle: 'Open In Browser',
-      secondaryButtonTitle: 'Open In App',
+      secondaryButtonTitle: "Download & Open In App",
     );
     log.i("openDoc BottomSheetResponse ");
-    if (!response.confirmed) {
+    if (response == null) return;
+    if (!response.confirmed ?? false) {
       return;
     }
 
-    if (response.responseData['checkBox']) {
+    //if he clicked the checkbox to remember his choice the save the changes locally
+    if (response.data['checkBox']) {
       prefs.setString(
         "openDocChoice",
-        response.responseData['buttonText'],
+        response.data['buttonText'],
       );
 
       SheetResponse response2 = await _bottomSheetService.showBottomSheet(
         title: "Settings Saved !",
-        description:
-            "You can change this setting in the profile screen anytime.",
+        description: "You can change this anytime in settings screen.",
       );
+
+      //navigate to the selected screen choice either to browser or inapp pdf viewer
       if (response2.confirmed) {
-        navigateToPDFScreen(response.responseData['buttonText'], syllabus);
+        navigateToPDFScreen(response.data['buttonText'], syllabus);
         return;
       }
     } else {
-      navigateToPDFScreen(response.responseData['buttonText'], syllabus);
+      navigateToPDFScreen(response.data['buttonText'], syllabus);
     }
     return;
   }
@@ -122,6 +125,9 @@ class SyllabusViewModel extends BaseViewModel {
     return InkWell(
         child: SyllabusTileView(
           syllabus: syllabus,
+          openDoc: () {
+            openDoc(syllabus);
+          },
         ),
         onTap: () {
           openDoc(syllabus);

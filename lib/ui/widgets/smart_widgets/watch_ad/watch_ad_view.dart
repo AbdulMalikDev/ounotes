@@ -78,6 +78,7 @@ class _WatchAdToContinueViewState extends State<WatchAdToContinueView> {
                     "Or",
                     style: TextStyle(
                       fontSize: 15,
+                      color: Colors.black,
                     ),
                   ),
                 ),

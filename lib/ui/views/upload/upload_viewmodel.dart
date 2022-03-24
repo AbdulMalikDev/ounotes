@@ -134,7 +134,7 @@ class UploadViewModel extends BaseViewModel {
     return subList;
   }
 
-  initialise(Document path) async {
+    initialise(Document uploadType) async {
     _dropDownMenuItemsofBranch =
         buildAndGetDropDownMenuItems(CourseInfo.branch);
     _dropDownMenuItemsofsemester =
@@ -144,7 +144,7 @@ class UploadViewModel extends BaseViewModel {
     _selectedSemester = _dropDownMenuItemsofsemester[0].value;
     _selectedBranch = _dropDownMenuItemsofBranch[0].value;
     _selectedyeartype = _dropDownMenuItemForTypeYear[0].value;
-    _document = Constants.getDocumentNameFromEnum(path??Document.GDRIVE);
+    _document = Constants.getDocumentNameFromEnum(uploadType??Document.GDRIVE);
     await setUser();
     notifyListeners();
   }

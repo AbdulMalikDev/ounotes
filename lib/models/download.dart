@@ -27,6 +27,8 @@ class Download extends HiveObject {
   final String branch;
   @HiveField(11)
   final String year;
+  @HiveField(12)
+  final String type;
 
   Download({
     this.id,
@@ -41,5 +43,6 @@ class Download extends HiveObject {
     this.semester,
     this.branch,
     this.year,
+    this.type,
   });
 }

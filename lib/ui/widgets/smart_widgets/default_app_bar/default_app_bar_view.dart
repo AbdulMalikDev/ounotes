@@ -2,14 +2,15 @@ import 'package:FSOUNotes/AppTheme/AppStateNotifier.dart';
 import 'package:FSOUNotes/enums/constants.dart';
 import 'package:FSOUNotes/ui/shared/app_config.dart';
 import 'package:flutter/material.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:stacked/stacked.dart';
 import 'default_app_bar_viewmodel.dart';
 
 class DefaultAppBarView extends StatelessWidget with PreferredSizeWidget {
   @override
   final Size preferredSize;
-  final bool showUploadButton;
-  DefaultAppBarView({Key key, this.showUploadButton=false})
+  final bool showNotificationButton;
+  DefaultAppBarView({Key key, this.showNotificationButton = false})
       : preferredSize = Size.fromHeight(60.0),
         super(key: key);
 
@@ -91,49 +92,39 @@ class DefaultAppBarView extends StatelessWidget with PreferredSizeWidget {
                   //     ),
                   //   ),
                   // )
-                  if (showUploadButton)
+                  if (showNotificationButton)
                     Align(
                       alignment: Alignment.centerRight,
-                      child: GestureDetector(
-                        onTap: () {
-                          model.navigateToUserUploadScreen();
-                        },
-                        child: Container(
-                          height: hp * 0.04,
-                          width: wp * 0.28,
-                          margin: EdgeInsets.only(right: 10),
-                          alignment: Alignment.center,
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 10,
-                            vertical: 5,
-                          ),
-                          decoration: BoxDecoration(
-                            color: Theme.of(context).accentColor,
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Flexible(
-                                child: Text(
-                                  "UPLOAD",
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 10,
-                                  ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          IconButton(
+                            onPressed: () {},
+                            icon: Container(
+                              height: hp * 0.18,
+                              width: wp * 0.25,
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                border: Border.all(
+                                  color: Theme.of(context)
+                                      .iconTheme
+                                      .color
+                                      .withOpacity(0.8),
                                 ),
                               ),
-                              SizedBox(
-                                width: 10,
+                              child: Icon(
+                                MdiIcons.bellOutline,
+                                size: hp*0.023,
+                                color: Theme.of(context)
+                                    .iconTheme
+                                    .color
+                                    .withOpacity(0.8),
                               ),
-                              Icon(
-                                Icons.upload_file_rounded,
-                                size: 25,
-                              ),
-                            ],
+                            ),
                           ),
-                        ),
+                          SizedBox(width: 10,)
+                        ],
                       ),
                     ),
                 ],

@@ -291,8 +291,6 @@ class StackedRouter extends RouterBase {
         builder: (context) => UploadView(
           textFieldsMap: args.textFieldsMap,
           subjectName: args.subjectName,
-          path: args.path,
-          path2: args.path2,
         ),
         settings: data,
       );
@@ -304,7 +302,6 @@ class StackedRouter extends RouterBase {
       return MaterialPageRoute<dynamic>(
         builder: (context) => UploadSelectionView(
           subjectName: args.subjectName,
-          path: args.path,
         ),
         settings: data,
       );

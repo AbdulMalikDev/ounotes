@@ -190,10 +190,7 @@ class NotesTileViewModel extends BaseViewModel {
     );
   }
 
-  // void incrementViewForAd() {
-  //   this.admobService.incrementNumberOfTimeNotesOpened();
-  //   this.admobService.shouldAdBeShown();
-  // }
+
 
   void pinNotes(Note note, Function refresh) {
     //Initialize and fetch pinned notes

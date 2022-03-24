@@ -34,11 +34,14 @@ import 'package:stacked_services/stacked_services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:hive/hive.dart';
 
+import '../../../misc/constants.dart';
+
 class NotesViewModel extends BaseViewModel {
   Logger log = getLogger("Notes view model");
   String table = 'uservoted_subjects';
   List<Download> downloadedNotes = [];
   ValueNotifier<List<Widget>> _notesTiles = new ValueNotifier([]);
+  bool _showAdminFeatures = false;
 
   FirestoreService _firestoreService = locator<FirestoreService>();
   AdmobService _admobService = locator<AdmobService>();
@@ -70,6 +73,7 @@ class NotesViewModel extends BaseViewModel {
   ValueNotifier<List<Widget>> get notesTiles => _notesTiles;
   bool isloading = false;
   bool get loading => isloading;
+  bool get showAdminFeatures => _showAdminFeatures;
   Box box;
   ValueNotifier<double> get downloadProgress =>
       _googleDriveService.downloadProgress;
@@ -248,57 +252,67 @@ class NotesViewModel extends BaseViewModel {
 
   void openDoc(Note note) async {
     _sharedPreferencesService.updateView(note.id);
-    Helper.launchURL(note.GDriveLink);
-    // User user = await _authenticationService.getUser();
+    User user = await _authenticationService.getUser();
+    //TODO show ad
     // if (_admobService.adDue && !user.isPremiumUser ??
     //     false || _admobService.shouldAdBeShown()) {
     //   _navigationService.navigateTo(Routes.watchAdToContinueView);
     //   return;
     // }
-    // SharedPreferences prefs = await _sharedPreferencesService.store();
-    // if (prefs.containsKey("openDocChoice")) {
-    //   String button = prefs.getString("openDocChoice");
-    //   if (button == "Open In App") {
-    //     navigateToPDFView(note);
-    //   } else {
-    //   _sharedPreferencesService.updateView(note.id);
-    //   Helper.launchURL(note.GDriveLink);
-    // }
-    //   return;
-    // }
 
-    // SheetResponse response = await _bottomSheetService.showCustomSheet(
-    //   variant: BottomSheetType.floating2,
-    //   title: 'Where do you want to open the file?',
-    //   description: "",
-    //   mainButtonTitle: 'Open In Browser',
-    //   secondaryButtonTitle: 'Open In App',
-    // );
-    // log.i("openDoc BottomSheetResponse ");
-    // if (response == null) return;
-    // if (!response.confirmed ?? false) {
-    //   return;
-    // }
+    //Check if used already saved his choice of actions
+    SharedPreferences prefs = await _sharedPreferencesService.store();
+    if (prefs.containsKey("openDocChoice")) {
+      String button = prefs.getString("openDocChoice");
+      if (button == Constants.downloadAndOpenInApp) {
+        navigateToPDFView(note);
+      } else {
+        _sharedPreferencesService.updateView(note.id);
+        Helper.launchURL(note.GDriveLink);
+      }
+      return;
+    }
 
-    // if (response.responseData['checkBox']) {
-    //   prefs.setString(
-    //     "openDocChoice",
-    //     response.responseData['buttonText'],
-    //   );
+    //Ask user to select his choice, whether to open in browser or app
+    SheetResponse response = await _bottomSheetService.showCustomSheet(
+      variant: BottomSheetType.floating2,
+      title: 'Where do you want to open the file?',
+      description: "",
+      mainButtonTitle: 'Open In Browser',
+      secondaryButtonTitle: "Download & Open In App",
+    );
+    log.i("openDoc BottomSheetResponse ");
+    if (response == null) return;
+    if (!response.confirmed ?? false) {
+      return;
+    }
 
-    //   SheetResponse response2 = await _bottomSheetService.showBottomSheet(
-    //     title: "Settings Saved !",
-    //     description: "You can change this anytime in settings screen.",
-    //   );
+    //if he clicked the checkbox to remember his choice the save the changes locally
+    if (response.data['checkBox']) {
+      prefs.setString(
+        "openDocChoice",
+        response.data['buttonText'],
+      );
 
-    //   if (response2.confirmed) {
-    //     navigateToPDFScreen(response.responseData['buttonText'], note);
-    //     return;
-    //   }
-    // } else {
-    //   navigateToPDFScreen(response.responseData['buttonText'], note);
-    // }
+      SheetResponse response2 = await _bottomSheetService.showBottomSheet(
+        title: "Settings Saved !",
+        description: "You can change this anytime in settings screen.",
+      );
+
+      //navigate to the selected screen choice either to browser or inapp pdf viewer
+      if (response2.confirmed) {
+        navigateToPDFScreen(response.data['buttonText'], note);
+        return;
+      }
+    } else {
+      navigateToPDFScreen(response.data['buttonText'], note);
+    }
     return;
+  }
+
+  onShowAdminFeature(bool val) {
+    _showAdminFeatures = val;
+    notifyListeners();
   }
 
   navigateToPDFScreen(String buttonText, Note note) {
@@ -435,12 +449,21 @@ class NotesViewModel extends BaseViewModel {
         isPinned: isPinned,
         refresh: refresh,
         onDownloadCallback: handleDownload,
+        onTap: () async {
+          await incrementViewForAd();
+          openDoc(note);
+        },
       ),
       onTap: () async {
-        // await incrementViewForAd();
-        // openDoc(note);
+        await incrementViewForAd();
+        openDoc(note);
       },
     );
+  }
+
+  void incrementViewForAd() {
+    this.admobService.incrementNumberOfTimeNotesOpened();
+    // this.admobService.shouldAdBeShown();
   }
 
   initialize() async {
@@ -449,9 +472,6 @@ class NotesViewModel extends BaseViewModel {
   }
 
   void handleDownload({Note note}) async {
-    setLoading(true);
-    await _documentService.downloadDocument(note:note);
-    setLoading(false);
+    await _documentService.downloadDocument(note: note,author: note.author,setLoading: setLoading);
   }
-
 }
