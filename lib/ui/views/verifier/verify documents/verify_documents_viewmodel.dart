@@ -2,6 +2,7 @@ import 'package:FSOUNotes/app/app.locator.dart';
 import 'package:FSOUNotes/enums/constants.dart';
 import 'package:FSOUNotes/models/UploadLog.dart';
 import 'package:FSOUNotes/models/user.dart';
+import 'package:FSOUNotes/services/funtional_services/authentication_service.dart';
 import 'package:FSOUNotes/services/funtional_services/document_service.dart';
 import 'package:FSOUNotes/services/funtional_services/firebase_firestore/firestore_service.dart';
 import 'package:flutter/cupertino.dart';
@@ -14,11 +15,12 @@ class VerifyDocumentsViewModel extends FutureViewModel {
   DialogService _dialogService = locator<DialogService>();
   BottomSheetService _bottomSheetService = locator<BottomSheetService>();
   DocumentService _documentService = locator<DocumentService>();
+  AuthenticationService _authenticationService = locator<AuthenticationService>();
 
   ValueNotifier<List<UploadLog>> _logs = new ValueNotifier(new List<UploadLog>());
 
   ValueNotifier<List<UploadLog>> get logs => _logs;
-
+  bool get isAdmin => _authenticationService?.user?.isAdmin ?? false;
   bool isloading = false;
 
   ValueNotifier<double> get downloadProgress =>
@@ -61,6 +63,12 @@ class VerifyDocumentsViewModel extends FutureViewModel {
     setBusy(false);
   }
 
+  void verifyAll() async {
+    for (int i=0; i<logs.value.length;i++){
+      await verify(logs.value[0],0);
+    }
+  }
+
   void verify(UploadLog logItem, int index) async {
     var result = await _documentService.verifyDocument(logItem);
     _removeReportFromList(result,index);
@@ -83,9 +91,9 @@ class VerifyDocumentsViewModel extends FutureViewModel {
   }
 
   _removeReportFromList(result,index) {
-    if (result!=null){
-      _logs.value.removeAt(index);
-    }
+    // if (result!=null){
+    _logs.value.removeAt(index);
+    // }
     _logs.notifyListeners();
     notifyListeners();
   }

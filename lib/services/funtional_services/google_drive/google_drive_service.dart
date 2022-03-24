@@ -270,7 +270,7 @@ class GoogleDriveService extends ChangeNotifier{
 
       try {
         //>> 1.5.1 initialize http client and GDrive API
-        var drive = _initializeHttpClientAndGDriveAPI();
+        var drive = await _initializeHttpClientAndGDriveAPI();
         subjectSubFolderID =
             _getSubjectFolderID(subjectName: doc.subjectName, docEnum: docEnum);
         gDriveFileToUpload = _setMetadataToGDriveFile(

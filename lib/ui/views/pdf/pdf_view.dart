@@ -26,10 +26,10 @@ part "./pdf_functions.dart";
 Logger log = getLogger("PDFScreen");
 
 class PDFScreen extends StatefulWidget {
-  final String pathPDF;
-  final AbstractDocument doc;
-  final bool isUploadingDoc;
-  PDFScreen({this.pathPDF, this.doc, this.isUploadingDoc = false});
+  String pathPDF;
+  AbstractDocument doc;
+  bool isUploadingDoc = false;
+  PDFScreen({this.pathPDF, this.doc, this.isUploadingDoc});
 
   @override
   _PDFScreenState createState() => _PDFScreenState();
@@ -140,9 +140,9 @@ class _PDFScreenState extends State<PDFScreen> {
                 ],
               ),
             )
-          : null,
+          : SizedBox(height: 0),
       appBar: isLandscape
-          ? null
+          ? SizedBox(height: 0)
           : AppBar(
               toolbarHeight: MediaQuery.of(context).size.height * 0.070,
               flexibleSpace: Toolbar(

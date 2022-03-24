@@ -37,6 +37,49 @@ class VerifyDocumentsView extends StatelessWidget {
                         //mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
+                          if(model.isAdmin)
+                          Row(
+                          children: [
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: RaisedButton(
+                                  color: Colors.teal,
+                                  child: FittedBox(
+                                    child: Text(
+                                      "📤  ALL DOCS",
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                  onPressed: () async {
+                                    await model.verifyAll();
+                                  },
+                                ),
+                              ),
+                            ),
+                            // Expanded(
+                            //   child: Padding(
+                            //     padding: const EdgeInsets.all(8.0),
+                            //     child: RaisedButton(
+                            //       color: Colors.teal,
+                            //       child: FittedBox(
+                            //         child: Text(
+                            //           "📤  SELECTED DOCS",
+                            //           style: TextStyle(
+                            //               color: Colors.white,
+                            //               fontWeight: FontWeight.bold),
+                            //         ),
+                            //       ),
+                            //       onPressed: () async {
+                            //         // await model.uploadSelectedDocuments();
+                            //       },
+                            //     ),
+                            //   ),
+                            // ),
+                          ],
+                        ),
                           SizedBox(
                             height: 5,
                           ),

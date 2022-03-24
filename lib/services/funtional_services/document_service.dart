@@ -352,7 +352,7 @@ class DocumentService {
     }
     if (navigate)
       _navigationService.navigateTo(Routes.pDFScreen,
-          arguments: PDFScreenArguments(pathPDF: PDFpath));
+          arguments: PDFScreenArguments(pathPDF: PDFpath,doc: doc,isUploadingDoc: false));
     return file;
   }
 
