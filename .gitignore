@@ -44,7 +44,6 @@ app.*.map.json
 # Exceptions to above rules.
 !/packages/flutter_tools/test/data/dart_dependencies_test/**/.packages
 
-
 .env
 /android
 /android/app/key.jks
@@ -59,3 +58,5 @@ app.*.map.json
 functions/
 .firebaserc
 firebase.json
+/Web
+/Web/config.js

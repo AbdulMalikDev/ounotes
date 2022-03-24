@@ -19,6 +19,7 @@ class NotesTileView extends StatelessWidget {
   final bool notification;
   final bool isPinned;
   final Function refresh;
+  final Function onTap;
   final Function({Note note}) onDownloadCallback;
 
   const NotesTileView({
@@ -28,6 +29,7 @@ class NotesTileView extends StatelessWidget {
     this.isPinned = false,
     this.refresh,
     this.onDownloadCallback,
+    @required this.onTap,
   }) : super(key: key);
 
   @override
@@ -80,6 +82,7 @@ class NotesTileView extends StatelessWidget {
                               model: model,
                               isPinned: isPinned,
                               onDownloadCallback: onDownloadCallback,
+                              openDoc: onTap,
                             ),
                           )
                         : NotesColumnWidget(
@@ -96,6 +99,7 @@ class NotesTileView extends StatelessWidget {
                             model: model,
                             isPinned: isPinned,
                             onDownloadCallback: onDownloadCallback,
+                            openDoc: onTap,
                           ),
                   ),
           );
@@ -119,6 +123,7 @@ class NotesColumnWidget extends StatelessWidget {
     @required this.model,
     @required this.isPinned,
     @required this.refresh,
+    @required this.openDoc,
     this.onDownloadCallback,
   }) : super(key: key);
 
@@ -134,6 +139,7 @@ class NotesColumnWidget extends StatelessWidget {
   final NotesTileViewModel model;
   final bool isPinned;
   final Function refresh;
+  final Function openDoc;
   final Function({Note note}) onDownloadCallback;
 
   @override
@@ -151,13 +157,25 @@ class NotesColumnWidget extends StatelessWidget {
           children: <Widget>[
             Column(
               children: <Widget>[
-                Text(
-                  size,
-                  style: TextStyle(
-                    color: primary,
-                    fontSize: 10,
-                    letterSpacing: .3,
-                  ),
+                Row(
+                  children: [
+                    // Icon(
+                    //   Icons.file_present,
+                    //   color: secondary,
+                    //   size: 20,
+                    // ),
+                    // SizedBox(
+                    //   width: 5,
+                    // ),
+                    Text(
+                      size,
+                      style: TextStyle(
+                        color: primary,
+                        fontSize: 10,
+                        letterSpacing: .3,
+                      ),
+                    ),
+                  ],
                 ),
                 Container(
                   height: App(context).appScreenHeightWithOutSafeArea(0.1),
@@ -308,27 +326,27 @@ class NotesColumnWidget extends StatelessWidget {
                   SizedBox(
                     height: 15,
                   ),
-                    Container(
-                      width: wp * 0.6,
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          primary: Theme.of(context).primaryColor,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                        ),
-                        onPressed: () {
-                          model.openDoc(note);
-                        },
-                        child: Text(
-                          "Open",
-                          style: Theme.of(context)
-                              .textTheme
-                              .button
-                              .copyWith(color: Colors.white),
+                  Container(
+                    width: wp * 0.6,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        primary: Theme.of(context).primaryColor,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
                         ),
                       ),
+                      onPressed: () {
+                        openDoc();
+                      },
+                      child: Text(
+                        "Open",
+                        style: Theme.of(context)
+                            .textTheme
+                            .button
+                            .copyWith(color: Colors.white),
+                      ),
                     ),
+                  ),
                 ],
               ),
             )
@@ -339,120 +357,76 @@ class NotesColumnWidget extends StatelessWidget {
           margin: const EdgeInsets.symmetric(horizontal: 10),
           color: theme.colorScheme.onBackground,
         ),
-        Container(
-          margin: const EdgeInsets.symmetric(horizontal: 10),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              TextButton(
-                onPressed: () {
-                  onDownloadCallback(note: note);
-                },
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.download,
-                      color: Colors.orange,
-                    ),
-                    SizedBox(
-                      width: 5,
-                    ),
-                    Text(
-                      "Download",
-                      style: Theme.of(context).textTheme.bodyText2.copyWith(
-                            color: Colors.orange,
-                          ),
-                    )
-                  ],
-                ),
-              ),
-              TextButton(
-                onPressed: () {
-                  final RenderBox box = context.findRenderObject();
-                  Share.share(
-                      "Notes Name: ${note.title}\n\nSubject Name: ${note.subjectName}\n\nLink:${note.GDriveLink}\n\nFind Latest Notes | Question Papers | Syllabus | Resources for Osmania University at the OU NOTES App\n\nhttps://play.google.com/store/apps/details?id=com.notes.ounotes",
-                      sharePositionOrigin:
-                          box.localToGlobal(Offset.zero) & box.size);
-                },
-                child: Row(
-                  children: [
-                    Icon(Icons.share, color: Theme.of(context).primaryColor),
-                    SizedBox(
-                      width: 5,
-                    ),
-                    Text(
-                      "Share",
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyText2
-                          .copyWith(color: Theme.of(context).primaryColor),
-                    )
-                  ],
-                ),
-              ),
-              TextButton(
-                onPressed: () {
-                  model.reportNote(
-                    doc: note,
-                    id: note.id,
-                    subjectName: note.subjectName,
-                    title: note.title,
-                    type: Constants.notes,
-                  );
-                },
-                child: Row(
-                  children: [
-                    Icon(Icons.report, color: Colors.red),
-                    SizedBox(
-                      width: 5,
-                    ),
-                    Text(
-                      "Report",
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyText2
-                          .copyWith(color: Colors.red),
-                    )
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-        model.isAdmin
-            ? Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+        if (!model.isAdmin)
+          Container(
+            margin: const EdgeInsets.symmetric(horizontal: 10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
                 TextButton(
-                  onPressed: () async {
-                    await model.navigateToEditView(note);
+                  onPressed: () {
+                    onDownloadCallback(note: note);
                   },
                   child: Row(
                     children: [
-                      Icon(Icons.edit, color: Colors.blue),
+                      Icon(
+                        Icons.download,
+                        color: Colors.orange,
+                      ),
                       SizedBox(
                         width: 5,
                       ),
                       Text(
-                        "EDIT",
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodyText2
-                            .copyWith(color: Colors.blue),
+                        "Download",
+                        style: Theme.of(context).textTheme.bodyText2.copyWith(
+                              color: Colors.orange,
+                            ),
                       )
                     ],
                   ),
                 ),
                 TextButton(
-                  onPressed: () async {
-                    await model.deleteFromGdrive(note);
+                  onPressed: () {
+                    final RenderBox box = context.findRenderObject();
+                    Share.share(
+                        "Notes Name: ${note.title}\n\nSubject Name: ${note.subjectName}\n\nLink:${note.GDriveLink}\n\nFind Latest Notes | Question Papers | Syllabus | Resources for Osmania University at the OU NOTES App\n\nhttps://play.google.com/store/apps/details?id=com.notes.ounotes",
+                        sharePositionOrigin:
+                            box.localToGlobal(Offset.zero) & box.size);
                   },
                   child: Row(
                     children: [
-                      Icon(Icons.delete, color: Colors.red),
+                      Icon(Icons.share, color: Theme.of(context).primaryColor),
                       SizedBox(
                         width: 5,
                       ),
                       Text(
-                        "DELETE",
+                        "Share",
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyText2
+                            .copyWith(color: Theme.of(context).primaryColor),
+                      )
+                    ],
+                  ),
+                ),
+                TextButton(
+                  onPressed: () {
+                    model.reportNote(
+                      doc: note,
+                      id: note.id,
+                      subjectName: note.subjectName,
+                      title: note.title,
+                      type: Constants.notes,
+                    );
+                  },
+                  child: Row(
+                    children: [
+                      Icon(Icons.report, color: Colors.red),
+                      SizedBox(
+                        width: 5,
+                      ),
+                      Text(
+                        "Report",
                         style: Theme.of(context)
                             .textTheme
                             .bodyText2
@@ -461,8 +435,98 @@ class NotesColumnWidget extends StatelessWidget {
                     ],
                   ),
                 ),
-              ])
-            : Container(),
+              ],
+            ),
+          ),
+        if (model.isAdmin)
+          Container(
+            margin: const EdgeInsets.symmetric(horizontal: 10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                TextButton(
+                  onPressed: () {
+                    onDownloadCallback(note: note);
+                  },
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.download,
+                        color: Colors.orange,
+                      ),
+                    ],
+                  ),
+                ),
+                TextButton(
+                  onPressed: () {
+                    final RenderBox box = context.findRenderObject();
+                    Share.share(
+                        "Notes Name: ${note.title}\n\nSubject Name: ${note.subjectName}\n\nLink:${note.GDriveLink}\n\nFind Latest Notes | Question Papers | Syllabus | Resources for Osmania University at the OU NOTES App\n\nhttps://play.google.com/store/apps/details?id=com.notes.ounotes",
+                        sharePositionOrigin:
+                            box.localToGlobal(Offset.zero) & box.size);
+                  },
+                  child: Row(
+                    children: [
+                      Icon(Icons.share, color: Theme.of(context).primaryColor),
+                      SizedBox(
+                        width: 5,
+                      ),
+                    ],
+                  ),
+                ),
+                TextButton(
+                  onPressed: () {
+                    model.reportNote(
+                      doc: note,
+                      id: note.id,
+                      subjectName: note.subjectName,
+                      title: note.title,
+                      type: Constants.notes,
+                    );
+                  },
+                  child: Row(
+                    children: [
+                      Icon(Icons.report, color: Colors.red),
+                      SizedBox(
+                        width: 5,
+                      ),
+                    ],
+                  ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    TextButton(
+                      onPressed: () async {
+                        await model.navigateToEditView(note);
+                      },
+                      child: Row(
+                        children: [
+                          Icon(Icons.edit, color: Colors.blue),
+                          SizedBox(
+                            width: 5,
+                          ),
+                        ],
+                      ),
+                    ),
+                    TextButton(
+                      onPressed: () async {
+                        await model.deleteFromGdrive(note);
+                      },
+                      child: Row(
+                        children: [
+                          Icon(Icons.delete, color: Colors.red),
+                          SizedBox(
+                            width: 5,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                )
+              ],
+            ),
+          ),
       ],
     );
   }

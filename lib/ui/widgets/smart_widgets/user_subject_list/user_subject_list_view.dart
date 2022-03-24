@@ -21,7 +21,10 @@ class UserSubjectListView extends StatelessWidget {
                 valueListenable: model.userSelectedSubjects,
                 builder: (context, userSelectedSubjects, child) =>
                     ListView.builder(
+                  shrinkWrap: true,
                   itemCount: userSubjects.length,
+                  scrollDirection: Axis.vertical,
+                  physics: NeverScrollableScrollPhysics(),
                   itemBuilder: (context, idx) {
                     Subject subject = userSubjects[idx];
                     bool isSubjectSelected = false;
@@ -135,6 +138,8 @@ class UserSubjectListView extends StatelessWidget {
             }
             return ReorderableListView(
               scrollDirection: Axis.vertical,
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
               onReorder: (int oldIndex, int newIndex) {
                 model.updateMyItems(oldIndex, newIndex);
               },

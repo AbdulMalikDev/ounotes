@@ -19,14 +19,14 @@ class BackIconAppBar extends StatelessWidget with PreferredSizeWidget {
       offset: Offset(0, 2),
     );
     return Container(
-      color: Colors.white,
+      color: Theme.of(context).scaffoldBackgroundColor,
       child: SafeArea(
         bottom: false,
         maintainBottomViewPadding: false,
         child: Container(
           height: 60,
           decoration: BoxDecoration(
-              color: Colors.white, boxShadow: [defaultAppBarShadow]),
+              color: Theme.of(context).scaffoldBackgroundColor, boxShadow: [defaultAppBarShadow]),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,

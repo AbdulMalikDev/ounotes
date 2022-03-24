@@ -70,23 +70,52 @@ class _FloatingBoxBottomSheet2 extends StatelessWidget {
                 controlAffinity:
                     ListTileControlAffinity.leading, //  <-- leading Checkbox
               ),
-              SizedBox(height: 15),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 3.0),
-                child: Text(request.description),
-              ),
-              SizedBox(height: 15),
-              Row(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+
+              // Padding(
+              //   padding: const EdgeInsets.symmetric(horizontal: 3.0),
+              //   child: Text(request.description),
+              // ),
+              // SizedBox(height: 15),
+              Column(
                 children: [
-                  Expanded(
-                    flex: 2,
-                    child: MaterialButton(
+                  Container(
+                    width: double.infinity,
+                    margin: EdgeInsets.symmetric(horizontal: 20),
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        primary: Theme.of(context).primaryColor,
+                      ),
                       onPressed: () => completer(
                         SheetResponse(
                           confirmed: true,
-                          responseData: {
+                          data: {
+                            "checkBox": model.ischecked,
+                            "buttonText": request.mainButtonTitle,
+                          },
+                        ),
+                      ),
+                      child: FittedBox(
+                        child: Text(
+                          request.mainButtonTitle ?? "YES",
+                          style: TextStyle(
+                              color: Colors.white, fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Container(
+                    width: double.infinity,
+                    margin: EdgeInsets.symmetric(horizontal: 20),
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        primary: Theme.of(context).canvasColor,
+                        side: BorderSide(
+                            width: 2.0, color: Theme.of(context).primaryColor),
+                      ),
+                      onPressed: () => completer(
+                        SheetResponse(
+                          confirmed: true,
+                          data: {
                             "checkBox": model.ischecked,
                             "buttonText": request.secondaryButtonTitle,
                           },
@@ -100,31 +129,6 @@ class _FloatingBoxBottomSheet2 extends StatelessWidget {
                               fontWeight: FontWeight.bold),
                         ),
                       ),
-                    ),
-                  ),
-                  SizedBox(
-                    width: 30,
-                  ),
-                  Expanded(
-                    flex: 3,
-                    child: FlatButton(
-                      onPressed: () => completer(
-                        SheetResponse(
-                          confirmed: true,
-                          responseData: {
-                            "checkBox": model.ischecked,
-                            "buttonText": request.mainButtonTitle,
-                          },
-                        ),
-                      ),
-                      child: FittedBox(
-                        child: Text(
-                          request.mainButtonTitle ?? "YES",
-                          style: TextStyle(
-                              color: Colors.white, fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                      color: Theme.of(context).primaryColor,
                     ),
                   ),
                 ],
@@ -311,13 +315,16 @@ class _FilledStacksFloatingBoxBottomSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     bool isFileUploadSheet = false;
     bool isDownloadSheet = false;
-    if (request.customData != null && request.customData.runtimeType.toString() == "_InternalLinkedHashMap<String, bool>"){
-
-        if(request.customData["file_upload"]!=null && request.customData["file_upload"]){
-          isFileUploadSheet = true;
-        }else if(request.customData["download"]!=null && request.customData["download"]){
-           isDownloadSheet = true;
-        }
+    if (request.customData != null &&
+        request.customData.runtimeType.toString() ==
+            "_InternalLinkedHashMap<String, bool>") {
+      if (request.customData["file_upload"] != null &&
+          request.customData["file_upload"]) {
+        isFileUploadSheet = true;
+      } else if (request.customData["download"] != null &&
+          request.customData["download"]) {
+        isDownloadSheet = true;
+      }
     }
     return Container(
       margin: EdgeInsets.all(25),
@@ -331,17 +338,18 @@ class _FilledStacksFloatingBoxBottomSheet extends StatelessWidget {
         children: [
           SizedBox(height: 10),
           isDownloadSheet
-          ?IconButton(icon:Icon(Icons.file_download,size: 40,color:Colors.teal),onPressed: (){})
-          :Text(
-            request.title,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-              color: Colors.grey[900],
-              
-            ),
-          ),
+              ? IconButton(
+                  icon: Icon(Icons.file_download, size: 40, color: Colors.teal),
+                  onPressed: () {})
+              : Text(
+                  request.title,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.grey[900],
+                  ),
+                ),
           SizedBox(height: 25),
           if (!isFileUploadSheet)
             Padding(
@@ -517,7 +525,7 @@ class PremiumBottomSheet extends StatelessWidget {
                 ),
                 child: new Text(
                   "Support Us",
-                  style: TextStyle(fontSize: 15,fontWeight: FontWeight.bold),
+                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
                 ),
               ),
             ),

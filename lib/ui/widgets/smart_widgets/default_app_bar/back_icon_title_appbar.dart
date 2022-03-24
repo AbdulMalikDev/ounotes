@@ -15,7 +15,7 @@ class BackIconTitleAppBar extends StatelessWidget with PreferredSizeWidget {
       offset: Offset(0, 2),
     );
     return Container(
-      color: Colors.white,
+      color: Theme.of(context).scaffoldBackgroundColor,
       child: SafeArea(
         bottom: false,
         maintainBottomViewPadding: false,

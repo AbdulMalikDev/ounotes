@@ -30,7 +30,8 @@ class GoogleInAppPaymentService{
   Note note;
 
   /// The In App Purchase plugin
-  InAppPurchaseConnection _iap ;
+  /// TODO deprecated
+  //InAppPurchaseConnection _iap ;
 
   /// Products for sale
   ValueNotifier<List<ProductDetails>> _products = new ValueNotifier(new List<ProductDetails>());
@@ -55,9 +56,9 @@ class GoogleInAppPaymentService{
 
   initialize() async {
     log.e("started");
-    _iap = InAppPurchaseConnection.instance;
-    // Check availability of In App Purchases
-    _available = await _iap.isAvailable();
+    // _iap = InAppPurchaseConnection.instance;
+    // // Check availability of In App Purchases
+    // _available = await _iap.isAvailable();
 
     if (_available) {
 
@@ -72,37 +73,38 @@ class GoogleInAppPaymentService{
     }
 
     // Listen to new purchases
-    subscription = _iap.purchaseUpdatedStream.listen((data) async {
-      log.e("purchaseUpdatedStream UPDATED");
-      _purchases.value.addAll(data);
-      await verifyPurchase();
-    });
+    // subscription = _iap.purchaseUpdatedStream.listen((data) async {
+    //   log.e("purchaseUpdatedStream UPDATED");
+    //   _purchases.value.addAll(data);
+    //   await verifyPurchase();
+    // });
 
   }
 
   /// Get all products available for sale
   Future<void> getProducts() async {
-    Set<String> ids = Set.from([pdfProductID,premiumProductID]);
-    ProductDetailsResponse response = await _iap.queryProductDetails(ids);
+    // Set<String> ids = Set.from([pdfProductID,premiumProductID]);
+    // ProductDetailsResponse response = await _iap.queryProductDetails(ids);
 
-    _products.value = response.productDetails;
+    // _products.value = response.productDetails;
     
   }
 
   /// Gets past purchases
+  //TODO deprecated classes
   Future<void> getPastPurchases() async {
-    QueryPurchaseDetailsResponse response =
-        await _iap.queryPastPurchases();
+    // QueryPurchaseDetailsResponse response =
+    //     await _iap.queryPastPurchases();
 
-    for (PurchaseDetails purchaseDetails in response.pastPurchases) {
-      final pending = !purchaseDetails.billingClientPurchase.isAcknowledged;
+    // for (PurchaseDetails purchaseDetails in response.pastPurchases) {
+    //   final pending = !purchaseDetails.billingClientPurchase.isAcknowledged;
 
-        if (pending) {
-          InAppPurchaseConnection.instance.completePurchase(purchaseDetails);
-        }
-    }
+    //     if (pending) {
+    //       InAppPurchaseConnection.instance.completePurchase(purchaseDetails);
+    //     }
+    // }
 
-    _purchases.value = response.pastPurchases;
+    // _purchases.value = response.pastPurchases;
   }
 
   // Returns purchase of specific product ID
@@ -132,25 +134,25 @@ class GoogleInAppPaymentService{
   void buyProduct({ProductDetails prod,Note note}) async {
     final PurchaseParam purchaseParam = PurchaseParam(productDetails: prod);
     // _iap.buyNonConsumable(purchaseParam: purchaseParam);
-    bool success = await _iap.buyConsumable(purchaseParam: purchaseParam, autoConsume: false);
-    if(success && prod.id == pdfProductID)
-    OnboardingService.box.put(GoogleInAppPaymentService.pdfProductID, "${note.subjectId}_${note.id}");
-    else if(success && prod.id == premiumProductID)
-    OnboardingService.box.put(GoogleInAppPaymentService.premiumProductID, premiumProductID);
+    // bool success = await _iap.buyConsumable(purchaseParam: purchaseParam, autoConsume: false);
+    // if(success && prod.id == pdfProductID)
+    // OnboardingService.box.put(GoogleInAppPaymentService.pdfProductID, "${note.subjectId}_${note.id}");
+    // else if(success && prod.id == premiumProductID)
+    // OnboardingService.box.put(GoogleInAppPaymentService.premiumProductID, premiumProductID);
   }
 
   /// Complete purchase and download PDF
   completePurchase(PurchaseDetails purchase) async {
     
-      if(hasPurchased(purchase.productID) != null){
-        var res = await _iap.consumePurchase(purchase);
+      // if(hasPurchased(purchase.productID) != null){
+      //   var res = await _iap.consumePurchase(purchase);
 
-        if(purchase.productID == pdfProductID)
-        await _handlePurchasedPdfDownload();
-        else if(purchase.productID == premiumProductID)
-        await _handlePremiumPurchase();
+      //   if(purchase.productID == pdfProductID)
+      //   await _handlePurchasedPdfDownload();
+      //   else if(purchase.productID == premiumProductID)
+      //   await _handlePremiumPurchase();
 
-      }
+      // }
     
   }
 
