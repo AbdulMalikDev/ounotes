@@ -183,7 +183,7 @@ class _PDFScreenState extends State<PDFScreen> {
               ),
               automaticallyImplyLeading: false,
               backgroundColor:
-                  SfPdfViewerTheme.of(context).bookmarkViewStyle.headerBarColor,
+                  SfPdfViewerTheme.of(context)?.bookmarkViewStyle?.headerBarColor??Colors.teal,
             ),
       body: FutureBuilder(
         future: Future.delayed(Duration(milliseconds: 200)).then((value) {

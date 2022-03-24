@@ -171,12 +171,28 @@ class GoogleDriveService extends ChangeNotifier{
       Function(String, String) onDownloadedCallback,
       Function startDownload}) async {
     try {
-      //Display ads based on downloads
-      await _admobService.showAd();
-      if (_admobService.shouldShowAd()) {
+
+      //>> Display ads based on downloads
+      //FIXME TODO enable ads in release
+      // await _admobService.showAd();
+      // if (_admobService.shouldShowAd()) {
+      //   return;
+      // }
+
+      //>> If file exists, avoid downloading again
+      String path = await ExternalPath.getExternalStoragePublicDirectory(
+        ExternalPath.DIRECTORY_DOWNLOADS)+ "/OUNotes/" + note.subjectName + "/" + note.type.replaceAll(' ', '') + "/";
+      log.e(path);
+      String fileName = "${note.subjectName}_${note.title}.pdf";
+      String filePath = path + fileName;
+      bool doesFileExist = await _checkIfFileExists(filePath);
+      if (doesFileExist) {
+        log.e("File Already Exists in Storage");
+        onDownloadedCallback(filePath, fileName);
         return;
       }
 
+      //>> Verify storage permission
       PermissionStatus status = await Permission.storage.request();
       log.e(status.isGranted);
       int downloadedLength = 0;
@@ -185,20 +201,16 @@ class GoogleDriveService extends ChangeNotifier{
 
       startDownload();
 
-      //*Google Drive Set Up
+      //> Google Drive Set Up
       ga.DriveApi drive = await _initializeHttpClientAndGDriveAPI();
-      print(drive);
 
       //>> Download file
       String fileID = note.GDriveID;
       ga.Media file = await drive.files
           .get(fileID, downloadOptions: ga.DownloadOptions.fullMedia);
-      var dir = await ExternalPath.getExternalStoragePublicDirectory(
-          ExternalPath.DIRECTORY_DOWNLOADS)+ "/OUNotes/" + note.subjectName + "/" + note.type.replaceAll(' ', '') + "/";
-      _createPath(dir);
+      _createPath(path);
 
-      String fileName = "${note.subjectName}_${note.title}.pdf";
-      String filePath = dir + fileName;
+      
       log.e(filePath);
       //*Figure out size from note.size property to show proper loading indicator
       File localFile;

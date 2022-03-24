@@ -1,6 +1,5 @@
 
 import 'dart:async';
-
 import 'package:FSOUNotes/app/app.locator.dart';
 import 'package:FSOUNotes/app/app.logger.dart';
 import 'package:FSOUNotes/app/app.router.dart';
@@ -31,7 +30,7 @@ class GoogleInAppPaymentService{
 
   /// The In App Purchase plugin
   /// TODO deprecated
-  //InAppPurchaseConnection _iap ;
+  InAppPurchase _iap ;
 
   /// Products for sale
   ValueNotifier<List<ProductDetails>> _products = new ValueNotifier(new List<ProductDetails>());
@@ -56,14 +55,15 @@ class GoogleInAppPaymentService{
 
   initialize() async {
     log.e("started");
-    // _iap = InAppPurchaseConnection.instance;
-    // // Check availability of In App Purchases
-    // _available = await _iap.isAvailable();
+    _iap = InAppPurchase.instance;
+    // Check availability of In App Purchases
+    _available = await _iap.isAvailable();
 
     if (_available) {
 
       await getProducts();
-      await getPastPurchases();
+      //Deprecated
+      // await getPastPurchases();
 
       // Verify and deliver a purchase with your own business logic
       verifyPurchase();
@@ -73,26 +73,26 @@ class GoogleInAppPaymentService{
     }
 
     // Listen to new purchases
-    // subscription = _iap.purchaseUpdatedStream.listen((data) async {
-    //   log.e("purchaseUpdatedStream UPDATED");
-    //   _purchases.value.addAll(data);
-    //   await verifyPurchase();
-    // });
+    subscription = _iap.purchaseStream.listen((data) async {
+      log.e("purchaseUpdatedStream UPDATED");
+      _purchases.value.addAll(data);
+      await verifyPurchase();
+    });
 
   }
 
   /// Get all products available for sale
   Future<void> getProducts() async {
-    // Set<String> ids = Set.from([pdfProductID,premiumProductID]);
-    // ProductDetailsResponse response = await _iap.queryProductDetails(ids);
+    Set<String> ids = Set.from([pdfProductID,premiumProductID]);
+    ProductDetailsResponse response = await _iap.queryProductDetails(ids);
 
-    // _products.value = response.productDetails;
+    _products.value = response.productDetails;
     
   }
 
   /// Gets past purchases
   //TODO deprecated classes
-  Future<void> getPastPurchases() async {
+  // Future<void> getPastPurchases() async {
     // QueryPurchaseDetailsResponse response =
     //     await _iap.queryPastPurchases();
 
@@ -105,14 +105,14 @@ class GoogleInAppPaymentService{
     // }
 
     // _purchases.value = response.pastPurchases;
-  }
+  // }
 
   // Returns purchase of specific product ID
   PurchaseDetails hasPurchased(String productID) {
     return _purchases.value.firstWhere( (purchase) => purchase.productID == productID, orElse: () => null);
   }
 
-  ProductDetails getProduct(String productID){
+  getProduct(String productID) async {
     return _products.value.firstWhere( (purchase) => purchase.id == productID, orElse: () => null);
   }
 
@@ -125,6 +125,9 @@ class GoogleInAppPaymentService{
       if(purchaseItem.status == PurchaseStatus.purchased){
         await completePurchase(purchaseItem);
       }
+      else if (purchaseItem.pendingCompletePurchase) {
+        _iap.completePurchase(purchaseItem);
+      }
       await toRemove.add(purchaseItem);
     }
     _purchases.value.removeWhere( (e) => toRemove.contains(e));
@@ -133,31 +136,33 @@ class GoogleInAppPaymentService{
    /// Purchase a product
   void buyProduct({ProductDetails prod,Note note}) async {
     final PurchaseParam purchaseParam = PurchaseParam(productDetails: prod);
-    // _iap.buyNonConsumable(purchaseParam: purchaseParam);
-    // bool success = await _iap.buyConsumable(purchaseParam: purchaseParam, autoConsume: false);
-    // if(success && prod.id == pdfProductID)
-    // OnboardingService.box.put(GoogleInAppPaymentService.pdfProductID, "${note.subjectId}_${note.id}");
-    // else if(success && prod.id == premiumProductID)
-    // OnboardingService.box.put(GoogleInAppPaymentService.premiumProductID, premiumProductID);
+    _iap.buyNonConsumable(purchaseParam: purchaseParam);
+    bool success = await _iap.buyConsumable(purchaseParam: purchaseParam, autoConsume: false);
+    if(success && prod.id == pdfProductID)
+    OnboardingService.box.put(GoogleInAppPaymentService.pdfProductID, "${note.subjectId}_${note.id}");
+    else if(success && prod.id == premiumProductID)
+    OnboardingService.box.put(GoogleInAppPaymentService.premiumProductID, premiumProductID);
   }
 
   /// Complete purchase and download PDF
   completePurchase(PurchaseDetails purchase) async {
     
-      // if(hasPurchased(purchase.productID) != null){
-      //   var res = await _iap.consumePurchase(purchase);
+      if(hasPurchased(purchase.productID) != null){
+        // Deprecated. Being called behind the scenes now.
+        // var res = await _iap.consumePurchase(purchase);
 
-      //   if(purchase.productID == pdfProductID)
-      //   await _handlePurchasedPdfDownload();
-      //   else if(purchase.productID == premiumProductID)
-      //   await _handlePremiumPurchase();
+        if(purchase.productID == pdfProductID)
+        await _handlePurchasedPdfDownload();
+        else if(purchase.productID == premiumProductID)
+        await _handlePremiumPurchase();
 
-      // }
+      }
     
   }
 
   _handlePurchasedPdfDownload() async {
-    await getPastPurchases();
+    //Deprecated
+    // await getPastPurchases();
     this.note = await _getNote();
     await _googleDriveService.downloadPuchasedPdf
     (

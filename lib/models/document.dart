@@ -13,6 +13,7 @@ abstract class AbstractDocument {
   String type;
   String uploader_id;
   String GDriveLink;
+  DateTime uploadDate;
   
 
   set setDate(DateTime setDate) {}

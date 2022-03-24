@@ -48,7 +48,6 @@ dependencies:
   # Utility Packages [ packages to perform a simple task ]
   cuid: ^0.1.2
   file_picker: ^3.0.3
-  flutter_full_pdf_viewer: ^1.0.6
   flutter_dotenv: ^5.0.2
   flutter_mailer: ^2.0.0-null-safe
   flutter_secure_storage: ^5.0.2
@@ -68,13 +67,14 @@ dependencies:
   flutter_windowmanager: ^0.2.0
   rate_my_app: ^1.1.0+1
   substring_highlight: ^1.0.26
-  syncfusion_flutter_pdfviewer: ^19.1.57-beta
-  syncfusion_flutter_pdf: ^19.1.57-beta
+  syncfusion_flutter_core: ^19.4.56
+  syncfusion_flutter_pdfviewer: ^19.4.56-beta
+  syncfusion_flutter_pdf: ^19.4.56-beta
   syncfusion_flutter_sliders: ^19.1.57-beta
   syncfusion_flutter_charts: ^19.1.57+1
   flutter_downloader: ^1.6.0
   open_file: ^3.2.0
-  external_path: ^1.0.1 
+  external_path: ^1.0.1
   pdf_compressor: ^0.2.0
   # flutter_easyloading: ^2.2.2
 
@@ -101,7 +101,7 @@ dependencies:
   googleapis: ^4.0.0
   googleapis_auth: ^1.1.0
   google_mobile_ads: ^1.1.0
-  in_app_purchase: ^0.5.2
+  in_app_purchase: ^3.0.2
 
   # packages of other services being used
   onesignal_flutter: ^3.1.0
@@ -121,7 +121,7 @@ dev_dependencies:
   build_runner: ^2.0.1
   stacked_generator: ^0.6.0
   flutter_launcher_icons: ^0.9.0
-  
+
 dependency_overrides:
   flutter_colorpicker: ^0.5.0
 

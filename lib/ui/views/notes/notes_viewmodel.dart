@@ -326,12 +326,12 @@ class NotesViewModel extends BaseViewModel {
 
   void navigateToPDFView(Note note) async {
     try {
-      _googleDriveService.downloadFile(
+      _googleDriveService.downloadPuchasedPdf(
         note: note,
         startDownload: () {
           setLoading(true);
         },
-        onDownloadedCallback: (path, note) {
+        onDownloadedCallback: (path, _) {
           setLoading(false);
           _navigationService.navigateTo(Routes.pDFScreen,
               arguments: PDFScreenArguments(

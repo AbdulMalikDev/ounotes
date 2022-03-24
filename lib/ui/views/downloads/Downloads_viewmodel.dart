@@ -96,6 +96,9 @@ class DownLoadViewModel extends BaseViewModel {
       author: download.author,
       view: download.view,
     );
+    log.e("download objecthere");
+    log.e(download);
+    log.e(download.path);
     _navigationService.navigateTo(Routes.pDFScreen,
         arguments: PDFScreenArguments(
             pathPDF: download.path, doc: note, isUploadingDoc: false));

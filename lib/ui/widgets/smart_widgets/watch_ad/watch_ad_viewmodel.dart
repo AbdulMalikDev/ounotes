@@ -16,7 +16,8 @@ class WatchAdToContinueViewModel extends BaseViewModel {
   GoogleInAppPaymentService _googleInAppPaymentService = locator<GoogleInAppPaymentService>();
 
   buyPremium() async {
-    ProductDetails prod = _googleInAppPaymentService.getProduct(GoogleInAppPaymentService.premiumProductID);
+    ProductDetails prod = await _googleInAppPaymentService.getProduct(GoogleInAppPaymentService.premiumProductID);
+    log.e(prod);
     if(prod == null)return;
 
     SheetResponse response = await _bottomSheetService.showCustomSheet(

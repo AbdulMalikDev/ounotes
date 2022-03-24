@@ -18,8 +18,7 @@ class RemoteConfigService{
       ));
       RemoteConfigValue(null, ValueSource.valueStatic);
       await _remoteConfig.fetchAndActivate();
-      // //TODO DEV CHECKLIST
-      //FIXME 
+      //Deprecated
       // await remoteConfig.setConfigSettings(RemoteConfigSettings(minimumFetchInterval: const Duration(hours: 4)));
       // // await remoteConfig.fetch(expiration: const Duration(seconds: 1));
       // await remoteConfig.activate();

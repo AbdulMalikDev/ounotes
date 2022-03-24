@@ -266,10 +266,11 @@ class DocumentService {
             subjectName: note.subjectName,
             title: note.title,
             type: note.type,
-            author: author,
+            // author: author,
             year: year,
             semester: sem,
             branch: branch,
+            path: path
           ),
           downloadBoxName: boxName,
         );
@@ -390,13 +391,13 @@ class DocumentService {
 
     //>> Download Notes from GDrive [As of time of writing this function was limited to Notes only]
     try {
-      await _googleDriveService.downloadFile(
-        loading: downloadProgress,
+      await _googleDriveService.downloadPuchasedPdf(
+        // loading: downloadProgress,
         note: doc,
         startDownload: () {},
         onDownloadedCallback: (path, note) {
           _navigationService.navigateTo(Routes.pDFScreen,
-              arguments: PDFScreenArguments(pathPDF: path, doc: note));
+              arguments: PDFScreenArguments(pathPDF: path, doc: doc));
         },
       );
       return;

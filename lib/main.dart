@@ -52,14 +52,16 @@ void main() async {
   
   await Hive.openBox<RecentlyOpenedNotes>(Constants.recentlyOpenedNotes);
   RemoteConfigService _remoteConfigService = locator<RemoteConfigService>();
+  GoogleInAppPaymentService _googleInAppPaymentService =
+  locator<GoogleInAppPaymentService>();
+  await _googleInAppPaymentService.initialize();
+  await _remoteConfigService.init();
   // CrashlyticsService _crashlyticsService = locator<CrashlyticsService>();
   // AdmobService _admobService = locator<AdmobService>();
-  // InAppPaymentService _inAppPaymentService= locator<InAppPaymentService>();
   // NotificationService _notificationService = locator<NotificationService>();
-  // GoogleInAppPaymentService _googleInAppPaymentService =
-  // locator<GoogleInAppPaymentService>();
+  // InAppPaymentService _inAppPaymentService= locator<InAppPaymentService>();
   // await _inAppPaymentService.fetchData();
-  await _remoteConfigService.init();
+  // InAppPurchaseConnection.enablePendingPurchases();
   // await _admobService.init();
   //Sentry provides crash reporting
   // _crashlyticsService.sentryClient = SentryClient(
@@ -74,8 +76,6 @@ void main() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   // AppStateNotifier.isDarkModeOn = prefs.getBool('isdarkmodeon') ?? false;
   // await _notificationService.init();
-  // InAppPurchaseConnection.enablePendingPurchases();
-  // await _googleInAppPaymentService.initialize();
   //TODO DevChecklist - Uncomment for error handling
   // FlutterError.onError = (details, {bool forceReport = false}) {
   //   _crashlyticsService.sentryClient.captureException(

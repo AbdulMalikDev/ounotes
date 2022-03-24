@@ -17,7 +17,7 @@ class UploadView extends StatefulWidget {
   //used to know whether user selected notes,syllabus,question paper or  links after opening upload selection view
   final Document uploadType;
   final String subjectName;
-  UploadView({this.textFieldsMap, @required this.subjectName, this.uploadType});
+  UploadView({this.textFieldsMap, @required this.subjectName, @required this.uploadType});
 
   @override
   _UploadViewState createState() => _UploadViewState();

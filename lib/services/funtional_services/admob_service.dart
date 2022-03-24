@@ -44,7 +44,7 @@ class AdmobService{
   set NumberOfTimeNotesOpened(int value) => _NumberOfTimeNotesOpened = value;
 
   incrementNumberOfTimeNotesOpened() {
-    log.e("incrementNumberOfTimeNotesOpened");
+    log.e("INCREMENTED");
      if(_NumberOfTimeNotesOpened==null){
        _NumberOfTimeNotesOpened=0;
       }
