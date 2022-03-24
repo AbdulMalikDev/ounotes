@@ -260,11 +260,11 @@ class NotesViewModel extends BaseViewModel {
     //   return;
     // }
 
-    //Check if used already saved his choice of actions 
+    //Check if used already saved his choice of actions
     SharedPreferences prefs = await _sharedPreferencesService.store();
     if (prefs.containsKey("openDocChoice")) {
       String button = prefs.getString("openDocChoice");
-      if (button == Constants.downloadAndOpenInApp){
+      if (button == Constants.downloadAndOpenInApp) {
         navigateToPDFView(note);
       } else {
         _sharedPreferencesService.updateView(note.id);
@@ -273,7 +273,7 @@ class NotesViewModel extends BaseViewModel {
       return;
     }
 
-  //Ask user to select his choice, whether to open in browser or app
+    //Ask user to select his choice, whether to open in browser or app
     SheetResponse response = await _bottomSheetService.showCustomSheet(
       variant: BottomSheetType.floating2,
       title: 'Where do you want to open the file?',
@@ -286,7 +286,6 @@ class NotesViewModel extends BaseViewModel {
     if (!response.confirmed ?? false) {
       return;
     }
-   
 
     //if he clicked the checkbox to remember his choice the save the changes locally
     if (response.data['checkBox']) {
@@ -299,7 +298,7 @@ class NotesViewModel extends BaseViewModel {
         title: "Settings Saved !",
         description: "You can change this anytime in settings screen.",
       );
-   
+
       //navigate to the selected screen choice either to browser or inapp pdf viewer
       if (response2.confirmed) {
         navigateToPDFScreen(response.data['buttonText'], note);
@@ -473,8 +472,6 @@ class NotesViewModel extends BaseViewModel {
   }
 
   void handleDownload({Note note}) async {
-    setLoading(true);
-    await _documentService.downloadDocument(note: note);
-    setLoading(false);
+    await _documentService.downloadDocument(note: note,author: note.author,setLoading: setLoading);
   }
 }

@@ -101,7 +101,7 @@ class _NotesViewState extends State<NotesView>
                         Container(
                           constraints: BoxConstraints(maxWidth: 180),
                           child: Text(
-                            'Access downloads from Drawer > My Downloads',
+                            'Access downloads from My Downloads',
                             overflow: TextOverflow.clip,
                             style: Theme.of(context)
                                 .textTheme

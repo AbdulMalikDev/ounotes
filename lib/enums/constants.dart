@@ -35,8 +35,8 @@ class Constants {
   //Hive Box Names
   static const String ouNotes = "OUNOTES";
   static const String notesDownloads = "NotesDownloads";
-  static const String questionPaperDownloads = "questionPaperDownloads";
-  static const String SyllabusDownloads = "SyllabusDownloads";
+  static const String questionPaperDownloads = "QuestionPaperDownloads";
+  static const String syllabusDownloads = "SyllabusDownloads";
   static const String recentlyOpenedNotes = "recentlyOpenedNotes";
 
   //Notification Events [ Make sure Cloud Functions file has same constants ]

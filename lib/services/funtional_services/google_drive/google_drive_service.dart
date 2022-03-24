@@ -54,7 +54,7 @@ part './google_drive_extra/google_drive_functions.dart';
 
 Logger log = getLogger("GoogleDriveService");
 
-class GoogleDriveService {
+class GoogleDriveService extends ChangeNotifier{
   String _chars =
       'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
   math.Random _rnd = math.Random();
@@ -172,10 +172,11 @@ class GoogleDriveService {
       Function(String, String) onDownloadedCallback,
       Function startDownload}) async {
     try {
-
       //Display ads based on downloads
       await _admobService.showAd();
-      if (_admobService.shouldShowAd()){return;}
+      if (_admobService.shouldShowAd()) {
+        return;
+      }
 
       PermissionStatus status = await Permission.storage.request();
       log.e(status.isGranted);
@@ -194,7 +195,12 @@ class GoogleDriveService {
       ga.Media file = await drive.files
           .get(fileID, downloadOptions: ga.DownloadOptions.fullMedia);
       var dir = await ExternalPath.getExternalStoragePublicDirectory(
-          ExternalPath.DIRECTORY_DOWNLOADS)+ "/OUNotes/" + note.subjectName + "/" + note.type.replaceAll(' ', '') + "/";
+              ExternalPath.DIRECTORY_DOWNLOADS) +
+          "/OUNotes/" +
+          note.subjectName +
+          "/" +
+          note.type.replaceAll(' ', '') +
+          "/";
       _createPath(dir);
 
       String fileName = "${note.subjectName}_${note.title}.pdf";
@@ -223,6 +229,7 @@ class GoogleDriveService {
         // if(downloadProgress.value < 1)
         // EasyLoading.showProgress(downloadProgress.value, status: 'downloading...');
         dataStore.insertAll(dataStore.length, data);
+        downloadProgress.notifyListeners();
       }, onDone: () async {
         // EasyLoading.dismiss();
         localFile = File(filePath);

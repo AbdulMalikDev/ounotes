@@ -29,6 +29,7 @@ class DownloadAdapter extends TypeAdapter<Download> {
       semester: fields[9] as String,
       branch: fields[10] as String,
       year: fields[11] as String,
+      type: fields[12] as String,
     );
   }
 
@@ -59,7 +60,9 @@ class DownloadAdapter extends TypeAdapter<Download> {
       ..writeByte(10)
       ..write(obj.branch)
       ..writeByte(11)
-      ..write(obj.year);
+      ..write(obj.year)
+      ..writeByte(12)
+      ..write(obj.type);
   }
 
   @override

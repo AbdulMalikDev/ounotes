@@ -257,7 +257,9 @@ class QuestionPaperTileView extends StatelessWidget {
                                         MainAxisAlignment.spaceBetween,
                                     children: [
                                       TextButton(
-                                        onPressed: () {},
+                                        onPressed: () {
+                                          model.download(questionPaper);
+                                        },
                                         child: Row(
                                           children: [
                                             Icon(
@@ -344,7 +346,9 @@ class QuestionPaperTileView extends StatelessWidget {
                                         MainAxisAlignment.spaceBetween,
                                     children: [
                                       TextButton(
-                                        onPressed: () {},
+                                        onPressed: () {
+                                          model.download(questionPaper);
+                                        },
                                         child: Row(
                                           children: [
                                             Icon(

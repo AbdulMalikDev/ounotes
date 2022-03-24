@@ -243,7 +243,9 @@ class _SyllabusTileViewState extends State<SyllabusTileView> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 TextButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    model.download(syllabus);
+                                  },
                                   child: Row(
                                     children: [
                                       Icon(
@@ -327,7 +329,9 @@ class _SyllabusTileViewState extends State<SyllabusTileView> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 TextButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                     model.download(syllabus);
+                                  },
                                   child: Row(
                                     children: [
                                       Icon(

@@ -60,11 +60,17 @@ class QuestionPaperTileViewModel extends BaseViewModel {
     log.i("Report BottomSheetResponse " + reportResponse.responseData);
 
     // Generate report with appropriate data
-     Report report = Report(doc.id, doc.subjectName, doc.type, doc.title, _authenticationService.user.email,reportReason: reportResponse.responseData);
+    Report report = Report(doc.id, doc.subjectName, doc.type, doc.title,
+        _authenticationService.user.email,
+        reportReason: reportResponse.responseData);
 
     // Check whether user is banned
     User user = await _firestoreService.refreshUser();
-    if(!user.isUserAllowedToUpload){_userIsNotAllowedNotToReport(); setBusy(false);return;}
+    if (!user.isUserAllowedToUpload) {
+      _userIsNotAllowedNotToReport();
+      setBusy(false);
+      return;
+    }
 
     // If user is reporting the same document 2nd time the result will be a String
     var result = await _reportsService.addReport(report);
@@ -115,17 +121,21 @@ class QuestionPaperTileViewModel extends BaseViewModel {
   navigateToEditView(QuestionPaper note) {
     _navigationService.navigateTo(Routes.editView,
         arguments: EditViewArguments(
-            path: Document.QuestionPapers,
-            subjectName: note.subjectName,
-            textFieldsMap: Constants.QuestionPaper,
-            note: note,
-            title: note.title));
+          path: Document.QuestionPapers,
+          subjectName: note.subjectName,
+          textFieldsMap: Constants.QuestionPaper,
+          note: note,
+          title: note.title,
+        ));
   }
 
-  download(AbstractDocument doc) async {
-    setLoading(true);
-    await _documentService.downloadDocument(note:doc);
-    setLoading(false);
+  download(QuestionPaper doc) async {
+    await _documentService.downloadDocument(
+      note: doc,
+      setLoading: setLoading,
+      year: doc.year,
+      boxName: Constants.questionPaperDownloads,
+    );
   }
 
   void _userIsNotAllowedNotToReport() async {
