@@ -1,34 +1,41 @@
+import 'package:FSOUNotes/enums/constants.dart';
+import 'package:FSOUNotes/models/document.dart';
+import 'package:FSOUNotes/models/notes.dart';
+import 'package:FSOUNotes/models/question_paper.dart';
+import 'package:FSOUNotes/models/syllabus.dart';
 import 'package:hive/hive.dart';
 part 'download.g.dart';
 
 @HiveType(typeId: 0)
 class Download extends HiveObject {
   @HiveField(0)
-  final String id;
+   String id;
   @HiveField(1)
-  final String path;
+   String path;
   @HiveField(2)
-  final String title;
+   String title;
   @HiveField(3)
-  final String subjectName;
+   String subjectName;
   @HiveField(4)
-  final String author;
+   String author;
   @HiveField(5)
-  final int view;
+   int view;
   @HiveField(6)
-  final int pages;
+   int pages;
   @HiveField(7)
-  final String size;
+   String size;
   @HiveField(8)
-  final DateTime uploadDate;
+   DateTime uploadDate;
   @HiveField(9)
-  final String semester;
+   String semester;
   @HiveField(10)
-  final String branch;
+   String branch;
   @HiveField(11)
-  final String year;
+   String year;
   @HiveField(12)
-  final String type;
+   String type;
+  @HiveField(13)
+   String boxName;
 
   Download({
     this.id,
@@ -45,4 +52,37 @@ class Download extends HiveObject {
     this.year,
     this.type,
   });
+
+  Download.fromNotes(Note note, String filepath){
+    this.id = note.id;
+    this.subjectName = note.subjectName;
+    this.title = note.title;
+    this.type = note.type;
+    this.author = note.author;
+    this.path = filepath;
+    this.boxName = Constants.notesDownloads;
+  }
+
+  Download.fromQuestionPapers(QuestionPaper note, String filepath){
+    this.id = note.id;
+    this.subjectName = note.subjectName;
+    this.title = note.title;
+    this.type = note.type;
+    this.year = note.year;
+    this.branch= note.branch;
+    this.path = filepath;
+    this.boxName = Constants.questionPaperDownloads;
+  }
+
+  Download.fromSyllabus(Syllabus note, String filepath){
+    this.id = note.id;
+    this.subjectName = note.subjectName;
+    this.title = note.title;
+    this.type = note.type;
+    this.year = note.year;
+    this.semester= note.semester;
+    this.branch= note.branch;
+    this.path = filepath;
+    this.boxName = Constants.syllabusDownloads;
+  }
 }

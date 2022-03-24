@@ -90,13 +90,17 @@ class CloudStorageService {
   }
 
   deleteContent(String path) async {
+    File file = File(path);
+    log.e("Deleteing : " + path);
     try {
-      // final dir = await _localPath;
-      final file = File('$path');
-      file.deleteSync(recursive: true);
+      if (await file.exists()) {
+        log.e("Deleteing : " + path);
+        await file.delete();
+      }
     } catch (e) {
-      // If encountering an error, return
-      return 'Error!';
+      // Error in getting access to the file.
+      log.e(e.toString());
+      log.e("Error in getting access to the file to delete from downloads in external storage");
     }
   }
 

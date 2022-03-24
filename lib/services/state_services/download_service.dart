@@ -16,14 +16,14 @@ class DownloadService {
 
   List<Download> get downloadlist => _downloads;
 
-  addDownload({@required Download download, String downloadBoxName}) async {
+  addDownload({@required Download download}) async {
     AuthenticationService _authenticationService =
         locator<AuthenticationService>();
     this.user = await _authenticationService.getUser();
-    if (!Hive.isBoxOpen(downloadBoxName)) {
-      await Hive.openBox<Download>(downloadBoxName);
+    if (!Hive.isBoxOpen(download.boxName)) {
+      await Hive.openBox<Download>(download.boxName);
     }
-    Box<Download> downloadBox = Hive.box(downloadBoxName);
+    Box<Download> downloadBox = Hive.box(download.boxName);
     downloadBox.add(download);
     // if (downloadBox.length > 3 && !user.isPremiumUser) {
     //   //if downloads list length is > 3 and he is not a premium user then delete the oldest download which is at index 0
@@ -31,9 +31,9 @@ class DownloadService {
     // }
   }
 
-  void removeDownload(int index, String path, String downloadBoxName) {
+  void removeDownload(int index, String path, String downloadBoxName) async {
     CloudStorageService _cloudStorageService = locator<CloudStorageService>();
-    _cloudStorageService.deleteContent(path);
+    await _cloudStorageService.deleteContent(path);
     Box<Download> downloadBox = Hive.box(downloadBoxName);
     downloadBox.deleteAt(index);
   }

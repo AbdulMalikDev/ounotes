@@ -231,12 +231,8 @@ class DocumentService {
 
   downloadDocument(
       {AbstractDocument note,
-      Function setLoading,
-      String boxName=Constants.notesDownloads,
-      String author = "",
-      String year = "2022",
-      String sem = "",
-      String branch = ""}) async {
+      Function setLoading
+      }) async {
     SheetResponse response = await _bottomSheetService.showCustomSheet(
         variant: BottomSheetType.filledStacks,
         title: "⬇",
@@ -260,20 +256,6 @@ class DocumentService {
               "PDF File has been downloaded in the downloads folder. Thank you for using the OU Notes app.",
           "payload": {"path": path, "id": note.id},
         });
-        _downloadService.addDownload(
-          download: Download(
-            id: note.id,
-            subjectName: note.subjectName,
-            title: note.title,
-            type: note.type,
-            // author: author,
-            year: year,
-            semester: sem,
-            branch: branch,
-            path: path
-          ),
-          downloadBoxName: boxName,
-        );
         User user = await _authenticationService.getUser();
         user.addDownload("${note.subjectId}_${note.id}");
         _navigationService.navigateTo(Routes.thankYouView,

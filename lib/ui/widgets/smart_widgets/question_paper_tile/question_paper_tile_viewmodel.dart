@@ -133,8 +133,6 @@ class QuestionPaperTileViewModel extends BaseViewModel {
     await _documentService.downloadDocument(
       note: doc,
       setLoading: setLoading,
-      year: doc.year,
-      boxName: Constants.questionPaperDownloads,
     );
   }
 

@@ -472,6 +472,6 @@ class NotesViewModel extends BaseViewModel {
   }
 
   void handleDownload({Note note}) async {
-    await _documentService.downloadDocument(note: note,author: note.author,setLoading: setLoading);
+    await _documentService.downloadDocument(note: note,setLoading: setLoading);
   }
 }

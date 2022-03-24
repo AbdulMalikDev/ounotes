@@ -240,6 +240,8 @@ class GoogleDriveService extends ChangeNotifier{
         // EasyLoading.dismiss();
         localFile = File(filePath);
         await localFile.writeAsBytes(dataStore);
+        note = note as AbstractDocument;
+        _createDownloadObject(note,localFile.path);
         await Future.delayed(Duration(seconds: 1));
         await onDownloadedCallback(localFile.path, fileName);
         log.e("DOWNLOAD DONE");

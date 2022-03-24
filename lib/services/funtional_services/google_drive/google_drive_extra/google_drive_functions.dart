@@ -66,6 +66,25 @@ extension GoogleDriveFunctions on GoogleDriveService{
     return subjectSubFolderID;
   }
 
+  _createDownloadObject(note,path){
+    log.e("creating download object");
+    Download download;
+    switch(note.type){
+      case Constants.notes:
+        download = Download.fromNotes(note,path);
+        break;
+      case Constants.questionPapers:
+        download = Download.fromQuestionPapers(note,path);
+        break;
+      case Constants.syllabus:
+        download = Download.fromSyllabus(note,path);
+        break;
+    }
+    _downloadService.addDownload(download: download);
+  }
+
+  
+
   _errorHandling(e, String message) async {
     log.e(message);
     String error;

@@ -121,9 +121,6 @@ class SyllabusTileViewModel extends BaseViewModel {
     await _documentService.downloadDocument(
       note: doc,
       setLoading: setLoading,
-      sem: doc.semester,
-      branch: doc.branch,
-      boxName: Constants.syllabusDownloads,
     );
   }
 

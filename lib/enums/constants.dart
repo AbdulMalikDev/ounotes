@@ -1,4 +1,5 @@
 import 'package:FSOUNotes/enums/enums.dart';
+import 'package:FSOUNotes/models/document.dart';
 import 'package:flutter/material.dart';
 
 class Constants {
@@ -157,6 +158,17 @@ class Constants {
       case Document.Random:
         return "";
         break;
+    }
+  }
+
+  static getBoxNameAccToType(AbstractDocument note){
+    switch (note.type) {
+      case Constants.notes:
+        return Constants.notesDownloads;
+      case Constants.questionPapers:
+        return Constants.questionPaperDownloads;
+      case Constants.syllabus:
+        return Constants.syllabusDownloads;
     }
   }
 
