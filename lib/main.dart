@@ -52,10 +52,8 @@ void main() async {
   await Hive.openBox(Constants.ouNotes);
   
   RemoteConfigService _remoteConfigService = locator<RemoteConfigService>();
-  GoogleInAppPaymentService _googleInAppPaymentService =
-  locator<GoogleInAppPaymentService>();
-  await _googleInAppPaymentService.initialize();
-  await _remoteConfigService.init();
+  
+  
   // CrashlyticsService _crashlyticsService = locator<CrashlyticsService>();
   // AdmobService _admobService = locator<AdmobService>();
   // NotificationService _notificationService = locator<NotificationService>();

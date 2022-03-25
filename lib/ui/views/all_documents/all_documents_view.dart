@@ -26,7 +26,7 @@ class _AllDocumentsViewState extends State<AllDocumentsView>
   Intro intro;
   List<String> uploadPromptInfo;
   _AllDocumentsViewState() {
-    if (OnboardingService.getNumberOfTimesDocumentViewOpened() % 10 == 0) {
+    if (OnboardingService.getNumberOfTimesDocumentViewOpened() % 25 == 0) {
       uploadPromptInfo = OnboardingService.getUploadPrompt();
       print(uploadPromptInfo[0]);
       intro = Intro(

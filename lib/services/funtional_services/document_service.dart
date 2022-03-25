@@ -242,6 +242,9 @@ class DocumentService {
         customData: {"download": true});
     print(response?.confirmed);
     if (response == null || !response.confirmed) return;
+    if (note.type == Constants.notes){
+      await _firestoreService.incrementView(note);
+    }
     await _googleDriveService.downloadPuchasedPdf(
       note: note,
       startDownload: () {

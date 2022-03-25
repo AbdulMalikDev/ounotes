@@ -3,6 +3,7 @@ import 'package:FSOUNotes/app/app.logger.dart';
 import 'package:FSOUNotes/app/app.router.dart';
 import 'package:FSOUNotes/models/user.dart';
 import 'package:FSOUNotes/services/funtional_services/authentication_service.dart';
+import 'package:FSOUNotes/services/funtional_services/google_in_app_payment_service.dart';
 import 'package:FSOUNotes/ui/views/Main/main_screen_view.dart';
 import 'package:connection_verify/connection_verify.dart';
 import 'package:FSOUNotes/services/funtional_services/app_info_service.dart';
@@ -31,11 +32,16 @@ class SplashViewModel extends FutureViewModel {
   AppInfoService _appInfoService = locator<AppInfoService>();
   PushNotificationService _pushNotificationService =
       locator<PushNotificationService>();
+  GoogleInAppPaymentService _googleInAppPaymentService =
+  locator<GoogleInAppPaymentService>();
 
   handleStartUpLogic() async {
     log.e("Splash Open");
     bool isUserOnline = await ConnectionVerify.connectionStatus();
     // await _pushNotificationService.initialise();
+    //Do Stuff while splash screen is loading
+    await _googleInAppPaymentService.initialize();
+    await _remoteConfigService.init();
     var LoggedInUser = await _sharedPreferencesService.isUserLoggedIn();
     //Check if user has outdated version if they're is online
     Map<String, dynamic> result;

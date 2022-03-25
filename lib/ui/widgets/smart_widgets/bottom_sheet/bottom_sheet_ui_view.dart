@@ -257,7 +257,7 @@ class _FloatingBoxConfirmBottomSheet extends StatelessWidget {
                 ),
                 SizedBox(height: 15),
                 Text(
-                  "Your Version : " + request.customData[1] + "+",
+                  "Your Version : " + request.customData[0] + "+",
                   style: TextStyle(color: Colors.grey),
                 ),
                 SizedBox(height: 10),

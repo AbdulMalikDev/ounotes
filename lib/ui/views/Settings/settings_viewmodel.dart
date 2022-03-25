@@ -291,7 +291,7 @@ class SettingsViewModel extends BaseViewModel {
   }
 
   void showBuyPremiumBottomSheet() async {
-    ProductDetails prod = _googleInAppPaymentService
+    ProductDetails prod = await _googleInAppPaymentService
         .getProduct(GoogleInAppPaymentService.premiumProductID);
     if (prod == null) return;
 
