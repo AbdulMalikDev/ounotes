@@ -24,6 +24,18 @@ extension FirestoreReads on FirestoreService {
     return SubjectStats.fromJson(doc.data());
   }
 
+  Future<DateTime> getSubjectsLastUpdatedTimestamp() async {
+    DocumentSnapshot doc = 
+    await _subjectsCollectionReference.doc(Constants.subjectsLastUpdatedKey).get();
+    if(!doc.exists){
+      return null;
+    }
+    Map object = doc.data();
+    //Key : Value pair
+    //Time : <Last modified ISO Timestamp String>
+    return DateTime.parse(object['time']);
+  }
+
   Future<User> refreshUser() async {
     User user = await _sharedPreferencesService.getUser();
     DocumentSnapshot doc = await _usersCollectionReference.doc(user.id).get();

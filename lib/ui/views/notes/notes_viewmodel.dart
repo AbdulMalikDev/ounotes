@@ -252,7 +252,7 @@ class NotesViewModel extends BaseViewModel {
 
   void openDoc(Note note) async {
     //increment view
-    _firestoreService.incrementView(note.id, note.view);
+    await _firestoreService.incrementView(note.id, note.view);
     User user = await _authenticationService.getUser();
     //TODO show ad
     // if (_admobService.adDue && !user.isPremiumUser ??

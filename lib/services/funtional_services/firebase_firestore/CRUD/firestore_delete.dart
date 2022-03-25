@@ -34,7 +34,7 @@ extension FirestoreDeletes on FirestoreService{
         variant: BottomSheetType.filledStacks,
         title: "Sure?",
         description:
-            "Warning this will delete all Notes,QPapers and syllabi having subject name that was entered",
+            "Warning this will delete all Notes,QPapers and syllabi having subject name ${subjectName}",
         mainButtonTitle: "ok",
         secondaryButtonTitle: "no");
     if (response == null || !response.confirmed) {
@@ -74,7 +74,7 @@ extension FirestoreDeletes on FirestoreService{
         doc.reference.delete();
       });
       await deleteSubjectById(subjectId);
-
+      await updateSubjectModifiedTimeStamp();
       return true;
     } catch (e) {
       log.e(e.toString());
@@ -84,6 +84,7 @@ extension FirestoreDeletes on FirestoreService{
 
   deleteSubjectById(int id) async {
     await _subjectsCollectionReference.doc(id.toString()).delete();
+    await updateSubjectModifiedTimeStamp();
   }
 
   deleteDocument(AbstractDocument doc) async {

@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:FSOUNotes/app/app.locator.dart';
 import 'package:FSOUNotes/app/app.logger.dart';
 import 'package:FSOUNotes/enums/bottom_sheet_type.dart';
+import 'package:FSOUNotes/enums/constants.dart';
 import 'package:FSOUNotes/models/notes.dart';
 import 'package:FSOUNotes/models/subject.dart';
 import 'package:FSOUNotes/models/subjectStats.dart';
@@ -137,6 +138,20 @@ class SubjectsService with ChangeNotifier {
     await _saveStateToLocal();
   }
 
+  loadUserSubjectFromLocal(prefs,{bool update=false}) async {
+    List<Subject> subjectObjects = [];
+    if (prefs.containsKey("user_subjects")) {
+      log.i("user subjects found in local storage");
+      List allsubs = json.decode(prefs.getString("user_subjects"));
+      subjectObjects =
+          allsubs.map((jsonSubject) => Subject.fromData(jsonSubject)).toList();
+      _userSubjects.value = subjectObjects;
+    } else {
+      log.i("user subjects not found in local storage");
+      if(!update)_userSubjects.value = [];
+    }
+  }
+
   Subject findSubjectByName(String name) {
     var sub = _allSubjects.value.firstWhere(
       (subject) => subject.name == name,
@@ -145,18 +160,22 @@ class SubjectsService with ChangeNotifier {
     return sub;
   }
 
-  loadSubjects({bool updateSubjects = false}) async {
+  loadSubjects({bool updateSubjects = false,bool checkIfUpdate = false}) async {
     log.e("Loading Subjects");
     SharedPreferencesService pref = locator<SharedPreferencesService>();
     SharedPreferences prefs = await pref.store();
+    if(checkIfUpdate){
+      checkIfUpdate = await _checkIfSubjectsOudated(prefs);
+    }
     _allSubjects.value = [];
     _userSubjects.value = [];
+    bool userSubjectsUpdated = false;
     List<Subject> subjectObjects = [];
     //*Try-catch block for retreiving All Subjects
     try {
       //Check if stored in local Storage and retreive
       //And subjects do not need to be updated
-      if (prefs.containsKey("all_BE_subjects") && !updateSubjects) {
+      if (prefs.containsKey("all_BE_subjects") && !updateSubjects && !checkIfUpdate) {
         log.i("all subjects found in local storage");
         List allsubs = json.decode(prefs.getString("all_BE_subjects"));
         subjectObjects = allsubs
@@ -172,6 +191,13 @@ class SubjectsService with ChangeNotifier {
           throw (subjectObjects);
         }
         _allSubjects.value = subjectObjects;
+
+        userSubjectsUpdated = true;
+        await _removeFromUserSubjectsIfOutdated(prefs);
+
+        //Set last updated timestamp
+        String currTime = DateTime.now().toIso8601String();
+        await prefs.setString(Constants.subjectsLastUpdatedKey,currTime);
       }
 
       _allSubjects.notifyListeners();
@@ -184,17 +210,11 @@ class SubjectsService with ChangeNotifier {
       return error;
     }
 
-    subjectObjects = [];
-    //For User subjects
-    if (prefs.containsKey("user_subjects")) {
-      log.i("user subjects found in local storage");
-      List allsubs = json.decode(prefs.getString("user_subjects"));
-      subjectObjects =
-          allsubs.map((jsonSubject) => Subject.fromData(jsonSubject)).toList();
-      _userSubjects.value = subjectObjects;
-    } else {
-      _userSubjects.value = [];
+    if(userSubjectsUpdated){
+      return;
     }
+
+    await loadUserSubjectFromLocal(prefs);
     _userSubjects.notifyListeners();
   }
 
@@ -270,6 +290,7 @@ class SubjectsService with ChangeNotifier {
   }
 
   List<String> _sanitizeAndSplitQuery(String query) {
+    List<String> commonWords = ['ENGINEERING','ANALYSIS','DESIGN'];
     //? [EFFECTIVE, TECHNICAL, COMMUNICATION]
     //? split with "-" for subjects like MATHEMATICS-III
     List<String> queryWords = (query.split(" ") + query.split("-"));
@@ -278,7 +299,7 @@ class SubjectsService with ChangeNotifier {
     //? Remove words with less than 3 letters like "OF" , "I" , "AND" etc. and other common words
     queryWords.removeWhere((queryWord) {
       if (queryWord.length <= 3) return true;
-      if (["ENGINEERING"].contains(queryWord)) return true;
+      if (commonWords.contains(queryWord)) return true;
       return false;
     });
     return queryWords;
@@ -293,7 +314,7 @@ class SubjectsService with ChangeNotifier {
         variant: BottomSheetType.filledStacks,
         title: "Sure?",
         description:
-            "Warning this will add a new subject. Are you sure?",
+            "Warning this will add a new subject called ${subject.name}. Are you sure?",
         mainButtonTitle: "ok",
         secondaryButtonTitle: "no");
     if (response == null || !response.confirmed) {
@@ -337,7 +358,7 @@ class SubjectsService with ChangeNotifier {
         variant: BottomSheetType.filledStacks,
         title: "Sure?",
         description:
-            "Warning this will delete all Notes,QPapers and syllabi having subject name that was entered",
+            "Warning this will delete all Notes,QPapers and syllabi having subject name ${subject.name}",
         mainButtonTitle: "ok",
         secondaryButtonTitle: "no");
     if (response == null || !response.confirmed) {
@@ -396,5 +417,43 @@ class SubjectsService with ChangeNotifier {
     error = e.toString();
     log.e(error);
     return error;
+  }
+
+  Future<bool> _checkIfSubjectsOudated(SharedPreferences prefs) async {
+
+    String key = Constants.subjectsLastUpdatedKey;
+    //If last updated time not available, store current date.
+    if(!prefs.containsKey(key)){
+      await prefs.setString(key, DateTime.now().toIso8601String());
+      //Returning true since this feature was introduced later. So atleast once all
+      //Users subjects should be updated.
+      return true;
+    }
+
+    DateTime mock = DateTime(1770);
+    DateTime lastUpdatedLocally = DateTime.parse(prefs.getString(key));
+    DateTime lastUpdatedInFirebase = (await _firestoreService.getSubjectsLastUpdatedTimestamp()) ?? mock;
+
+    bool isOutDated = lastUpdatedInFirebase.isAfter(lastUpdatedLocally);
+    log.e("Subjects Outdated : " + isOutDated.toString());
+
+    return isOutDated;
+  }
+
+  _removeFromUserSubjectsIfOutdated(prefs) async {
+    log.i("Removing outdated subjects");
+    await loadUserSubjectFromLocal(prefs,update: true);
+    List<int> subjectIds = _allSubjects.value.map((e) => e.id).toList();
+    List<int> subjectIndexToRemove = [];
+    _userSubjects.value.asMap().forEach((index,subject) { 
+      if(!(subjectIds.contains(subject.id))){
+        log.e("removing subject ${subject.name}");
+        subjectIndexToRemove.add(index);
+      }
+    });
+    subjectIndexToRemove.forEach((index){
+      removeUserSubjectAtIntex(index);
+    });
+    _userSubjects.notifyListeners();
   }
 }

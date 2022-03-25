@@ -143,6 +143,19 @@ extension FirestoreWrites on FirestoreService{
           .collection("Subjects")
           .doc(subject.id.toString())
           .update(subject.toJson());
+      await updateSubjectModifiedTimeStamp();
+    } on Exception catch (e) {
+      log.e(e.toString());
+    }
+  }
+
+  updateSubjectModifiedTimeStamp() async {
+    try {
+
+      await _subjectsCollectionReference
+      .doc(Constants.subjectsLastUpdatedKey)
+      .set({'time':DateTime.now().toIso8601String()});
+
     } on Exception catch (e) {
       log.e(e.toString());
     }
@@ -307,6 +320,7 @@ extension FirestoreWrites on FirestoreService{
       await _subjectsCollectionReference
           .doc(subject.id.toString())
           .set(subject.toJson());
+      await updateSubjectModifiedTimeStamp();
     } catch (e) {
       log.e(e.toString());
     }

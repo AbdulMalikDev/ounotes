@@ -40,6 +40,9 @@ class Constants {
   static const String syllabusDownloads = "SyllabusDownloads";
   static const String recentlyOpenedNotes = "recentlyOpenedNotes";
 
+  //Sharedpref key names
+  static const String subjectsLastUpdatedKey = "Subject_last_updated";
+
   //Notification Events [ Make sure Cloud Functions file has same constants ]
   static const String notificationEventNotesUpload =
       "notificationEventNotesUpload";

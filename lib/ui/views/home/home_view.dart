@@ -54,18 +54,24 @@ class _HomeViewState extends State<HomeView> {
         floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
         floatingActionButton: Padding(
           padding: const EdgeInsets.only(bottom: 80.0),
-          child: DescribedFeatureOverlay(
-            featureId: OnboardingService
-                .floating_action_button_to_add_subjects, // Unique id that identifies this overlay.
-            tapTarget: const Icon(Icons
-                .add), // The widget that will be displayed as the tap target.
-            title: Text('Add Your Subjects !'),
-            description: Text(
-                'Please use \"+\" button to add subjects and swipe left or right to delete them'),
-            backgroundColor: Theme.of(context).primaryColor,
-            targetColor: Theme.of(context).accentColor,
-            textColor: Colors.white,
-            child: PimpedButton(
+          child: 
+          //TODO wajid feature overlay is causing the whole screen to be stuck at one place
+          // I dont know why fix this.
+          // DescribedFeatureOverlay(
+          //   featureId: OnboardingService
+          //       .floating_action_button_to_add_subjects, // Unique id that identifies this overlay.
+          //   tapTarget: const Icon(Icons
+          //       .add), // The widget that will be displayed as the tap target.
+          //   title: Text('Add Your Subjects !'),
+          //   description: Text(
+          //       'Please use \"+\" button to add subjects and swipe left or right to delete them'),
+          //   backgroundColor: Theme.of(context).primaryColor,
+          //   targetColor: Theme.of(context).accentColor,
+          //   textColor: Colors.white,
+          //   contentLocation: ContentLocation.above,
+            
+          //   child: 
+            PimpedButton(
               particle: DemoParticle(),
               pimpedWidgetBuilder: (context, controller) {
                 return FloatingActionButton(
@@ -84,7 +90,7 @@ class _HomeViewState extends State<HomeView> {
                 );
               },
             ),
-          ),
+          // ),
         ),
         body: SingleChildScrollView(
           child: Column(

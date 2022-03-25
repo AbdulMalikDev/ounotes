@@ -13,7 +13,7 @@ class AdminSubjectListViewModel extends BaseViewModel {
   BottomSheetService _bottomSheetService = locator<BottomSheetService>();
   NavigationService _navigationService = locator<NavigationService>();
 
-  List<Subject> get allSubjects => _subjectsService.allSubjects.value;
+  List<Subject> get allSubjects => _subjectsService.allSubjects.value + _subjectsService.userSubjects.value;
 
   deleteSubject(Subject subject) async {
     //Double check user intent
@@ -21,7 +21,7 @@ class AdminSubjectListViewModel extends BaseViewModel {
         variant: BottomSheetType.filledStacks,
         title: "Sure you want to delete ${subject.name}?",
         description:
-            "Warning this will delete all Notes,QPapers and syllabi having subject name that was entered",
+            "Warning this will delete all Notes,QPapers and syllabi having subject name ${subject.name}",
         mainButtonTitle: "ok",
         secondaryButtonTitle: "no");
     if (response == null || !response.confirmed) {
