@@ -1,19 +1,10 @@
 import 'package:FSOUNotes/AppTheme/AppStateNotifier.dart';
-import 'package:FSOUNotes/enums/enums.dart';
 import 'package:FSOUNotes/misc/helper.dart';
-import 'package:FSOUNotes/services/funtional_services/onboarding_service.dart';
 import 'package:FSOUNotes/ui/views/Main/main_screen_viewmodel.dart';
-
 import 'package:animated_theme_switcher/animated_theme_switcher.dart';
-import 'package:feature_discovery/feature_discovery.dart';
-import 'package:flutter/animation.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:pimp_my_button/pimp_my_button.dart';
 import 'package:rate_my_app/rate_my_app.dart';
-import 'package:stacked_services/stacked_services.dart';
-
-import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
 import '../../widgets/smart_widgets/default_app_bar/default_app_bar_view.dart';
@@ -225,23 +216,5 @@ class _MainScreenViewState extends State<MainScreenView> {
         );
       },
     );
-  }
-}
-
-class MainView extends StatefulWidget {
-  const MainView({Key key}) : super(key: key);
-  @override
-  _MainViewState createState() => _MainViewState();
-}
-
-class _MainViewState extends State<MainView> {
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    print("yoyo");
   }
 }

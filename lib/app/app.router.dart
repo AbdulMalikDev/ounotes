@@ -172,7 +172,7 @@ class StackedRouter extends RouterBase {
     RouteDef(Routes.reportedDocumentsView, page: ReportedDocumentsView),
     RouteDef(Routes.notificationView, page: NotificationView),
     RouteDef(Routes.accountInfoView, page: AccountInfoView),
-    RouteDef(Routes.mainView, page: MainView),
+    RouteDef(Routes.mainView, page: MainScreenView),
   ];
   @override
   Map<Type, StackedRouteFactory> get pagesMap => _pagesMap;
@@ -483,9 +483,9 @@ class StackedRouter extends RouterBase {
         settings: data,
       );
     },
-    MainView: (data) {
+    MainScreenView: (data) {
       return MaterialPageRoute<dynamic>(
-        builder: (context) => const MainView(),
+        builder: (context) => const MainScreenView(),
         settings: data,
       );
     },

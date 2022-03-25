@@ -1,12 +1,10 @@
-import 'package:flutter/material.dart';
-import 'package:stacked/stacked.dart';
+import 'package:FSOUNotes/ui/views/FilterDocuments/FD_InputScreen/fd_inputView.dart';
 import 'package:FSOUNotes/ui/views/Settings/settings_view.dart';
 import 'package:FSOUNotes/ui/views/downloads/Downloads_view.dart';
 import 'package:FSOUNotes/ui/views/home/home_view.dart';
 import 'package:FSOUNotes/ui/views/upload/upload_selection/upload_selection_view.dart';
-import 'package:FSOUNotes/ui/views/FilterDocuments/FD_InputScreen/fd_inputView.dart';
-import 'package:FSOUNotes/ui/widgets/smart_widgets/default_app_bar/default_app_bar_view.dart';
-import 'package:FSOUNotes/ui/widgets/smart_widgets/subjects_dialog/subjects_dialog_view.dart';
+import 'package:flutter/material.dart';
+import 'package:stacked/stacked.dart';
 
 class MainScreenViewModel extends BaseViewModel {
   int _selectedIndex = 0;
