@@ -523,7 +523,7 @@ class UploadViewModel extends BaseViewModel {
           description:
               "Thank you for sharing a resource with all the students ! Admins will review the link and display it in the app.");
       _navigationService
-          .popUntil((route) => route.settings.name == Routes.homeView);
+          .clearStackAndShow(Routes.splashView);
     } else {
       await _dialogService.showDialog(
           title: "Aww ! Wrong Link !",

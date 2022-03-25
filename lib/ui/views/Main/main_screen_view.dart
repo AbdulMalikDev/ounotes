@@ -10,7 +10,10 @@ import 'package:stacked/stacked.dart';
 import '../../widgets/smart_widgets/default_app_bar/default_app_bar_view.dart';
 
 class MainScreenView extends StatefulWidget {
-  const MainScreenView({Key key}) : super(key: key);
+  final bool shouldShowUpdateDialog;
+  final Map<String, dynamic> versionDetails;
+  const MainScreenView({Key key, this.shouldShowUpdateDialog, this.versionDetails})
+      : super(key: key);
   @override
   _MainScreenViewState createState() => _MainScreenViewState();
 }
@@ -20,7 +23,10 @@ class _MainScreenViewState extends State<MainScreenView> {
   Widget build(BuildContext context) {
     return ViewModelBuilder<MainScreenViewModel>.reactive(
       viewModelBuilder: () => MainScreenViewModel(),
-      onModelReady: (model) {},
+      onModelReady: (model) {
+        model.updateDialog(
+            widget.shouldShowUpdateDialog, widget.versionDetails);
+      },
       builder: (
         BuildContext context,
         MainScreenViewModel model,

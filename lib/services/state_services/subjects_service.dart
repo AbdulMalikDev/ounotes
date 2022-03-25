@@ -150,6 +150,7 @@ class SubjectsService with ChangeNotifier {
       log.i("user subjects not found in local storage");
       if(!update)_userSubjects.value = [];
     }
+    await _saveStateToLocal();
   }
 
   Subject findSubjectByName(String name) {
@@ -198,6 +199,7 @@ class SubjectsService with ChangeNotifier {
         //Set last updated timestamp
         String currTime = DateTime.now().toIso8601String();
         await prefs.setString(Constants.subjectsLastUpdatedKey,currTime);
+        await _saveStateToLocal();
       }
 
       _allSubjects.notifyListeners();

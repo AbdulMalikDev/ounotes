@@ -44,12 +44,10 @@ class SplashViewModel extends FutureViewModel {
       if (LoggedInUser.isPremiumUser ?? false)
         _checkPremiumPurchaseDate(LoggedInUser.id);
       await _subjectsService.loadSubjects(checkIfUpdate: true);
-      isUserOnline = false;
-      if(isUserOnline)_navigationService.replaceWith(Routes.homeView,arguments:HomeViewArguments(shouldShowUpdateDialog: result["doesUserNeedUpdate"],versionDetails: result));
-      else _navigationService.replaceWith(Routes.homeView);
-      _navigationService.navigateToView(
-        MainScreenView(),
-      );
+      // isUserOnline = false;
+      if(isUserOnline)_navigationService.replaceWith(Routes.mainScreenView,arguments:MainScreenViewArguments(shouldShowUpdateDialog: result["doesUserNeedUpdate"],versionDetails: result));
+      else _navigationService.replaceWith(Routes.mainScreenView);
+      
     } else {
       log.e("user is null");
       _navigationService.replaceWith(Routes.introView);

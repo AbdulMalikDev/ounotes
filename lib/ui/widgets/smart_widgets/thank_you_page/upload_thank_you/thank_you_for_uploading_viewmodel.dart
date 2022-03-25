@@ -12,6 +12,6 @@ class ThankYouForUploadingViewModel extends BaseViewModel {
     //       route.settings.name == Routes.allDocumentsView ||
     //       route.settings.name == Routes.mainView,
     // );
-    _navigationService.replaceWith(Routes.mainView);
+    _navigationService.replaceWith(Routes.mainScreenView);
   }
 }

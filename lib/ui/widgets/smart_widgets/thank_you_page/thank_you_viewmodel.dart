@@ -6,6 +6,6 @@ import 'package:stacked_services/stacked_services.dart';
 class ThankYouViewModel extends BaseViewModel {
   NavigationService _navigationService = locator<NavigationService>();
   void navigateToHome() {
-    _navigationService.replaceWith(Routes.mainView);
+    _navigationService.replaceWith(Routes.mainScreenView);
   }
 }

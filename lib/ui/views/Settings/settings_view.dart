@@ -290,6 +290,7 @@ class _SettingsViewState extends State<SettingsView> {
                         subTitle: "Help us out on Github!",
                         isClickable: true,
                         onPressed: () async {
+                          //TODO MALIK
                           const url =
                               'https://github.com/AbdulMalikDev/ounotes';
                           if (await canLaunch(url)) {
