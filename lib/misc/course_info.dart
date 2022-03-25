@@ -32,6 +32,8 @@ class CourseInfo {
     "CIVIL",
     "EIE",
     "MECH",
+    "AIDS",
+    "AIML",
     'PE',
     "AE"
   ];
