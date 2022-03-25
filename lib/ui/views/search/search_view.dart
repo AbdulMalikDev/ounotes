@@ -45,9 +45,8 @@ class SearchView extends SearchDelegate<Subject> {
     final ThemeData theme = Theme.of(context);
     return theme.copyWith(
       primaryColor: theme.primaryColor,
+      textTheme: theme.textTheme,
       primaryIconTheme: theme.primaryIconTheme,
-      primaryColorBrightness: theme.primaryColorBrightness,
-      primaryTextTheme: theme.primaryTextTheme,
     );
   }
 

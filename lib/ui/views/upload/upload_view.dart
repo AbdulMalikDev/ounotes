@@ -478,25 +478,25 @@ class _UploadViewState extends State<UploadView> {
 
   Widget uploadButtonWidget(UploadViewModel model) {
     return Column(children: [
-      if (widget.textFieldsMap != Constants.GDRIVELink)
-        Row(
-          children: [
-            Container(
-              child: Checkbox(
-                value: model.canUseUploaderUserName,
-                onChanged: model.changeCheckMark2,
-                activeColor: Colors.amber,
-              ),
-            ),
-            //TODO malik add dummy string here
-            Flexible(
-              child: Text(
-                "Hey, ${model.user.username}...can we show your name as uploader below this note?",
-                style: TextStyle(color: Colors.white, fontSize: 15),
-              ),
-            )
-          ],
-        ),
+      // if (widget.textFieldsMap != Constants.GDRIVELink)
+      //   Row(
+      //     children: [
+      //       Container(
+      //         child: Checkbox(
+      //           value: model.canUseUploaderUserName,
+      //           onChanged: model.changeCheckMark2,
+      //           activeColor: Colors.amber,
+      //         ),
+      //       ),
+      //       //TODO malik add dummy string here
+      //       Flexible(
+      //         child: Text(
+      //           "Hey, ${model.user.username}...can we show your name as uploader below this note?",
+      //           style: TextStyle(color: Colors.white, fontSize: 15),
+      //         ),
+      //       )
+      //     ],
+      //   ),
       SizedBox(
         height: 10,
       ),

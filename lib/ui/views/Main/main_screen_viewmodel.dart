@@ -12,7 +12,18 @@ class MainScreenViewModel extends BaseViewModel {
   int _selectedIndex = 0;
   PageController _pageController = PageController();
 
-  List<Widget> _screens = [];
+  List<Widget> _screens = [
+    HomeView(
+      key: ValueKey("Home"),
+    ),
+    FDInputView(key: ValueKey("input")),
+    UploadSelectionView(
+      key: ValueKey("upload"),
+      isFromMainScreen: true,
+    ),
+    DownLoadView(key: ValueKey("download")),
+    SettingsView(key: ValueKey("settings")),
+  ];
 
   PageController get controller => _pageController;
   List<Widget> get screens => _screens;
@@ -31,15 +42,5 @@ class MainScreenViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  void init() {
-    _screens = [
-      HomeView(
-        key: ValueKey("Home"),
-      ),
-      FDInputView(key: ValueKey("input")),
-      UploadSelectionView(key: ValueKey("upload"),isFromMainScreen: true,),
-      DownLoadView(key: ValueKey("download")),
-      SettingsView(key: ValueKey("settings")),
-    ];
-  }
+  void init() {}
 }

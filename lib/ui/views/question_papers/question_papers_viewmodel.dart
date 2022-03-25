@@ -5,6 +5,7 @@ import 'package:FSOUNotes/misc/course_info.dart';
 import 'package:FSOUNotes/misc/helper.dart';
 import 'package:FSOUNotes/models/question_paper.dart';
 import 'package:FSOUNotes/services/funtional_services/firebase_firestore/firestore_service.dart';
+import 'package:FSOUNotes/services/funtional_services/google_drive/google_drive_service.dart';
 import 'package:FSOUNotes/ui/widgets/smart_widgets/question_paper_tile/question_paper_tile_view.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -31,6 +32,7 @@ class QuestionPapersViewModel extends BaseViewModel {
   List<DropdownMenuItem<String>> _dropDownMenuItemsofquestionSortMethods;
   String _selectedSortingMethod;
   String get selectedSortingMethod => _selectedSortingMethod;
+  GoogleDriveService _googleDriveService = locator<GoogleDriveService>();
 
   List<DropdownMenuItem<String>> get dropdownofsortingmethods =>
       _dropDownMenuItemsofquestionSortMethods;
@@ -154,11 +156,34 @@ class QuestionPapersViewModel extends BaseViewModel {
   }
 
   navigateToPDFScreen(String buttonText, QuestionPaper questionPaper) {
-    if (buttonText == 'Open In App') {
-      navigateToWebView(questionPaper);
+    if (buttonText == "Download & Open In App") {
+      navigateToPDFView(questionPaper);
     } else {
       _sharedPreferencesService.updateView(questionPaper.id);
       Helper.launchURL(questionPaper.GDriveLink);
+    }
+  }
+
+  void navigateToPDFView(QuestionPaper questionPaper) async {
+    try {
+      _googleDriveService.downloadPuchasedPdf(
+        note: questionPaper,
+        startDownload: () {
+          setBusy(true);
+        },
+        onDownloadedCallback: (path, _) {
+          setBusy(false);
+          _navigationService.navigateTo(Routes.pDFScreen,
+              arguments: PDFScreenArguments(
+                  pathPDF: path, doc: questionPaper, isUploadingDoc: false));
+        },
+      );
+    } catch (e) {
+      setBusy(false);
+      Fluttertoast.showToast(
+          msg: "An error Occurred while downloading pdf..." +
+              "Please check you internet connection and try again later");
+      return;
     }
   }
 
