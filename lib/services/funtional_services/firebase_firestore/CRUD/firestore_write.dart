@@ -397,13 +397,15 @@ extension FirestoreWrites on FirestoreService{
     }
   }
 
-  incrementView(String docId, int views) {
-    CollectionReference ref = _notesCollectionReference;
+  incrementView(Note doc) {
+    CollectionReference ref = _subjectsCollectionReference
+        .doc(doc.subjectId.toString())
+        .collection(Constants.firebase_notes);
     try {
-      if (docId != null && docId.length > 5) {
+      if (doc.id != null && doc.id.length > 5) {
         log.i("Document being increment view using ID");
         // if (doc.id.length > 5) {
-        ref.doc(docId).update({"view": FieldValue.increment(views)});
+        ref.doc(doc.id).update({"view": FieldValue.increment(1)});
         //}
       }
       // else {
