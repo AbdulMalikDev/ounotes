@@ -35,6 +35,7 @@ class AuthenticationService {
   AuthCredential _credential;
   User _firebaseUser;
   userModel.User _user;
+  String appVersion = "N/A";
 
   //Getters and Setters
   GoogleSignInAccount get googleUser => _googleUser;

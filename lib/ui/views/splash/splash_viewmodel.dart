@@ -2,6 +2,7 @@ import 'package:FSOUNotes/app/app.locator.dart';
 import 'package:FSOUNotes/app/app.logger.dart';
 import 'package:FSOUNotes/app/app.router.dart';
 import 'package:FSOUNotes/models/user.dart';
+import 'package:FSOUNotes/services/funtional_services/authentication_service.dart';
 import 'package:FSOUNotes/ui/views/Main/main_screen_view.dart';
 import 'package:connection_verify/connection_verify.dart';
 import 'package:FSOUNotes/services/funtional_services/app_info_service.dart';
@@ -26,6 +27,7 @@ class SplashViewModel extends FutureViewModel {
       locator<SharedPreferencesService>();
   SubjectsService _subjectsService = locator<SubjectsService>();
   FirestoreService _firestoreService = locator<FirestoreService>();
+  AuthenticationService _authenticationService = locator<AuthenticationService>();
   AppInfoService _appInfoService = locator<AppInfoService>();
   PushNotificationService _pushNotificationService =
       locator<PushNotificationService>();
@@ -62,6 +64,7 @@ class SplashViewModel extends FutureViewModel {
     String version = packageInfo.version;
     String buildNumber = packageInfo.buildNumber;
     String currentVersion = "$version $buildNumber";
+    _authenticationService.appVersion = currentVersion;
     log.i("Updated Version :" + updatedVersion);
     log.i("Current Version :" + currentVersion);
     log.i("Are Both Equal ?");

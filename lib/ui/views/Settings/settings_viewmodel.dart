@@ -49,6 +49,8 @@ class SettingsViewModel extends BaseViewModel {
   bool get isVerifier => _authenticationService.user.isVerifier;
   bool get isAdmin => _authenticationService.user.isAdmin;
 
+  get appVersion => _authenticationService.appVersion;
+
   getPackageInfo() async {
     if (packageInfo == null) {
       packageInfo = await _appInfoService.getPackageInfo();

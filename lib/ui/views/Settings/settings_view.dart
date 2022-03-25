@@ -161,7 +161,7 @@ class _SettingsViewState extends State<SettingsView> {
                           ),
                         ),
                         title: 'Feedback',
-                        subTitle: "TODO",
+                        subTitle: "Let us know what you think about our app!",
                         isClickable: true,
                         onPressed: () async {
                           await model.getPackageInfo();
@@ -246,7 +246,7 @@ class _SettingsViewState extends State<SettingsView> {
                           ),
                         ),
                         title: "About Us",
-                        subTitle: "TODO write some subtitle",
+                        subTitle: "Know more about us!",
                         isClickable: true,
                         onPressed: () {
                           model.navigateToAboutUsScreen();
@@ -262,7 +262,7 @@ class _SettingsViewState extends State<SettingsView> {
                           ),
                         ),
                         title: "Support Us",
-                        subTitle: "TODO add subtitle",
+                        subTitle: "Your support means a lot!",
                         isClickable: true,
                         onPressed: () {
                           model.showBuyPremiumBottomSheet();
@@ -275,7 +275,7 @@ class _SettingsViewState extends State<SettingsView> {
                           child: Icon(Icons.share, color: iconColor),
                         ),
                         title: "Tell a Friend",
-                        subTitle: "TODO add subtitle",
+                        subTitle: "Share this app with a friend!",
                         isClickable: true,
                         onPressed: () {
                           final RenderBox box = context.findRenderObject();
@@ -287,7 +287,7 @@ class _SettingsViewState extends State<SettingsView> {
                       ),
                       SettingsTile(
                         title: "Check us out on Github",
-                        subTitle: "TODO add subtitle ",
+                        subTitle: "Help us out on Github!",
                         isClickable: true,
                         onPressed: () async {
                           const url =
@@ -311,7 +311,7 @@ class _SettingsViewState extends State<SettingsView> {
                       ),
                       SettingsTile(
                         title: "Join us on telegram",
-                        subTitle: "TODO add subtitle ",
+                        subTitle: "live updates from the admins!",
                         isClickable: true,
                         onPressed: () async {
                           const url = 'https://t.me/ounotes';
@@ -393,7 +393,7 @@ class _SettingsViewState extends State<SettingsView> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        "App Version:1.5.023",
+                        "App Version: ${model.appVersion}",
                         style: theme.textTheme.bodyText2
                             .copyWith(color: iconColor),
                       ),
