@@ -9,7 +9,7 @@ import '../../../../misc/constants.dart';
 
 class UploadSelectionView extends StatelessWidget {
   final String subjectName;
-  final bool isFromMainScreen;
+  bool isFromMainScreen = false;
 
   UploadSelectionView(
       {key, this.subjectName = "", this.isFromMainScreen = false})
@@ -22,7 +22,7 @@ class UploadSelectionView extends StatelessWidget {
           model.subjectName = subjectName;
         },
         builder: (context, model, child) => Scaffold(
-              body: isFromMainScreen
+              body: (isFromMainScreen ?? false)
                   ? Container(
                       child: GestureDetector(
                         onTap: () => FocusScope.of(context).unfocus(),

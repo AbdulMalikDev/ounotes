@@ -73,11 +73,15 @@ class AdmobService{
       // if (true){
 
         log.e("SHOW AD NOW");
-        if(!(_authenticationService.user.isPremiumUser ?? false))
+        log.e(_authenticationService?.user?.isPremiumUser);
+        if(!(_authenticationService?.user?.isPremiumUser ?? false))
         {
           // _adFailedToBeShown();
           await _navigationService.navigateTo(Routes.watchAdToContinueView);
           return true;
+        }else{
+          //If premium user no need of seeing ad
+          incrementNumberOfTimeNotesOpened();
         }
 
       }else{

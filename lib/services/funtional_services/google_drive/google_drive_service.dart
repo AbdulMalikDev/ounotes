@@ -173,11 +173,10 @@ class GoogleDriveService extends ChangeNotifier{
     try {
 
       //>> Display ads based on downloads
-      //FIXME TODO enable ads in release
-      // await _admobService.showAd();
-      // if (_admobService.shouldShowAd()) {
-      //   return;
-      // }
+      await _admobService.showAd();
+      if (_admobService.shouldShowAd()) {
+        return;
+      }
 
       //>> If file exists, avoid downloading again
       String path = await ExternalPath.getExternalStoragePublicDirectory(

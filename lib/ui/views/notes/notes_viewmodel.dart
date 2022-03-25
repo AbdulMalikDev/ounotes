@@ -462,7 +462,7 @@ class NotesViewModel extends BaseViewModel {
   }
 
   void incrementViewForAd() {
-    this.admobService.incrementNumberOfTimeNotesOpened();
+    // this.admobService.incrementNumberOfTimeNotesOpened();
     // this.admobService.shouldAdBeShown();
   }
 

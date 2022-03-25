@@ -290,7 +290,6 @@ class _SettingsViewState extends State<SettingsView> {
                         subTitle: "Help us out on Github!",
                         isClickable: true,
                         onPressed: () async {
-                          //TODO MALIK
                           const url =
                               'https://github.com/AbdulMalikDev/ounotes';
                           if (await canLaunch(url)) {
@@ -328,10 +327,6 @@ class _SettingsViewState extends State<SettingsView> {
                           child: ClipRRect(
                             child: Image.asset(
                               "assets/images/telegram-logo.png",
-                              //TODO update telegram logo
-                              // color: AppStateNotifier.isDarkModeOn
-                              //     ? theme.iconTheme.color
-                              //     : Colors.white,
                             ),
                           ),
                         ),
