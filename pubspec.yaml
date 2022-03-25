@@ -102,6 +102,7 @@ dependencies:
   googleapis_auth: ^1.1.0
   google_mobile_ads: ^1.1.0
   in_app_purchase: ^3.0.2
+  splash_screen_view: ^3.0.0
 
   # packages of other services being used
   onesignal_flutter: ^3.1.0

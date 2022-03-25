@@ -254,9 +254,11 @@ class SettingsViewModel extends BaseViewModel {
                 print('Thanks for the ' +
                     (stars == null ? '0' : stars.round().toString()) +
                     ' star(s) !');
+
                 Navigator.pop<RateMyAppDialogButton>(
                     context, RateMyAppDialogButton.rate);
-                if (stars < 4) {
+                if (stars == 0) return;
+                if (stars < 3) {
                   dispatchEmail();
                 } else {
                   OpenAppstore.launch(
@@ -264,9 +266,9 @@ class SettingsViewModel extends BaseViewModel {
                       iOSAppId: 'com.notes.ounotes');
                 }
                 // This allows to mimic the behavior of the default "Rate" button. See "Advanced > Broadcasting events" for more information :
-                await rateMyApp.callEvent(RateMyAppEventType.rateButtonPressed);
-                Navigator.pop<RateMyAppDialogButton>(
-                    context, RateMyAppDialogButton.rate);
+                // await rateMyApp.callEvent(RateMyAppEventType.rateButtonPressed);
+                // Navigator.pop<RateMyAppDialogButton>(
+                //     context, RateMyAppDialogButton.rate);
               },
             ),
           ];

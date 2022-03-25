@@ -16,6 +16,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:FSOUNotes/services/funtional_services/sharedpref_service.dart';
 import 'package:FSOUNotes/enums/bottom_sheet_type.dart';
 
+import '../../../misc/constants.dart';
+
 class QuestionPapersViewModel extends BaseViewModel {
   Logger log = getLogger("QuestionPapersViewModel");
   FirestoreService _firestoreService = locator<FirestoreService>();
@@ -110,7 +112,8 @@ class QuestionPapersViewModel extends BaseViewModel {
 
     if (prefs.containsKey("openDocChoice")) {
       String button = prefs.getString("openDocChoice");
-      if (button == "Open In App") {
+      if (button == Constants.downloadAndOpenInApp) {
+        navigateToPDFView(questionPaper);
       } else {
         _sharedPreferencesService.updateView(questionPaper.id);
         Helper.launchURL(questionPaper.GDriveLink);
@@ -124,7 +127,7 @@ class QuestionPapersViewModel extends BaseViewModel {
       title: 'Where do you want to open the file?',
       description: "",
       mainButtonTitle: 'Open In Browser',
-      secondaryButtonTitle: "Download & Open In App",
+      secondaryButtonTitle: Constants.downloadAndOpenInApp,
     );
     log.i("openDoc BottomSheetResponse ");
     if (response == null) return;
@@ -156,7 +159,7 @@ class QuestionPapersViewModel extends BaseViewModel {
   }
 
   navigateToPDFScreen(String buttonText, QuestionPaper questionPaper) {
-    if (buttonText == "Download & Open In App") {
+    if (buttonText == Constants.downloadAndOpenInApp) {
       navigateToPDFView(questionPaper);
     } else {
       _sharedPreferencesService.updateView(questionPaper.id);

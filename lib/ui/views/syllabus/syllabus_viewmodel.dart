@@ -15,6 +15,8 @@ import 'package:FSOUNotes/services/funtional_services/sharedpref_service.dart';
 import 'package:FSOUNotes/enums/bottom_sheet_type.dart';
 import 'package:stacked_services/stacked_services.dart';
 
+import '../../../misc/constants.dart';
+
 class SyllabusViewModel extends BaseViewModel {
   Logger log = getLogger("SyllabusViewModel");
   FirestoreService _firestoreService = locator<FirestoreService>();
@@ -61,8 +63,8 @@ class SyllabusViewModel extends BaseViewModel {
 
     if (prefs.containsKey("openDocChoice")) {
       String button = prefs.getString("openDocChoice");
-      if (button == "Open In App") {
-        // navigateToWebView(syllabus);
+      if (button == Constants.downloadAndOpenInApp) {
+        navigateToPDFView(syllabus);
       } else {
         _sharedPreferencesService.updateView(syllabus.id);
         Helper.launchURL(syllabus.GDriveLink);
@@ -76,7 +78,7 @@ class SyllabusViewModel extends BaseViewModel {
       title: 'Where do you want to open the file?',
       description: "",
       mainButtonTitle: 'Open In Browser',
-      secondaryButtonTitle: "Download & Open In App",
+      secondaryButtonTitle: Constants.downloadAndOpenInApp,
     );
     log.i("openDoc BottomSheetResponse ");
     if (response == null) return;
@@ -108,13 +110,14 @@ class SyllabusViewModel extends BaseViewModel {
   }
 
   navigateToPDFScreen(String buttonText, Syllabus syllabus) {
-    if (buttonText == "Download & Open In App") {
+    if (buttonText == Constants.downloadAndOpenInApp) {
       navigateToPDFView(syllabus);
     } else {
       _sharedPreferencesService.updateView(syllabus.id);
       Helper.launchURL(syllabus.GDriveLink);
     }
   }
+
   void navigateToPDFView(Syllabus syllabus) async {
     try {
       _googleDriveService.downloadPuchasedPdf(

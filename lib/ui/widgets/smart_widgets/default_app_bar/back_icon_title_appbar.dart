@@ -22,7 +22,9 @@ class BackIconTitleAppBar extends StatelessWidget with PreferredSizeWidget {
         child: Container(
           height: 60,
           decoration: BoxDecoration(
-              color: Colors.white, boxShadow: [defaultAppBarShadow]),
+            color: Theme.of(context).scaffoldBackgroundColor,
+            boxShadow: [defaultAppBarShadow],
+          ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
