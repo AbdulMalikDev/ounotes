@@ -36,6 +36,7 @@ import 'models/download.dart';
 
 Logger log = getLogger("main");
 void main() async {
+  log.e("Main Open");
   WidgetsFlutterBinding.ensureInitialized();
   MobileAds.instance.initialize();
   await Firebase.initializeApp();
@@ -93,7 +94,8 @@ void main() async {
   //     // );
   //   },
   // );
-  await dothis();
+  log.e("Main Close");
+  // await dothis();
 }
 
 dothis() async {
