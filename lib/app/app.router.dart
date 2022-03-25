@@ -89,9 +89,8 @@ class Routes {
   static const String verifyDocumentsView = '/verify-documents-view';
   static const String reportedDocumentsView = '/reported-documents-view';
   static const String notificationView = '/notification-view';
-  static const String recentlyAddedNotesView = '/recently-added-notes-view';
   static const String accountInfoView = '/account-info-view';
-  static const String mainView = '/main-view';
+  static const String mainScreenView = '/main-screen-view';
   static const all = <String>{
     splashView,
     introView,
@@ -127,9 +126,8 @@ class Routes {
     verifyDocumentsView,
     reportedDocumentsView,
     notificationView,
-    recentlyAddedNotesView,
     accountInfoView,
-    mainView,
+    mainScreenView,
   };
 }
 
@@ -172,7 +170,7 @@ class StackedRouter extends RouterBase {
     RouteDef(Routes.reportedDocumentsView, page: ReportedDocumentsView),
     RouteDef(Routes.notificationView, page: NotificationView),
     RouteDef(Routes.accountInfoView, page: AccountInfoView),
-    RouteDef(Routes.mainView, page: MainView),
+    RouteDef(Routes.mainScreenView, page: MainScreenView),
   ];
   @override
   Map<Type, StackedRouteFactory> get pagesMap => _pagesMap;
@@ -300,7 +298,9 @@ class StackedRouter extends RouterBase {
       );
       return MaterialPageRoute<dynamic>(
         builder: (context) => UploadSelectionView(
+          key: args.key,
           subjectName: args.subjectName,
+          isFromMainScreen: args.isFromMainScreen,
         ),
         settings: data,
       );
@@ -483,9 +483,16 @@ class StackedRouter extends RouterBase {
         settings: data,
       );
     },
-    MainView: (data) {
+    MainScreenView: (data) {
+      var args = data.getArgs<MainScreenViewArguments>(
+        orElse: () => MainScreenViewArguments(),
+      );
       return MaterialPageRoute<dynamic>(
-        builder: (context) => const MainView(),
+        builder: (context) => MainScreenView(
+          key: args.key,
+          shouldShowUpdateDialog: args.shouldShowUpdateDialog,
+          versionDetails: args.versionDetails,
+        ),
         settings: data,
       );
     },
@@ -562,18 +569,19 @@ class UploadViewArguments {
   final Map<dynamic, dynamic> textFieldsMap;
   final String subjectName;
   final Document uploadType;
-  UploadViewArguments({
-    this.textFieldsMap,
-    @required this.subjectName,
-    this.uploadType,
-  });
+  UploadViewArguments(
+      {this.textFieldsMap,
+      @required this.subjectName,
+      @required this.uploadType});
 }
 
 /// UploadSelectionView arguments holder class
 class UploadSelectionViewArguments {
+  final dynamic key;
   final String subjectName;
-  final Document path;
-  UploadSelectionViewArguments({this.subjectName, this.path});
+  final bool isFromMainScreen;
+  UploadSelectionViewArguments(
+      {this.key, this.subjectName, this.isFromMainScreen});
 }
 
 /// FDSubjectView arguments holder class
@@ -651,4 +659,13 @@ class WhyToPayForDownloadViewArguments {
 class AddVerifierViewArguments {
   final Verifier verifier;
   AddVerifierViewArguments({this.verifier});
+}
+
+/// MainScreenView arguments holder class
+class MainScreenViewArguments {
+  final Key key;
+  final bool shouldShowUpdateDialog;
+  final Map<String, dynamic> versionDetails;
+  MainScreenViewArguments(
+      {this.key, this.shouldShowUpdateDialog, this.versionDetails});
 }

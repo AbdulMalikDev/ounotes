@@ -85,7 +85,9 @@ class GoogleInAppPaymentService{
   Future<void> getProducts() async {
     Set<String> ids = Set.from([pdfProductID,premiumProductID]);
     ProductDetailsResponse response = await _iap.queryProductDetails(ids);
-
+    // TODO malik
+    log.e("All premium product IDs");
+    response.productDetails.forEach((element) {log.e(element.id);});
     _products.value = response.productDetails;
     
   }

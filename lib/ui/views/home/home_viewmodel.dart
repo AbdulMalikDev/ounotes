@@ -34,7 +34,7 @@ class HomeViewModel extends BaseViewModel {
   FirestoreService _firestoreService = locator<FirestoreService>();
   AdmobService _admobService = locator<AdmobService>();
   SubjectsService _subjectsService = locator<SubjectsService>();
-  BottomSheetService _bottomSheetService = locator<BottomSheetService>();
+  
   NavigationService _navigationService = locator<NavigationService>();
 
   ValueNotifier<List<Subject>> get userSubjects =>
@@ -69,7 +69,7 @@ class HomeViewModel extends BaseViewModel {
   }
 
   navigateToRecentlyOpenedSeeAllScreen() {
-    _navigationService.navigateTo(Routes.recentlyAddedNotesView);
+    // _navigationService.navigateTo(Routes.recentlyAddedNotesView);
   }
 
   deleteSelectedSubjects() {
@@ -304,40 +304,5 @@ class HomeViewModel extends BaseViewModel {
   //   return notes;
   // }
 
-  void updateDialog(
-      bool shouldShowUpdateDialog, Map<String, dynamic> versionDetails) {
-    if (versionDetails == null) return;
-    SchedulerBinding.instance.addPostFrameCallback((timeStamp) async {
-      if (shouldShowUpdateDialog) {
-        String updatedVersion = versionDetails["updatedVersion"];
-        String currentVersion = versionDetails["currentVersion"];
-        String warning =
-            "If you don't see the update option, please wait a day or two for the update to roll-out";
-        //To show this warning only sometimes, using a random bool
-        Random random = new Random();
-        bool shouldShowWarning = random.nextBool();
-        SheetResponse response = await _bottomSheetService.showCustomSheet(
-          variant: BottomSheetType.confirm,
-          title: "Update App? ✨",
-          description:
-              "A new version of OU Notes is available. Update the app to avoid crashes and access new features !!",
-          mainButtonTitle: 'UPDATE',
-          secondaryButtonTitle: 'NOT NOW',
-          barrierDismissible: false,
-          customData: [
-            updatedVersion,
-            currentVersion,
-            shouldShowWarning ? warning : ""
-          ],
-        );
-        //BottomSheet closed by tapping elsewhere on the screen
-        if (response == null) return;
-        //Confirm action
-        if (response.confirmed) {
-          OpenAppstore.launch(
-              androidAppId: 'com.notes.ounotes', iOSAppId: 'com.notes.ounotes');
-        }
-      }
-    });
-  }
+  
 }

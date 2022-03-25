@@ -103,7 +103,7 @@ import 'package:stacked_services/stacked_services.dart';
   MaterialRoute(page: ReportedDocumentsView),
   MaterialRoute(page: NotificationView),
   MaterialRoute(page: AccountInfoView),
-  MaterialRoute(page: MainView),
+  MaterialRoute(page: MainScreenView),
 ], dependencies: [
   LazySingleton(classType: BottomSheetService),
   LazySingleton(classType: AdmobService),

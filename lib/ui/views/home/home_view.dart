@@ -45,8 +45,6 @@ class _HomeViewState extends State<HomeView> {
       onModelReady: (model) async {
         // await model.admobService.hideNotesViewBanner();
         model.showRateMyAppDialog(context);
-        model.updateDialog(
-            widget.shouldShowUpdateDialog, widget.versionDetails);
         model.showIntroDialog(context);
         // model.showTelgramDialog(context);
       },

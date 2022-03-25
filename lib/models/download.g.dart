@@ -30,13 +30,13 @@ class DownloadAdapter extends TypeAdapter<Download> {
       branch: fields[10] as String,
       year: fields[11] as String,
       type: fields[12] as String,
-    );
+    )..boxName = fields[13] as String;
   }
 
   @override
   void write(BinaryWriter writer, Download obj) {
     writer
-      ..writeByte(12)
+      ..writeByte(14)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -62,7 +62,9 @@ class DownloadAdapter extends TypeAdapter<Download> {
       ..writeByte(11)
       ..write(obj.year)
       ..writeByte(12)
-      ..write(obj.type);
+      ..write(obj.type)
+      ..writeByte(13)
+      ..write(obj.boxName);
   }
 
   @override
