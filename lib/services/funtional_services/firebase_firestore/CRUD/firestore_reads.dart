@@ -198,7 +198,10 @@ extension FirestoreReads on FirestoreService {
 
   loadNotificationsFromFirebase() async {
     try {
-      QuerySnapshot snapshot = await _notificationsCollectionReference
+      AuthenticationService _authenticationService = locator<AuthenticationService>();
+      User user = _authenticationService.user;
+      QuerySnapshot snapshot = await FirestoreService.
+          notificationsCollectionReference(user)
           .orderBy("date", descending: true)
           .get();
       List<Notification> reports =

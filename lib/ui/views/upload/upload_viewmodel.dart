@@ -212,9 +212,11 @@ class UploadViewModel extends BaseViewModel {
     } else {
 
       if(!isUserUploadingSharedFile)
-      SheetResponse response = await _showDocTypeSelectionSheet();
+      response = await _showDocTypeSelectionSheet();
+      log.e(response);
 
       if (!isUserUploadingSharedFile && response == null) {
+        log.e("No response from upload sheet");
         setBusy(false);
         return;
       }
@@ -543,12 +545,15 @@ class UploadViewModel extends BaseViewModel {
   }
 
   Future<SheetResponse> _showDocTypeSelectionSheet() async {
-    return await _bottomSheetService.showCustomSheet(
+    var result = await _bottomSheetService.showCustomSheet(
         variant: BottomSheetType.filledStacks,
         title: "What do you want to upload?",
         description: "",
         mainButtonTitle: "PDF",
         secondaryButtonTitle: "Image",
         customData: {"file_upload": true});
+    log.e(result);
+    return result;
   }
+
 }

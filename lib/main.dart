@@ -8,6 +8,7 @@ import 'package:FSOUNotes/services/funtional_services/crashlytics_service.dart';
 import 'package:FSOUNotes/services/funtional_services/document_service.dart';
 import 'package:FSOUNotes/services/funtional_services/google_in_app_payment_service.dart';
 import 'package:FSOUNotes/services/funtional_services/notification_service.dart';
+import 'package:FSOUNotes/services/funtional_services/push_notification_service.dart';
 import 'package:FSOUNotes/services/funtional_services/remote_config_service.dart';
 import 'package:FSOUNotes/ui/widgets/smart_widgets/bottom_sheet/bottom_sheet_ui_view.dart';
 import 'package:animated_theme_switcher/animated_theme_switcher.dart';
@@ -53,6 +54,9 @@ void main() async {
       locator<RemoteConfigService>();
   await _remoteConfigService.init();
   Logger.level = Level.verbose;
+  PushNotificationService _pushNotificationService =
+      locator<PushNotificationService>();
+  await _pushNotificationService.initialise();
   runApp(MyApp());
 
   log.e("Main Close");

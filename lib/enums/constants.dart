@@ -48,6 +48,8 @@ class Constants {
       "notificationEventNotesUpload";
   static const String notificationEventGrantVerifierAccess =
       "notificationEventGrantVerifierAccess";
+  static const String notificationEventThankYouForUpload =
+      "notificationEventThankYouForUpload";
 
   static TextStyle kHintTextStyle = TextStyle(
     color: Colors.white54,

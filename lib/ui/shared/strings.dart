@@ -1,3 +1,5 @@
+import 'package:FSOUNotes/models/notes.dart';
+
 class Strings{
 
   //Notification Strings
@@ -5,6 +7,8 @@ class Strings{
   static const admin_document_upload_notification_message = "A new document has been uploaded";
   static const admin_document_report_notification_title = "Document Reported ⚠️ !";
   static const admin_document_report_notification_message = "A document has been reported";
+  static const thank_user_notification_title = "Thank You! 🎉";
+  static String thank_user_notification_message(Note note) => "Someone thanked you ✨ for uploading ${note.title} in ${note.subjectName}";
 
   //Authentication_service.dart
   static const fcm_token_permission_title = "Get Notified 🔔 !";

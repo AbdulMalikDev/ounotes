@@ -36,8 +36,7 @@ class SplashViewModel extends FutureViewModel {
   FirestoreService _firestoreService = locator<FirestoreService>();
   AuthenticationService _authenticationService = locator<AuthenticationService>();
   AppInfoService _appInfoService = locator<AppInfoService>();
-  PushNotificationService _pushNotificationService =
-      locator<PushNotificationService>();
+  
   GoogleInAppPaymentService _googleInAppPaymentService =
   locator<GoogleInAppPaymentService>();
   CrashlyticsService _crashlyticsService = locator<CrashlyticsService>();
@@ -52,7 +51,7 @@ class SplashViewModel extends FutureViewModel {
     bool isUserOnline = await ConnectionVerify.connectionStatus();
 
     //>> Initialization of services, isn't this why splash screens are used?
-    await _pushNotificationService.initialise();
+    // await _pushNotificationService.initialise();
     await _googleInAppPaymentService.initialize();
     await _remoteConfigService.init();
     await _crashlyticsService.init();

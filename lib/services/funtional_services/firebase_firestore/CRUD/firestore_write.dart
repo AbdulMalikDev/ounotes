@@ -122,15 +122,19 @@ extension FirestoreWrites on FirestoreService{
 
   /// Ideally used by admin to send anyone a notification
   addNotification(Notification notification) async {
+    AuthenticationService _authenticationService = locator<AuthenticationService>();
+    User user = _authenticationService.user;
+    notification.time = DateTime.now().toIso8601String();
     Map<String, dynamic> data = notification.toJson();
     try {
-      log.i("Adding Verifier to firebase");
-      await _notificationsCollectionReference
-          .doc(notification.userId)
+      log.i("Adding Notification to firebase");
+      await FirestoreService.
+          notificationsCollectionReference(user)
+          .doc(notification.id)
           .set(data,SetOptions(merge: true));
 
     } catch (e) {
-      return _errorHandling(e, "While saving user to Firebase , Error occurred");
+      return _errorHandling(e, "While saving notification to Firebase , Error occurred");
     }
   }
 
