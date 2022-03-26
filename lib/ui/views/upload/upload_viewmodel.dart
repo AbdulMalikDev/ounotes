@@ -16,6 +16,7 @@ import 'package:FSOUNotes/models/subject.dart';
 import 'package:FSOUNotes/models/syllabus.dart';
 import 'package:FSOUNotes/models/user.dart';
 import 'package:FSOUNotes/services/funtional_services/cloud_storage_service.dart';
+import 'package:FSOUNotes/services/funtional_services/document_service.dart';
 import 'package:FSOUNotes/services/funtional_services/firebase_firestore/firestore_service.dart';
 import 'package:FSOUNotes/services/funtional_services/google_drive/google_drive_service.dart';
 import 'package:FSOUNotes/services/funtional_services/sharedpref_service.dart';
@@ -41,6 +42,8 @@ class UploadViewModel extends BaseViewModel {
   GoogleDriveService _googleDriveService = locator<GoogleDriveService>();
   SharedPreferencesService _sharedPreferencesService =
       locator<SharedPreferencesService>();
+  DocumentService _documentService =
+      locator<DocumentService>();
 
   List<DropdownMenuItem<String>> _dropDownMenuItemsofsemester;
 
@@ -197,20 +200,26 @@ class UploadViewModel extends BaseViewModel {
       String subjectName, BuildContext context) async {
     setBusy(true);
     Subject subject = await _firestoreService.getSubjectByName(subjectName);
+    bool isUserUploadingSharedFile = _documentService.sharedFileType != null;
 
     AbstractDocument doc;
+    SheetResponse response;
     doc = _setDoc(doc, path, text1, text2, text3, subjectName, subject);
 
     if (doc.path == Document.Links) {
       _processLink(doc);
       setBusy(false);
     } else {
+
+      if(!isUserUploadingSharedFile)
       SheetResponse response = await _showDocTypeSelectionSheet();
-      if (response == null) {
+
+      if (!isUserUploadingSharedFile && response == null) {
         setBusy(false);
         return;
       }
-      String fileType = response.confirmed
+
+      String fileType = (response?.confirmed ?? true)
           ? enumConst.Constants.pdf
           : enumConst.Constants.png;
       // var result = await _cloudStorageService.uploadFile(note: doc, type: doc.type, uploadFileType: fileType);
@@ -227,12 +236,12 @@ class UploadViewModel extends BaseViewModel {
         case "BLOCKED":
           await _showBannedDialog();
           setBusy(false);
-          return;
+          // return;
           break;
         case "File size more than 35mb":
           _showFileSizeExceededDialog(context);
           setBusy(false);
-          return;
+          // return;
           break;
         case "error":
           setBusy(false);
@@ -252,10 +261,11 @@ class UploadViewModel extends BaseViewModel {
           break;
         default:
           setBusy(false);
-          return;
+          // return;
           break;
       }
     }
+    _documentService.sharedFileType = null;
   }
 
   launchURL(String url) async {

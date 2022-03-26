@@ -7,6 +7,7 @@ import 'package:FSOUNotes/enums/constants.dart';
 import 'package:FSOUNotes/services/funtional_services/remote_config_service.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:logger/logger.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'package:http/http.dart' as http;
 
@@ -21,9 +22,13 @@ class PushNotificationService {
   RemoteConfigService _remoteConfigService = locator<RemoteConfigService>();
 
   Future initialise() async {
+    //Firebase Messaging
     FirebaseMessaging.onBackgroundMessage(_handleNotification);
     FirebaseMessaging.onMessage.listen(_handleNotification);
     FirebaseMessaging.onMessageOpenedApp.listen(_handleNotification);
+
+    //One Signal
+    OneSignal.shared.setAppId(_remoteConfigService.remoteConfig.getString('ONESIGNAL_APP_ID'));
   }
 
   Future<void> _handleNotification(RemoteMessage remoteMessage) async {

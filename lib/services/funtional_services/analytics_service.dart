@@ -3,6 +3,7 @@ import 'package:FSOUNotes/app/app.locator.dart';
 import 'package:FSOUNotes/app/app.logger.dart';
 import 'package:FSOUNotes/services/funtional_services/remote_config_service.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:logger/logger.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:http/http.dart' as http;
@@ -16,10 +17,12 @@ class AnalyticsService {
 
   final FirebaseAnalytics analytics = FirebaseAnalytics();
 
-  void logEvent(
-      {String name,
+  void logEvent({
+      String name,
       Map parameters,
-      bool addInNotificationService = false}) async {
+      bool addInNotificationService = false
+    }) async {
+
     try {
       if (parameters == null) {
         analytics.logEvent(name: name);
@@ -29,6 +32,7 @@ class AnalyticsService {
     } catch (e) {
       log.e("Exception in logging event ${e.toString()}");
     }
+    
   }
 
   void setUserProperty({String name, String value}) {
@@ -46,9 +50,14 @@ class AnalyticsService {
     OneSignal.shared.sendTag(key, value);
   }
 
-  sendNotification(
-      {String id, String title, String message, bool isAdmin = false}) async {
-    await _remoteConfigService.init();
+  sendNotification
+      ({
+        String id,
+        String title, 
+        String message, 
+        bool isAdmin = false
+      }) async {
+        
     if (isAdmin) {
       id = _remoteConfigService.remoteConfig.getString('ADMIN_ID');
     }

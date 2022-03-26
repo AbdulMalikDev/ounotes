@@ -31,6 +31,11 @@ enum CourseType{
   BE,
 }
 
+enum SharedDocType{
+  IMAGE,
+  FILE,
+}
+
 class Enum{
 
   // To serialize and deserialize enums from firebase

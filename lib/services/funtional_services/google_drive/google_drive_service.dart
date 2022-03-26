@@ -10,6 +10,7 @@ import 'package:FSOUNotes/models/notes.dart';
 import 'package:FSOUNotes/models/question_paper.dart';
 import 'package:FSOUNotes/models/subject.dart';
 import 'package:FSOUNotes/models/syllabus.dart';
+import 'package:FSOUNotes/services/funtional_services/document_service.dart';
 import 'package:external_path/external_path.dart';
 import 'package:FSOUNotes/models/document.dart';
 import 'package:FSOUNotes/models/download.dart';
@@ -74,6 +75,7 @@ class GoogleDriveService extends ChangeNotifier{
   QuestionPaperService _questionPaperService = locator<QuestionPaperService>();
   SyllabusService _syllabusService = locator<SyllabusService>();
   AdmobService _admobService = locator<AdmobService>();
+  
 
   ValueNotifier<double> downloadProgress = new ValueNotifier(0);
 
@@ -288,7 +290,7 @@ class GoogleDriveService extends ChangeNotifier{
             response, subjectSubFolderID, docEnum, doc, note, fileToUpload);
       } catch (e) {
         return _errorHandling(
-            e, "While UPLOADING Notes to Google Drive , Error occurred");
+            e, "While UPLOADING Notes to Google Drive , Error occurred uploadFileToGoogleDriveAfterVerification");
       }
 
       //>> Post-Upload Sanitization and finishing touches

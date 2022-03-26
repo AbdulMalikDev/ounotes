@@ -1,8 +1,12 @@
 import 'package:FSOUNotes/app/app.locator.dart';
 import 'package:FSOUNotes/app/app.logger.dart';
 import 'package:FSOUNotes/app/app.router.dart';
+import 'package:FSOUNotes/enums/constants.dart';
+import 'package:FSOUNotes/models/download.dart';
+import 'package:FSOUNotes/models/recently_open_notes.dart';
 import 'package:FSOUNotes/models/user.dart';
 import 'package:FSOUNotes/services/funtional_services/authentication_service.dart';
+import 'package:FSOUNotes/services/funtional_services/crashlytics_service.dart';
 import 'package:FSOUNotes/services/funtional_services/google_in_app_payment_service.dart';
 import 'package:FSOUNotes/ui/views/Main/main_screen_view.dart';
 import 'package:connection_verify/connection_verify.dart';
@@ -13,8 +17,10 @@ import 'package:FSOUNotes/services/funtional_services/push_notification_service.
 import 'package:FSOUNotes/services/funtional_services/remote_config_service.dart';
 import 'package:FSOUNotes/services/funtional_services/sharedpref_service.dart';
 import 'package:FSOUNotes/services/state_services/subjects_service.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:logger/logger.dart';
 import 'package:package_info/package_info.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 
@@ -34,30 +40,61 @@ class SplashViewModel extends FutureViewModel {
       locator<PushNotificationService>();
   GoogleInAppPaymentService _googleInAppPaymentService =
   locator<GoogleInAppPaymentService>();
+  CrashlyticsService _crashlyticsService = locator<CrashlyticsService>();
+  
 
   handleStartUpLogic() async {
     log.e("Splash Open");
+
+    var LoggedInUser = await _sharedPreferencesService.isUserLoggedIn();
+    if(LoggedInUser == null){_navigationService.replaceWith(Routes.introView);}
+
     bool isUserOnline = await ConnectionVerify.connectionStatus();
-    // await _pushNotificationService.initialise();
-    //Do Stuff while splash screen is loading
+
+    //>> Initialization of services, isn't this why splash screens are used?
+    await _pushNotificationService.initialise();
     await _googleInAppPaymentService.initialize();
     await _remoteConfigService.init();
-    var LoggedInUser = await _sharedPreferencesService.isUserLoggedIn();
+    await _crashlyticsService.init();
+    await _notificationService.init();
+    final appDir = await getApplicationDocumentsDirectory();
+    Hive.init(appDir.path);
+    Hive.registerAdapter<Download>(DownloadAdapter());
+    Hive.registerAdapter<RecentlyOpenedNotes>(RecentlyOpenedNotesAdapter());
+    await Hive.openBox(Constants.ouNotes);
+    
     //Check if user has outdated version if they're is online
     Map<String, dynamic> result;
     if(isUserOnline) result = await _checkForUpdatedVersionAndShowDialog();
+
+    
     if (LoggedInUser != null) {
-      if (LoggedInUser.isPremiumUser ?? false)
-        _checkPremiumPurchaseDate(LoggedInUser.id);
-      await _subjectsService.loadSubjects(checkIfUpdate: true);
-      // isUserOnline = false;
-      if(isUserOnline)_navigationService.replaceWith(Routes.mainScreenView,arguments:MainScreenViewArguments(shouldShowUpdateDialog: result["doesUserNeedUpdate"],versionDetails: result));
-      else _navigationService.replaceWith(Routes.mainScreenView);
       
-    } else {
-      log.e("user is null");
-      _navigationService.replaceWith(Routes.introView);
+      //>> 1.1 Check if User is Premium
+      if (LoggedInUser.isPremiumUser ?? false){
+        _checkPremiumPurchaseDate(LoggedInUser.id);
+      }
+
+      //>> 1.2 Load all subjects
+      await _subjectsService.loadSubjects(checkIfUpdate: true);
+
+      //>> 1.3 Check for app update if User is online
+      if(isUserOnline){
+
+        _navigationService.replaceWith(
+          Routes.mainScreenView,
+          arguments:MainScreenViewArguments(
+            shouldShowUpdateDialog: result["doesUserNeedUpdate"],
+            versionDetails: result
+            )
+          );
+
+      }else{ 
+        _navigationService.replaceWith(Routes.mainScreenView);
+      }
+      
     }
+
     log.e("Splash Close");
   }
 

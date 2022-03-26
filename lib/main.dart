@@ -5,6 +5,7 @@ import 'package:FSOUNotes/AppTheme/AppTheme.dart';
 import 'package:FSOUNotes/models/recently_open_notes.dart';
 import 'package:FSOUNotes/services/funtional_services/admob_service.dart';
 import 'package:FSOUNotes/services/funtional_services/crashlytics_service.dart';
+import 'package:FSOUNotes/services/funtional_services/document_service.dart';
 import 'package:FSOUNotes/services/funtional_services/google_in_app_payment_service.dart';
 import 'package:FSOUNotes/services/funtional_services/notification_service.dart';
 import 'package:FSOUNotes/services/funtional_services/remote_config_service.dart';
@@ -14,7 +15,10 @@ import 'package:feature_discovery/feature_discovery.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
+import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 import 'package:flutter/material.dart';
@@ -37,60 +41,20 @@ import 'models/download.dart';
 Logger log = getLogger("main");
 void main() async {
   log.e("Main Open");
+  
   WidgetsFlutterBinding.ensureInitialized();
-  MobileAds.instance.initialize();
-  await Firebase.initializeApp();
   //Dynamic Injection
   setupLocator();
   //Setting custom Bottom Sheet
   setUpBottomSheetUi();
-  //Setting up Hive DB
-  final appDir = await getApplicationDocumentsDirectory();
-  Hive.init(appDir.path);
-  Hive.registerAdapter<Download>(DownloadAdapter());
-  Hive.registerAdapter<RecentlyOpenedNotes>(RecentlyOpenedNotesAdapter());
-  await Hive.openBox(Constants.ouNotes);
-  
-  RemoteConfigService _remoteConfigService = locator<RemoteConfigService>();
-  
-  
-  // CrashlyticsService _crashlyticsService = locator<CrashlyticsService>();
-  // AdmobService _admobService = locator<AdmobService>();
-  // NotificationService _notificationService = locator<NotificationService>();
-  // InAppPaymentService _inAppPaymentService= locator<InAppPaymentService>();
-  // await _inAppPaymentService.fetchData();
-  // InAppPurchaseConnection.enablePendingPurchases();
-  // await _admobService.init();
-  //Sentry provides crash reporting
-  // _crashlyticsService.sentryClient = SentryClient(
-  //     dsn: _remoteConfigService.remoteConfig.getString('SentryKey'));
-  // OneSignal.shared
-  //     .setNotificationOpenedHandler((OSNotificationOpenedResult result) {});
-  // OneSignal.shared
-  //     .init(_remoteConfigService.remoteConfig.getString('ONESIGNAL_KEY'));
-  // OneSignal.shared
-  //     .setInFocusDisplayType(OSNotificationDisplayType.notification);
+  MobileAds.instance.initialize();
+  await Firebase.initializeApp();
+  RemoteConfigService _remoteConfigService =
+      locator<RemoteConfigService>();
+  await _remoteConfigService.init();
   Logger.level = Level.verbose;
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  // AppStateNotifier.isDarkModeOn = prefs.getBool('isdarkmodeon') ?? false;
-  // await _notificationService.init();
-  //TODO DevChecklist - Uncomment for error handling
-  // FlutterError.onError = (details, {bool forceReport = false}) {
-  //   _crashlyticsService.sentryClient.captureException(
-  //     exception: details.exception,
-  //     stackTrace: details.stack,
-  //   );
-  // };
   runApp(MyApp());
-  // runZonedGuarded(
-  //   () => runApp(MyApp()),
-  //   (error, stackTrace) async {
-  //     // await _crashlyticsService.sentryClient.captureException(
-  //     //   exception: error,
-  //     //   stackTrace: stackTrace,
-  //     // );
-  //   },
-  // );
+
   log.e("Main Close");
   // await dothis();
 }
@@ -153,27 +117,37 @@ dothis() async {
   // }
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  StreamSubscription _intentDataStreamSubscription;
+  List<SharedMediaFile> _sharedFiles;
+  String _sharedText;
   // This widget is the root of your application
   final RemoteConfigService _remoteConfigService =
       locator<RemoteConfigService>();
+
   final FirebaseAnalyticsObserver observer =
       FirebaseAnalyticsObserver(analytics: FirebaseAnalytics());
+
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.portraitUp,
-      DeviceOrientation.portraitDown,
-    ]);
+    // SystemChrome.setPreferredOrientations([
+    //   DeviceOrientation.portraitUp,
+    //   DeviceOrientation.portraitDown,
+    // ]);
     return ViewModelBuilder<AppStateNotifier>.reactive(
       builder: (context, model, child) => FeatureDiscovery(
         child: Wiredash(
-          projectId: "Sometid",
-          secret: "sdsdsd",
           // projectId: _remoteConfigService.remoteConfig
           //     .getString("WIREDASH_PROJECT_ID"),
           // secret:
           //     _remoteConfigService.remoteConfig.getString("WIREDASH_SECRET"),
+          projectId: "ffff",
+          secret:"dddd",
           navigatorKey: StackedService.navigatorKey,
           child: ThemeProvider(
               initTheme: AppStateNotifier.isDarkModeOn
@@ -198,5 +172,62 @@ class MyApp extends StatelessWidget {
       ),
       viewModelBuilder: () => locator<AppStateNotifier>(),
     );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    // For sharing images coming from outside the app while the app is in the memory
+    _intentDataStreamSubscription =
+        ReceiveSharingIntent.getMediaStream().listen((List<SharedMediaFile> value) {
+          
+        if (value.isEmpty){
+          Fluttertoast.showToast(msg: "No Documents Shared");
+          return;
+        }
+        log.e("For sharing images coming from outside the app while the app is in the memory");
+        log.e(value);
+        log.e(value[0].path);
+        log.e(value[0].thumbnail);
+        log.e(value[0].type);
+        DocumentService _documentService = locator<DocumentService>();
+        _documentService.shareFile(value);
+
+    }, onError: (err) {
+      log.e("getIntentDataStream error while sharing doc in main.dart: $err");
+    });
+
+    // For sharing images coming from outside the app while the app is closed
+    ReceiveSharingIntent.getInitialMedia().then((List<SharedMediaFile> value) {
+      log.e("For sharing images coming from outside the app while the app is closed");
+      setState(() {
+        _sharedFiles = value;
+      });
+    });
+
+    // For sharing or opening urls/text coming from outside the app while the app is in the memory
+    _intentDataStreamSubscription =
+        ReceiveSharingIntent.getTextStream().listen((String value) {
+      setState(() {
+        _sharedText = value;
+      });
+    }, onError: (err) {
+      print("getLinkStream error: $err");
+    });
+
+    // For sharing or opening urls/text coming from outside the app while the app is closed
+    ReceiveSharingIntent.getInitialText().then((String value) {
+      log.e("For sharing or opening urls/text coming from outside the app while the app is closed");
+      setState(() {
+        _sharedText = value;
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _intentDataStreamSubscription.cancel();
+    super.dispose();
   }
 }
