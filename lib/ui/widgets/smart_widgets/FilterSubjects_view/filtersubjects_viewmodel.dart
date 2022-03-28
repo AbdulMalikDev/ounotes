@@ -1,5 +1,4 @@
 import 'package:FSOUNotes/app/app.locator.dart';
-import 'package:FSOUNotes/app/app.logger.dart';
 import 'package:FSOUNotes/app/app.router.dart';
 import 'package:FSOUNotes/enums/enums.dart';
 import 'package:stacked/stacked.dart';

@@ -1,14 +1,13 @@
 import 'package:FSOUNotes/app/app.locator.dart';
 import 'package:FSOUNotes/app/app.logger.dart';
-import 'package:FSOUNotes/app/app.router.dart';
 import 'package:FSOUNotes/models/subject.dart';
 import 'package:FSOUNotes/models/user.dart';
+import 'package:FSOUNotes/services/funtional_services/authentication_service.dart';
+import 'package:FSOUNotes/services/state_services/subjects_service.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:logger/logger.dart';
 import 'package:stacked/stacked.dart';
-import 'package:FSOUNotes/services/funtional_services/authentication_service.dart';
-import 'package:FSOUNotes/services/state_services/subjects_service.dart';
 
 class SubjectsDialogViewModel extends BaseViewModel {
   Logger log = getLogger("SubjectsDialogViewModel");

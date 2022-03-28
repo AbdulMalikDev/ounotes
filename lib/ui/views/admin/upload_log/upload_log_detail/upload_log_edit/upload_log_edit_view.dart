@@ -5,7 +5,7 @@ import 'package:FSOUNotes/models/notes.dart';
 import 'package:FSOUNotes/models/question_paper.dart';
 import 'package:FSOUNotes/models/syllabus.dart';
 import 'package:FSOUNotes/ui/shared/app_config.dart';
-import 'package:FSOUNotes/ui/views/admin/AddEditSubject/textFormField.dart';
+import 'package:FSOUNotes/ui/widgets/dumb_widgets/textFormField.dart';
 import 'package:FSOUNotes/ui/views/admin/upload_log/upload_log_detail/upload_log_edit/upload_log_edit_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
@@ -64,7 +64,7 @@ class _UploadLogEditViewState extends State<UploadLogEditView> {
           case Document.UploadLog:
           case Document.Report:
           case Document.Random:
-
+          case Document.GDRIVE:
           case Document.None:
             break;
         }

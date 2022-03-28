@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 class TextFormFieldView extends StatelessWidget {
   final String heading;
   final String hintText;
+  final Key textFieldUniqueKey;
   final bool isLargeTextField;
   final TextEditingController controller;
   final String Function(String) validator;
@@ -21,6 +22,7 @@ class TextFormFieldView extends StatelessWidget {
     this.onChanged,
     this.initialValue,
     this.isLargeTextField = false,
+    this.textFieldUniqueKey,
   }) : super(key: key);
 
   @override
@@ -32,13 +34,16 @@ class TextFormFieldView extends StatelessWidget {
           padding: EdgeInsets.symmetric(horizontal: 20, vertical: 0),
           child: Text(
             heading,
-            style: Theme.of(context).textTheme.headline5.copyWith(fontSize: 18,fontWeight: FontWeight.w500),
+            style: Theme.of(context)
+                .textTheme
+                .headline5
+                .copyWith(fontSize: 18, fontWeight: FontWeight.w500),
           ),
         ),
         Container(
           padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
-          height: 90,
           child: TextFormField(
+            key: textFieldUniqueKey,
             maxLines: isLargeTextField ? null : 1,
             initialValue: initialValue,
             controller: controller,
@@ -66,7 +71,16 @@ class TextFormFieldView extends StatelessWidget {
                 ),
               ),
             ),
-            validator: validator,
+            validator: validator != null
+                ? validator
+                : (value) {
+                    if (value.isEmpty) {
+                      return 'Please enter $heading .';
+                    } else if (value.length < 3) {
+                      return "Please enter valid $heading";
+                    }
+                    return null;
+                  },
             onChanged: onChanged,
           ),
         ),

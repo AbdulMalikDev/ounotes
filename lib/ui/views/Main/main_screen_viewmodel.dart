@@ -7,6 +7,7 @@ import 'package:FSOUNotes/ui/views/Settings/settings_view.dart';
 import 'package:FSOUNotes/ui/views/downloads/Downloads_view.dart';
 import 'package:FSOUNotes/ui/views/home/home_view.dart';
 import 'package:FSOUNotes/ui/views/upload/upload_selection/upload_selection_view.dart';
+import 'package:FSOUNotes/ui/views/upload/upload_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:open_appstore/open_appstore.dart';
@@ -23,10 +24,7 @@ class MainScreenViewModel extends BaseViewModel {
       key: ValueKey("Home"),
     ),
     FDInputView(key: ValueKey("input")),
-    UploadSelectionView(
-      key: ValueKey("upload"),
-      isFromMainScreen: true,
-    ),
+    UploadSelectionView(),
     DownLoadView(key: ValueKey("download")),
     SettingsView(key: ValueKey("settings")),
   ];

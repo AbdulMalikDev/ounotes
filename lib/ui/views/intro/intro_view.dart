@@ -105,19 +105,19 @@ class _IntroViewState extends State<IntroView> {
                       children: [
                         SelectionCard(
                           value: model.sem,
-                          onChange: model.changedDropDownItemOfSemester,
+                          onChanged: model.changedDropDownItemOfSemester,
                           items: model.dropdownofsem,
                           title: "Select Semester",
                         ),
                         SelectionCard(
                           value: model.br,
-                          onChange: model.changedDropDownItemOfBranch,
+                          onChanged: model.changedDropDownItemOfBranch,
                           items: model.dropdownofbr,
                           title: "Select Branch",
                         ),
                         SelectionCard(
                           value: model.clg,
-                          onChange: model.changedDropDownItemOfCollege,
+                          onChanged: model.changedDropDownItemOfCollege,
                           items: model.dropdownofclg,
                           title: "Select College",
                           isExpanded: true,

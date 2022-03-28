@@ -2,7 +2,7 @@ import 'package:FSOUNotes/misc/constants.dart';
 import 'package:FSOUNotes/models/subject.dart';
 import 'package:FSOUNotes/ui/shared/app_config.dart';
 import 'package:FSOUNotes/ui/views/admin/AddEditSubject/addEditSubject_viewmodel.dart';
-import 'package:FSOUNotes/ui/views/admin/AddEditSubject/textFormField.dart';
+import 'package:FSOUNotes/ui/widgets/dumb_widgets/textFormField.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 

@@ -385,9 +385,6 @@ class _SettingsViewState extends State<SettingsView> {
                     ),
                   ),
                 ),
-                SizedBox(
-                  height: hp * 0.05,
-                ),
                 Container(
                   margin: EdgeInsets.all(10),
                   child: Row(
@@ -477,7 +474,7 @@ class SettingsTile extends StatelessWidget {
                         height: 3,
                       ),
                       Container(
-                        height: largeSubtitle ? hp * 0.032 : hp * 0.02,
+                        height: largeSubtitle ? hp * 0.04 : hp * 0.02,
                         width: isClickable ? wp * 0.68 : wp * 0.75,
                         alignment: Alignment.centerLeft,
                         child: Text(
@@ -533,7 +530,6 @@ class SettingsTextFormFieldView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('sdsdsdsdsdsd' + textEditingController.text);
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
       child: TextFormField(

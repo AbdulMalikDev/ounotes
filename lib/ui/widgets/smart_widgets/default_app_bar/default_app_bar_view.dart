@@ -2,8 +2,8 @@ import 'package:FSOUNotes/AppTheme/AppStateNotifier.dart';
 import 'package:FSOUNotes/enums/constants.dart';
 import 'package:FSOUNotes/ui/shared/app_config.dart';
 import 'package:flutter/material.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:stacked/stacked.dart';
+
 import 'default_app_bar_viewmodel.dart';
 
 class DefaultAppBarView extends StatelessWidget with PreferredSizeWidget {
@@ -19,8 +19,7 @@ class DefaultAppBarView extends StatelessWidget with PreferredSizeWidget {
     double hp = App(context).appHeight(1);
     double wp = App(context).appWidth(1);
     BoxShadow defaultAppBarShadow = BoxShadow(
-      color: Colors.grey.withOpacity(0.2),
-      // blurRadius: 0.5,
+      color: Colors.grey.withOpacity(0.5),
       offset: Offset(0, 2),
     );
     return ViewModelBuilder<DefaultAppBarViewModel>.nonReactive(
@@ -43,9 +42,7 @@ class DefaultAppBarView extends StatelessWidget with PreferredSizeWidget {
               // height: hp * 0.06,
               height: 60.0,
               decoration: BoxDecoration(
-                color: AppStateNotifier.isDarkModeOn
-                    ? Theme.of(context).scaffoldBackgroundColor
-                    : Colors.white,
+                color: Theme.of(context).appBarTheme.backgroundColor,
                 boxShadow: [
                   defaultAppBarShadow,
                 ],

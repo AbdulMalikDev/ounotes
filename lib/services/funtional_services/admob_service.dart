@@ -1,14 +1,12 @@
 
-import 'package:FSOUNotes/app/app.router.dart';
-import 'package:FSOUNotes/models/user.dart';
-import 'package:FSOUNotes/services/funtional_services/authentication_service.dart';
-import 'package:FSOUNotes/services/funtional_services/remote_config_service.dart';
-import 'package:FSOUNotes/services/funtional_services/onboarding_service.dart';
 import 'package:FSOUNotes/app/app.locator.dart';
 import 'package:FSOUNotes/app/app.logger.dart';
+import 'package:FSOUNotes/app/app.router.dart';
+import 'package:FSOUNotes/services/funtional_services/authentication_service.dart';
+import 'package:FSOUNotes/services/funtional_services/onboarding_service.dart';
+import 'package:FSOUNotes/services/funtional_services/remote_config_service.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:googleapis/dfareporting/v3_4.dart';
 import 'package:logger/logger.dart';
 import 'package:stacked_services/stacked_services.dart';
 

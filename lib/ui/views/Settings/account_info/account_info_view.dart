@@ -73,8 +73,8 @@ class AccountInfoView extends StatelessWidget {
                         height: 30,
                       ),
                       Container(
-                        width: MediaQuery.of(context).size.width / 1.7,
-                        height: MediaQuery.of(context).size.height * 0.06,
+                        width: MediaQuery.of(context).size.width/1.5,
+                        height: MediaQuery.of(context).size.height * 0.05,
                         margin: const EdgeInsets.symmetric(horizontal: 70),
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
@@ -83,12 +83,14 @@ class AccountInfoView extends StatelessWidget {
                             ),
                             primary: Theme.of(context).primaryColor,
                           ),
-                          child: Text(
-                            "CHANGE INFORMATION",
-                            style:
-                                Theme.of(context).textTheme.bodyText2.copyWith(
-                                      color: Colors.white,
-                                    ),
+                          child: FittedBox(
+                            child: Text(
+                              "CHANGE INFORMATION",
+                              style:
+                                  Theme.of(context).textTheme.bodyText2.copyWith(
+                                        color: Colors.white,
+                                      ),
+                            ),
                           ),
                           onPressed: () {
                             model.changeProfileData();

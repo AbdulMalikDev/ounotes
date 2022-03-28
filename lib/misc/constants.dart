@@ -1,6 +1,7 @@
 import 'package:FSOUNotes/enums/enums.dart';
 import 'package:flutter/material.dart';
 
+//TODO we have duplicate contants.dart files in misc and enums , need to merge them in to one file
 const Color primary = Color(0xff2A9D8F);
 const Color secondary = Color(0xffFFB800);
 const Color ternary = Color(0xffFF8282);
@@ -176,7 +177,32 @@ class Constants {
     8: "Semester 8"
   };
 
-  static getDocumentNameFromEnum(Document doc) {
+  static getTextFieldMapFromEnum(Document doc) {
+    switch (doc) {
+      case Document.Notes:
+        return Notes;
+        break;
+      case Document.QuestionPapers:
+        return QuestionPaper;
+        break;
+      case Document.Syllabus:
+        return Syllabus;
+        break;
+      case Document.Links:
+        return Links;
+        break;
+      case Document.UploadLog:
+      case Document.Report:
+      case Document.None:
+      case Document.Drawer:
+      case Document.Random:
+      case Document.GDRIVE:
+        return {};
+        break;
+    }
+  }
+
+  static String getDocumentNameFromEnum(Document doc) {
     switch (doc) {
       case Document.Notes:
         return notes;
@@ -200,6 +226,7 @@ class Constants {
         return "";
         break;
     }
+    return "";
   }
 }
 

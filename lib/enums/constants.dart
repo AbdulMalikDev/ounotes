@@ -125,6 +125,8 @@ class Constants {
     "TextFieldHeadingLabel4": null,
   };
 
+ 
+
   static Map<int, String> semlist = {
     1: "Semester 1",
     2: "Semester 2",
@@ -159,12 +161,13 @@ class Constants {
       case Document.None:
       case Document.Drawer:
       case Document.Random:
+      case Document.GDRIVE:
         return "";
         break;
     }
   }
 
-  static getBoxNameAccToType(AbstractDocument note){
+  static getBoxNameAccToType(AbstractDocument note) {
     switch (note.type) {
       case Constants.notes:
         return Constants.notesDownloads;
