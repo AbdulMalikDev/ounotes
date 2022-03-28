@@ -6,6 +6,7 @@ import 'package:FSOUNotes/misc/constants.dart';
 import 'package:FSOUNotes/misc/helper.dart';
 import 'package:FSOUNotes/models/document.dart';
 import 'package:FSOUNotes/models/notes.dart';
+import 'package:FSOUNotes/models/notification.dart' as local;
 import 'package:FSOUNotes/models/recently_open_notes.dart';
 import 'package:FSOUNotes/models/report.dart';
 import 'package:FSOUNotes/services/funtional_services/authentication_service.dart';
@@ -13,10 +14,13 @@ import 'package:FSOUNotes/services/funtional_services/cloud_storage_service.dart
 import 'package:FSOUNotes/services/funtional_services/firebase_firestore/firestore_service.dart';
 import 'package:FSOUNotes/services/funtional_services/google_drive/google_drive_service.dart';
 import 'package:FSOUNotes/services/funtional_services/admob_service.dart';
+import 'package:FSOUNotes/services/funtional_services/push_notification_service.dart';
 import 'package:FSOUNotes/services/funtional_services/sharedpref_service.dart';
 import 'package:FSOUNotes/services/state_services/recently_opened_notes_service.dart';
 import 'package:FSOUNotes/services/state_services/report_service.dart';
 import 'package:FSOUNotes/services/state_services/subjects_service.dart';
+import 'package:FSOUNotes/ui/shared/strings.dart';
+import 'package:cuid/cuid.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 // import 'package:purchases_flutter/purchases_flutter.dart';
@@ -43,6 +47,9 @@ class NotesTileViewModel extends BaseViewModel {
       locator<SharedPreferencesService>();
   RecentlyOpenedNotesService _recentlyOpenedNotesService =
       locator<RecentlyOpenedNotesService>();
+  PushNotificationService _pushNotificationService =
+      locator<PushNotificationService>();
+
   bool _isnotedownloaded = false;
   bool get isnotedownloaded => _isnotedownloaded;
   AdmobService get admobService => _admobService;
@@ -265,5 +272,14 @@ class NotesTileViewModel extends BaseViewModel {
 
     //notify UI for update
     refresh(note.subjectName);
+  }
+
+  thankUser(Note note) async {
+    String title = Strings.thank_user_notification_title;
+    String body = Strings.thank_user_notification_message(note);
+    String userId = note.uploader_id;
+    String id = newCuid(); 
+    local.Notification notification = local.Notification(id:id,heading:title,body:body,userId: userId);
+    await _pushNotificationService.sendNotification(notification:notification);
   }
 }

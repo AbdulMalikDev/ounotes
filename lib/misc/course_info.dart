@@ -48,6 +48,7 @@ class CourseInfo {
   // DO NOT CHANGE THESE NAMES ( NOT EVEN SPACE )
   // USER ANALYTICS DOC IN FIREBASE USES THESE NAMES
   static List<String> colleges = [
+    "Other College",
     "Muffakham Jah College of Engineering and Technology",
     "Osmania University's College of Technology",
     "CBIT",
@@ -62,7 +63,6 @@ class CourseInfo {
     "Matrusri Engineering College",
     "Swathi Institute of Technology & Science",
     "JNTU Affiliated Colleges",
-    "Other"
   ];
 
   //Used for FCM topics

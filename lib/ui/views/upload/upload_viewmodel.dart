@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:FSOUNotes/app/app.locator.dart';
 import 'package:FSOUNotes/app/app.logger.dart';
 import 'package:FSOUNotes/app/app.router.dart';
@@ -15,6 +14,7 @@ import 'package:FSOUNotes/models/question_paper.dart';
 import 'package:FSOUNotes/models/subject.dart';
 import 'package:FSOUNotes/models/syllabus.dart';
 import 'package:FSOUNotes/models/user.dart';
+import 'package:FSOUNotes/services/funtional_services/document_service.dart';
 import 'package:FSOUNotes/services/funtional_services/firebase_firestore/firestore_service.dart';
 import 'package:FSOUNotes/services/funtional_services/google_drive/google_drive_service.dart';
 import 'package:FSOUNotes/services/funtional_services/sharedpref_service.dart';
@@ -39,6 +39,8 @@ class UploadViewModel extends BaseViewModel {
   GoogleDriveService _googleDriveService = locator<GoogleDriveService>();
   SharedPreferencesService _sharedPreferencesService =
       locator<SharedPreferencesService>();
+  DocumentService _documentService =
+      locator<DocumentService>();
 
   List<DropdownMenuItem<String>> _dropDownMenuItemsofsemester;
 
@@ -225,20 +227,28 @@ class UploadViewModel extends BaseViewModel {
       String subjectName, BuildContext context) async {
     setBusy(true);
     Subject subject = await _firestoreService.getSubjectByName(subjectName);
+    bool isUserUploadingSharedFile = _documentService.sharedFileType != null;
 
     AbstractDocument doc;
+    SheetResponse response;
     doc = _setDoc(doc, documentType, text1, text2, text3, subjectName, subject);
 
     if (doc.path == Document.Links) {
       _processLink(doc);
       setBusy(false);
     } else {
-      SheetResponse response = await _showDocTypeSelectionSheet();
-      if (response == null) {
+
+      if(!isUserUploadingSharedFile)
+      response = await _showDocTypeSelectionSheet();
+      log.e(response);
+
+      if (!isUserUploadingSharedFile && response == null) {
+        log.e("No response from upload sheet");
         setBusy(false);
         return;
       }
-      String fileType = response.confirmed
+
+      String fileType = (response?.confirmed ?? true)
           ? enumConst.Constants.pdf
           : enumConst.Constants.png;
       // var result = await _cloudStorageService.uploadFile(note: doc, type: doc.type, uploadFileType: fileType);
@@ -255,12 +265,12 @@ class UploadViewModel extends BaseViewModel {
         case "BLOCKED":
           await _showBannedDialog();
           setBusy(false);
-          return;
+          // return;
           break;
         case "File size more than 35mb":
           _showFileSizeExceededDialog(context);
           setBusy(false);
-          return;
+          // return;
           break;
         case "error":
           setBusy(false);
@@ -280,10 +290,11 @@ class UploadViewModel extends BaseViewModel {
           break;
         default:
           setBusy(false);
-          return;
+          // return;
           break;
       }
     }
+    _documentService.sharedFileType = null;
   }
 
   launchURL(String url) async {
@@ -560,12 +571,15 @@ class UploadViewModel extends BaseViewModel {
   }
 
   Future<SheetResponse> _showDocTypeSelectionSheet() async {
-    return await _bottomSheetService.showCustomSheet(
+    var result = await _bottomSheetService.showCustomSheet(
         variant: BottomSheetType.filledStacks,
         title: "What do you want to upload?",
         description: "",
         mainButtonTitle: "PDF",
         secondaryButtonTitle: "Image",
         customData: {"file_upload": true});
+    log.e(result);
+    return result;
   }
+
 }

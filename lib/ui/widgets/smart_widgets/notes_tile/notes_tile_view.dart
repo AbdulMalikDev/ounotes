@@ -459,6 +459,19 @@ class NotesColumnWidget extends StatelessWidget {
                 ),
                 TextButton(
                   onPressed: () {
+                    model.thankUser(note);
+                  },
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.celebration_outlined,
+                        color: Colors.orange,
+                      ),
+                    ],
+                  ),
+                ),
+                TextButton(
+                  onPressed: () {
                     final RenderBox box = context.findRenderObject();
                     Share.share(
                         "Notes Name: ${note.title}\n\nSubject Name: ${note.subjectName}\n\nLink:${note.GDriveLink}\n\nFind Latest Notes | Question Papers | Syllabus | Resources for Osmania University at the OU NOTES App\n\nhttps://play.google.com/store/apps/details?id=com.notes.ounotes",

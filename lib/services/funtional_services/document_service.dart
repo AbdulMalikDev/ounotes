@@ -24,6 +24,7 @@ import 'package:clipboard/clipboard.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:logger/logger.dart';
+import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 Logger log = getLogger("DocumentService");
@@ -42,6 +43,9 @@ class DocumentService {
   DownloadService _downloadService = locator<DownloadService>();
 
   ValueNotifier<double> downloadProgress = new ValueNotifier(0);
+
+  List<File> sharedFiles = null;
+  SharedDocType sharedFileType = null;
 
   ///Function to view any document regardless of where it is uploaded
   viewDocument(UploadLog logItem, {bool viewInBrowser = false}) async {
@@ -239,6 +243,9 @@ class DocumentService {
         customData: {"download": true});
     print(response?.confirmed);
     if (response == null || !response.confirmed) return;
+    if (note.type == Constants.notes){
+      await _firestoreService.incrementView(note);
+    }
     await _googleDriveService.downloadPuchasedPdf(
       note: note,
       startDownload: () {
@@ -408,5 +415,31 @@ class DocumentService {
     await _firestoreService.deleteLinkById(link.id);
     SheetResponse response = await _bottomSheetService.showBottomSheet(
         title: "Link Deleted ✔️", description: "");
+  }
+
+  void shareFile(List<SharedMediaFile> sharedFile) {
+    this.sharedFiles = sharedFile.map((e) => File(e.path)).toList();
+
+    switch(sharedFile[0].type){
+      
+      case SharedMediaType.IMAGE:
+        this.sharedFileType = SharedDocType.IMAGE;
+        _navigationService.navigateTo(Routes.uploadSelectionView);
+        return;
+      case SharedMediaType.FILE:
+        this.sharedFileType = SharedDocType.FILE;
+        if(sharedFile.length > 1){
+          Fluttertoast.showToast(msg: "Cannot upload multiple documents at once! Please merge them first at www.ilovepdf.com");
+          return;
+        }
+        _navigationService.navigateTo(Routes.uploadSelectionView);
+        return;
+      case SharedMediaType.VIDEO:
+      default:
+        break;
+
+    }
+    // If control flow reaches this point document type not supported
+    Fluttertoast.showToast(msg: "Document Type Not Supported. Please Upload a PDF or Image");
   }
 }

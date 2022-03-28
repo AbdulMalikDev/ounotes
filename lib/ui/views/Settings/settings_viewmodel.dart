@@ -17,7 +17,7 @@ import 'package:FSOUNotes/models/user.dart';
 import 'package:FSOUNotes/services/funtional_services/authentication_service.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
-import 'package:open_appstore/open_appstore.dart';
+import 'package:open_store/open_store.dart';
 import 'package:package_info/package_info.dart';
 import 'package:rate_my_app/rate_my_app.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -261,9 +261,10 @@ class SettingsViewModel extends BaseViewModel {
                 if (stars < 3) {
                   dispatchEmail();
                 } else {
-                  OpenAppstore.launch(
-                      androidAppId: 'com.notes.ounotes',
-                      iOSAppId: 'com.notes.ounotes');
+                  OpenStore.instance.open(
+                        appStoreId: '', // AppStore id of your app
+                        androidAppBundleId: 'com.notes.ounotes', // Android app bundle package name
+                    );
                 }
                 // This allows to mimic the behavior of the default "Rate" button. See "Advanced > Broadcasting events" for more information :
                 // await rateMyApp.callEvent(RateMyAppEventType.rateButtonPressed);
@@ -291,7 +292,7 @@ class SettingsViewModel extends BaseViewModel {
   }
 
   void showBuyPremiumBottomSheet() async {
-    ProductDetails prod = _googleInAppPaymentService
+    ProductDetails prod = await _googleInAppPaymentService
         .getProduct(GoogleInAppPaymentService.premiumProductID);
     if (prod == null) return;
 

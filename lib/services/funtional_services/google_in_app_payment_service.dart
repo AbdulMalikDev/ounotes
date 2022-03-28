@@ -115,7 +115,8 @@ class GoogleInAppPaymentService{
   }
 
   getProduct(String productID) async {
-    return _products.value.firstWhere( (purchase) => purchase.id == productID, orElse: () => null);
+    var result =  _products.value.firstWhere( (purchase) => purchase.id == productID, orElse: () => null);
+    return result;
   }
 
   /// Your own business logic to setup a consumable

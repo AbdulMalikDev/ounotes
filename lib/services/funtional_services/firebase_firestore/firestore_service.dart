@@ -30,6 +30,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cuid/cuid.dart';
 import 'package:FSOUNotes/ui/shared/strings.dart';
 import 'package:flutter/services.dart';
+import 'package:googleapis_auth/auth.dart';
 import 'package:logger/logger.dart';
 import 'package:stacked_services/stacked_services.dart';
 
@@ -70,8 +71,8 @@ class FirestoreService {
       FirebaseFirestore.instance.collection("confidential");
   final CollectionReference _uploadLogCollectionReference =
       FirebaseFirestore.instance.collection("uploadLog");
-  final CollectionReference _notificationsCollectionReference =
-      FirebaseFirestore.instance.collection("Notifications");
+  static CollectionReference notificationsCollectionReference(user) =>
+      FirebaseFirestore.instance.collection("Notifications").doc(user.id).collection("UserNotifications");
 
   NotesService _notesService = locator<NotesService>();
   QuestionPaperService _questionPaperService = locator<QuestionPaperService>();

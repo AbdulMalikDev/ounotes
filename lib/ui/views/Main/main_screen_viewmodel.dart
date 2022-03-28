@@ -10,7 +10,7 @@ import 'package:FSOUNotes/ui/views/upload/upload_selection/upload_selection_view
 import 'package:FSOUNotes/ui/views/upload/upload_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:open_appstore/open_appstore.dart';
+import 'package:open_store/open_store.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 
@@ -78,8 +78,10 @@ class MainScreenViewModel extends BaseViewModel {
         if (response == null) return;
         //Confirm action
         if (response.confirmed) {
-          OpenAppstore.launch(
-              androidAppId: 'com.notes.ounotes', iOSAppId: 'com.notes.ounotes');
+          OpenStore.instance.open(
+                        appStoreId: '', // AppStore id of your app
+                        androidAppBundleId: 'com.notes.ounotes', // Android app bundle package name
+                    );
         }
       }
     });

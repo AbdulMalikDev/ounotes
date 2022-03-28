@@ -49,7 +49,7 @@ class OnboardingService{
   }
 
   static int getNumberOfTimesDocumentViewOpened() {
-    int savedState = box.get("number_of_time_document_view_opened") ?? 0;
+    int savedState = box.get("number_of_time_document_view_opened") ?? 1;
     number_of_time_document_view_opened = savedState;
     print(savedState.toString() + "savedState");
     return savedState;

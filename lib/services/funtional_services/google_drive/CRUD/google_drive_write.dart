@@ -31,6 +31,9 @@ extension GoogleDriveWrites on GoogleDriveService{
     ga.File gDriveFileToUpload;
     ga.File response;
     if (type == null) type = note.type;
+    DocumentService _documentService = locator<DocumentService>();
+    bool isUserUploadingSharedFile = _documentService.sharedFileType != null;
+    List result;
 
     /// TODO
     /// handle return of string
@@ -52,8 +55,17 @@ extension GoogleDriveWrites on GoogleDriveService{
       String tempPath =
           (await _localPath()) + "/${DateTime.now().millisecondsSinceEpoch}";
       //Not defining type since it could be List of files or just one file
-      List result =
-          await _filePickerService.selectFile(uploadFileType: uploadFileType);
+      if(isUserUploadingSharedFile){
+        bool isImage = _documentService.sharedFileType == SharedDocType.IMAGE;
+        if(isImage){
+          result = [_documentService.sharedFiles,isImage];
+        }else{
+          result = [_documentService.sharedFiles[0],isImage];
+        }
+      }else{
+        result = await _filePickerService.selectFile(uploadFileType: uploadFileType);
+      }
+
       final document = result[0];
       if (document == null) return "File is null";
       isImage = result[1];
