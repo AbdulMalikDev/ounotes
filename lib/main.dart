@@ -54,7 +54,7 @@ void main() async {
   // await Hive.openBox(Constants.ouNotes);
   // await Hive.openBox<Download>(Constants.notesDownloads);
   // await Hive.openBox<RecentlyOpenedNotes>(Constants.recentlyOpenedNotes);
-  RemoteConfigService _remoteConfigService = locator<RemoteConfigService>();
+  //RemoteConfigService _remoteConfigService = locator<RemoteConfigService>();
   // CrashlyticsService _crashlyticsService = locator<CrashlyticsService>();
   // AdmobService _admobService = locator<AdmobService>();
   // InAppPaymentService _inAppPaymentService= locator<InAppPaymentService>();
@@ -159,16 +159,12 @@ dothis() async {
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application
-  final RemoteConfigService _remoteConfigService =
-      locator<RemoteConfigService>();
-  final FirebaseAnalyticsObserver observer =
-      FirebaseAnalyticsObserver(analytics: FirebaseAnalytics());
+  // final RemoteConfigService _remoteConfigService =
+  //     locator<RemoteConfigService>();
+  // final FirebaseAnalyticsObserver observer =
+  //     FirebaseAnalyticsObserver(analytics: FirebaseAnalytics());
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.portraitUp,
-      DeviceOrientation.portraitDown,
-    ]);
     return ViewModelBuilder<AppStateNotifier>.reactive(
       builder: (context, model, child) => FeatureDiscovery(
         child: Wiredash(
@@ -185,7 +181,7 @@ class MyApp extends StatelessWidget {
                   : AppTheme.lightTheme,
               builder: (context, myTheme) {
                 return MaterialApp(
-                  navigatorObservers: <NavigatorObserver>[observer],
+                  // navigatorObservers: <NavigatorObserver>[observer],
                   title: 'OU Notes',
                   debugShowCheckedModeBanner: false,
                   theme: myTheme,

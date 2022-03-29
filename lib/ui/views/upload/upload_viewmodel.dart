@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:FSOUNotes/app/app.locator.dart';
 import 'package:FSOUNotes/app/app.logger.dart';
 import 'package:FSOUNotes/app/app.router.dart';
@@ -15,7 +14,7 @@ import 'package:FSOUNotes/models/question_paper.dart';
 import 'package:FSOUNotes/models/subject.dart';
 import 'package:FSOUNotes/models/syllabus.dart';
 import 'package:FSOUNotes/models/user.dart';
-import 'package:FSOUNotes/services/funtional_services/cloud_storage_service.dart';
+import 'package:FSOUNotes/services/funtional_services/document_service.dart';
 import 'package:FSOUNotes/services/funtional_services/firebase_firestore/firestore_service.dart';
 import 'package:FSOUNotes/services/funtional_services/google_drive/google_drive_service.dart';
 import 'package:FSOUNotes/services/funtional_services/sharedpref_service.dart';
@@ -32,7 +31,6 @@ import 'package:url_launcher/url_launcher.dart';
 
 class UploadViewModel extends BaseViewModel {
   Logger log = getLogger("UploadViewModel");
-  CloudStorageService _cloudStorageService = locator<CloudStorageService>();
   FirestoreService _firestoreService = locator<FirestoreService>();
   NavigationService _navigationService = locator<NavigationService>();
   DialogService _dialogService = locator<DialogService>();
@@ -41,6 +39,7 @@ class UploadViewModel extends BaseViewModel {
   GoogleDriveService _googleDriveService = locator<GoogleDriveService>();
   SharedPreferencesService _sharedPreferencesService =
       locator<SharedPreferencesService>();
+  DocumentService _documentService = locator<DocumentService>();
 
   List<DropdownMenuItem<String>> _dropDownMenuItemsofsemester;
 
@@ -66,6 +65,32 @@ class UploadViewModel extends BaseViewModel {
 
   String get year => _year;
   SfRangeValues get sfValues => _sfValues;
+
+  Document _documentType = Document.Notes;
+  Document get documentType => _documentType;
+  Map _textFieldsMap = Constants.Notes;
+
+  Map get textFieldsMap => _textFieldsMap;
+
+  TextEditingController _textFieldController1 = TextEditingController();
+  TextEditingController _textFieldController2 = TextEditingController();
+  TextEditingController _textFieldController3 = TextEditingController();
+  TextEditingController _controllerOfSub = TextEditingController();
+  TextEditingController _controllerOfYear1 = TextEditingController();
+  TextEditingController _controllerOfYear2 = TextEditingController();
+
+  TextEditingController get textFieldController1 => _textFieldController1;
+  TextEditingController get textFieldController2 => _textFieldController2;
+  TextEditingController get textFieldController3 => _textFieldController3;
+  TextEditingController get controllerOfSub => _controllerOfSub;
+  TextEditingController get controllerOfYear1 => _controllerOfYear1;
+  TextEditingController get controllerOfYear2 => _controllerOfYear2;
+
+  set setDocumentType(Document selectedType) {
+    _documentType = selectedType;
+    _textFieldsMap = Constants.getTextFieldMapFromEnum(selectedType);
+    notifyListeners();
+  }
 
   set setYear(String year) {
     _year = year;
@@ -102,7 +127,7 @@ class UploadViewModel extends BaseViewModel {
     SharedPreferences prefs = await _sharedPreferencesService.store();
     User user = User.fromData(
         json.decode(prefs.getString("current_user_is_logged_in")));
-    print(user);
+
     _user = user;
     setBusy(false);
     notifyListeners();
@@ -134,7 +159,7 @@ class UploadViewModel extends BaseViewModel {
     return subList;
   }
 
-    initialise(Document uploadType) async {
+  initialise(Document uploadType, String subjectName) async {
     _dropDownMenuItemsofBranch =
         buildAndGetDropDownMenuItems(CourseInfo.branch);
     _dropDownMenuItemsofsemester =
@@ -144,7 +169,13 @@ class UploadViewModel extends BaseViewModel {
     _selectedSemester = _dropDownMenuItemsofsemester[0].value;
     _selectedBranch = _dropDownMenuItemsofBranch[0].value;
     _selectedyeartype = _dropDownMenuItemForTypeYear[0].value;
-    _document = Constants.getDocumentNameFromEnum(uploadType??Document.GDRIVE);
+    print("inside initialise function : uploadViewModel");
+    print(uploadType);
+    _documentType = uploadType ?? Document.Notes;
+    _textFieldsMap = Constants.getTextFieldMapFromEnum(_documentType);
+    if (subjectName != null) {
+      controllerOfSub.text = subjectName;
+    }
     await setUser();
     notifyListeners();
   }
@@ -152,7 +183,7 @@ class UploadViewModel extends BaseViewModel {
   List<DropdownMenuItem<String>> buildAndGetDropDownMenuItems(List items) {
     List<DropdownMenuItem<String>> i = [];
     items.forEach((item) {
-      i.add(DropdownMenuItem(value: item, child: Text(item)));
+      i.add(DropdownMenuItem(value: item, child: Center(child: Text(item))));
     });
     return i;
   }
@@ -191,24 +222,31 @@ class UploadViewModel extends BaseViewModel {
     _navigationService.navigateTo(Routes.termsAndConditionView);
   }
 
-  Future handleUpload(String text1, String text2, String text3, Document path,
+  Future handleUpload(String text1, String text2, String text3,
       String subjectName, BuildContext context) async {
     setBusy(true);
     Subject subject = await _firestoreService.getSubjectByName(subjectName);
+    bool isUserUploadingSharedFile = false;
 
     AbstractDocument doc;
-    doc = _setDoc(doc, path, text1, text2, text3, subjectName, subject);
+    SheetResponse response;
+    doc = _setDoc(doc, documentType, text1, text2, text3, subjectName, subject);
 
     if (doc.path == Document.Links) {
       _processLink(doc);
       setBusy(false);
     } else {
-      SheetResponse response = await _showDocTypeSelectionSheet();
-      if (response == null) {
+      if (!isUserUploadingSharedFile)
+        response = await _showDocTypeSelectionSheet();
+      log.e(response);
+
+      if (!isUserUploadingSharedFile && response == null) {
+        log.e("No response from upload sheet");
         setBusy(false);
         return;
       }
-      String fileType = response.confirmed
+
+      String fileType = (response?.confirmed ?? true)
           ? enumConst.Constants.pdf
           : enumConst.Constants.png;
       // var result = await _cloudStorageService.uploadFile(note: doc, type: doc.type, uploadFileType: fileType);
@@ -225,12 +263,12 @@ class UploadViewModel extends BaseViewModel {
         case "BLOCKED":
           await _showBannedDialog();
           setBusy(false);
-          return;
+          // return;
           break;
         case "File size more than 35mb":
           _showFileSizeExceededDialog(context);
           setBusy(false);
-          return;
+          // return;
           break;
         case "error":
           setBusy(false);
@@ -250,7 +288,7 @@ class UploadViewModel extends BaseViewModel {
           break;
         default:
           setBusy(false);
-          return;
+          // return;
           break;
       }
     }
@@ -520,8 +558,7 @@ class UploadViewModel extends BaseViewModel {
           title: "SUCCESS",
           description:
               "Thank you for sharing a resource with all the students ! Admins will review the link and display it in the app.");
-      _navigationService
-          .popUntil((route) => route.settings.name == Routes.homeView);
+      _navigationService.clearStackAndShow(Routes.splashView);
     } else {
       await _dialogService.showDialog(
           title: "Aww ! Wrong Link !",
@@ -531,12 +568,14 @@ class UploadViewModel extends BaseViewModel {
   }
 
   Future<SheetResponse> _showDocTypeSelectionSheet() async {
-    return await _bottomSheetService.showCustomSheet(
+    var result = await _bottomSheetService.showCustomSheet(
         variant: BottomSheetType.filledStacks,
         title: "What do you want to upload?",
         description: "",
         mainButtonTitle: "PDF",
         secondaryButtonTitle: "Image",
         customData: {"file_upload": true});
+    log.e(result);
+    return result;
   }
 }

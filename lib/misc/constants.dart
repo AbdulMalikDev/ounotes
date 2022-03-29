@@ -176,6 +176,31 @@ class Constants {
     8: "Semester 8"
   };
 
+  static getTextFieldMapFromEnum(Document doc) {
+    switch (doc) {
+      case Document.Notes:
+        return Notes;
+        break;
+      case Document.QuestionPapers:
+        return QuestionPaper;
+        break;
+      case Document.Syllabus:
+        return Syllabus;
+        break;
+      case Document.Links:
+        return Links;
+        break;
+      case Document.UploadLog:
+      case Document.Report:
+      case Document.None:
+      case Document.Drawer:
+      case Document.Random:
+      case Document.GDRIVE:
+        return {};
+        break;
+    }
+  }
+
   static getDocumentNameFromEnum(Document doc) {
     switch (doc) {
       case Document.Notes:

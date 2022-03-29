@@ -34,7 +34,6 @@ dependencies:
   flutter_auth_buttons: ^0.10.0
   fluttertoast: ^8.0.6
   lottie: ^1.0.1
-  flutter_material_pickers: ^2.1.1
   material_design_icons_flutter: ^5.0.5955-rc.1
   shimmer: ^2.0.0
   modal_progress_hud: ^0.1.3

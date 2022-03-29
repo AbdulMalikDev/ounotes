@@ -289,7 +289,6 @@ class StackedRouter extends RouterBase {
       var args = data.getArgs<UploadViewArguments>(nullOk: false);
       return MaterialPageRoute<dynamic>(
         builder: (context) => UploadView(
-          textFieldsMap: args.textFieldsMap,
           subjectName: args.subjectName,
         ),
         settings: data,
@@ -300,9 +299,7 @@ class StackedRouter extends RouterBase {
         orElse: () => UploadSelectionViewArguments(),
       );
       return MaterialPageRoute<dynamic>(
-        builder: (context) => UploadSelectionView(
-          subjectName: args.subjectName,
-        ),
+        builder: (context) => UploadSelectionView(),
         settings: data,
       );
     },
@@ -566,12 +563,13 @@ class LinksViewArguments {
 
 /// UploadView arguments holder class
 class UploadViewArguments {
-  final Map<dynamic, dynamic> textFieldsMap;
   final String subjectName;
-  final Document path;
-  final Document path2;
-  UploadViewArguments(
-      {this.textFieldsMap, @required this.subjectName, this.path, this.path2});
+  final Document uploadType;
+
+  UploadViewArguments({
+    @required this.subjectName,
+    this.uploadType,
+  });
 }
 
 /// UploadSelectionView arguments holder class

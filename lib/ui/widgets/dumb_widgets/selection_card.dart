@@ -1,12 +1,11 @@
 import 'package:FSOUNotes/misc/constants.dart';
 import 'package:FSOUNotes/ui/shared/app_config.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_material_pickers/flutter_material_pickers.dart';
 
 class SelectionCard extends StatefulWidget {
   final String value;
-  final List<String> items;
-  final Function(String) onChange;
+  final List<DropdownMenuItem<String>> items;
+  final Function(String) onChanged;
   final String title;
   final bool isExpanded;
 
@@ -14,7 +13,7 @@ class SelectionCard extends StatefulWidget {
     Key key,
     this.value,
     this.items,
-    this.onChange,
+    this.onChanged,
     this.title,
     this.isExpanded = false,
   }) : super(key: key);
@@ -65,47 +64,68 @@ class _SelectionCardState extends State<SelectionCard> {
                     width: 0.5,
                   ),
                 ),
-                child: GestureDetector(
-                  onTap: () {
-                    showMaterialScrollPicker(
-                      context: context,
-                      title: widget.title,
+                child: DropdownButtonHideUnderline(
+                  child: ButtonTheme(
+                    child: DropdownButton(
+                      isExpanded: true,
+                      elevation: 8,
                       items: widget.items,
-                      onChanged: widget.onChange,
-                      selectedValue: widget.value,
-                      showDivider: false,
-                      maxLongSide: MediaQuery.of(context).size.height * 0.7,
-                      cancelText: "",
-                      backgroundColor:
-                          Theme.of(context).scaffoldBackgroundColor,
-                    );
-                  },
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      SizedBox(width: 10),
-                      Expanded(
-                        child: Center(
-                          child: Text(
-                            widget.value,
-                            style:
-                                Theme.of(context).textTheme.headline5.copyWith(
-                                      fontSize: 15,
-                                    ),
+                      onChanged: widget.onChanged,
+                      value: widget.value,
+                      iconSize: 25,
+                      icon: Icon(
+                        Icons.expand_more_rounded,
+                        color: Theme.of(context).primaryColor,
+                      ),
+                      style: Theme.of(context).textTheme.subtitle1.copyWith(
+                            fontSize: 15,
                             overflow: TextOverflow.ellipsis,
                           ),
-                        ),
-                      ),
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: Icon(
-                          Icons.keyboard_arrow_down,
-                          color: Theme.of(context).primaryColor,
-                        ),
-                      ),
-                    ],
+                      alignment: Alignment.center,
+                    ),
                   ),
                 ),
+                // child: GestureDetector(
+                //   onTap: () {
+                //     showMaterialScrollPicker(
+                //       context: context,
+                //       title: widget.title,
+                //       items: widget.items,
+                //       onChanged: widget.onChange,
+                //       selectedValue: widget.value,
+                //       showDivider: false,
+                //       maxLongSide: MediaQuery.of(context).size.height * 0.7,
+                //       cancelText: "",
+                //       backgroundColor:
+                //           Theme.of(context).scaffoldBackgroundColor,
+                //     );
+                //   },
+                //   child: Row(
+                //     mainAxisAlignment: MainAxisAlignment.end,
+                //     children: [
+                //       SizedBox(width: 10),
+                //       Expanded(
+                //         child: Center(
+                //           child: Text(
+                //             widget.value,
+                //             style:
+                //                 Theme.of(context).textTheme.headline5.copyWith(
+                //                       fontSize: 15,
+                //                     ),
+                //             overflow: TextOverflow.ellipsis,
+                //           ),
+                //         ),
+                //       ),
+                //       Align(
+                //         alignment: Alignment.centerLeft,
+                //         child: Icon(
+                //           Icons.keyboard_arrow_down,
+                //           color: Theme.of(context).primaryColor,
+                //         ),
+                //       ),
+                //     ],
+                //   ),
+                // ),
               ),
             ],
           ),
