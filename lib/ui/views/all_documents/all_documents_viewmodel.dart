@@ -44,7 +44,7 @@ class AllDocumentsViewModel extends BaseViewModel {
 
   onUploadButtonPressed() {
     _navigationService.navigateTo(Routes.uploadSelectionView,
-        arguments: UploadSelectionViewArguments(subjectName: _subjectName));
+        arguments: UploadSelectionViewArguments());
   }
 
   handleStartup(BuildContext context) async {

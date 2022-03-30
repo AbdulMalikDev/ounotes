@@ -125,10 +125,12 @@ class UploadViewModel extends BaseViewModel {
   Future setUser() async {
     setBusy(true);
     SharedPreferences prefs = await _sharedPreferencesService.store();
+    if(prefs.containsKey("current_user_is_logged_in")){
     User user = User.fromData(
         json.decode(prefs.getString("current_user_is_logged_in")));
-
     _user = user;
+    }
+
     setBusy(false);
     notifyListeners();
   }
@@ -146,17 +148,17 @@ class UploadViewModel extends BaseViewModel {
   }
 
   List<String> getAllSubjectsList() {
-    // List<String> userSub = _subjectsService.userSubjects.value
-    //     .map((sub) => sub.name)
-    //     .toList()
-    //     .cast<String>();
-    // List<String> allSub = _subjectsService.allSubjects.value
-    //     .map((sub) => sub.name)
-    //     .toList()
-    //     .cast<String>();
-    // List<String> subList = userSub + allSub;
-    // subList = subList.toSet().toList().cast<String>();
-    List<String> subList = CourseInfo.aallsubjects.map((sub) => sub.name);
+    List<String> userSub = _subjectsService.userSubjects.value
+        .map((sub) => sub.name)
+        .toList()
+        .cast<String>();
+    List<String> allSub = _subjectsService.allSubjects.value
+        .map((sub) => sub.name)
+        .toList()
+        .cast<String>();
+    List<String> subList = userSub + allSub;
+    subList = subList.toSet().toList().cast<String>();
+    // List<String> subList = CourseInfo.aallsubjects.map((sub) => sub.name);
     return subList;
   }
 

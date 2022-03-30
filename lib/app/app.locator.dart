@@ -10,7 +10,6 @@ import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 import '../AppTheme/AppStateNotifier.dart';
-import '../services/funtional_services/admob_service.dart';
 import '../services/funtional_services/analytics_service.dart';
 import '../services/funtional_services/app_info_service.dart';
 import '../services/funtional_services/authentication_service.dart';
@@ -43,7 +42,6 @@ final locator = StackedLocator.instance;
 
 void setupLocator() {
   locator.registerLazySingleton(() => BottomSheetService());
-  // locator.registerLazySingleton(() => AdmobService());
   locator.registerLazySingleton(() => AnalyticsService());
   locator.registerLazySingleton(() => AppInfoService());
   locator.registerLazySingleton(() => AppStateNotifier());

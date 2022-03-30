@@ -2,8 +2,6 @@ import 'package:FSOUNotes/ui/views/splash/splash_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
-
-
 class SplashView extends StatelessWidget {
 
   @override

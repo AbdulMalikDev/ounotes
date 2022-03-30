@@ -286,10 +286,14 @@ class StackedRouter extends RouterBase {
       );
     },
     UploadView: (data) {
-      var args = data.getArgs<UploadViewArguments>(nullOk: false);
+      var args = data.getArgs<UploadViewArguments>(
+        orElse: () => UploadViewArguments(),
+      );
       return MaterialPageRoute<dynamic>(
         builder: (context) => UploadView(
+          key: args.key,
           subjectName: args.subjectName,
+          uploadType: args.uploadType,
         ),
         settings: data,
       );
@@ -299,7 +303,7 @@ class StackedRouter extends RouterBase {
         orElse: () => UploadSelectionViewArguments(),
       );
       return MaterialPageRoute<dynamic>(
-        builder: (context) => UploadSelectionView(),
+        builder: (context) => UploadSelectionView(key: args.key),
         settings: data,
       );
     },
@@ -563,20 +567,16 @@ class LinksViewArguments {
 
 /// UploadView arguments holder class
 class UploadViewArguments {
+  final dynamic key;
   final String subjectName;
   final Document uploadType;
-
-  UploadViewArguments({
-    this.subjectName,
-    this.uploadType,
-  });
+  UploadViewArguments({this.key, this.subjectName, this.uploadType});
 }
 
 /// UploadSelectionView arguments holder class
 class UploadSelectionViewArguments {
-  final String subjectName;
-  final Document path;
-  UploadSelectionViewArguments({this.subjectName, this.path});
+  final dynamic key;
+  UploadSelectionViewArguments({this.key});
 }
 
 /// FDSubjectView arguments holder class
