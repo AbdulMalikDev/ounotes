@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:FSOUNotes/app/app.locator.dart';
 import 'package:FSOUNotes/app/app.logger.dart';
+import 'package:badges/badges.dart';
 import 'package:FSOUNotes/app/app.router.dart';
 import 'package:FSOUNotes/misc/helper.dart';
 import 'package:FSOUNotes/models/document.dart';
@@ -442,22 +443,33 @@ class NotesViewModel extends BaseViewModel {
 
   Widget _addInkWellWidget(Note note,
       {bool notification = false, bool isPinned = false}) {
-    return InkWell(
-      child: NotesTileView(
-        note: note,
-        notification: notification,
-        isPinned: isPinned,
-        refresh: refresh,
-        onDownloadCallback: handleDownload,
+    return 
+    // Badge(
+    //   badgeContent: Text('Question Bank',style: TextStyle(color:Colors.white,fontWeight: FontWeight.bold)),
+    //   toAnimate: true,
+    //   animationType: BadgeAnimationType.fade,
+    //   shape: BadgeShape.square,
+    //   borderRadius: BorderRadius.circular(10),
+    //   position: BadgePosition.topEnd(top: 15, end: 15),
+    //   badgeColor: Colors.amber.withOpacity(0.7),
+    //   child:
+      InkWell(
+        child: NotesTileView(
+          note: note,
+          notification: notification,
+          isPinned: isPinned,
+          refresh: refresh,
+          onDownloadCallback: handleDownload,
+          onTap: () async {
+            await incrementViewForAd();
+            openDoc(note);
+          },
+        ),
         onTap: () async {
           await incrementViewForAd();
           openDoc(note);
         },
-      ),
-      onTap: () async {
-        await incrementViewForAd();
-        openDoc(note);
-      },
+      // ),
     );
   }
 

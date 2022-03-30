@@ -275,4 +275,53 @@ extension GoogleDriveWrites on GoogleDriveService{
     }
   }
 
+//This function is used to upload verified documents that are in Firebase, to Google Drive
+  uploadFileToGoogleDriveAfterVerification(
+      File fileToUpload, Document docEnum, doc) async {
+    try {
+      ga.File gDriveFileToUpload;
+      ga.File response;
+      String subjectSubFolderID;
+      AbstractDocument note = doc;
+
+      //>> 1.4 Compress PDF
+      fileToUpload = await _compressPDF(fileToCompress: fileToUpload);
+
+      //>> 1.5 Upload to Google Drive
+      log.i("Uploading File to Google Drive");
+
+      try {
+        //>> 1.5.1 initialize http client and GDrive API
+        var drive = await _initializeHttpClientAndGDriveAPI();
+        subjectSubFolderID =
+            _getSubjectFolderID(subjectName: doc.subjectName, docEnum: docEnum);
+        gDriveFileToUpload = _setMetadataToGDriveFile(
+            gDriveFileToUpload, subjectSubFolderID, doc);
+
+        //>> 1.5.3 Commence Upload
+        log.e(fileToUpload);
+        response = await drive.files.create(
+          gDriveFileToUpload,
+          uploadMedia:
+              ga.Media(fileToUpload.openRead(), fileToUpload.lengthSync()),
+        );
+
+        ///>> 1.5.4 Create and Set Data to access the uploaded file
+        _setDataForUploadedFile(
+            response, subjectSubFolderID, docEnum, doc, note, fileToUpload);
+      } catch (e) {
+        return _errorHandling(
+            e, "While UPLOADING Notes to Google Drive , Error occurred uploadFileToGoogleDriveAfterVerification");
+      }
+
+      //>> Post-Upload Sanitization and finishing touches
+      // pdf.dispose();
+      fileToUpload.delete();
+      return "Upload Successful";
+    } catch (e) {
+      log.e(e);
+    }
+    }
+  
 }
+

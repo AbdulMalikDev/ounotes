@@ -11,19 +11,24 @@ import 'package:logger/logger.dart';
 
 class DownloadService {
   Logger log = getLogger("DownloadService");
-  User user;
+  // User user;
   List<Download> _downloads = [];
 
   List<Download> get downloadlist => _downloads;
 
   addDownload({@required Download download}) async {
-    AuthenticationService _authenticationService =
-        locator<AuthenticationService>();
-    this.user = await _authenticationService.getUser();
+
+    //>> Open box if closed
     if (!Hive.isBoxOpen(download.boxName)) {
       await Hive.openBox<Download>(download.boxName);
     }
     Box<Download> downloadBox = Hive.box(download.boxName);
+
+    //>> Check to avoid duplicate storage
+    var result = downloadBox.get(download,defaultValue: null);
+    if(result != null){return;}
+
+    //>> Store in download box
     downloadBox.add(download);
     // if (downloadBox.length > 3 && !user.isPremiumUser) {
     //   //if downloads list length is > 3 and he is not a premium user then delete the oldest download which is at index 0
@@ -37,4 +42,5 @@ class DownloadService {
     Box<Download> downloadBox = Hive.box(downloadBoxName);
     downloadBox.deleteAt(index);
   }
+  
 }

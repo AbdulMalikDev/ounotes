@@ -39,6 +39,7 @@ class Constants {
   static const String questionPaperDownloads = "QuestionPaperDownloads";
   static const String syllabusDownloads = "SyllabusDownloads";
   static const String recentlyOpenedNotes = "recentlyOpenedNotes";
+  static const String thankUserBox = "thankUserBox";
 
   //Sharedpref key names
   static const String subjectsLastUpdatedKey = "Subject_last_updated";

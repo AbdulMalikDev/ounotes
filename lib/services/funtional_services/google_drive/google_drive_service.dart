@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'dart:math' as math;
-
 import 'package:FSOUNotes/app/app.locator.dart';
 import 'package:FSOUNotes/app/app.logger.dart';
 import 'package:FSOUNotes/app/app.router.dart';
@@ -61,8 +60,7 @@ class GoogleDriveService extends ChangeNotifier{
 
   RemoteConfigService _remoteConfigService = locator<RemoteConfigService>();
   FilePickerService _filePickerService = locator<FilePickerService>();
-  AuthenticationService _authenticationService =
-      locator<AuthenticationService>();
+  AuthenticationService _authenticationService =locator<AuthenticationService>();
   SubjectsService _subjectsService = locator<SubjectsService>();
   FirestoreService _firestoreService = locator<FirestoreService>();
   CloudStorageService _cloudStorageService = locator<CloudStorageService>();
@@ -75,233 +73,10 @@ class GoogleDriveService extends ChangeNotifier{
   QuestionPaperService _questionPaperService = locator<QuestionPaperService>();
   SyllabusService _syllabusService = locator<SyllabusService>();
   AdmobService _admobService = locator<AdmobService>();
-  
-
   ValueNotifier<double> downloadProgress = new ValueNotifier(0);
-
-  //TODO
-  /// Merge the verified document upload to gdrive with the normal wala function
-  /// Merge Download and DownloadPurchased functions
-
-  /// Difference betweeen downloadFile and downloadPuchasedPdf seems to be that
-  /// in download file we are making sure it hasnt been downloaded before and
-  /// for purchased pdfs we are ensuring that its downloaded in the external directory
-  /// where its visible. Both should be clubbed into one.
-
-  downloadFile(
-      {@required Note note,
-      @required onDownloadedCallback,
-      @required startDownload,
-      loading}) async {
-    try {
-      int downloadedLength = 0;
-      downloadProgress.value = 0;
-      List<int> dataStore = [];
-
-      //>> If file exists, avoid downloading again
-      File localFile;
-      Directory tempDir = await getTemporaryDirectory();
-      String filePath = "${tempDir.path}/${note.subjectId}_${note.id}";
-      log.e(filePath);
-      bool doesFileExist = await _checkIfFileExists(filePath);
-      if (doesFileExist) {
-        onDownloadedCallback(filePath, note);
-        return;
-      }
-
-      startDownload();
-
-      //>> Google Drive Set Up
-      var drive = _initializeHttpClientAndGDriveAPI();
-      String fileID = note.GDriveID;
-
-      //>> Initialization for Download
-      ga.Media file = await drive.files
-          .get(fileID, downloadOptions: ga.DownloadOptions.fullMedia);
-
-      //*Figure out size from note.size property to show proper loading indicator
-      double contentLength =
-          double.parse(note.size == null ? '0.0' : note.size.split(" ")[0]);
-      contentLength = note.size == null
-          ? 0
-          : note.size.split(" ")[1] == 'KB'
-              ? contentLength * 1000
-              : contentLength * 1000000;
-
-      //>> Start the download
-      file.stream.listen((data) {
-        downloadedLength += data.length;
-        downloadProgress.value = ((downloadedLength / contentLength) * 100);
-        loading.value = downloadProgress.value;
-        print(downloadProgress.value);
-        dataStore.insertAll(dataStore.length, data);
-      }, onDone: () async {
-        localFile = File(filePath);
-        await localFile.writeAsBytes(dataStore);
-        _insertBookmarks(filePath, note);
-        Download downloadObject = Download(
-          id: note.id,
-          path: filePath,
-          author: note.author,
-          view: note.view,
-          size: note.size,
-          subjectName: note.subjectName,
-          title: note.title,
-          uploadDate: note.uploadDate,
-        );
-        //  note.id,
-        //   filePath,
-        //   note.title,
-        //   note.subjectName,
-        //   note.author,
-        //   note.view,
-        //   note.pages,
-        //   note.size,
-        //   note.uploadDate,
-        _downloadService.addDownload(download: downloadObject);
-        await Future.delayed(Duration(seconds: 1));
-        downloadProgress.value = 0;
-        onDownloadedCallback(localFile.path, note);
-      });
-    } catch (e) {
-      log.e(e.toString());
-    }
-  }
-
-  Future downloadPuchasedPdf(
-      {var note,
-      Function(String, String) onDownloadedCallback,
-      Function startDownload}) async {
-    try {
-
-      //>> Display ads based on downloads
-      await _admobService.showAd();
-      if (_admobService.shouldShowAd()) {
-        return;
-      }
-
-      //>> If file exists, avoid downloading again
-      String path = await ExternalPath.getExternalStoragePublicDirectory(
-        ExternalPath.DIRECTORY_DOWNLOADS)+ "/OUNotes/" + note.subjectName + "/" + note.type.replaceAll(' ', '') + "/";
-      log.e(path);
-      String fileName = "${note.subjectName}_${note.title}.pdf";
-      String filePath = path + fileName;
-      bool doesFileExist = await _checkIfFileExists(filePath);
-      if (doesFileExist) {
-        log.e("File Already Exists in Storage");
-        onDownloadedCallback(filePath, fileName);
-        return;
-      }
-
-      //>> Verify storage permission
-      PermissionStatus status = await Permission.storage.request();
-      log.e(status.isGranted);
-      int downloadedLength = 0;
-      downloadProgress.value = 0;
-      List<int> dataStore = [];
-
-      startDownload();
-
-      //> Google Drive Set Up
-      ga.DriveApi drive = await _initializeHttpClientAndGDriveAPI();
-
-      //>> Download file
-      String fileID = note.GDriveID;
-      ga.Media file = await drive.files
-          .get(fileID, downloadOptions: ga.DownloadOptions.fullMedia);
-      _createPath(path);
-
-      
-      log.e(filePath);
-      //*Figure out size from note.size property to show proper loading indicator
-      File localFile;
-      double contentLength;
-      if (note.size != null) {
-        contentLength = double.parse(note.size.split(" ")[0]);
-        contentLength = note.size?.split(" ")[1] == 'KB'
-            ? contentLength * 1000
-            : contentLength * 1000000;
-        log.e("Size in numbers : " + contentLength.toString());
-      } else {
-        contentLength = 0.0;
-      }
-
-      //*Start the download
-      file.stream.listen((data) {
-        downloadedLength += data.length;
-        downloadProgress.value = (downloadedLength / contentLength) * 100;
-        // log.e(downloadedLength);
-        // log.e(contentLength);
-        print("loading.. : " + downloadProgress.value.toString());
-        // if(downloadProgress.value < 1)
-        // EasyLoading.showProgress(downloadProgress.value, status: 'downloading...');
-        dataStore.insertAll(dataStore.length, data);
-        downloadProgress.notifyListeners();
-      }, onDone: () async {
-        // EasyLoading.dismiss();
-        localFile = File(filePath);
-        await localFile.writeAsBytes(dataStore);
-        note = note as AbstractDocument;
-        _createDownloadObject(note,localFile.path);
-        await Future.delayed(Duration(seconds: 1));
-        await onDownloadedCallback(localFile.path, fileName);
-        log.e("DOWNLOAD DONE");
-        downloadProgress.value = 0;
-      });
-    } catch (e) {
-      print("error");
-      log.e(e);
-    }
-  }
-
-//This function is used to upload verified documents that are in Firebase, to Google Drive
-  uploadFileToGoogleDriveAfterVerification(
-      File fileToUpload, Document docEnum, doc) async {
-    try {
-      ga.File gDriveFileToUpload;
-      ga.File response;
-      String subjectSubFolderID;
-      AbstractDocument note = doc;
-
-      //>> 1.4 Compress PDF
-      fileToUpload = await _compressPDF(fileToCompress: fileToUpload);
-
-      //>> 1.5 Upload to Google Drive
-      log.i("Uploading File to Google Drive");
-
-      try {
-        //>> 1.5.1 initialize http client and GDrive API
-        var drive = await _initializeHttpClientAndGDriveAPI();
-        subjectSubFolderID =
-            _getSubjectFolderID(subjectName: doc.subjectName, docEnum: docEnum);
-        gDriveFileToUpload = _setMetadataToGDriveFile(
-            gDriveFileToUpload, subjectSubFolderID, doc);
-
-        //>> 1.5.3 Commence Upload
-        log.e(fileToUpload);
-        response = await drive.files.create(
-          gDriveFileToUpload,
-          uploadMedia:
-              ga.Media(fileToUpload.openRead(), fileToUpload.lengthSync()),
-        );
-
-        ///>> 1.5.4 Create and Set Data to access the uploaded file
-        _setDataForUploadedFile(
-            response, subjectSubFolderID, docEnum, doc, note, fileToUpload);
-      } catch (e) {
-        return _errorHandling(
-            e, "While UPLOADING Notes to Google Drive , Error occurred uploadFileToGoogleDriveAfterVerification");
-      }
-
-      //>> Post-Upload Sanitization and finishing touches
-      // pdf.dispose();
-      fileToUpload.delete();
-      return "Upload Successful";
-    } catch (e) {
-      log.e(e);
-    }
-  }
 }
+
+
 
 class GoogleHttpClient extends IOClient {
   Map<String, String> _headers;
@@ -316,3 +91,4 @@ class GoogleHttpClient extends IOClient {
   Future<http.Response> head(Object url, {Map<String, String> headers}) =>
       super.head(url, headers: headers..addAll(_headers));
 }
+

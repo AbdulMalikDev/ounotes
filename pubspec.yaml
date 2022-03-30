@@ -44,6 +44,7 @@ dependencies:
   confetti: ^0.6.0-nullsafety
   feature_discovery: ^0.14.0
   flutter_colorpicker: ^0.6.0
+  # badges: ^2.0.2
 
   # Utility Packages [ packages to perform a simple task ]
   cuid: ^0.1.2

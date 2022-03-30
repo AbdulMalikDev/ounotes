@@ -23,11 +23,13 @@ import 'package:FSOUNotes/ui/shared/strings.dart';
 import 'package:cuid/cuid.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:hive/hive.dart';
 // import 'package:purchases_flutter/purchases_flutter.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'package:FSOUNotes/models/user.dart';
 import 'package:FSOUNotes/enums/bottom_sheet_type.dart';
+import 'package:FSOUNotes/enums/constants.dart' as enumConstant;
 
 class NotesTileViewModel extends BaseViewModel {
   final log = getLogger("BuildTileOfNotes");
@@ -275,11 +277,31 @@ class NotesTileViewModel extends BaseViewModel {
   }
 
   thankUser(Note note) async {
+
+    //Locally store to make sure double thanking (lol) is not possible
+    String boxName = enumConstant.Constants.thankUserBox;
+    if (!Hive.isBoxOpen(boxName)) {
+      await Hive.openBox(boxName);
+    }
+    Box box = Hive.box(boxName);
+    String key = "${note.subjectId}_${note.id}";
+    var result = box.get(key);
+    if(result != null){
+      Fluttertoast.showToast(
+        msg: "You have already thanked this user 😊!",
+        backgroundColor: Colors.teal,
+        );
+      return;
+    }
+    box.put(key,key);
+
+    //Create notification object and send
     String title = Strings.thank_user_notification_title;
     String body = Strings.thank_user_notification_message(note);
     String userId = note.uploader_id;
     String id = newCuid(); 
     local.Notification notification = local.Notification(id:id,heading:title,body:body,userId: userId);
     await _pushNotificationService.sendNotification(notification:notification);
+
   }
 }
