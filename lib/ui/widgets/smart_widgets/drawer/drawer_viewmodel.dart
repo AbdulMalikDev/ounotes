@@ -77,7 +77,7 @@ class DrawerViewModel extends BaseViewModel {
   navigateToUserUploadScreen(Document p1) {
     _navigationService.navigateTo(
       Routes.uploadSelectionView,
-      arguments: UploadSelectionViewArguments(path: p1),
+      arguments: UploadSelectionViewArguments(),
     );
   }
 

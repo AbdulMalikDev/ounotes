@@ -19,8 +19,8 @@ class UploadView extends StatefulWidget {
   final Document uploadType;
   UploadView({
     key,
-    @required this.subjectName,
-    this.uploadType,
+    this.subjectName = "",
+    this.uploadType = Document.Notes,
   }) : super(key: key);
 
   @override

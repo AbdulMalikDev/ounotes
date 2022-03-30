@@ -125,10 +125,12 @@ class UploadViewModel extends BaseViewModel {
   Future setUser() async {
     setBusy(true);
     SharedPreferences prefs = await _sharedPreferencesService.store();
+    if(prefs.containsKey("current_user_is_logged_in")){
     User user = User.fromData(
         json.decode(prefs.getString("current_user_is_logged_in")));
-
     _user = user;
+    }
+
     setBusy(false);
     notifyListeners();
   }
@@ -177,7 +179,7 @@ class UploadViewModel extends BaseViewModel {
     if (subjectName != null) {
       controllerOfSub.text = subjectName;
     }
-    await setUser();
+    // await setUser();
     notifyListeners();
   }
 
