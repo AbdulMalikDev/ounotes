@@ -11,6 +11,7 @@ import 'package:FSOUNotes/services/funtional_services/push_notification_service.
 import 'package:FSOUNotes/services/funtional_services/remote_config_service.dart';
 import 'package:FSOUNotes/services/funtional_services/sharedpref_service.dart';
 import 'package:FSOUNotes/services/state_services/subjects_service.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:logger/logger.dart';
 import 'package:package_info/package_info.dart';
 import 'package:stacked/stacked.dart';
@@ -51,7 +52,13 @@ class SplashViewModel extends FutureViewModel {
     //   log.e("user is null");
     //   _navigationService.replaceWith(Routes.introView);
     // }
-     _navigationService.replaceWith(Routes.uploadSelectionView);
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      _navigationService.navigateTo(
+        Routes.uploadView,
+        arguments: UploadViewArguments(),
+      );
+    });
+    //  _navigationService.navigateTo(Routes.introView);
   }
 
   _checkForUpdatedVersionAndShowDialog() async {

@@ -58,5 +58,5 @@ app.*.map.json
 functions/
 .firebaserc
 firebase.json
-/Web
-/Web/config.js
+/web
+

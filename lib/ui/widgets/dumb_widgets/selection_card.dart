@@ -71,6 +71,7 @@ class _SelectionCardState extends State<SelectionCard> {
                       elevation: 8,
                       items: widget.items,
                       onChanged: widget.onChanged,
+                      onTap: (){},
                       value: widget.value,
                       iconSize: 25,
                       icon: Icon(

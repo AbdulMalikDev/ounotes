@@ -567,7 +567,7 @@ class UploadViewArguments {
   final Document uploadType;
 
   UploadViewArguments({
-    @required this.subjectName,
+     this.subjectName,
     this.uploadType,
   });
 }

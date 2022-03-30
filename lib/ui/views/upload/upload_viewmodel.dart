@@ -172,6 +172,7 @@ class UploadViewModel extends BaseViewModel {
     print("inside initialise function : uploadViewModel");
     print(uploadType);
     _documentType = uploadType ?? Document.Notes;
+    print(_documentType);
     _textFieldsMap = Constants.getTextFieldMapFromEnum(_documentType);
     if (subjectName != null) {
       controllerOfSub.text = subjectName;
