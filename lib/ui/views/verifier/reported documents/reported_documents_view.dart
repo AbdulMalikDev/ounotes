@@ -2,7 +2,7 @@ import 'package:FSOUNotes/AppTheme/AppStateNotifier.dart';
 import 'package:FSOUNotes/misc/constants.dart';
 import 'package:FSOUNotes/models/report.dart';
 import 'package:FSOUNotes/ui/shared/app_config.dart';
-import 'package:FSOUNotes/ui/views/admin/AddEditSubject/textFormField.dart';
+import 'package:FSOUNotes/ui/widgets/dumb_widgets/textFormField.dart';
 import 'package:FSOUNotes/ui/views/verifier/reported%20documents/reported_documents_viewmodel.dart';
 import 'package:FSOUNotes/ui/widgets/dumb_widgets/progress.dart';
 import 'package:flutter/material.dart';

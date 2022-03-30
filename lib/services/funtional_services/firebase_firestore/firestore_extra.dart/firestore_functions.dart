@@ -31,6 +31,7 @@ extension FirestoreFunctions on FirestoreService{
       case Document.UploadLog:
       case Document.Drawer:
       case Document.Random:
+      case Document.GDRIVE:
         break;
     }
   }
@@ -54,6 +55,7 @@ extension FirestoreFunctions on FirestoreService{
       case Document.UploadLog:
       case Document.Drawer:
       case Document.Random:
+      case Document.GDRIVE:
         break;
     }
   }

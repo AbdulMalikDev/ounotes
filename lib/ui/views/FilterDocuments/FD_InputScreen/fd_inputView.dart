@@ -3,6 +3,8 @@ import 'package:FSOUNotes/enums/constants.dart';
 import 'package:FSOUNotes/enums/enums.dart';
 import 'package:FSOUNotes/ui/shared/app_config.dart';
 import 'package:FSOUNotes/ui/views/FilterDocuments/FD_InputScreen/fd_inputViewmodel.dart';
+import 'package:FSOUNotes/ui/widgets/dumb_widgets/document_type_card.dart';
+import 'package:FSOUNotes/ui/widgets/dumb_widgets/selection_card.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
@@ -108,87 +110,26 @@ class FDInputView extends StatelessWidget {
               SizedBox(
                 height: 20,
               ),
-              Center(
-                child: Container(
-                  height: App(context).appHeight(0.13),
-                  width: App(context).appWidth(1) - 40,
-                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                  margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                  decoration: AppStateNotifier.isDarkModeOn
-                      ? Constants.mdecoration.copyWith(
-                          color: Theme.of(context).colorScheme.background,
-                          boxShadow: [],
-                        )
-                      : Constants.mdecoration
-                          .copyWith(color: theme.scaffoldBackgroundColor),
-                  child: Column(
-                    children: <Widget>[
-                      Text(
-                        "Select Semester",
-                        style: Theme.of(context)
-                            .textTheme
-                            .headline6
-                            .copyWith(fontSize: 20),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Flexible(
-                        child: Container(
-                          child: DropdownButton(
-                            value: model.sem,
-                            items: model.dropdownofsem,
-                            onChanged: model.changedDropDownItemOfSemester,
-                            dropdownColor: theme.scaffoldBackgroundColor,
-                            style: theme.textTheme.subtitle1
-                                .copyWith(fontSize: 17),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: 20,
-              ),
               Container(
-                height: App(context).appHeight(0.13),
-                width: App(context).appHeight(1) - 40,
-                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                margin: EdgeInsets.symmetric(horizontal: 20, vertical: 0),
-                decoration: AppStateNotifier.isDarkModeOn
-                    ? Constants.mdecoration.copyWith(
-                        color: Theme.of(context).colorScheme.background,
-                        boxShadow: [],
-                      )
-                    : Constants.mdecoration
-                        .copyWith(color: theme.scaffoldBackgroundColor),
+                margin: EdgeInsets.symmetric(horizontal: 20),
                 child: Column(
-                  children: <Widget>[
-                    Text(
-                      "Select Branch",
-                      style: Theme.of(context)
-                          .textTheme
-                          .headline6
-                          .copyWith(fontSize: 20),
+                  children: [
+                    SelectionCard(
+                      isExpanded: true,
+                      title: "Select Branch",
+                      value: model.br,
+                      items: model.dropdownofbr,
+                      onChanged: model.changedDropDownItemOfBranch,
                     ),
                     SizedBox(
                       height: 10,
                     ),
-                    Flexible(
-                      child: Container(
-                        child: DropdownButton(
-                          focusColor: Colors.transparent,
-                          value: model.br,
-                          items: model.dropdownofbr,
-                          onChanged: model.changedDropDownItemOfBranch,
-                          style:
-                              theme.textTheme.subtitle1.copyWith(fontSize: 17),
-                          dropdownColor:
-                              Theme.of(context).scaffoldBackgroundColor,
-                        ),
-                      ),
+                    SelectionCard(
+                      isExpanded: true,
+                      title: "Select Semester",
+                      value: model.sem,
+                      items: model.dropdownofsem,
+                      onChanged: model.changedDropDownItemOfSemester,
                     ),
                   ],
                 ),
@@ -197,9 +138,9 @@ class FDInputView extends StatelessWidget {
                 height: App(context).appScreenHeightWithOutSafeArea(0.06),
               ),
               FractionallySizedBox(
-                widthFactor: 0.8,
+                widthFactor: 0.6,
                 child: Container(
-                  height: 55,
+                  height: App(context).appHeight(0.05),
                   child: ElevatedButton(
                     onPressed: () {
                       model.onSearchButtonPressed();
@@ -211,7 +152,7 @@ class FDInputView extends StatelessWidget {
                           .copyWith(color: Colors.white),
                       primary: Colors.teal,
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 25.0, vertical: 15),
+                          horizontal: 20.0, vertical: 5),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(30),
                       ),
@@ -221,78 +162,19 @@ class FDInputView extends StatelessWidget {
                       style: Theme.of(context)
                           .textTheme
                           .button
-                          .copyWith(color: Colors.white, fontSize: 18),
+                          .copyWith(color: Colors.white),
                     ),
                   ),
                 ),
               ),
               SizedBox(
-                height: 30,
+                height: App(context).appHeight(0.15),
               ),
             ],
           ),
         ),
       ),
       viewModelBuilder: () => FDInputViewModel(),
-    );
-  }
-}
-
-class DocumentTypeCard extends StatelessWidget {
-  final Widget icon;
-  final String title;
-  final bool isQuestionPaper;
-  final bool isSelected;
-  final Function onPressed;
-  const DocumentTypeCard(
-      {Key key,
-      this.icon,
-      this.title,
-      this.isQuestionPaper = false,
-      this.isSelected = false,
-      this.onPressed})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    var subtitle1 = Theme.of(context).textTheme.subtitle1.copyWith(
-          fontSize: isQuestionPaper ? 12 : 16,
-          color: (AppStateNotifier.isDarkModeOn || isSelected)
-              ? Colors.white
-              : Colors.black,
-        );
-    return GestureDetector(
-      onTap: onPressed,
-      child: Container(
-        padding: EdgeInsets.all(10),
-        margin: EdgeInsets.all(10),
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          color: isSelected
-              ? Theme.of(context).primaryColor
-              : Theme.of(context).colorScheme.background,
-        ),
-        width: App(context).appWidth(0.4),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            icon ?? Container(),
-            SizedBox(
-              width: 5,
-            ),
-            Flexible(
-              child: Text(
-                title,
-                style: subtitle1,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-          ],
-        ),
-      ),
     );
   }
 }

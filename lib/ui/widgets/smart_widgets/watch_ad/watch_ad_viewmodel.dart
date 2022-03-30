@@ -1,6 +1,5 @@
 import 'package:FSOUNotes/app/app.locator.dart';
 import 'package:FSOUNotes/app/app.logger.dart';
-import 'package:FSOUNotes/app/app.router.dart';
 import 'package:FSOUNotes/enums/bottom_sheet_type.dart';
 import 'package:FSOUNotes/services/funtional_services/admob_service.dart';
 import 'package:FSOUNotes/services/funtional_services/google_in_app_payment_service.dart';

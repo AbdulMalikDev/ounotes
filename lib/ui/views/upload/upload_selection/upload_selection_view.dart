@@ -1,169 +1,75 @@
 import 'package:FSOUNotes/AppTheme/AppStateNotifier.dart';
 import 'package:FSOUNotes/ui/shared/app_config.dart';
 import 'package:FSOUNotes/ui/views/upload/upload_selection/upload_selection_viewmodel.dart';
-import 'package:FSOUNotes/ui/widgets/dumb_widgets/SaveButtonView.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
 import '../../../../misc/constants.dart';
 
 class UploadSelectionView extends StatelessWidget {
-  final String subjectName;
-  bool isFromMainScreen = false;
-
-  UploadSelectionView(
-      {key, this.subjectName = "", this.isFromMainScreen = false})
-      : super(key: key);
+  UploadSelectionView({key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<UploadSelectionViewModel>.reactive(
-        onModelReady: (model) {
-          model.subjectName = subjectName;
-        },
         builder: (context, model, child) => Scaffold(
-              body: (isFromMainScreen ?? false)
-                  ? Container(
-                      child: GestureDetector(
-                        onTap: () => FocusScope.of(context).unfocus(),
-                        child: Stack(
-                          children: <Widget>[
-                            Container(
-                              height: double.infinity,
-                              width: double.infinity,
-                              color: Theme.of(context).scaffoldBackgroundColor,
-                            ),
-                            Container(
-                              alignment: Alignment.topCenter,
-                              height: double.infinity,
-                              child: SingleChildScrollView(
-                                physics: AlwaysScrollableScrollPhysics(),
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: 40.0,
-                                ),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: <Widget>[
-                                    SizedBox(
-                                      height: 30,
-                                    ),
-                                    Text("Select Upload Type",
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .headline6),
-                                    SizedBox(
-                                      height: 18,
-                                    ),
-                                    SaveButtonMainView(
-                                      onTap: model.navigateToNotes,
-                                      text: "NOTES",
-                                    ),
-                                    SaveButtonMainView(
-                                      onTap: model.navigateToQuestionPapers,
-                                      text: "QUESTION PAPERS",
-                                    ),
-                                    SaveButtonMainView(
-                                      onTap: model.navigateToSyllabus,
-                                      text: "SYLLABUS",
-                                    ),
-                                    SaveButtonMainView(
-                                      onTap: model.navigateToLinks,
-                                      text: "LINKS",
-                                    ),
-                                    // SaveButtonMainView(
-                                    //   onTap: model.navigateToGDRIVELinks,
-                                    //   text: "GDRIVE LINK",
-                                    // ),
-                                  ],
-                                ),
-                              ),
-                            )
-                          ],
-                        ),
+              body: Container(
+                child: GestureDetector(
+                  onTap: () => FocusScope.of(context).unfocus(),
+                  child: Stack(
+                    children: <Widget>[
+                      Container(
+                        height: double.infinity,
+                        width: double.infinity,
+                        color: Theme.of(context).scaffoldBackgroundColor,
                       ),
-                    )
-                  : Container(
-                      child: GestureDetector(
-                        onTap: () => FocusScope.of(context).unfocus(),
-                        child: Stack(
-                          children: <Widget>[
-                            Container(
-                              height: double.infinity,
-                              width: double.infinity,
-                              decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                  begin: Alignment.topCenter,
-                                  end: Alignment.bottomCenter,
-                                  colors: [
-                                    Color(0xFF73AEF5),
-                                    Color(0xFF61A4F1),
-                                    Color(0xFF478DE0),
-                                    Color(0xFF398AE5),
-                                  ],
-                                  stops: [0.1, 0.4, 0.7, 0.9],
-                                ),
+                      Container(
+                        alignment: Alignment.topCenter,
+                        height: double.infinity,
+                        child: SingleChildScrollView(
+                          physics: AlwaysScrollableScrollPhysics(),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 40.0,
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              SizedBox(
+                                height: 30,
                               ),
-                            ),
-                            Container(
-                              alignment: Alignment.center,
-                              height: double.infinity,
-                              child: SingleChildScrollView(
-                                physics: AlwaysScrollableScrollPhysics(),
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: 40.0,
-                                  vertical: 10.0,
-                                ),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: <Widget>[
-                                    SizedBox(height: 30),
-                                    Text(
-                                      "UPLOAD DOCUMENT",
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontFamily: 'OpenSans',
-                                        fontSize: 30.0,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    SizedBox(height: 30.0),
-                                    SaveButtonView(
-                                      onTap: model.navigateToNotes,
-                                      text: "NOTES",
-                                    ),
-                                    SizedBox(
-                                      height: 10,
-                                    ),
-                                    SaveButtonView(
-                                      onTap: model.navigateToQuestionPapers,
-                                      text: "QUESTION PAPERS",
-                                    ),
-                                    SizedBox(
-                                      height: 10,
-                                    ),
-                                    SaveButtonView(
-                                      onTap: model.navigateToSyllabus,
-                                      text: "SYLLABUS",
-                                    ),
-                                    SizedBox(
-                                      height: 10,
-                                    ),
-                                    SaveButtonView(
-                                      onTap: model.navigateToLinks,
-                                      text: "LINKS",
-                                    ),
-                                    // SaveButtonView(
-                                    //   onTap: model.navigateToGDRIVELinks,
-                                    //   text: "GDRIVE LINK",
-                                    // ),
-                                  ],
-                                ),
+                              Text("Select Upload Type",
+                                  style: Theme.of(context).textTheme.headline6),
+                              SizedBox(
+                                height: 18,
                               ),
-                            )
-                          ],
+                              SaveButtonMainView(
+                                onTap: model.navigateToNotes,
+                                text: "NOTES",
+                              ),
+                              SaveButtonMainView(
+                                onTap: model.navigateToQuestionPapers,
+                                text: "QUESTION PAPERS",
+                              ),
+                              SaveButtonMainView(
+                                onTap: model.navigateToSyllabus,
+                                text: "SYLLABUS",
+                              ),
+                              SaveButtonMainView(
+                                onTap: model.navigateToLinks,
+                                text: "LINKS",
+                              ),
+                              // SaveButtonMainView(
+                              //   onTap: model.navigateToGDRIVELinks,
+                              //   text: "GDRIVE LINK",
+                              // ),
+                            ],
+                          ),
                         ),
-                      ),
-                    ),
+                      )
+                    ],
+                  ),
+                ),
+              ),
             ),
         viewModelBuilder: () => UploadSelectionViewModel());
   }

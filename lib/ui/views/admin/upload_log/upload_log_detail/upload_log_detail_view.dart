@@ -2,7 +2,7 @@ import 'package:FSOUNotes/models/UploadLog.dart';
 import 'package:FSOUNotes/models/user.dart';
 import 'package:FSOUNotes/ui/shared/app_config.dart';
 import 'package:FSOUNotes/ui/shared/strings.dart';
-import 'package:FSOUNotes/ui/views/admin/AddEditSubject/textFormField.dart';
+import 'package:FSOUNotes/ui/widgets/dumb_widgets/textFormField.dart';
 import 'package:FSOUNotes/ui/views/admin/upload_log/upload_log_detail/upload_log_detail_viewmodel.dart';
 import 'package:FSOUNotes/ui/widgets/dumb_widgets/dumb_widgets.dart';
 import 'package:flutter/material.dart';

@@ -7,8 +7,7 @@ class BackIconAppBar extends StatelessWidget with PreferredSizeWidget {
   final bool showTitle;
   @override
   final Size preferredSize;
-  BackIconAppBar(
-      {Key key, this.title,this.showTitle})
+  BackIconAppBar({Key key, this.title, this.showTitle})
       : preferredSize = Size.fromHeight(60.0),
         super(key: key);
   @override
@@ -26,7 +25,9 @@ class BackIconAppBar extends StatelessWidget with PreferredSizeWidget {
         child: Container(
           height: 60,
           decoration: BoxDecoration(
-              color: Theme.of(context).scaffoldBackgroundColor, boxShadow: [defaultAppBarShadow]),
+            color: Theme.of(context).scaffoldBackgroundColor,
+            boxShadow: [defaultAppBarShadow],
+          ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,

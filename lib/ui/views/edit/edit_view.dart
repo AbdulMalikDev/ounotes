@@ -62,6 +62,7 @@ class _EditViewState extends State<EditView> {
 
   @override
   Widget build(BuildContext context) {
+    print("yo");
     return ViewModelBuilder<EditViewModel>.reactive(
       builder: (context, model, child) => Scaffold(
         body: model.isBusy

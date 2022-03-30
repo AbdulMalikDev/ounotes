@@ -1,7 +1,7 @@
 
 import 'dart:io';
-import 'dart:math' as math;
 import 'dart:ui' as ui;
+
 import 'package:FSOUNotes/app/app.logger.dart';
 import 'package:flutter/painting.dart';
 import 'package:logger/logger.dart';

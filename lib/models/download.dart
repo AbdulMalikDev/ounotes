@@ -1,9 +1,9 @@
 import 'package:FSOUNotes/enums/constants.dart';
-import 'package:FSOUNotes/models/document.dart';
 import 'package:FSOUNotes/models/notes.dart';
 import 'package:FSOUNotes/models/question_paper.dart';
 import 'package:FSOUNotes/models/syllabus.dart';
 import 'package:hive/hive.dart';
+
 part 'download.g.dart';
 
 @HiveType(typeId: 0)
