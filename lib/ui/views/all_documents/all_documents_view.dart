@@ -4,6 +4,7 @@ import 'package:FSOUNotes/ui/views/links/links_view.dart';
 import 'package:FSOUNotes/ui/views/notes/notes_view.dart';
 import 'package:FSOUNotes/ui/views/question_papers/question_papers_view.dart';
 import 'package:FSOUNotes/ui/views/syllabus/syllabus_view.dart';
+import 'package:FSOUNotes/ui/views/upload/upload_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_intro/flutter_intro.dart';
@@ -65,6 +66,7 @@ class _AllDocumentsViewState extends State<AllDocumentsView>
                   appBar: widget.path == "search"
                       ? null
                       : AppBar(
+                          backgroundColor: theme.primaryColor,
                           iconTheme: IconThemeData(color: Colors.white),
                           bottom: TabBar(
                             controller: _tabController,
@@ -149,7 +151,15 @@ class _AllDocumentsViewState extends State<AllDocumentsView>
                                   ),
                                 ),
                                 onPressed: () {
-                                  model.onUploadButtonPressed();
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => UploadView(
+                                        subjectName: widget.subjectName,
+                                      ),
+                                    ),
+                                  );
+                                  // model.onUploadButtonPressed();
                                 },
                               ),
                             ),

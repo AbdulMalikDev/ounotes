@@ -13,7 +13,7 @@ class AppTheme {
     ),
     scaffoldBackgroundColor: Colors.white,
     appBarTheme: AppBarTheme(
-      color: Color(0xff2A9D8F),
+      color: Colors.white,
       iconTheme: IconThemeData(
         color: Colors.black54,
       ),
@@ -65,7 +65,7 @@ class AppTheme {
             color: Color(0xff2A9D8F),
             fontFamily: 'Montserrat',
             fontWeight: FontWeight.w400,
-            fontSize: 15,
+            fontSize: 14,
           ),
           subtitle1: TextStyle(
             color: Colors.black,
@@ -144,7 +144,7 @@ class AppTheme {
             color: Colors.white,
             fontFamily: 'Montserrat',
             fontWeight: FontWeight.w400,
-            fontSize: 15,
+            fontSize: 14,
           ),
           subtitle1: TextStyle(
             color: Colors.white,

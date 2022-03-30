@@ -3,7 +3,7 @@ import 'package:FSOUNotes/misc/constants.dart';
 import 'package:FSOUNotes/models/UploadLog.dart';
 import 'package:FSOUNotes/models/user.dart';
 import 'package:FSOUNotes/ui/shared/app_config.dart';
-import 'package:FSOUNotes/ui/views/admin/AddEditSubject/textFormField.dart';
+import 'package:FSOUNotes/ui/widgets/dumb_widgets/textFormField.dart';
 import 'package:FSOUNotes/ui/views/verifier/verify%20documents/verify_documents_viewmodel.dart';
 import 'package:FSOUNotes/ui/widgets/dumb_widgets/progress.dart';
 import 'package:flutter/material.dart';

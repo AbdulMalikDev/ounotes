@@ -1,5 +1,6 @@
 import 'package:FSOUNotes/AppTheme/AppStateNotifier.dart';
 import 'package:FSOUNotes/misc/helper.dart';
+import 'package:FSOUNotes/ui/shared/app_config.dart';
 import 'package:FSOUNotes/ui/views/Main/main_screen_viewmodel.dart';
 import 'package:animated_theme_switcher/animated_theme_switcher.dart';
 import 'package:flutter/material.dart';
@@ -7,12 +8,13 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import 'package:rate_my_app/rate_my_app.dart';
 import 'package:stacked/stacked.dart';
 
-import '../../widgets/smart_widgets/default_app_bar/default_app_bar_view.dart';
+import '../../../enums/constants.dart';
 
 class MainScreenView extends StatefulWidget {
   final bool shouldShowUpdateDialog;
   final Map<String, dynamic> versionDetails;
-  const MainScreenView({Key key, this.shouldShowUpdateDialog, this.versionDetails})
+  const MainScreenView(
+      {Key key, this.shouldShowUpdateDialog, this.versionDetails})
       : super(key: key);
   @override
   _MainScreenViewState createState() => _MainScreenViewState();
@@ -42,9 +44,17 @@ class _MainScreenViewState extends State<MainScreenView> {
                   bottom: false,
                   child: Scaffold(
                       extendBody: true,
-                      // drawer: DrawerView(),
-                      appBar: DefaultAppBarView(
-                        showNotificationButton: model.currIdx == 0,
+                      appBar: AppBar(
+                        title: Center(
+                          child: Container(
+                            alignment: Alignment.center,
+                            margin: EdgeInsets.symmetric(vertical: 5),
+                            height: App(context).appHeight(0.05),
+                            child: Image.asset(
+                              Constants.appIcon,
+                            ),
+                          ),
+                        ),
                       ),
                       backgroundColor:
                           Theme.of(context).scaffoldBackgroundColor,
@@ -166,8 +176,9 @@ class _MainScreenViewState extends State<MainScreenView> {
                         // color: Theme.of(context).appBarTheme.backgroundColor,
                         child: BottomNavigationBar(
                           type: BottomNavigationBarType.fixed,
-                          backgroundColor:
-                              Theme.of(context).appBarTheme.backgroundColor,
+                          backgroundColor: AppStateNotifier.isDarkModeOn
+                              ? Theme.of(context).appBarTheme.backgroundColor
+                              : Theme.of(context).primaryColor,
                           iconSize: 32.0,
                           currentIndex: model.currIdx,
                           showSelectedLabels: true,

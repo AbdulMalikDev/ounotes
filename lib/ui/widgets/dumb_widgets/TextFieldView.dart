@@ -12,9 +12,15 @@ class TextFieldView extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Text(
-          heading,
-          style: Constants.kLabelStyle,
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 0),
+          child: Text(
+            heading,
+            style: Theme.of(context)
+                .textTheme
+                .headline5
+                .copyWith(fontSize: 18, fontWeight: FontWeight.w500),
+          ),
         ),
         SizedBox(height: 10.0),
         Card(

@@ -1,10 +1,9 @@
 import 'package:FSOUNotes/misc/constants.dart';
-import 'package:FSOUNotes/ui/views/Main/main_screen_view.dart';
 import 'package:FSOUNotes/ui/widgets/smart_widgets/thank_you_page/thank_you_viewmodel.dart';
+import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 import 'package:open_file/open_file.dart';
 import 'package:stacked/stacked.dart';
-import 'package:confetti/confetti.dart';
 
 class ThankYouView extends StatefulWidget {
   final String filePath;

@@ -240,6 +240,7 @@ class CloudStorageService {
       case Document.UploadLog:
       case Document.Drawer:
       case Document.Random:
+      case Document.GDRIVE:
         return null;
         break;
     }
