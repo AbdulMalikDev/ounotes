@@ -146,16 +146,17 @@ class UploadViewModel extends BaseViewModel {
   }
 
   List<String> getAllSubjectsList() {
-    List<String> userSub = _subjectsService.userSubjects.value
-        .map((sub) => sub.name)
-        .toList()
-        .cast<String>();
-    List<String> allSub = _subjectsService.allSubjects.value
-        .map((sub) => sub.name)
-        .toList()
-        .cast<String>();
-    List<String> subList = userSub + allSub;
-    subList = subList.toSet().toList().cast<String>();
+    // List<String> userSub = _subjectsService.userSubjects.value
+    //     .map((sub) => sub.name)
+    //     .toList()
+    //     .cast<String>();
+    // List<String> allSub = _subjectsService.allSubjects.value
+    //     .map((sub) => sub.name)
+    //     .toList()
+    //     .cast<String>();
+    // List<String> subList = userSub + allSub;
+    // subList = subList.toSet().toList().cast<String>();
+    List<String> subList = CourseInfo.aallsubjects.map((sub) => sub.name);
     return subList;
   }
 
@@ -177,7 +178,7 @@ class UploadViewModel extends BaseViewModel {
     if (subjectName != null) {
       controllerOfSub.text = subjectName;
     }
-    await setUser();
+    // await setUser();
     notifyListeners();
   }
 

@@ -19,7 +19,7 @@ class UploadView extends StatefulWidget {
   final Document uploadType;
   UploadView({
     key,
-    @required this.subjectName,
+    this.subjectName,
     this.uploadType,
   }) : super(key: key);
 
@@ -91,6 +91,7 @@ class _UploadViewState extends State<UploadView> {
               : Form(
                   key: this._formKey,
                   child: Container(
+                    margin:EdgeInsets.symmetric(horizontal:App(context).appHeight(0.2)),
                     child: SingleChildScrollView(
                       // physics: AlwaysScrollableScrollPhysics(),
                       child: Column(

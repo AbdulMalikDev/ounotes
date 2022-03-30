@@ -55,7 +55,9 @@ class SplashViewModel extends FutureViewModel {
     SchedulerBinding.instance.addPostFrameCallback((_) {
       _navigationService.navigateTo(
         Routes.uploadView,
-        arguments: UploadViewArguments(),
+        arguments: UploadViewArguments(
+          subjectName: "",
+        ),
       );
     });
     //  _navigationService.navigateTo(Routes.introView);
