@@ -27,6 +27,7 @@ extension GoogleDriveWrites on GoogleDriveService{
     bool isImage;
     String docPath;
     PdfDocument pdf;
+    List<PdfDocument> pdfs;
     String GDrive_URL;
     ga.File gDriveFileToUpload;
     ga.File response;
@@ -49,35 +50,39 @@ extension GoogleDriveWrites on GoogleDriveService{
     try {
 
       //>> 1.1 Select file, sanitize extension and create a PDF Object
-      String tempPath =
-          (await _localPath()) + "/${DateTime.now().millisecondsSinceEpoch}";
       //Not defining type since it could be List of files or just one file
-      List result =
+      List<File> files =
           await _filePickerService.selectFile(uploadFileType: uploadFileType);
-      final document = result[0];
-      if (document == null) return "File is null";
-      isImage = result[1];
-      log.e("isImage : " + isImage.toString());
-      docPath = isImage ? document[0].path : document.path;
-      log.e(docPath);
-      String mimeStr = lookupMimeType(docPath);
+      if (files == null || files.isEmpty){
+        Fluttertoast.showToast(msg: "FILES NOT SELECTED");
+        return;
+      }
+      final document = files[0];
+      log.e(files[0]);
+      log.e(files[0].path);
+      String mimeStr = lookupMimeType(files[0].path);
       log.e("MimeType : " + mimeStr);
       var fileType = mimeStr.split('/').last;
       bool isValidExtension = ['pdf', 'jpg', 'jpeg', 'png'].contains(fileType);
       if (!isValidExtension) {
         return 'file is not compatible. Please make sure you uploaded a PDF';
       } else if (['jpg', 'jpeg', 'png'].contains(fileType)) {
-        pdf = await _pdfService.convertImageToPdf(document, tempPath);
+        // pdf = await _pdfService.convertImageToPdf(document, tempPath);
+        Fluttertoast.showToast(msg: "IMAGES CONVERSION NOT AVAILABLE IN WEB");
+        return;
       } else {
+        files.forEach((file) { 
+          pdfs.add(PdfDocument(
+            inputBytes: file.readAsBytesSync(),
+          ));
+        });
         pdf = PdfDocument(
           inputBytes: document.readAsBytesSync(),
         );
       }
 
       //>> 1.2 Find size of file, make sure not more than 35 MB
-      int lengthOfDoc = isImage
-          ? await _getLengthOfImages(document)
-          : await document.length();
+      int lengthOfDoc = await document.length();
       log.e("lengthOfDoc : " + lengthOfDoc.toString());
       final String bytes = _formatBytes2(lengthOfDoc, 2);
       final String bytesuffix = _formatBytes2Suffix(lengthOfDoc, 2);
@@ -88,8 +93,7 @@ extension GoogleDriveWrites on GoogleDriveService{
 
       //>> 1.3 Verify intent of File Upload with user to make sure 
       //>>     they haven't uploaded the wrong file by mistake
-      File fileToUpload = isImage ? null : document;
-      if (fileToUpload == null) fileToUpload = File(tempPath);
+      File fileToUpload = document;
       final validDocument = await _navigationService.navigateTo(
         Routes.pDFScreen,
         arguments: PDFScreenArguments(
@@ -102,11 +106,13 @@ extension GoogleDriveWrites on GoogleDriveService{
 
       //>> 1.4 Compress PDF (only if it is notes)
       if(largerSizeThanAllowed){
-
+        
         if(docEnum != Document.Notes){
           Fluttertoast.showToast(msg:"File size too large!");
           return;
         }
+
+        log.e("Compressing file");
         String outputPath = await getOutputPath();
         await PdfCompressor.compressPdfFile(
             docPath, outputPath, CompressQuality.MEDIUM);
