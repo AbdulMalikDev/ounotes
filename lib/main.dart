@@ -49,11 +49,11 @@ void main() async {
     final appDir = await getApplicationDocumentsDirectory();
     Hive.init(appDir.path);
   }
-  // Hive.registerAdapter<Download>(DownloadAdapter());
-  // Hive.registerAdapter<RecentlyOpenedNotes>(RecentlyOpenedNotesAdapter());
-  // await Hive.openBox(Constants.ouNotes);
-  // await Hive.openBox<Download>(Constants.notesDownloads);
-  // await Hive.openBox<RecentlyOpenedNotes>(Constants.recentlyOpenedNotes);
+  Hive.registerAdapter<Download>(DownloadAdapter());
+  Hive.registerAdapter<RecentlyOpenedNotes>(RecentlyOpenedNotesAdapter());
+  await Hive.openBox(Constants.ouNotes);
+  await Hive.openBox<Download>(Constants.notesDownloads);
+  await Hive.openBox<RecentlyOpenedNotes>(Constants.recentlyOpenedNotes);
   //RemoteConfigService _remoteConfigService = locator<RemoteConfigService>();
   // CrashlyticsService _crashlyticsService = locator<CrashlyticsService>();
   // AdmobService _admobService = locator<AdmobService>();
