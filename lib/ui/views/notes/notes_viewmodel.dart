@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:FSOUNotes/app/app.locator.dart';
 import 'package:FSOUNotes/app/app.logger.dart';
-import 'package:badges/badges.dart';
+// import 'package:badges/badges.dart';
 import 'package:FSOUNotes/app/app.router.dart';
 import 'package:FSOUNotes/misc/helper.dart';
 import 'package:FSOUNotes/models/document.dart';
