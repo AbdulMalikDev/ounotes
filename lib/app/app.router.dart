@@ -5,6 +5,7 @@
 // **************************************************************************
 
 // ignore_for_file: public_member_api_docs
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
@@ -223,6 +224,7 @@ class StackedRouter extends RouterBase {
         builder: (context) => PDFScreen(
           pathPDF: args.pathPDF,
           doc: args.doc,
+          bytes: args.bytes,
           isUploadingDoc: args.isUploadingDoc,
         ),
         settings: data,
@@ -526,8 +528,9 @@ class AllDocumentsViewArguments {
 class PDFScreenArguments {
   final String pathPDF;
   final AbstractDocument doc;
+  final Uint8List bytes;
   final bool isUploadingDoc;
-  PDFScreenArguments({this.pathPDF, this.doc, this.isUploadingDoc});
+  PDFScreenArguments({this.pathPDF, this.doc, this.bytes, this.isUploadingDoc});
 }
 
 /// NotesView arguments holder class

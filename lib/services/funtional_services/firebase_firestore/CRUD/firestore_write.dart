@@ -25,7 +25,7 @@ extension FirestoreWrites on FirestoreService{
   Future saveNotes(AbstractDocument note) async {
     try {
       User user = await _sharedPreferencesService.getUser();
-      String id = newCuid();
+      String id = kIsWeb ? Uuid().v1() : newCuid();
       note.setId = id;
       note.setUploaderId = user.id;
       log.i("Document being saved");

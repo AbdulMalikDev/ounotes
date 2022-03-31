@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:FSOUNotes/app/app.locator.dart';
 import 'package:FSOUNotes/app/app.logger.dart';
 import 'package:FSOUNotes/app/app.router.dart';
@@ -9,6 +10,7 @@ import 'package:FSOUNotes/ui/widgets/dumb_widgets/pdf_view/pdf_error_dialog.dart
 import 'package:FSOUNotes/ui/widgets/dumb_widgets/pdf_view/pdf_search_toolbar_widget.dart';
 import 'package:FSOUNotes/ui/widgets/dumb_widgets/pdf_view/pdf_toolbar_widget.dart';
 import 'package:FSOUNotes/ui/views/pdf/Add_bookmarks/add_bookMarks_view.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
@@ -29,7 +31,8 @@ class PDFScreen extends StatefulWidget {
   final String pathPDF;
   final AbstractDocument doc;
   final bool isUploadingDoc;
-  PDFScreen({this.pathPDF, this.doc, this.isUploadingDoc = false});
+  final Uint8List bytes;
+  PDFScreen({this.pathPDF, this.doc, this.bytes, this.isUploadingDoc = false});
 
   @override
   _PDFScreenState createState() => _PDFScreenState();
@@ -183,7 +186,7 @@ class _PDFScreenState extends State<PDFScreen> {
               ),
               automaticallyImplyLeading: false,
               backgroundColor:
-                  SfPdfViewerTheme.of(context).bookmarkViewStyle.headerBarColor,
+                  SfPdfViewerTheme.of(context)?.bookmarkViewStyle?.headerBarColor??Colors.teal,
             ),
       body: FutureBuilder(
         future: Future.delayed(Duration(milliseconds: 200)).then((value) {
@@ -201,28 +204,10 @@ class _PDFScreenState extends State<PDFScreen> {
                   return true;
                 },
                 child: Stack(children: [
-                  SfPdfViewer.file(
-                    File(widget.pathPDF.trim()),
-                    enableTextSelection: false,
-                    key: _pdfViewerKey,
-                    controller: _pdfViewerController,
-                    onTextSelectionChanged:
-                        (PdfTextSelectionChangedDetails details) async {
-                      if (details.selectedText == null &&
-                          _overlayEntry != null) {
-                        _checkAndCloseContextMenu();
-                      } else if (details.selectedText != null &&
-                          _overlayEntry == null) {
-                        _showContextMenu(context, details);
-                      }
-                    },
-                    onDocumentLoadFailed:
-                        (PdfDocumentLoadFailedDetails details) {
-                      showErrorDialog(
-                          context, details.error, details.description);
-                    },
-                    canShowScrollHead: _showScrollHead,
-                  ),
+                  kIsWeb
+                  ?  _PdfViewerWeb()
+                  :  _PdfViewerMobile()
+                  ,
                   Visibility(
                     visible: _textSearchKey?.currentState?.showToast ?? false,
                     child: Align(
@@ -437,5 +422,55 @@ class _PDFScreenState extends State<PDFScreen> {
       _overlayEntry.remove();
       _overlayEntry = null;
     }
+  }
+
+  SfPdfViewer _PdfViewerMobile() {
+    return SfPdfViewer.file(
+                    File(widget.pathPDF.trim()),
+                    enableTextSelection: false,
+                    key: _pdfViewerKey,
+                    controller: _pdfViewerController,
+                    onTextSelectionChanged:
+                        (PdfTextSelectionChangedDetails details) async {
+                      if (details.selectedText == null &&
+                          _overlayEntry != null) {
+                        _checkAndCloseContextMenu();
+                      } else if (details.selectedText != null &&
+                          _overlayEntry == null) {
+                        _showContextMenu(context, details);
+                      }
+                    },
+                    onDocumentLoadFailed:
+                        (PdfDocumentLoadFailedDetails details) {
+                      showErrorDialog(
+                          context, details.error, details.description);
+                    },
+                    canShowScrollHead: _showScrollHead,
+                  );
+  }
+
+  SfPdfViewer _PdfViewerWeb() {
+    return SfPdfViewer.memory(
+                    widget.bytes,
+                    enableTextSelection: false,
+                    key: _pdfViewerKey,
+                    controller: _pdfViewerController,
+                    onTextSelectionChanged:
+                        (PdfTextSelectionChangedDetails details) async {
+                      if (details.selectedText == null &&
+                          _overlayEntry != null) {
+                        _checkAndCloseContextMenu();
+                      } else if (details.selectedText != null &&
+                          _overlayEntry == null) {
+                        _showContextMenu(context, details);
+                      }
+                    },
+                    onDocumentLoadFailed:
+                        (PdfDocumentLoadFailedDetails details) {
+                      showErrorDialog(
+                          context, details.error, details.description);
+                    },
+                    canShowScrollHead: _showScrollHead,
+                  );
   }
 }

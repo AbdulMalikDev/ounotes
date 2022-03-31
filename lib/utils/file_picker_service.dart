@@ -21,7 +21,7 @@ class FilePickerService{
 
         // File(result.files.single.path)
         
-        List<File> files = result.files.map((e) => File(e.path)).toList();
+        List<PlatformFile> files = result.files;
         files.forEach((element) {log.e(element);});
 
         return files;

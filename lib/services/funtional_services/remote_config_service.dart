@@ -1,17 +1,21 @@
 
 
+import 'package:FSOUNotes/app/app.logger.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
-
+import 'package:logger/logger.dart';
+Logger log = getLogger("RemoteConfigService");
 class RemoteConfigService{
 
-  RemoteConfig _remoteConfig;
+  FirebaseRemoteConfig _remoteConfig;
 
-  RemoteConfig get remoteConfig => _remoteConfig;
+  FirebaseRemoteConfig get remoteConfig => _remoteConfig;
 
   Future init() async {
     if (_remoteConfig == null)
     {
-      _remoteConfig = await RemoteConfig.instance;
+      log.e("loading remote config");
+      _remoteConfig = FirebaseRemoteConfig.instance;
+      // _remoteConfig = await RemoteConfig.instance;
       await _remoteConfig.setConfigSettings(RemoteConfigSettings(
         fetchTimeout: const Duration(seconds: 10),
         minimumFetchInterval: Duration.zero,
