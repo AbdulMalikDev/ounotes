@@ -17,7 +17,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:open_appstore/open_appstore.dart';
+import 'package:open_store/open_store.dart';
 import 'package:rate_my_app/rate_my_app.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
@@ -198,9 +198,10 @@ class HomeViewModel extends BaseViewModel {
                   if (stars < 3) {
                     dispatchEmail();
                   } else {
-                    OpenAppstore.launch(
-                        androidAppId: 'com.notes.ounotes',
-                        iOSAppId: 'com.notes.ounotes');
+                    OpenStore.instance.open(
+                        appStoreId: '', // AppStore id of your app
+                        androidAppBundleId: 'com.notes.ounotes', // Android app bundle package name
+                    );
                   }
                   // This allows to mimic the behavior of the default "Rate" button. See "Advanced > Broadcasting events" for more information :
                   await rateMyApp
@@ -334,8 +335,9 @@ class HomeViewModel extends BaseViewModel {
         if (response == null) return;
         //Confirm action
         if (response.confirmed) {
-          OpenAppstore.launch(
-              androidAppId: 'com.notes.ounotes', iOSAppId: 'com.notes.ounotes');
+          OpenStore.instance.open(
+                        appStoreId: '', // AppStore id of your app
+                        androidAppBundleId: 'com.notes.ounotes'); // Android app bundle package name
         }
       }
     });

@@ -8,7 +8,6 @@ import 'package:FSOUNotes/models/syllabus.dart';
 import 'package:FSOUNotes/services/funtional_services/authentication_service.dart';
 import 'package:FSOUNotes/ui/views/web_view/web_view_viewModel.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 import 'package:flutter_windowmanager/flutter_windowmanager.dart';
 import 'package:share/share.dart';
 import 'package:stacked/stacked.dart';
@@ -29,7 +28,7 @@ class WebViewWidget extends StatefulWidget {
 
 class _WebViewWidgetState extends State<WebViewWidget> {
   // Instance of WebView plugin
-  final flutterWebViewPlugin = FlutterWebviewPlugin();
+  final flutterWebViewPlugin = null;
 
   // On urlChanged stream
   StreamSubscription<String> _onUrlChanged;
@@ -97,8 +96,7 @@ class _WebViewWidgetState extends State<WebViewWidget> {
     return ViewModelBuilder.reactive(
         onModelReady: (model) => localModel = model,
         builder: (context, model, child) {
-          return new WebviewScaffold(
-            initialChild: Center(
+          return Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -115,42 +113,41 @@ class _WebViewWidgetState extends State<WebViewWidget> {
                   CircularProgressIndicator(),
                 ],
               ),
-            ),
-            hidden: true,
-            url: url ?? widget.url,
-            headers: {},
-            appBar: isLandscape
-                ? null
-                : new AppBar(
-                    iconTheme: IconThemeData(
-                      color: Colors.white, //change your color here
-                    ),
-                    title: new Text("Notes"),
-                    actions: [
-                      IconButton(
-                        icon: Icon(Icons.share),
-                        onPressed: () {
-                          final RenderBox box = context.findRenderObject();
-                          String share = "";
+            );
+            // hidden: true,
+            // url: url ?? widget.url,
+            // headers: {},
+            // appBar: isLandscape
+            //     ? null
+            //     : new AppBar(
+            //         iconTheme: IconThemeData(
+            //           color: Colors.white, //change your color here
+            //         ),
+            //         title: new Text("Notes"),
+            //         actions: [
+            //           IconButton(
+            //             icon: Icon(Icons.share),
+            //             onPressed: () {
+            //               final RenderBox box = context.findRenderObject();
+            //               String share = "";
 
-                          if (widget.note != null) {
-                            share =
-                                "Notes Name: $title\n\nSubject Name: $subjectName\n\nLink:$url\n\nFind Latest Notes | Question Papers | Syllabus | Resources for Osmania University at the OU NOTES App\n\nhttps://play.google.com/store/apps/details?id=com.notes.ounotes";
-                          } else if (widget.questionPaper != null) {
-                            share =
-                                "QuestionPaper year: $year\n\nSubject Name: $subjectName\n\nLink:$url\n\nFind Latest Notes | Question Papers | Syllabus | Resources for Osmania University at the OU NOTES App\n\nhttps://play.google.com/store/apps/details?id=com.notes.ounotes";
-                          } else if (widget.syllabus != null) {
-                            share =
-                                "Syllabus Branch: $br\n\nSubject Name: $subjectName\n\nLink:$url\n\nFind Latest Notes | Question Papers | Syllabus | Resources for Osmania University at the OU NOTES App\n\nhttps://play.google.com/store/apps/details?id=com.notes.ounotes";
-                          }
-                          Share.share(share,
-                              sharePositionOrigin:
-                                  box.localToGlobal(Offset.zero) & box.size);
-                        },
-                      )
-                    ],
-                  ),
-          );
+            //               if (widget.note != null) {
+            //                 share =
+            //                     "Notes Name: $title\n\nSubject Name: $subjectName\n\nLink:$url\n\nFind Latest Notes | Question Papers | Syllabus | Resources for Osmania University at the OU NOTES App\n\nhttps://play.google.com/store/apps/details?id=com.notes.ounotes";
+            //               } else if (widget.questionPaper != null) {
+            //                 share =
+            //                     "QuestionPaper year: $year\n\nSubject Name: $subjectName\n\nLink:$url\n\nFind Latest Notes | Question Papers | Syllabus | Resources for Osmania University at the OU NOTES App\n\nhttps://play.google.com/store/apps/details?id=com.notes.ounotes";
+            //               } else if (widget.syllabus != null) {
+            //                 share =
+            //                     "Syllabus Branch: $br\n\nSubject Name: $subjectName\n\nLink:$url\n\nFind Latest Notes | Question Papers | Syllabus | Resources for Osmania University at the OU NOTES App\n\nhttps://play.google.com/store/apps/details?id=com.notes.ounotes";
+            //               }
+            //               Share.share(share,
+            //                   sharePositionOrigin:
+            //                       box.localToGlobal(Offset.zero) & box.size);
+            //             },
+            //           )
+            //         ],
+            //       );
         },
         viewModelBuilder: () => WebViewModel());
   }

@@ -559,13 +559,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.7.3"
-  flutter_full_pdf_viewer:
-    dependency: "direct main"
-    description:
-      name: flutter_full_pdf_viewer
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.6"
   flutter_intro:
     dependency: "direct main"
     description:
@@ -688,13 +681,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  flutter_webview_plugin:
-    dependency: "direct main"
-    description:
-      name: flutter_webview_plugin
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.4.0"
   flutter_windowmanager:
     dependency: "direct main"
     description:
@@ -982,13 +968,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.3.0"
-  open_appstore:
-    dependency: "direct main"
-    description:
-      name: open_appstore
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.2"
   open_file:
     dependency: "direct main"
     description:
@@ -996,6 +975,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.2.1"
+  open_store:
+    dependency: "direct main"
+    description:
+      name: open_store
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.2.4"
   package_config:
     dependency: transitive
     description:

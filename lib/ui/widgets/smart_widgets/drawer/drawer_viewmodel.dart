@@ -24,7 +24,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'package:rate_my_app/rate_my_app.dart';
-import 'package:open_appstore/open_appstore.dart';
 
 Logger log = getLogger("DrawerViewModel");
 
