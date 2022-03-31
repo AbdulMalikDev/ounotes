@@ -7,6 +7,7 @@ import 'package:FSOUNotes/app/app.logger.dart';
 import 'package:FSOUNotes/app/app.router.dart';
 import 'package:FSOUNotes/enums/constants.dart';
 import 'package:FSOUNotes/enums/enums.dart';
+import 'package:FSOUNotes/models/pdfWeb.dart';
 import 'package:cuid/cuid.dart';
 import 'package:external_path/external_path.dart';
 import 'package:FSOUNotes/models/document.dart';
