@@ -18,6 +18,7 @@ class Note extends AbstractDocument {
   String size;
   String url;
   DateTime uploadDate;
+  DateTime lastViewed;
   String firebaseId;
   Map<String, int> bookmarks = {};
   Map<int, bool> units = {};
@@ -43,6 +44,7 @@ class Note extends AbstractDocument {
     this.view,
     this.url,
     this.uploadDate,
+    this.lastViewed,
     this.isDownloaded = false,
     @required this.path,
     this.votes,
@@ -65,6 +67,7 @@ class Note extends AbstractDocument {
           view: note.view,
           url: note.url,
           uploadDate: note.uploadDate,
+          lastViewed: note.lastViewed,
           isDownloaded: note.isDownloaded,
           path: note.path,
           GDriveID: note.GDriveID,
@@ -83,6 +86,7 @@ class Note extends AbstractDocument {
     view = data['view'];
     url = data['url'];
     uploadDate = _parseUploadDate(data["uploadDate"]);
+    lastViewed = _parseLastViewedDate(data["lastViewed"]);
     id = data['id']?.toString() ?? "";
     isDownloaded = data['isDownloaded'] ?? false;
     path = Enum.getDocumentFromString(data['path']) ?? Document.Notes;
@@ -110,6 +114,7 @@ class Note extends AbstractDocument {
       if (view != null) "view": view,
       if (url != null) "url": url,
       if (uploadDate != null) "uploadDate": uploadDate,
+      if (lastViewed != null) "uploadDate": lastViewed.toIso8601String(),
       if (id != null) "id": id,
       if (isDownloaded != null) "isDownloaded": isDownloaded ?? false,
       if (votes != null) "votes": votes,
@@ -187,5 +192,11 @@ class Note extends AbstractDocument {
   DateTime _parseUploadDate(date) {
     return DateTime.parse(
         date?.toDate()?.toString() ?? DateTime.now().toString());
+  }
+
+  _parseLastViewedDate(date){
+    if (date == null)return null;
+
+    return DateTime.parse(date);
   }
 }

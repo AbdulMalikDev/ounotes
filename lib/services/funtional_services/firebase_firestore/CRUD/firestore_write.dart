@@ -409,7 +409,10 @@ extension FirestoreWrites on FirestoreService{
       if (doc.id != null && doc.id.length > 5) {
         log.i("Document being increment view using ID");
         // if (doc.id.length > 5) {
-        ref.doc(doc.id).update({"view": FieldValue.increment(1)});
+        ref.doc(doc.id).update({
+          "view": FieldValue.increment(1),
+          "lastViewed": DateTime.now().toIso8601String(),
+        });
         //}
       }
       // else {
