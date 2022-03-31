@@ -217,19 +217,19 @@ extension GoogleDriveFunctions on GoogleDriveService{
   }
 
   Stream<List<int>> _convertToStream(Uint8List uint8List){
-    final sw1 = Stopwatch()..start();
-    final result1 = Stream.value(
-      List<int>.from(uint8List),
-    );
-    sw1.stop();
-    print('case1: ${sw1.elapsedMicroseconds} µs');
+    // final sw1 = Stopwatch()..start();
+    // final result1 = Stream.value(
+    //   List<int>.from(uint8List),
+    // );
+    // sw1.stop();
+    // print('case1: ${sw1.elapsedMicroseconds} µs');
 
-    final sw2 = Stopwatch()..start();
-    final result2 = Stream.value(
-      uint8List.map((e) => [e]),
-    );
-    sw2.stop();
-    print('case2: ${sw2.elapsedMicroseconds} µs');
+    // final sw2 = Stopwatch()..start();
+    // final result2 = Stream.value(
+    //   uint8List.map((e) => [e]),
+    // );
+    // sw2.stop();
+    // print('case2: ${sw2.elapsedMicroseconds} µs');
 
 
     final sw3 = Stopwatch()..start();
@@ -237,9 +237,9 @@ extension GoogleDriveFunctions on GoogleDriveService{
       uint8List.map((e) => [e]),
     );
     sw3.stop();
-    print('case3: ${sw2.elapsedMicroseconds} µs');
+    print('case3: ${sw3.elapsedMicroseconds} µs');
 
-    return result1;
+    return result3;
     
   }
 
