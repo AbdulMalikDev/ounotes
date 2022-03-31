@@ -128,6 +128,7 @@ extension GoogleDriveFunctions on GoogleDriveService{
     // Log values to console
     log.i("Values recieved to upload the file :");
     log.i("notesName : ${note.title}");
+    log.i("notesId : ${note.id}");
     log.i("Subject Name : ${note.subjectName}");
     log.i("Type : $type");
   }
@@ -213,6 +214,33 @@ extension GoogleDriveFunctions on GoogleDriveService{
       return false;
     }
     return doesExist;
+  }
+
+  Stream<List<int>> _convertToStream(Uint8List uint8List){
+    // final sw1 = Stopwatch()..start();
+    // final result1 = Stream.value(
+    //   List<int>.from(uint8List),
+    // );
+    // sw1.stop();
+    // print('case1: ${sw1.elapsedMicroseconds} µs');
+
+    // final sw2 = Stopwatch()..start();
+    // final result2 = Stream.value(
+    //   uint8List.map((e) => [e]),
+    // );
+    // sw2.stop();
+    // print('case2: ${sw2.elapsedMicroseconds} µs');
+
+
+    final sw3 = Stopwatch()..start();
+    final result3 = Stream.fromIterable(
+      uint8List.map((e) => [e]),
+    );
+    sw3.stop();
+    print('case3: ${sw3.elapsedMicroseconds} µs');
+
+    return result3;
+    
   }
 
   void _insertBookmarks(String filePath, Note note) {

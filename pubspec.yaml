@@ -45,19 +45,20 @@ dependencies:
   flutter_colorpicker: ^0.6.0
 
   # Utility Packages [ packages to perform a simple task ]
-  cuid: ^0.1.2
+  cuid: ^0.1.2 #Not supported on web, so damn stupid
+  uuid: ^3.0.6
   file_picker: ^3.0.3
-  flutter_full_pdf_viewer: ^1.0.6
+  # flutter_full_pdf_viewer: ^1.0.6
   flutter_dotenv: ^5.0.2
   flutter_mailer: ^2.0.0-null-safe
   flutter_secure_storage: ^5.0.2
   flutter_typeahead: ^3.1.1
-  flutter_webview_plugin: ^0.4.0
+  # flutter_webview_plugin: ^0.4.0
   image_picker: ^0.8.4+11
   intl: ^0.17.0
   logger: ^1.0.0
   url_launcher: ^6.0.3
-  open_appstore: ^1.0.2
+  open_store: ^0.2.4
   package_info: ^2.0.0
   path_provider: ^2.0.1
   permission_handler: ^9.2.0
@@ -85,13 +86,14 @@ dependencies:
   shared_preferences: ^2.0.5
   # purchases_flutter: ^2.0.0
   awesome_notifications: ^0.6.21
+  observable: ^0.24.0
 
   # firebase/google packages
   # firebase_admob: ^0.11.2
   firebase_analytics: ^8.2.0
   firebase_auth: ^3.0.1
   firebase_messaging: ^10.0.4
-  firebase_remote_config: ^0.10.0+3
+  firebase_remote_config: ^2.0.2
   firebase_storage: ^10.0.1
   cloud_firestore: ^2.4.0
   cloud_functions: ^3.0.0

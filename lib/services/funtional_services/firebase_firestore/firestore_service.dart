@@ -27,9 +27,11 @@ import 'package:FSOUNotes/services/state_services/syllabus_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cuid/cuid.dart';
 import 'package:FSOUNotes/ui/shared/strings.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:logger/logger.dart';
 import 'package:stacked_services/stacked_services.dart';
+import 'package:uuid/uuid.dart';
 
 // All top level Variables and Serivces needed are stored in this file
 // For specific functions explore the files below

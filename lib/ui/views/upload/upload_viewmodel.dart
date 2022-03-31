@@ -10,6 +10,7 @@ import 'package:FSOUNotes/misc/course_info.dart';
 import 'package:FSOUNotes/models/document.dart';
 import 'package:FSOUNotes/models/link.dart';
 import 'package:FSOUNotes/models/notes.dart';
+import 'package:FSOUNotes/models/pdfWeb.dart';
 import 'package:FSOUNotes/models/question_paper.dart';
 import 'package:FSOUNotes/models/subject.dart';
 import 'package:FSOUNotes/models/syllabus.dart';
@@ -241,63 +242,66 @@ class UploadViewModel extends BaseViewModel {
     if (doc.path == Document.Links) {
       _processLink(doc);
       setBusy(false);
-    } else {
-      if (!isUserUploadingSharedFile)
-        response = await _showDocTypeSelectionSheet();
-      log.e(response);
-
-      if (!isUserUploadingSharedFile && response == null) {
-        log.e("No response from upload sheet");
-        setBusy(false);
-        return;
-      }
-
-      String fileType = (response?.confirmed ?? true)
-          ? enumConst.Constants.pdf
-          : enumConst.Constants.png;
-      // var result = await _cloudStorageService.uploadFile(note: doc, type: doc.type, uploadFileType: fileType);
-      var result = await _googleDriveService.processFile(
-          doc: doc,
-          docEnum: doc.path,
-          note: doc,
-          type: doc.type,
-          uploadFileType: fileType);
-      log.w(result);
-
-      //* Handle upload result
-      switch (result) {
-        case "BLOCKED":
-          await _showBannedDialog();
-          setBusy(false);
-          // return;
-          break;
-        case "File size more than 35mb":
-          _showFileSizeExceededDialog(context);
-          setBusy(false);
-          // return;
-          break;
-        case "error":
-          setBusy(false);
-          Fluttertoast.showToast(
-              msg: "An error occurred...please try again later");
-          break;
-        case "file is not pdf":
-          await _showFileIsNotPdfDialog(context);
-          setBusy(false);
-          break;
-        case "Upload Successful":
-          setBusy(false);
-          _navigationService.navigateTo(Routes.thankYouForUploadingView);
-          break;
-        case "Invalid document":
-          setBusy(false);
-          break;
-        default:
-          setBusy(false);
-          // return;
-          break;
-      }
+      return;
     }
+      
+    String fileType = enumConst.Constants.pdf;
+
+    //TODO WAJID
+    //! WAJID this is where user will pick documents from PC
+    List<PdfWeb> files = await _documentService.pickDocumentsOnWeb();
+
+    files.forEach((element) {
+        log.e(element.name);
+    });
+
+    //! This function should NOT be called when uploading
+    // var result = await _googleDriveService.processFile(
+    //     abstractDoc: doc,
+    //     uploadFileType: fileType
+    // );
+    //! Instead call 
+    //! _documentService.uploadAllDocumentsOnWeb(files);
+    //! Where files is --> Map<AbstractDocument,PdfWeb> files
+    //! I have handled upload logic in that function
+
+    var result = "";
+    log.w(result);
+
+    //* Handle upload result
+    switch (result) {
+      case "BLOCKED":
+        await _showBannedDialog();
+        setBusy(false);
+        // return;
+        break;
+      case "File size more than 35mb":
+        _showFileSizeExceededDialog(context);
+        setBusy(false);
+        // return;
+        break;
+      case "error":
+        setBusy(false);
+        Fluttertoast.showToast(
+            msg: "An error occurred...please try again later");
+        break;
+      case "file is not pdf":
+        await _showFileIsNotPdfDialog(context);
+        setBusy(false);
+        break;
+      case "Upload Successful":
+        setBusy(false);
+        _navigationService.navigateTo(Routes.thankYouForUploadingView);
+        break;
+      case "Invalid document":
+        setBusy(false);
+        break;
+      default:
+        setBusy(false);
+        // return;
+        break;
+    }
+    
   }
 
   launchURL(String url) async {

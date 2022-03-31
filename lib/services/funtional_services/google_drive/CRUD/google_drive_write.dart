@@ -15,10 +15,8 @@ extension GoogleDriveWrites on GoogleDriveService{
   ///   - "Upload Successful";
   ///
   processFile({
-    @required dynamic doc,
-    @required Document docEnum,
-    @required AbstractDocument note,
-    String type,
+    @required AbstractDocument abstractDoc,
+    @required PdfWeb pdfDocument,
     String uploadFileType = Constants.pdf,
   }) async {
     log.v("Uploading file to Google Drive");
@@ -27,10 +25,12 @@ extension GoogleDriveWrites on GoogleDriveService{
     bool isImage;
     String docPath;
     PdfDocument pdf;
-    String GDrive_URL;
-    ga.File gDriveFileToUpload;
     ga.File response;
-    if (type == null) type = note.type;
+    String GDrive_URL;
+    List<PdfDocument> pdfs;
+    ga.File gDriveFileToUpload;
+    String type = abstractDoc.type;
+    Document docEnum = abstractDoc.path;
 
     /// TODO
     /// handle return of string
@@ -43,41 +43,14 @@ extension GoogleDriveWrites on GoogleDriveService{
     if (!result1 || !result2) {
       return "BLOCKED";
     }
-    _logValuesToConsole(note, type);
+    _logValuesToConsole(abstractDoc, type);
 
     //>> 1. Initiate Upload Logic
     try {
 
-      //>> 1.1 Select file, sanitize extension and create a PDF Object
-      String tempPath =
-          (await _localPath()) + "/${DateTime.now().millisecondsSinceEpoch}";
-      //Not defining type since it could be List of files or just one file
-      List result =
-          await _filePickerService.selectFile(uploadFileType: uploadFileType);
-      final document = result[0];
-      if (document == null) return "File is null";
-      isImage = result[1];
-      log.e("isImage : " + isImage.toString());
-      docPath = isImage ? document[0].path : document.path;
-      log.e(docPath);
-      String mimeStr = lookupMimeType(docPath);
-      log.e("MimeType : " + mimeStr);
-      var fileType = mimeStr.split('/').last;
-      bool isValidExtension = ['pdf', 'jpg', 'jpeg', 'png'].contains(fileType);
-      if (!isValidExtension) {
-        return 'file is not compatible. Please make sure you uploaded a PDF';
-      } else if (['jpg', 'jpeg', 'png'].contains(fileType)) {
-        pdf = await _pdfService.convertImageToPdf(document, tempPath);
-      } else {
-        pdf = PdfDocument(
-          inputBytes: document.readAsBytesSync(),
-        );
-      }
-
+      log.e("Checkpoint");
       //>> 1.2 Find size of file, make sure not more than 35 MB
-      int lengthOfDoc = isImage
-          ? await _getLengthOfImages(document)
-          : await document.length();
+      int lengthOfDoc = await pdfDocument.bytes.length;
       log.e("lengthOfDoc : " + lengthOfDoc.toString());
       final String bytes = _formatBytes2(lengthOfDoc, 2);
       final String bytesuffix = _formatBytes2Suffix(lengthOfDoc, 2);
@@ -85,77 +58,67 @@ extension GoogleDriveWrites on GoogleDriveService{
       log.i("size of file" + bytes);
       var suffix = ["MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
       bool largerSizeThanAllowed = double.parse(bytes) > 35 && suffix.contains(bytesuffix);
-
-      //>> 1.3 Verify intent of File Upload with user to make sure 
-      //>>     they haven't uploaded the wrong file by mistake
-      File fileToUpload = isImage ? null : document;
-      if (fileToUpload == null) fileToUpload = File(tempPath);
-      final validDocument = await _navigationService.navigateTo(
-        Routes.pDFScreen,
-        arguments: PDFScreenArguments(
-            doc: note, pathPDF: fileToUpload.path, isUploadingDoc: true),
-      );
-      log.i(validDocument);
-      if (!validDocument) {
-        return "Invalid document";
-      }
+      log.e("Checkpoint");
 
       //>> 1.4 Compress PDF (only if it is notes)
-      if(largerSizeThanAllowed){
-
-        if(docEnum != Document.Notes){
-          Fluttertoast.showToast(msg:"File size too large!");
-          return;
-        }
-        String outputPath = await getOutputPath();
-        await PdfCompressor.compressPdfFile(
-            docPath, outputPath, CompressQuality.MEDIUM);
-        fileToUpload = File(outputPath);
-        Fluttertoast.showToast(msg: "File Size too large! compressing document... This may decrease quality.",toastLength: Toast.LENGTH_LONG);
-        
-      }
+      //* not implemented on web
 
       //>> 1.5 Upload to Google Drive
       log.i("Uploading File to Google Drive");
-      log.i(doc);
-      log.i(document);
+      log.i(abstractDoc);
+      log.i(pdfDocument);
 
       try {
         //>> 1.5.1 initialize http client and GDrive API
+        log.e("Checkpoint");
         final accountCredentials = new ServiceAccountCredentials.fromJson(
             _remote.remoteConfig.getString("GDRIVE"));
         final scopes = ['https://www.googleapis.com/auth/drive'];
         AutoRefreshingAuthClient gdriveAuthClient =
             await clientViaServiceAccount(accountCredentials, scopes);
         var drive = ga.DriveApi(gdriveAuthClient);
-        Subject subject = _subjectsService.getSubjectByName(doc.subjectName);
+        Subject subject = _subjectsService.getSubjectByName(abstractDoc.subjectName);
         String subjectSubFolderID = _getFolderIDForType(subject, docEnum);
         if (subject == null) {
           log.e("Subject is Null");
           return;
         }
+        log.e("Checkpoint");
 
         //>> 1.5.2 Set metadata for the GDrive File
-        gDriveFileToUpload = ga.File();
-        gDriveFileToUpload.parents = [subjectSubFolderID];
-        gDriveFileToUpload.name = doc.title;
-        gDriveFileToUpload.copyRequiresWriterPermission = true;
+        log.e("Checkpoint");
+        try {
+          gDriveFileToUpload = ga.File();
+          gDriveFileToUpload.parents = [subjectSubFolderID];
+          gDriveFileToUpload.name = abstractDoc.title;
+          gDriveFileToUpload.copyRequiresWriterPermission = true;
+          
+        } catch (e) {
+          log.e(e.toString());
+          log.e("error here");
+          return;
+        }
 
         //>> 1.5.3 Commence Upload
-        log.e(fileToUpload);
+        // log.e(fileToUpload);
+        log.e("Checkpoint");
+        log.e(pdfDocument);
+        // log.e(document.readStream);
+        Stream<List<int>> filestream = _convertToStream(pdfDocument.bytes);
         response = await drive.files.create(
           gDriveFileToUpload,
           uploadMedia:
-              ga.Media(fileToUpload.openRead(), fileToUpload.lengthSync()),
+              ga.Media(filestream, pdfDocument.bytes.length),
         );
 
         ///>> 1.5.4 Create and Set Data to access the uploaded file
         GDrive_URL =
             "https://drive.google.com/file/d/${response.id}/view?usp=sharing";
         log.w("GDrive Link : " + GDrive_URL);
-        doc = _setLinkToDocument(
-            doc, GDrive_URL, response.id, subjectSubFolderID, docEnum);
-        log.w(doc.toJson());
+        abstractDoc = _setLinkToDocument(
+            abstractDoc, GDrive_URL, response.id, subjectSubFolderID, docEnum);
+        log.w(abstractDoc.toJson());
+        log.e("Checkpoint");
 
       } catch (e) {
         return _errorHandling(
@@ -163,18 +126,21 @@ extension GoogleDriveWrites on GoogleDriveService{
       }
 
       //>> 1.6 Set Metadata of the file to store in Database
-      String fileName = assignFileName(note);
-      note.setTitle = fileName;
-      note.setUrl = GDrive_URL;
-      note.setSize = _formatBytes(fileToUpload.lengthSync(), 2);
-      note.setDate = DateTime.now();
-      note.setPages = pdf.pages.count;
-      log.e(note.toJson());
+      log.e("Checkpoint");
+      String fileName = assignFileName(abstractDoc);
+      abstractDoc.setTitle = fileName;
+      abstractDoc.setUrl = GDrive_URL;
+      abstractDoc.setSize = _formatBytes(pdfDocument.bytes.length, 2);
+      abstractDoc.setDate = DateTime.now();
+      abstractDoc.setPages = pdf.pages.count;
+      log.e(abstractDoc.toJson());
+      log.e("Checkpoint");
 
       //>> Post-Upload Sanitization and finishing touches
       pdf.dispose();
-      fileToUpload.delete();
-      _firestoreService.saveNotes(note);
+      // fileToUpload.delete();
+      _firestoreService.saveNotes(abstractDoc);
+      log.e("UPLOAD SUCCESSFUL");
       return "Upload Successful";
 
     } catch (e) {
@@ -250,3 +216,202 @@ extension GoogleDriveWrites on GoogleDriveService{
   }
 
 }
+
+// legacy code 31 March 2022
+// processFile({
+//     @required AbstractDocument abstractDoc,
+//     String uploadFileType = Constants.pdf,
+//   }) async {
+//     log.v("Uploading file to Google Drive");
+
+//     //Variables
+//     bool isImage;
+//     String docPath;
+//     PdfDocument pdf;
+//     ga.File response;
+//     String GDrive_URL;
+//     List<PdfDocument> pdfs;
+//     ga.File gDriveFileToUpload;
+//     String type = abstractDoc.type;
+//     Document docEnum = abstractDoc.path;
+
+//     /// TODO
+//     /// handle return of string
+
+//     //>> Pre-Upload Check
+//     bool result1 = await _firestoreService.areUsersAllowed();
+//     bool result2 = await _firestoreService
+//         .refreshUser()
+//         .then((user) => user.isUserAllowedToUpload);
+//     if (!result1 || !result2) {
+//       return "BLOCKED";
+//     }
+//     _logValuesToConsole(abstractDoc, type);
+
+//     //>> 1. Initiate Upload Logic
+//     try {
+
+//       //>> 1.1 Select file, sanitize extension and create a PDF Object
+//       //Not defining type since it could be List of files or just one file
+//       List<PlatformFile> files =
+//           await _filePickerService.selectFile(uploadFileType: uploadFileType);
+//       if (files == null || files.isEmpty){
+//         Fluttertoast.showToast(msg: "FILES NOT SELECTED");
+//         return;
+//       }
+//       PlatformFile document = files[0];
+//       log.e("Checkpoint");
+//       // String mimeStr = lookupMimeType(files[0].path);
+//       // log.e("MimeType : " + mimeStr);
+//       // var fileType = mimeStr.split('/').last;
+//       //! Since only PDF file allowed in web
+//       var fileType = 'pdf';
+//       log.e("Checkpoint");
+//       bool isValidExtension = ['pdf', 'jpg', 'jpeg', 'png'].contains(fileType);
+//       if (!isValidExtension) {
+//         return 'file is not compatible. Please make sure you uploaded a PDF';
+//       } else if (['jpg', 'jpeg', 'png'].contains(fileType)) {
+//         // pdf = await _pdfService.convertImageToPdf(document, tempPath);
+//         Fluttertoast.showToast(msg: "IMAGES CONVERSION NOT AVAILABLE IN WEB");
+//         return;
+//       } else {
+//       log.e("Checkpoint");
+//         try{
+//           // log.e(document.bytes);
+//           // log.e(List<int>.from(document.bytes));
+//           pdf = PdfDocument(
+//             inputBytes: List<int>.from(document.bytes),
+//           );
+
+//         }catch(e){log.e(e.toString());}
+
+//       }
+
+//       log.e("Checkpoint");
+//       //>> 1.2 Find size of file, make sure not more than 35 MB
+//       int lengthOfDoc = await document.bytes.lengthInBytes;
+//       log.e("lengthOfDoc : " + lengthOfDoc.toString());
+//       final String bytes = _formatBytes2(lengthOfDoc, 2);
+//       final String bytesuffix = _formatBytes2Suffix(lengthOfDoc, 2);
+//       log.i("suffix of size" + bytesuffix);
+//       log.i("size of file" + bytes);
+//       var suffix = ["MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
+//       bool largerSizeThanAllowed = double.parse(bytes) > 35 && suffix.contains(bytesuffix);
+//       log.e("Checkpoint");
+
+//       //>> 1.3 Verify intent of File Upload with user to make sure 
+//       //>>     they haven't uploaded the wrong file by mistake
+//       PlatformFile fileToUpload = document;
+//       final validDocument = await _navigationService.navigateTo(
+//         Routes.pDFScreen,
+//         arguments: PDFScreenArguments(
+//             doc: abstractDoc, bytes:document.bytes , isUploadingDoc: true),
+//       );
+//       log.i(validDocument);
+//       if (!validDocument) {
+//         return "Invalid document";
+//       }
+
+//       //>> 1.4 Compress PDF (only if it is notes)
+//       if(largerSizeThanAllowed){
+        
+//         if(docEnum != Document.Notes){
+//           Fluttertoast.showToast(msg:"File size too large!");
+//           return;
+//         }
+
+//         log.e("Compressing file");
+//         // String outputPath = await getOutputPath();
+//         // await PdfCompressor.compressPdfFile(
+//         //     docPath, outputPath, CompressQuality.MEDIUM);
+//         fileToUpload = document;
+//         await Fluttertoast.showToast(msg: "File Size too large! compressing document... This may decrease quality.",toastLength: Toast.LENGTH_LONG);
+//         Fluttertoast.showToast(msg: "Cannot compress in web",toastLength: Toast.LENGTH_LONG);
+        
+//       }
+
+//       //>> 1.5 Upload to Google Drive
+//       log.i("Uploading File to Google Drive");
+//       log.i(abstractDoc);
+//       log.i(document);
+
+//       try {
+//         //>> 1.5.1 initialize http client and GDrive API
+//         log.e("Checkpoint");
+//         final accountCredentials = new ServiceAccountCredentials.fromJson(
+//             _remote.remoteConfig.getString("GDRIVE"));
+//         final scopes = ['https://www.googleapis.com/auth/drive'];
+//         AutoRefreshingAuthClient gdriveAuthClient =
+//             await clientViaServiceAccount(accountCredentials, scopes);
+//         var drive = ga.DriveApi(gdriveAuthClient);
+//         Subject subject = _subjectsService.getSubjectByName(abstractDoc.subjectName);
+//         String subjectSubFolderID = _getFolderIDForType(subject, docEnum);
+//         if (subject == null) {
+//           log.e("Subject is Null");
+//           return;
+//         }
+//         log.e("Checkpoint");
+
+//         //>> 1.5.2 Set metadata for the GDrive File
+//         log.e("Checkpoint");
+//         try {
+//           gDriveFileToUpload = ga.File();
+//           gDriveFileToUpload.parents = [subjectSubFolderID];
+//           gDriveFileToUpload.name = abstractDoc.title;
+//           gDriveFileToUpload.copyRequiresWriterPermission = true;
+          
+//         } catch (e) {
+//           log.e(e.toString());
+//           log.e("error here");
+//           return;
+//         }
+
+//         //>> 1.5.3 Commence Upload
+//         // log.e(fileToUpload);
+//         log.e("Checkpoint");
+//         log.e(document);
+//         // log.e(document.readStream);
+//         Stream<List<int>> filestream = _convertToStream(document.bytes);
+//         response = await drive.files.create(
+//           gDriveFileToUpload,
+//           uploadMedia:
+//               ga.Media(filestream, document.bytes.lengthInBytes),
+//         );
+
+//         ///>> 1.5.4 Create and Set Data to access the uploaded file
+//         GDrive_URL =
+//             "https://drive.google.com/file/d/${response.id}/view?usp=sharing";
+//         log.w("GDrive Link : " + GDrive_URL);
+//         abstractDoc = _setLinkToDocument(
+//             abstractDoc, GDrive_URL, response.id, subjectSubFolderID, docEnum);
+//         log.w(abstractDoc.toJson());
+//         log.e("Checkpoint");
+
+//       } catch (e) {
+//         return _errorHandling(
+//             e, "While UPLOADING Notes to Google Drive , Error occurred");
+//       }
+
+//       //>> 1.6 Set Metadata of the file to store in Database
+//       log.e("Checkpoint");
+//       String fileName = assignFileName(abstractDoc);
+//       abstractDoc.setTitle = fileName;
+//       abstractDoc.setUrl = GDrive_URL;
+//       abstractDoc.setSize = _formatBytes(fileToUpload.bytes.lengthInBytes, 2);
+//       abstractDoc.setDate = DateTime.now();
+//       abstractDoc.setPages = pdf.pages.count;
+//       log.e(abstractDoc.toJson());
+//       log.e("Checkpoint");
+
+//       //>> Post-Upload Sanitization and finishing touches
+//       pdf.dispose();
+//       // fileToUpload.delete();
+//       _firestoreService.saveNotes(abstractDoc);
+//       log.e("UPLOAD SUCCESSFUL");
+//       return "Upload Successful";
+
+//     } catch (e) {
+//       return _errorHandling(
+//           e, "While UPLOADING Notes to Google Drive , Error occurred (outer)");
+//     }
+//   }

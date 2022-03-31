@@ -80,44 +80,44 @@ class IntroViewModel extends BaseViewModel {
   }
 
   handleSignUp() async {
-    SchedulerBinding.instance.addPostFrameCallback((_) {
-      _navigationService.replaceWith(Routes.uploadView);
-    });
+    // SchedulerBinding.instance.addPostFrameCallback((_) {
+    //   _navigationService.replaceWith(Routes.uploadView);
+    // });
 
-    return;
-    bool result = await _authenticationService.handleSignIn(
-      college: _selectedCollege ?? "",
-      branch: _selectedBranch ?? "",
-      semeseter: _selectedSemester ?? "",
-    );
-    notifyListeners();
-    setBusy(false);
-    if (result) {
-    } else {
-      Fluttertoast.showToast(msg: "An Error Occured,Please try again later");
-    }
-    // DialogResponse dialogResult = await _dialogService.showConfirmationDialog(
-    //   title: "Are You Sure?",
-    //   description:
-    //       "Semester,Branch and College Name will be used to personalise this app",
-    //   cancelTitle: "GO BACK",
-    //   confirmationTitle: "PROCEED",
+    // return;
+    // bool result = await _authenticationService.handleSignIn(
+    //   college: _selectedCollege ?? "",
+    //   branch: _selectedBranch ?? "",
+    //   semeseter: _selectedSemester ?? "",
     // );
-
-    // if (dialogResult.confirmed) {
-    //   setBusy(true);
-    //   bool result = await _authenticationService.handleSignIn(
-    //     college: _selectedCollege ?? "",
-    //     branch: _selectedBranch ?? "",
-    //     semeseter: _selectedSemester ?? "",
-    //   );
-    //   notifyListeners();
-    //   setBusy(false);
-    //   if (result) {
-    //     _navigationService.replaceWith(Routes.splashView);
-    //   } else {
-    //     Fluttertoast.showToast(msg: "An Error Occured,Please try again later");
-    //   }
+    // notifyListeners();
+    // setBusy(false);
+    // if (result) {
+    // } else {
+    //   Fluttertoast.showToast(msg: "An Error Occured,Please try again later");
     // }
+    DialogResponse dialogResult = await _dialogService.showConfirmationDialog(
+      title: "Are You Sure?",
+      description:
+          "Semester,Branch and College Name will be used to personalise this app",
+      cancelTitle: "GO BACK",
+      confirmationTitle: "PROCEED",
+    );
+
+    if (dialogResult.confirmed) {
+      setBusy(true);
+      bool result = await _authenticationService.handleSignIn(
+        college: _selectedCollege ?? "",
+        branch: _selectedBranch ?? "",
+        semeseter: _selectedSemester ?? "",
+      );
+      notifyListeners();
+      setBusy(false);
+      if (result) {
+        _navigationService.replaceWith(Routes.splashView);
+      } else {
+        Fluttertoast.showToast(msg: "An Error Occured,Please try again later");
+      }
+    }
   }
 }

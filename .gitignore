@@ -61,3 +61,4 @@ firebase.json
 /web
 /web/config.js
 /web/firebase-messaging-sw.js
+web/firebase-messaging-sw.js

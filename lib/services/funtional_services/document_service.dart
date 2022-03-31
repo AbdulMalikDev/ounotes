@@ -12,6 +12,7 @@ import 'package:FSOUNotes/models/UploadLog.dart';
 import 'package:FSOUNotes/models/link.dart' as linkModel;
 import 'package:FSOUNotes/models/document.dart';
 import 'package:FSOUNotes/models/notes.dart';
+import 'package:FSOUNotes/models/pdfWeb.dart';
 import 'package:FSOUNotes/models/report.dart';
 import 'package:FSOUNotes/models/subject.dart';
 import 'package:FSOUNotes/models/user.dart';
@@ -22,11 +23,14 @@ import 'package:FSOUNotes/services/funtional_services/firebase_firestore/firesto
 import 'package:FSOUNotes/services/funtional_services/google_drive/google_drive_service.dart';
 import 'package:FSOUNotes/services/funtional_services/notification_service.dart';
 import 'package:FSOUNotes/services/state_services/subjects_service.dart';
+import 'package:FSOUNotes/utils/file_picker_service.dart';
 import 'package:clipboard/clipboard.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:logger/logger.dart';
 import 'package:stacked_services/stacked_services.dart';
+import 'package:syncfusion_flutter_pdf/pdf.dart';
 
 Logger log = getLogger("DocumentService");
 
@@ -41,6 +45,7 @@ class DocumentService{
   GoogleDriveService _googleDriveService = locator<GoogleDriveService>();
   AuthenticationService _authenticationService = locator<AuthenticationService>();
   NotificationService _notificationService = locator<NotificationService>();
+  FilePickerService _filePickerService = locator<FilePickerService>();
 
   ValueNotifier<double> downloadProgress = new ValueNotifier(0);
 
@@ -272,6 +277,34 @@ class DocumentService{
     }
   }
 
+  //TODO wajid
+  Future<List<PdfWeb>> pickDocumentsOnWeb({String uploadFileType = Constants.pdf}) async {
+    
+    List<PdfWeb> pdfs = [];
+    List<PlatformFile> files =
+          await _filePickerService.selectFile(uploadFileType: uploadFileType);
+    if (files == null || files.isEmpty){
+      Fluttertoast.showToast(msg: "FILES NOT SELECTED");
+      return null;
+    }
+    
+    files.forEach((file) { 
+      PdfDocument pdf = PdfDocument(inputBytes: List<int>.from(file.bytes));
+      pdfs.add(PdfWeb.from(file, pdf));
+    });
+
+    return pdfs;
+  }
+
+  uploadAllDocumentsOnWeb(Map<AbstractDocument,PdfWeb> files) async {
+
+    files.forEach((abstractDoc, pdf) async {
+      log.e("PDF being uploaded with name ${pdf.name}"); 
+      await _googleDriveService.processFile(abstractDoc: abstractDoc,pdfDocument: pdf);
+    });
+
+  }
+
   Verifier _updateVerifier(Verifier verifier,id,{bool isReport = false}){
     if(!isReport){verifier.numOfVerifiedDocs = 1;verifier.numOfReportedDocs = 0;}
     else {verifier.numOfReportedDocs = 1;verifier.numOfVerifiedDocs = 0;}
@@ -279,7 +312,7 @@ class DocumentService{
     return verifier;
   }
 
-   Future<File> _viewDocumentfromFirebase(UploadLog logItem, AbstractDocument doc,{bool navigate = true}) async {
+  Future<File> _viewDocumentfromFirebase(UploadLog logItem, AbstractDocument doc,{bool navigate = true}) async {
     log.i("Viewing document from Firebase");
     downloadProgress.value = 0;
     File file = await _cloudStorageService.downloadFile(

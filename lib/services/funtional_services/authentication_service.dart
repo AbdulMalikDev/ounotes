@@ -228,9 +228,9 @@ class AuthenticationService {
       "email": _user.email,
       "username": _user.username,
     };
-    OneSignal.shared.sendTags(tags);
-    OneSignal.shared.setEmail(email: _user.email);
-    OneSignal.shared.setExternalUserId(_user.id);
+    // OneSignal.shared.sendTags(tags);
+    // OneSignal.shared.setEmail(email: _user.email);
+    // OneSignal.shared.setExternalUserId(_user.id);
   }
 
   void _handleAuthError(var e) {
