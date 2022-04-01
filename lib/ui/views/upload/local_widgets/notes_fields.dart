@@ -1,56 +1,53 @@
 import 'package:FSOUNotes/AppTheme/AppStateNotifier.dart';
-import 'package:FSOUNotes/misc/course_info.dart';
-import 'package:FSOUNotes/models/question_paper.dart';
-import 'package:FSOUNotes/ui/views/upload/local_widgets/dropdownview.dart';
-import 'package:FSOUNotes/ui/views/upload/local_widgets/year_widget.dart';
-import 'package:FSOUNotes/ui/views/upload/upload_viewmodel.dart';
-import 'package:FSOUNotes/ui/widgets/dumb_widgets/selection_card.dart';
+import 'package:FSOUNotes/models/notes.dart';
+import 'package:FSOUNotes/ui/widgets/dumb_widgets/textFormField.dart';
 import 'package:flutter/material.dart';
+import 'package:syncfusion_flutter_sliders/sliders.dart';
 
 import '../../../../misc/constants.dart';
 import '../../../shared/app_config.dart';
 import '../web_upload_document/web_document_edit_viewmodel.dart';
 
-class QuestionPaperFields extends StatefulWidget {
-  final int index;
+class NoteFields extends StatefulWidget {
   final WebDocumentEditViewModel model;
-
-  const QuestionPaperFields({Key key, this.model, this.index})
-      : super(key: key);
+  final int index;
+  const NoteFields({
+    Key key,
+    this.model,
+    this.index,
+  }) : super(key: key);
 
   @override
-  State<QuestionPaperFields> createState() => _QuestionPaperFieldsState();
+  State<NoteFields> createState() => _NoteFieldsState();
 }
 
-class _QuestionPaperFieldsState extends State<QuestionPaperFields> {
-  TextEditingController controllerOfYear1 = TextEditingController();
-  TextEditingController controllerOfYear2 = TextEditingController();
-  List<DropdownMenuItem<String>> dropDownMenuItemsofBranch;
-  List<DropdownMenuItem<String>> dropDownMenuItemForTypeYear;
+class _NoteFieldsState extends State<NoteFields> {
+  TextEditingController textFieldController1 = TextEditingController();
+  TextEditingController textFieldController2 = TextEditingController();
+  Note doc;
 
-  QuestionPaper doc;
+  SfRangeValues sfValues = SfRangeValues(2.0, 4.0);
 
-  String selectedBranch;
-  String selectedyeartype;
+  set setSfValues(SfRangeValues values) {
+    setState(() {
+      sfValues = values;
+      //TODO use slider values
+    });
+  }
 
   @override
   void initState() {
-    dropDownMenuItemsofBranch = buildAndGetDropDownMenuItems(CourseInfo.branch);
-    dropDownMenuItemForTypeYear =
-        buildAndGetDropDownMenuItems(CourseInfo.yeartype);
-    selectedBranch = dropDownMenuItemsofBranch[0].value;
-    selectedyeartype = dropDownMenuItemForTypeYear[0].value;
-    doc = widget.model.documents[widget.index];
-    doc.branch = selectedBranch;
     super.initState();
+    doc = widget.model.documents[widget.index];
+    print(widget.model.textFieldsMap);
   }
 
   void updateDocument() {
     widget.model.documents[widget.index] = doc;
     print("updated document with index ${widget.index}");
-    QuestionPaper n = widget.model.documents[widget.index];
-    print(n.branch);
-    print(n.year);
+    Note n = widget.model.documents[widget.index];
+    print(n.author);
+    print(n.title);
   }
 
   @override
@@ -132,23 +129,31 @@ class _QuestionPaperFieldsState extends State<QuestionPaperFields> {
                 child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      YearFieldWidget(
-                        controllerOfYear1: controllerOfYear1,
-                        controllerOfYear2: controllerOfYear2,
-                        typeofyear: selectedyeartype,
-                        dropdownofyear: dropDownMenuItemForTypeYear,
-                        changedDropDownItemOfYear: changedDropDownItemOfYear,
-                        onChangedYearField: onChangedYearField,
+                      TextFormFieldView(
+                        textFieldUniqueKey: ValueKey(
+                            widget.model.textFieldsMap["TextFieldHeading1"]),
+                        heading:
+                            widget.model.textFieldsMap["TextFieldHeading1"],
+                        hintText: widget
+                            .model.textFieldsMap["TextFieldHeadingLabel1"],
+                        controller: textFieldController1,
+                        onChanged: (String value) {
+                          doc.title = textFieldController1.text;
+                          updateDocument();
+                        },
                       ),
-                      SizedBox(
-                        height: 8,
-                      ),
-                      DropDownView(
-                        isExpanded: true,
-                        title: "Select Branch",
-                        value: selectedBranch,
-                        items: dropDownMenuItemsofBranch,
-                        onChanged: changedDropDownItemOfBranch,
+                      TextFormFieldView(
+                        textFieldUniqueKey: ValueKey(
+                            widget.model.textFieldsMap["TextFieldHeading2"]),
+                        heading:
+                            widget.model.textFieldsMap["TextFieldHeading2"],
+                        hintText: widget
+                            .model.textFieldsMap["TextFieldHeadingLabel2"],
+                        controller: textFieldController2,
+                        onChanged: (String value) {
+                          doc.author = textFieldController2.text;
+                          updateDocument();
+                        },
                       ),
                     ]),
               )
@@ -157,37 +162,5 @@ class _QuestionPaperFieldsState extends State<QuestionPaperFields> {
         ],
       ),
     );
-  }
-
-  List<DropdownMenuItem<String>> buildAndGetDropDownMenuItems(List items) {
-    List<DropdownMenuItem<String>> i = [];
-    items.forEach((item) {
-      i.add(DropdownMenuItem(value: item, child: Center(child: Text(item))));
-    });
-    return i;
-  }
-
-  void changedDropDownItemOfBranch(String br) {
-    setState(() {
-      selectedBranch = br;
-      doc.branch = br;
-      updateDocument();
-    });
-  }
-
-  void changedDropDownItemOfYear(type) {
-    setState(() {
-      selectedyeartype = type;
-      onChangedYearField(type);
-    });
-  }
-
-  void onChangedYearField(String value) {
-    if (selectedyeartype == CourseInfo.yeartype[0]) {
-      doc.year = controllerOfYear1.text;
-    } else {
-      doc.year = controllerOfYear1.text + '-' + controllerOfYear2.text;
-    }
-    updateDocument();
   }
 }

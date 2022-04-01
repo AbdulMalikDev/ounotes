@@ -1,12 +1,14 @@
 import 'package:FSOUNotes/enums/enums.dart';
 import 'package:FSOUNotes/misc/constants.dart';
 import 'package:FSOUNotes/misc/course_info.dart';
-import 'package:FSOUNotes/ui/views/upload/local_widgets/notes_links_fields.dart';
+import 'package:FSOUNotes/ui/views/upload/local_widgets/links_fields.dart';
+import 'package:FSOUNotes/ui/views/upload/local_widgets/notes_fields.dart';
 import 'package:FSOUNotes/ui/views/upload/local_widgets/question_paper_fields.dart';
 import 'package:FSOUNotes/ui/views/upload/local_widgets/subject_name_field.dart';
 import 'package:FSOUNotes/ui/views/upload/upload_viewmodel.dart';
 import 'package:FSOUNotes/ui/widgets/smart_widgets/default_app_bar/back_icon_title_appbar.dart';
 import 'package:flutter/material.dart';
+import 'package:googleapis/cloudtrace/v2.dart';
 import 'package:stacked/stacked.dart';
 
 import '../../shared/app_config.dart';
@@ -91,7 +93,8 @@ class _UploadViewState extends State<UploadView> {
               : Form(
                   key: this._formKey,
                   child: Container(
-                    margin:EdgeInsets.symmetric(horizontal:App(context).appHeight(0.2)),
+                    margin: EdgeInsets.symmetric(
+                        horizontal: App(context).appHeight(0.2)),
                     child: SingleChildScrollView(
                       // physics: AlwaysScrollableScrollPhysics(),
                       child: Column(
@@ -112,23 +115,25 @@ class _UploadViewState extends State<UploadView> {
                                   key: ValueKey("Subject field"),
                                   model: model,
                                 ),
-                                model.textFieldsMap == Constants.Syllabus
-                                    ? SyllabusFields(
-                                        key: ValueKey("Syllabus field"),
-                                        model: model,
-                                      )
-                                    : model.textFieldsMap ==
-                                            Constants.QuestionPaper
-                                        ? QuestionPaperFields(
-                                            key: ValueKey(
-                                                "Question paper field"),
-                                            model: model,
-                                          )
-                                        : NoteAndLinkFields(
-                                            key: ValueKey(
-                                                "Question paper field"),
-                                            model: model,
-                                          ),
+                                if(model.documentType == Document.Links)LinkFields(
+                                  model:model,
+                                ),
+                                //     ? SyllabusFields(
+                                //         key: ValueKey("Syllabus field"),
+                                //         model: model,
+                                //       )
+                                //     : model.textFieldsMap ==
+                                //             Constants.QuestionPaper
+                                //         ? QuestionPaperFields(
+                                //             key: ValueKey(
+                                //                 "Question paper field"),
+                                //             model: model,
+                                //           )
+                                //         : NoteAndLinkFields(
+                                //             key: ValueKey(
+                                //                 "Question paper field"),
+                                //             model: model,
+                                //           ),
                                 SizedBox(
                                   height: 20,
                                 ),

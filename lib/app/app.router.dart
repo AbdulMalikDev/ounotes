@@ -14,6 +14,7 @@ import '../enums/enums.dart';
 import '../models/UploadLog.dart';
 import '../models/document.dart';
 import '../models/notes.dart';
+import '../models/pdfWeb.dart';
 import '../models/question_paper.dart';
 import '../models/syllabus.dart';
 import '../models/verifier.dart';
@@ -46,6 +47,7 @@ import '../ui/views/splash/spash_view.dart';
 import '../ui/views/syllabus/syllabus_view.dart';
 import '../ui/views/upload/upload_selection/upload_selection_view.dart';
 import '../ui/views/upload/upload_view.dart';
+import '../ui/views/upload/web_upload_document/web_document_edit_view.dart';
 import '../ui/views/verifier/reported%20documents/reported_documents_view.dart';
 import '../ui/views/verifier/verifier_view.dart';
 import '../ui/views/verifier/verify%20documents/verify_documents_view.dart';
@@ -93,7 +95,8 @@ class Routes {
   static const String notificationView = '/notification-view';
   static const String recentlyAddedNotesView = '/recently-added-notes-view';
   static const String accountInfoView = '/account-info-view';
-  static const String mainView = '/main-view';
+  static const String mainScreenView = '/main-screen-view';
+  static const String webDocumentEditView = '/web-document-edit-view';
   static const all = <String>{
     splashView,
     introView,
@@ -131,7 +134,8 @@ class Routes {
     notificationView,
     recentlyAddedNotesView,
     accountInfoView,
-    mainView,
+    mainScreenView,
+    webDocumentEditView,
   };
 }
 
@@ -175,7 +179,8 @@ class StackedRouter extends RouterBase {
     RouteDef(Routes.notificationView, page: NotificationView),
     RouteDef(Routes.recentlyAddedNotesView, page: RecentlyAddedNotesView),
     RouteDef(Routes.accountInfoView, page: AccountInfoView),
-    RouteDef(Routes.mainView, page: MainView),
+    RouteDef(Routes.mainScreenView, page: MainScreenView),
+    RouteDef(Routes.webDocumentEditView, page: WebDocumentEditView),
   ];
   @override
   Map<Type, StackedRouteFactory> get pagesMap => _pagesMap;
@@ -493,9 +498,23 @@ class StackedRouter extends RouterBase {
         settings: data,
       );
     },
-    MainView: (data) {
+    MainScreenView: (data) {
       return MaterialPageRoute<dynamic>(
-        builder: (context) => const MainView(),
+        builder: (context) => const MainScreenView(),
+        settings: data,
+      );
+    },
+    WebDocumentEditView: (data) {
+      var args = data.getArgs<WebDocumentEditViewArguments>(
+        orElse: () => WebDocumentEditViewArguments(),
+      );
+      return MaterialPageRoute<dynamic>(
+        builder: (context) => WebDocumentEditView(
+          key: args.key,
+          files: args.files,
+          textFieldsMap: args.textFieldsMap,
+          document: args.document,
+        ),
         settings: data,
       );
     },
@@ -657,4 +676,14 @@ class WhyToPayForDownloadViewArguments {
 class AddVerifierViewArguments {
   final Verifier verifier;
   AddVerifierViewArguments({this.verifier});
+}
+
+/// WebDocumentEditView arguments holder class
+class WebDocumentEditViewArguments {
+  final Key key;
+  final List<PdfWeb> files;
+  final Map<dynamic, dynamic> textFieldsMap;
+  final AbstractDocument document;
+  WebDocumentEditViewArguments(
+      {this.key, this.files, this.textFieldsMap, this.document});
 }

@@ -54,6 +54,7 @@ import 'package:FSOUNotes/ui/views/splash/spash_view.dart';
 import 'package:FSOUNotes/ui/views/syllabus/syllabus_view.dart';
 import 'package:FSOUNotes/ui/views/upload/upload_selection/upload_selection_view.dart';
 import 'package:FSOUNotes/ui/views/upload/upload_view.dart';
+import 'package:FSOUNotes/ui/views/upload/web_upload_document/web_document_edit_view.dart';
 import 'package:FSOUNotes/ui/views/verifier/reported%20documents/reported_documents_view.dart';
 import 'package:FSOUNotes/ui/views/verifier/verifier_view.dart';
 import 'package:FSOUNotes/ui/views/verifier/verify%20documents/verify_documents_view.dart';
@@ -105,7 +106,8 @@ import 'package:stacked_services/stacked_services.dart';
   MaterialRoute(page: NotificationView),
   MaterialRoute(page: RecentlyAddedNotesView),
   MaterialRoute(page: AccountInfoView),
-  MaterialRoute(page: MainView),
+  MaterialRoute(page: MainScreenView),
+  MaterialRoute(page: WebDocumentEditView),
 ], dependencies: [
   LazySingleton(classType: BottomSheetService),
   // LazySingleton(classType: AdmobService),

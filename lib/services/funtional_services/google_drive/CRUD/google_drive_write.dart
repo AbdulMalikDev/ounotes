@@ -132,7 +132,7 @@ extension GoogleDriveWrites on GoogleDriveService{
       abstractDoc.setUrl = GDrive_URL;
       abstractDoc.setSize = _formatBytes(pdfDocument.bytes.length, 2);
       abstractDoc.setDate = DateTime.now();
-      abstractDoc.setPages = pdf.pages.count;
+      // abstractDoc.setPages = pdf.pages.count;
       log.e(abstractDoc.toJson());
       log.e("Checkpoint");
 

@@ -1,6 +1,5 @@
-import 'package:FSOUNotes/misc/course_info.dart';
 import 'package:FSOUNotes/ui/views/upload/upload_viewmodel.dart';
-import 'package:FSOUNotes/ui/widgets/dumb_widgets/SaveButtonView.dart';
+import 'package:FSOUNotes/ui/views/upload/web_upload_document/web_document_edit_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
@@ -24,26 +23,7 @@ class UploadButtonWidget extends StatefulWidget {
 class _UploadButtonWidgetState extends State<UploadButtonWidget> {
   @override
   Widget build(BuildContext context) {
-    return Column(children: [
-      // if (model.textFieldsMap != Constants.GDRIVELink)
-      //   Row(
-      //     children: [
-      //       Container(
-      //         child: Checkbox(
-      //           value: model.canUseUploaderUserName,
-      //           onChanged: model.changeCheckMark2,
-      //           activeColor: Colors.amber,
-      //         ),
-      //       ),
-      //       //TODO malik add dummy string here
-      //       Flexible(
-      //         child: Text(
-      //           "Hey, ${model.user.username}...can we show your name as uploader below this note?",
-      //           style: TextStyle(color: Colors.white, fontSize: 15),
-      //         ),
-      //       )
-      //     ],
-      //   ),
+    return Column(mainAxisAlignment: MainAxisAlignment.center, children: [
       SizedBox(
         height: 10,
       ),
@@ -59,66 +39,56 @@ class _UploadButtonWidgetState extends State<UploadButtonWidget> {
           SizedBox(
             width: 5,
           ),
-          Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              Row(
-                children: <Widget>[
-                  Text(
-                    'I agree to OU Notes ',
-                    style: Theme.of(context)
-                        .textTheme
-                        .subtitle1
-                        .copyWith(fontSize: 15, fontWeight: FontWeight.bold),
-                  ),
-                  Container(
-                    height: 20,
-                    child: TextButton(
-                      onPressed: () {
-                        widget.model.navigatetoPrivacyPolicy();
-                      },
-                      style: TextButton.styleFrom(
-                        padding: EdgeInsets.all(0),
-                      ),
-                      child: Text(
-                        "Privacy policy",
-                        style: Theme.of(context).textTheme.subtitle1.copyWith(
-                            fontSize: 15, fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                  ),
-                ],
+          Text(
+            'I agree to OU Notes ',
+            style: Theme.of(context)
+                .textTheme
+                .subtitle1
+                .copyWith(fontSize: 15, fontWeight: FontWeight.bold),
+          ),
+          Container(
+            height: 20,
+            child: TextButton(
+              onPressed: () {
+                widget.model.navigatetoPrivacyPolicy();
+              },
+              style: TextButton.styleFrom(
+                padding: EdgeInsets.all(0),
               ),
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  Text(
-                    'and  ',
-                    style: Theme.of(context)
-                        .textTheme
-                        .subtitle1
-                        .copyWith(fontSize: 15, fontWeight: FontWeight.bold),
-                  ),
-                  Container(
-                    height: 20,
-                    child: TextButton(
-                      onPressed: () {
-                        widget.model.navigateToTermsAndConditionView();
-                      },
-                      style: TextButton.styleFrom(
-                        padding: EdgeInsets.all(0),
-                      ),
-                      child: Text(
-                        'Terms and condition',
-                        style: Theme.of(context).textTheme.subtitle1.copyWith(
-                            fontSize: 15, fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                  ),
-                ],
+              child: Text(
+                "Privacy policy",
+                style: Theme.of(context)
+                    .textTheme
+                    .subtitle1
+                    .copyWith(fontSize: 15, fontWeight: FontWeight.bold),
               ),
-            ],
-          )
+            ),
+          ),
+          Text(
+            'and  ',
+            style: Theme.of(context)
+                .textTheme
+                .subtitle1
+                .copyWith(fontSize: 15, fontWeight: FontWeight.bold),
+          ),
+          Container(
+            height: 20,
+            child: TextButton(
+              onPressed: () {
+                widget.model.navigateToTermsAndConditionView();
+              },
+              style: TextButton.styleFrom(
+                padding: EdgeInsets.all(0),
+              ),
+              child: Text(
+                'Terms and condition',
+                style: Theme.of(context)
+                    .textTheme
+                    .subtitle1
+                    .copyWith(fontSize: 15, fontWeight: FontWeight.bold),
+              ),
+            ),
+          ),
         ],
       ),
       SizedBox(
