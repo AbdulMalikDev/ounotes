@@ -2,6 +2,7 @@ import 'package:FSOUNotes/app/app.locator.dart';
 import 'package:FSOUNotes/app/app.logger.dart';
 import 'package:FSOUNotes/app/app.router.dart';
 import 'package:FSOUNotes/services/funtional_services/sharedpref_service.dart';
+import 'package:FSOUNotes/ui/views/upload/upload_view.dart';
 import 'package:connection_verify/connection_verify.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
@@ -43,8 +44,10 @@ class AllDocumentsViewModel extends BaseViewModel {
   }
 
   onUploadButtonPressed() {
-    _navigationService.navigateTo(Routes.uploadSelectionView,
-        arguments: UploadSelectionViewArguments());
+    _navigationService.navigateTo(Routes.uploadView,
+        arguments: UploadViewArguments(
+          subjectName: _subjectName,
+        ));
   }
 
   handleStartup(BuildContext context) async {

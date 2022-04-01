@@ -20,6 +20,7 @@ import 'package:FSOUNotes/services/funtional_services/firebase_firestore/firesto
 import 'package:FSOUNotes/services/funtional_services/google_drive/google_drive_service.dart';
 import 'package:FSOUNotes/services/funtional_services/sharedpref_service.dart';
 import 'package:FSOUNotes/services/state_services/subjects_service.dart';
+import 'package:FSOUNotes/ui/views/upload/web_upload_document/web_document_edit_view.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -126,10 +127,10 @@ class UploadViewModel extends BaseViewModel {
   Future setUser() async {
     setBusy(true);
     SharedPreferences prefs = await _sharedPreferencesService.store();
-    if(prefs.containsKey("current_user_is_logged_in")){
-    User user = User.fromData(
-        json.decode(prefs.getString("current_user_is_logged_in")));
-    _user = user;
+    if (prefs.containsKey("current_user_is_logged_in")) {
+      User user = User.fromData(
+          json.decode(prefs.getString("current_user_is_logged_in")));
+      _user = user;
     }
 
     setBusy(false);
@@ -159,6 +160,7 @@ class UploadViewModel extends BaseViewModel {
         .cast<String>();
     List<String> subList = userSub + allSub;
     subList = subList.toSet().toList().cast<String>();
+
     return subList;
   }
 
@@ -241,26 +243,34 @@ class UploadViewModel extends BaseViewModel {
       setBusy(false);
       return;
     }
-      
+
     String fileType = enumConst.Constants.pdf;
 
     //TODO WAJID
     //! WAJID this is where user will pick documents from PC
     List<PdfWeb> files = await _documentService.pickDocumentsOnWeb();
 
-    files.forEach((element) {
-        log.e(element.name);
-    });
-
+    for (int i = 0; i < files.length; i++) {
+      log.e(files[i].name);
+    }
     //! This function should NOT be called when uploading
     // var result = await _googleDriveService.processFile(
     //     abstractDoc: doc,
     //     uploadFileType: fileType
     // );
-    //! Instead call 
+    //! Instead call
     //! _documentService.uploadAllDocumentsOnWeb(files);
     //! Where files is --> Map<AbstractDocument,PdfWeb> files
     //! I have handled upload logic in that function
+    _navigationService.navigateTo(
+      Routes.webDocumentEditView,
+      arguments: WebDocumentEditViewArguments(
+        files: files,
+        document: doc,
+        textFieldsMap: _textFieldsMap,
+      ),
+    );
+    return;
 
     var result = "";
     log.w(result);
@@ -298,7 +308,6 @@ class UploadViewModel extends BaseViewModel {
         // return;
         break;
     }
-    
   }
 
   launchURL(String url) async {
