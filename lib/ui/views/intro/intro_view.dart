@@ -1,6 +1,6 @@
 import 'package:FSOUNotes/misc/helper.dart';
 import 'package:FSOUNotes/ui/shared/app_config.dart';
-import 'package:FSOUNotes/ui/views/Intro/intro_viewmodel.dart';
+import 'package:FSOUNotes/ui/views/intro/intro_viewmodel.dart';
 import 'package:FSOUNotes/ui/widgets/dumb_widgets/progress.dart';
 import 'package:FSOUNotes/ui/widgets/dumb_widgets/selection_card.dart';
 import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
