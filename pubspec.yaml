@@ -150,7 +150,7 @@ flutter:
     - assets/images/study4.jpg
     - assets/images/study5.jpg
     - assets/lottie/
-    - .env
+    # - .env
 
   fonts:
     - family: Montserrat
