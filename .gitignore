@@ -45,8 +45,8 @@ app.*.map.json
 !/packages/flutter_tools/test/data/dart_dependencies_test/**/.packages
 
 .env
-/android
-/android/app/key.jks
+# /android
+# /android/app/key.jks
 /lib/enums/confidential.dart
 /config
 /.metadata
